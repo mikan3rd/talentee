@@ -18,7 +18,7 @@ export const savePopularChannel = async () => {
     regionCode: "JP",
     relevanceLanguage: "ja",
     order: "viewCount",
-    maxResults: 50,
+    maxResults: 10,
     publishedAfter,
     location: "35.68,139.76", // 東京駅
     locationRadius: "500km", // 大阪あたりまで,
@@ -38,13 +38,31 @@ export const savePopularChannel = async () => {
 
   const result = [];
   for (const item of channelResponse.data.items) {
-    const { id, snippet, statistics, brandingSettings } = item;
+    const {
+      id,
+      snippet,
+      statistics,
+      brandingSettings: {
+        channel: { keywords, ...channnelObjects },
+        ...brandSettingObjects
+      },
+    } = item;
+
+    const formattedStatistics = {};
+    Object.entries(statistics).forEach(([key, value]) => {
+      if (isNaN(Number(value))) {
+        formattedStatistics[key] = value;
+      } else {
+        formattedStatistics[key] = Number(value);
+      }
+    });
+    const keywordArray = keywords ? keywords.split(/\s/) : [];
 
     const data = {
       id,
       snippet,
-      statistics,
-      brandingSettings,
+      statistics: formattedStatistics,
+      brandingSettings: { ...brandSettingObjects, channel: { ...channnelObjects, keywords: keywordArray } },
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     };
