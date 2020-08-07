@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { google } from "googleapis";
+import { google, youtube_v3 } from "googleapis";
 import * as dayjs from "dayjs";
 import * as functions from "firebase-functions";
 
@@ -38,44 +38,48 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
 
   const result = [];
   for (const item of channelResponse.data.items) {
-    const {
-      id,
-      snippet,
-      statistics,
-      brandingSettings: {
-        channel: { keywords, ...channnelObjects },
-        ...brandSettingObjects
-      },
-    } = item;
-
-    const formattedStatistics = {};
-    Object.entries(statistics).forEach(([key, value]) => {
-      if (typeof value !== "string" || isNaN(Number(value))) {
-        formattedStatistics[key] = value;
-      } else {
-        formattedStatistics[key] = Number(value);
-      }
-    });
-    const keywordArray = keywords ? keywords.split(/\s/) : [];
-
-    const data = {
-      id,
-      snippet,
-      statistics: formattedStatistics,
-      brandingSettings: { ...brandSettingObjects, channel: { ...channnelObjects, keywords: keywordArray } },
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-    };
-
+    const data = formatChannelData(item);
+    const { id } = item;
     const ref = youtubeChannelCollection.doc(id);
     const doc = await ref.get();
     if (doc.exists) {
       delete data.createdAt;
     }
     await ref.set(data, { merge: true });
-
     result.push(data);
   }
 
   return result;
+};
+
+const formatChannelData = (item: youtube_v3.Schema$Channel) => {
+  const {
+    id,
+    snippet,
+    statistics,
+    brandingSettings: {
+      channel: { keywords, ...channnelObjects },
+      ...brandSettingObjects
+    },
+  } = item;
+
+  const formattedStatistics = {};
+  Object.entries(statistics).forEach(([key, value]) => {
+    if (typeof value !== "string" || isNaN(Number(value))) {
+      formattedStatistics[key] = value;
+    } else {
+      formattedStatistics[key] = Number(value);
+    }
+  });
+  const keywordArray = keywords ? keywords.split(/\s/) : [];
+
+  const data = {
+    id,
+    snippet,
+    statistics: formattedStatistics,
+    brandingSettings: { ...brandSettingObjects, channel: { ...channnelObjects, keywords: keywordArray } },
+    createdAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp(),
+  };
+  return data;
 };
