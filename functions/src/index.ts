@@ -10,6 +10,7 @@ admin.initializeApp();
 import { savePopularChannel } from "./savePopularChannel";
 
 export const getYoytubePopularChannel = functions.region("asia-northeast1").https.onRequest(async (req, res) => {
-  const result = await savePopularChannel();
+  const publishedAfter = dayjs().subtract(1, "week");
+  const result = await savePopularChannel(publishedAfter);
   res.send({ result });
 });

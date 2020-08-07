@@ -1,17 +1,17 @@
 import * as admin from "firebase-admin";
 import { google } from "googleapis";
 import * as dayjs from "dayjs";
+import * as functions from "firebase-functions";
 
-const YOUTUBE_API_KEY = "";
+const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 const YoutubeChannelCollectionPath = "youtubeChannel" as const;
 
 const { FieldValue } = admin.firestore;
 
-export const savePopularChannel = async () => {
+export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
   const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
 
-  const publishedAfter = dayjs().subtract(1, "week").toISOString();
   const searchResponse = await service.search.list({
     part: ["id", "snippet"],
     type: ["video"],
@@ -19,7 +19,7 @@ export const savePopularChannel = async () => {
     relevanceLanguage: "ja",
     order: "viewCount",
     maxResults: 10,
-    publishedAfter,
+    publishedAfter: publishedAfter.toISOString(),
     location: "35.68,139.76", // 東京駅
     locationRadius: "500km", // 大阪あたりまで,
   });
@@ -50,7 +50,7 @@ export const savePopularChannel = async () => {
 
     const formattedStatistics = {};
     Object.entries(statistics).forEach(([key, value]) => {
-      if (isNaN(Number(value))) {
+      if (typeof value !== "string" || isNaN(Number(value))) {
         formattedStatistics[key] = value;
       } else {
         formattedStatistics[key] = Number(value);
