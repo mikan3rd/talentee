@@ -71,7 +71,31 @@ const formatChannelData = (item: youtube_v3.Schema$Channel) => {
       formattedStatistics[key] = Number(value);
     }
   });
-  const keywordArray = keywords ? keywords.split(/\s/) : [];
+
+  const keywordArray: string[] = [];
+  if (keywords) {
+    let tmpKeyword = "";
+    for (const keyword of keywords.split(/\s/)) {
+      const separator = '"';
+      const firstString = keyword.charAt(0);
+      const lastString = keyword.slice(-1);
+      if (firstString === separator) {
+        tmpKeyword = keyword.substr(1);
+        continue;
+      }
+      if (lastString === separator) {
+        keywordArray.push(`${tmpKeyword} ${keyword.slice(0, -1)}`);
+        tmpKeyword = "";
+        continue;
+      }
+      if (tmpKeyword) {
+        tmpKeyword += " " + keyword;
+        continue;
+      }
+      keywordArray.push(keyword);
+    }
+    console.log(keywordArray);
+  }
 
   const data = {
     id,
