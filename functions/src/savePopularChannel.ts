@@ -18,7 +18,7 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
     regionCode: "JP",
     relevanceLanguage: "ja",
     order: "viewCount",
-    maxResults: 10,
+    maxResults: 50,
     publishedAfter: publishedAfter.toISOString(),
     location: "35.68,139.76", // 東京駅
     locationRadius: "500km", // 大阪あたりまで,

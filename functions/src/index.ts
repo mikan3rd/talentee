@@ -9,8 +9,20 @@ admin.initializeApp();
 
 import { savePopularChannel } from "./savePopularChannel";
 
-export const getYoytubePopularChannel = functions.region("asia-northeast1").https.onRequest(async (req, res) => {
-  const publishedAfter = dayjs().subtract(1, "week");
-  const result = await savePopularChannel(publishedAfter);
-  res.send({ result });
-});
+export const getYoutubePopularChannelWeekly = functions
+  .region("asia-northeast1")
+  .pubsub.schedule("0 0 * * *")
+  .timeZone("Asia/Tokyo")
+  .onRun(async (context) => {
+    const publishedAfter = dayjs().subtract(1, "week");
+    const result = await savePopularChannel(publishedAfter);
+    return result;
+  });
+
+export const getYoutubePopularChannelWeeklyTest = functions
+  .region("asia-northeast1")
+  .https.onRequest(async (req, res) => {
+    const publishedAfter = dayjs().subtract(1, "week");
+    const result = await savePopularChannel(publishedAfter);
+    res.send({ result });
+  });
