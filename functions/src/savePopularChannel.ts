@@ -6,6 +6,7 @@ import * as functions from "firebase-functions";
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 const YoutubeChannelCollectionPath = "youtubeChannel" as const;
+const AccountCollectionPath = "account" as const;
 
 const { FieldValue } = admin.firestore;
 
@@ -18,7 +19,7 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
     regionCode: "JP",
     relevanceLanguage: "ja",
     order: "viewCount",
-    maxResults: 50,
+    maxResults: 10,
     publishedAfter: publishedAfter.toISOString(),
     location: "35.68,139.76", // 東京駅
     locationRadius: "500km", // 大阪あたりまで,
@@ -35,18 +36,47 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
   const db = admin.firestore();
   db.settings({ ignoreUndefinedProperties: true });
   const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
+  const accountCollection = db.collection(AccountCollectionPath);
 
   const result = [];
   for (const item of channelResponse.data.items) {
-    const data = formatChannelData(item);
     const { id } = item;
-    const ref = youtubeChannelCollection.doc(id);
-    const doc = await ref.get();
-    if (doc.exists) {
-      delete data.createdAt;
+    const youtubeMainRef = youtubeChannelCollection.doc(id);
+    const youtubeDoc = await youtubeMainRef.get();
+
+    let accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeMainRef).limit(1).get();
+    if (accountDocs.empty) {
+      const accountData = {
+        tmpUsername: item.snippet.title,
+        thumbnailUrl: item.snippet.thumbnails.medium.url,
+        youtubeMainRef,
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      };
+      await accountCollection.doc().set(accountData, { merge: true });
+      accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeMainRef).limit(1).get();
     }
-    await ref.set(data, { merge: true });
-    result.push(data);
+
+    let accountRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;
+    accountDocs.forEach((doc) => {
+      accountRef = accountCollection.doc(doc.id);
+    });
+
+    const data = formatChannelData(item);
+    const youtubeData = {
+      ...data,
+      accountRef,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    };
+
+    if (youtubeDoc.exists) {
+      delete youtubeData.createdAt;
+    }
+
+    await youtubeMainRef.set(youtubeData, { merge: true });
+
+    result.push(youtubeData);
   }
 
   return result;
@@ -65,10 +95,10 @@ const formatChannelData = (item: youtube_v3.Schema$Channel) => {
 
   const formattedStatistics = {};
   Object.entries(statistics).forEach(([key, value]) => {
-    if (typeof value !== "string" || isNaN(Number(value))) {
-      formattedStatistics[key] = value;
-    } else {
+    if (typeof value === "string" && !isNaN(Number(value))) {
       formattedStatistics[key] = Number(value);
+    } else {
+      formattedStatistics[key] = value;
     }
   });
 
@@ -94,7 +124,6 @@ const formatChannelData = (item: youtube_v3.Schema$Channel) => {
       }
       keywordArray.push(keyword);
     }
-    console.log(keywordArray);
   }
 
   const data = {
@@ -102,8 +131,6 @@ const formatChannelData = (item: youtube_v3.Schema$Channel) => {
     snippet,
     statistics: formattedStatistics,
     brandingSettings: { ...brandSettingObjects, channel: { ...channnelObjects, keywords: keywordArray } },
-    createdAt: FieldValue.serverTimestamp(),
-    updatedAt: FieldValue.serverTimestamp(),
   };
   return data;
 };
