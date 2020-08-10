@@ -3031,7 +3031,7 @@ date-and-time@^0.13.0:
   resolved "https://registry.yarnpkg.com/date-and-time/-/date-and-time-0.13.1.tgz#d12ba07ac840d5b112dc4c83f8a03e8a51f78dd6"
   integrity sha512-/Uge9DJAT+s+oAcDxtBhyR8+sKjUnZbYmyhbmWjTHNtX7B7oWD8YyYdeXcBRbwSj6hVvj+IQegJam7m7czhbFw==
 
-dayjs@^1.8.33:
+dayjs@1.8.33:
   version "1.8.33"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.33.tgz#18bc4a2b6c1c6f4d67b4c4f2536c0b97e5b766f7"
   integrity sha512-881TDLZCdpJFKbraWRHcUG8zfMLLX400ENf9rFZDuWc5zYMss6xifo2PhlDX0ftOmR2NRmaIY47bAa4gKQfXqw==
@@ -3215,7 +3215,7 @@ dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
-dotenv@^8.2.0:
+dotenv@8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
@@ -6366,7 +6366,7 @@ react-refresh@0.8.3:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
-react-semantic-toasts@^0.6.5:
+react-semantic-toasts@0.6.5:
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/react-semantic-toasts/-/react-semantic-toasts-0.6.5.tgz#d35b7dacf821860b85683d6d875c08f68a83f3e9"
   integrity sha512-XsSvlix69XbzXkT728sRx9TnP7c7g8rGf31KS37Hf/DQLEuAJzsUwqHmo70Q6u7tIcWbCF58UnCzg9mNlYlijA==
@@ -6704,14 +6704,14 @@ schema-utils@^2.6.1, schema-utils@^2.6.5, schema-utils@^2.6.6:
     ajv "^6.12.2"
     ajv-keywords "^3.4.1"
 
-semantic-ui-css@^2.4.1:
+semantic-ui-css@2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/semantic-ui-css/-/semantic-ui-css-2.4.1.tgz#f5aea39fafb787cbd905ec724272a3f9cba9004a"
   integrity sha512-Pkp0p9oWOxlH0kODx7qFpIRYpK1T4WJOO4lNnpNPOoWKCrYsfHqYSKgk5fHfQtnWnsAKy7nLJMW02bgDWWFZFg==
   dependencies:
     jquery x.*
 
-semantic-ui-react@^1.1.1:
+semantic-ui-react@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/semantic-ui-react/-/semantic-ui-react-1.1.1.tgz#7d32e4cf5e07e7272b705ca287c39c61bd4c0284"
   integrity sha512-QtzLNkK4MUe1HQo4S7/tIkSp4NFtxSGDzTMKxmvztMJ6jt+nKGmMyjpyxJsrm3ohU8Z3sTyBUyiBsDYW4jNtjw==
