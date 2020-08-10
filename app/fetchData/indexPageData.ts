@@ -1,4 +1,5 @@
-import admin, { YoutubeChannelCollectionPath } from "../firebase/nodeApp";
+import admin from "../firebase/nodeApp";
+import { YoutubeChannelCollectionPath } from "../firebase/firestore";
 
 export const getIndexPageData = async () => {
   const db = admin.firestore();

@@ -1,33 +1,13 @@
 import React from "react";
-import { GetServerSideProps } from "next";
 
-import { getIndexPageData } from "../fetchData/indexPageData";
+import { Index } from "../components/pages/Index";
 
-interface IYoutubeData {
-  id: string;
-  snippet: { title; description };
-  statistics: { subscriberCount: number };
-}
-
-const Top: React.FC<{ data: { youtubeJsonData: string } }> = ({ data: { youtubeJsonData } }) => {
-  const youtubeData: IYoutubeData[] = JSON.parse(youtubeJsonData);
+const Top: React.FC = () => {
   return (
-    <div>
-      {youtubeData.map((data) => {
-        const {
-          id,
-          snippet: { title },
-          statistics: { subscriberCount },
-        } = data;
-        return <div key={id}>{title}</div>;
-      })}
-    </div>
+    <>
+      <Index />
+    </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const youtubeJsonData = await getIndexPageData();
-  return { props: { data: { youtubeJsonData } } };
 };
 
 export default Top;
