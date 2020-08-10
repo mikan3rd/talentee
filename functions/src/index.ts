@@ -1,9 +1,28 @@
 import * as functions from "firebase-functions";
+import * as dayjs from "dayjs";
+import * as admin from "firebase-admin";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.region("asia-northeast1").https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", { structuredData: true });
-  response.send("Hello from Firebase!");
-});
+import "dayjs/locale/ja";
+dayjs.locale("ja");
+
+admin.initializeApp();
+
+import { savePopularChannel } from "./savePopularChannel";
+
+export const getYoutubePopularChannelWeekly = functions
+  .region("asia-northeast1")
+  .pubsub.schedule("0 0 * * *")
+  .timeZone("Asia/Tokyo")
+  .onRun(async (context) => {
+    const publishedAfter = dayjs().subtract(1, "week");
+    const result = await savePopularChannel(publishedAfter);
+    return result;
+  });
+
+export const getYoutubePopularChannelWeeklyTest = functions
+  .region("asia-northeast1")
+  .https.onRequest(async (req, res) => {
+    const publishedAfter = dayjs().subtract(1, "week");
+    const result = await savePopularChannel(publishedAfter);
+    res.send({ result });
+  });
