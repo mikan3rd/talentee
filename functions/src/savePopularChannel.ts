@@ -3,10 +3,9 @@ import { google, youtube_v3 } from "googleapis";
 import * as dayjs from "dayjs";
 import * as functions from "firebase-functions";
 
-const YOUTUBE_API_KEY = functions.config().youtube.api_key;
+import { AccountCollectionPath, YoutubeChannelCollectionPath } from "./collectionPath";
 
-const YoutubeChannelCollectionPath = "youtubeChannel" as const;
-const AccountCollectionPath = "account" as const;
+const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 const { FieldValue } = admin.firestore;
 
