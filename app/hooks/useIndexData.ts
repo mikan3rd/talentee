@@ -3,7 +3,7 @@ import React from "react";
 import firebase from "../firebase/clientApp";
 import { YoutubeChannelCollectionPath } from "../firebase/firestore";
 
-interface IYoutubeData {
+export interface IYoutubeData {
   id: string;
   snippet: { title: string; description: string; thumbnails: { medium: { url: string } }; country: string };
   statistics: { subscriberCount: number; videoCount: number; viewCount: number };
