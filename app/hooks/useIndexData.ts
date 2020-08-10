@@ -5,8 +5,9 @@ import { YoutubeChannelCollectionPath } from "../firebase/firestore";
 
 interface IYoutubeData {
   id: string;
-  snippet: { title: string; description: string; thumbnails: { medium: { url: string } } };
-  statistics: { subscriberCount: number };
+  snippet: { title: string; description: string; thumbnails: { medium: { url: string } }; country: string };
+  statistics: { subscriberCount: number; videoCount: number; viewCount: number };
+  brandingSettings: { channel: { keywords: string[] } };
   accountRef: { id: string };
 }
 
@@ -16,7 +17,11 @@ export const useIndexData = () => {
   const getYoutubePageData = async () => {
     const db = firebase.firestore();
     const youtubeCollection = db.collection(YoutubeChannelCollectionPath);
-    const youtubeDocs = await youtubeCollection.orderBy("statistics.subscriberCount", "desc").limit(5).get();
+    const youtubeDocs = await youtubeCollection
+      .where("snippet.country", "==", "JP")
+      .orderBy("statistics.subscriberCount", "desc")
+      .limit(10)
+      .get();
     const youtubeData: IYoutubeData[] = [];
     youtubeDocs.forEach((doc) => {
       const data = doc.data() as IYoutubeData;
