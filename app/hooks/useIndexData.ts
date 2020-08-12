@@ -20,7 +20,7 @@ export const useIndexData = () => {
     const youtubeDocs = await youtubeCollection
       .where("snippet.country", "==", "JP")
       .orderBy("statistics.subscriberCount", "desc")
-      .limit(10)
+      .limit(5)
       .get();
     const youtubeData: IYoutubeData[] = [];
     youtubeDocs.forEach((doc) => {

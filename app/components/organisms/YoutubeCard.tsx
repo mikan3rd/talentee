@@ -20,17 +20,22 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData }> = ({ data }) => {
       key={id}
       css={css`
         position: relative;
+        margin-top: 12px;
+        &:first-of-type {
+          margin-top: 0px;
+        }
       `}
     >
       <Link href={`/account/${accountRef.id}`} passHref>
         <a
           css={css`
             display: block;
-            margin-top: 20px;
+
             border-radius: 5px;
             padding: 20px;
             color: inherit;
             background-color: white;
+            box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
             &:hover {
               color: inherit;
             }
