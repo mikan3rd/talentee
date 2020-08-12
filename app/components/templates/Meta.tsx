@@ -4,7 +4,7 @@ import Head from "next/head";
 export const Meta = React.memo<{
   title: string;
   description?: string;
-}>(({ title, description = "Talenteeで世界が注目するインフルエンサーを探そう！" }) => {
+}>(({ title, description = "Talenteeで世界が注目するインフルエンサーを見つけよう！" }) => {
   const titleWithSiteName = `Talentee | ${title}`;
   return (
     <Head>
