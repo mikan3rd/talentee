@@ -10,6 +10,7 @@ const PageLimit = 10;
 export const useYoutubeIndexData = () => {
   const [youtubeData, setYoutubeData] = React.useState<IYoutubeData[] | null>(null);
   const [lastDoc, setLastDoc] = React.useState<firebase.firestore.DocumentData | null>(null);
+  const [hasNext, setHasNext] = React.useState(true);
 
   const getYoutubePageData = async () => {
     const db = firebase.firestore();
@@ -35,11 +36,15 @@ export const useYoutubeIndexData = () => {
 
     const nextLastDoc = youtubeDocs.docs[youtubeDocs.docs.length - 1];
     setLastDoc(nextLastDoc);
+
+    if (youtubeDocs.docs.length < PageLimit) {
+      setHasNext(false);
+    }
   };
 
   React.useEffect(() => {
     getYoutubePageData();
   }, []);
 
-  return { youtubeData, getYoutubePageData };
+  return { youtubeData, hasNext, getYoutubePageData };
 };
