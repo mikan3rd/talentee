@@ -75,6 +75,9 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData }> = ({ data }) => {
                 css={css`
                   display: flex;
                   margin-top: 10px;
+                  @media (max-width: 600px) {
+                    display: block;
+                  }
                 `}
               >
                 <div css={CountWrapperCss}>
