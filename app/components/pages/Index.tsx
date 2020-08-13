@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { css } from "@emotion/core";
-import { Button, Header, Icon, Segment } from "semantic-ui-react";
+import { Button, Icon, Segment } from "semantic-ui-react";
 
 import { useIndexData } from "../../hooks/useIndexData";
 import { YoutubeCard } from "../organisms/YoutubeCard";
