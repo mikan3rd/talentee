@@ -5,7 +5,7 @@ import { Button, Icon, Label } from "semantic-ui-react";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
 
-export const YoutubeCard: React.FC<{ data: IYoutubeData }> = ({ data }) => {
+export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number }> = ({ data, rankNum }) => {
   const {
     id,
     accountRef,
@@ -20,17 +20,33 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData }> = ({ data }) => {
       key={id}
       css={css`
         position: relative;
+        margin-top: 12px;
+        &:first-of-type {
+          margin-top: 0px;
+        }
       `}
     >
+      <div
+        css={css`
+          position: absolute;
+          bottom: 0px;
+          right: 10px;
+          font-weight: bold;
+          font-size: 100px;
+          color: lightgrey;
+        `}
+      >
+        {rankNum}
+      </div>
       <Link href={`/account/${accountRef.id}`} passHref>
         <a
           css={css`
             display: block;
-            margin-top: 20px;
             border-radius: 5px;
-            padding: 20px;
+            padding: 20px 60px 20px 20px;
             color: inherit;
             background-color: white;
+            box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
             &:hover {
               color: inherit;
             }
@@ -55,7 +71,6 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData }> = ({ data }) => {
             <div
               css={css`
                 margin-left: 20px;
-                padding-right: 40px;
               `}
             >
               <div
@@ -70,6 +85,9 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData }> = ({ data }) => {
                 css={css`
                   display: flex;
                   margin-top: 10px;
+                  @media (max-width: 600px) {
+                    display: block;
+                  }
                 `}
               >
                 <div css={CountWrapperCss}>
