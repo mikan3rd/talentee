@@ -63,7 +63,7 @@ export const YoutubeIndex: React.FC = () => {
             `}
           >
             <Icon name="hand point right" />
-            さらに読み込む
+            {youtubeData.length}位以降を読み込む
           </Button>
         </Segment>
       )}
