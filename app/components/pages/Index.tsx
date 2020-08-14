@@ -13,24 +13,15 @@ export const Index: React.FC = () => {
     <>
       <Segment vertical></Segment>
 
-      <Segment vertical>
-        <div
-          css={css`
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            @media (max-width: 600px) {
-              display: block;
-            }
-          `}
-        >
+      {youtubeData && (
+        <Segment vertical>
           <div
             css={css`
               display: flex;
+              justify-content: space-between;
               align-items: center;
               @media (max-width: 600px) {
                 display: block;
-                margin-bottom: 10px;
               }
             `}
           >
@@ -38,89 +29,99 @@ export const Index: React.FC = () => {
               css={css`
                 display: flex;
                 align-items: center;
-              `}
-            >
-              <Icon name="youtube" color="red" size="big" />
-              <h2
-                css={css`
-                  color: red;
-                  font-size: 20px;
-                  margin: 0;
-                `}
-              >
-                Youtube
-              </h2>
-            </div>
-            <span
-              css={css`
-                color: black;
-                font-size: 16px;
-                margin-left: 5px;
                 @media (max-width: 600px) {
                   display: block;
+                  margin-bottom: 10px;
                 }
               `}
             >
-              チャンネル登録者数ランキング
-            </span>
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                `}
+              >
+                <Icon name="youtube" color="red" size="big" />
+                <h2
+                  css={css`
+                    color: red;
+                    font-size: 20px;
+                    margin: 0;
+                  `}
+                >
+                  Youtube
+                </h2>
+              </div>
+              <span
+                css={css`
+                  color: black;
+                  font-size: 16px;
+                  margin-left: 5px;
+                  @media (max-width: 600px) {
+                    display: block;
+                  }
+                `}
+              >
+                チャンネル登録者数ランキング
+              </span>
+            </div>
+
+            <Link href="/youtube" passHref>
+              <Button
+                icon
+                labelPosition="left"
+                color="red"
+                as="a"
+                css={css`
+                  @media (max-width: 600px) {
+                    &&& {
+                      width: 100%;
+                    }
+                  }
+                `}
+              >
+                <Icon name="hand point right" />
+                もっと詳しく！
+              </Button>
+            </Link>
           </div>
 
-          <Link href="/youtube" passHref>
-            <Button
-              icon
-              labelPosition="left"
-              color="red"
-              as="a"
-              css={css`
-                @media (max-width: 600px) {
-                  &&& {
-                    width: 100%;
-                  }
-                }
-              `}
-            >
-              <Icon name="hand point right" />
-              もっと詳しく！
-            </Button>
-          </Link>
-        </div>
-
-        <div
-          css={css`
-            margin: 14px 0;
-          `}
-        >
-          {youtubeData &&
-            youtubeData.map((data, index) => {
-              return <YoutubeCard key={data.id} data={data} rankNum={index + 1} />;
+          <div
+            css={css`
+              margin: 14px 0;
+            `}
+          >
+            {youtubeData.map((data, index) => {
+              return <YoutubeCard key={data.id} data={data} rankNum={index + 1} showKeywords={false} />;
             })}
-        </div>
+          </div>
 
-        <div
-          css={css`
-            text-align: right;
-          `}
-        >
-          <Link href="/youtube" passHref>
-            <Button
-              icon
-              labelPosition="left"
-              color="red"
-              as="a"
-              css={css`
-                @media (max-width: 600px) {
-                  &&& {
-                    width: 100%;
+          <div
+            css={css`
+              text-align: right;
+            `}
+          >
+            <Link href="/youtube" passHref>
+              <Button
+                icon
+                labelPosition="left"
+                color="red"
+                as="a"
+                css={css`
+                  @media (max-width: 600px) {
+                    &&& {
+                      width: 100%;
+                    }
                   }
-                }
-              `}
-            >
-              <Icon name="hand point right" />
-              もっと詳しく！
-            </Button>
-          </Link>
-        </div>
-      </Segment>
+                `}
+              >
+                <Icon name="hand point right" />
+                もっと詳しく！
+              </Button>
+            </Link>
+          </div>
+        </Segment>
+      )}
 
       <Segment vertical></Segment>
     </>

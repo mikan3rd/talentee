@@ -5,7 +5,11 @@ import { Button, Icon, Label } from "semantic-ui-react";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
 
-export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number }> = ({ data, rankNum }) => {
+export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showKeywords?: boolean }> = ({
+  data,
+  rankNum,
+  showKeywords = true,
+}) => {
   const {
     id,
     accountRef,
@@ -29,11 +33,12 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number }> = ({
       <div
         css={css`
           position: absolute;
-          bottom: 0px;
+          bottom: 12px;
           right: 10px;
           font-weight: bold;
           font-size: 100px;
           color: lightgrey;
+          line-height: 1;
         `}
       >
         {rankNum}
@@ -43,7 +48,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number }> = ({
           css={css`
             display: block;
             border-radius: 5px;
-            padding: 20px 60px 20px 20px;
+            padding: 20px ${showKeywords ? "60px" : "20px"} 20px 20px;
             color: inherit;
             background-color: white;
             box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
@@ -105,43 +110,31 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number }> = ({
               </div>
             </div>
           </div>
-          <div
-            css={css`
-              margin-top: 10px;
-            `}
-          >
-            {keywords.map((keyword, index) => {
-              return (
-                <Label
-                  key={index}
-                  tag
-                  css={css`
-                    &&& {
-                      margin-top: 5px;
-                    }
-                  `}
-                >
-                  {keyword}
-                </Label>
-              );
-            })}
-          </div>
+          {showKeywords && (
+            <div
+              css={css`
+                margin-top: 10px;
+              `}
+            >
+              {keywords.map((keyword, index) => {
+                return (
+                  <Label
+                    key={index}
+                    tag
+                    css={css`
+                      &&& {
+                        margin-top: 5px;
+                      }
+                    `}
+                  >
+                    {keyword}
+                  </Label>
+                );
+              })}
+            </div>
+          )}
         </a>
       </Link>
-
-      <Button
-        circular
-        color="youtube"
-        icon="youtube"
-        as="a"
-        href={`https://www.youtube.com/channel/${id}`}
-        target="_black"
-        css={css`
-          position: absolute;
-          top: 20px;
-          right: 20px;
-        `}
-      />
     </div>
   );
 };
