@@ -3,6 +3,7 @@ import { css } from "@emotion/core";
 import { Icon, Label } from "semantic-ui-react";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
+import { Linkify } from "../atoms/Linkify";
 
 export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtubeData }) => {
   const {
@@ -72,7 +73,7 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
           word-break: break-word;
         `}
       >
-        {description}
+        <Linkify>{description}</Linkify>
       </p>
       <div
         css={css`
