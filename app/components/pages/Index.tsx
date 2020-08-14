@@ -11,8 +11,6 @@ export const Index: React.FC = () => {
 
   return (
     <>
-      <Segment vertical></Segment>
-
       {youtubeData && (
         <Segment vertical>
           <div

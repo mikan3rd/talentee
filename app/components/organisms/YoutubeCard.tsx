@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { css } from "@emotion/core";
-import { Button, Icon, Label } from "semantic-ui-react";
+import { Icon, Label } from "semantic-ui-react";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
 
