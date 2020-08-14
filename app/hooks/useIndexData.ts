@@ -18,11 +18,7 @@ export const useIndexData = () => {
   const getYoutubePageData = async () => {
     const db = firebase.firestore();
     const youtubeCollection = db.collection(YoutubeChannelCollectionPath);
-    const youtubeDocs = await youtubeCollection
-      .where("snippet.country", "==", "JP")
-      .orderBy("statistics.subscriberCount", "desc")
-      .limit(3)
-      .get();
+    const youtubeDocs = await youtubeCollection.orderBy("statistics.subscriberCount", "desc").limit(3).get();
     const youtubeData: IYoutubeData[] = [];
     youtubeDocs.forEach((doc) => {
       const data = doc.data() as IYoutubeData;
