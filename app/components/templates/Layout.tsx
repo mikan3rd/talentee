@@ -14,7 +14,14 @@ export const Layout: React.FC = ({ children }) => {
           background-color: #f7f7f7;
         `}
       >
-        <Container text>{children}</Container>
+        <Container
+          text
+          css={css`
+            padding: 20px 0;
+          `}
+        >
+          {children}
+        </Container>
       </div>
 
       <SemanticToastContainer position="top-center" />
