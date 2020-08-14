@@ -37,9 +37,21 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
   const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
   const accountCollection = db.collection(AccountCollectionPath);
 
+  let createNum = 0;
+  let updateNum = 0;
+  let skipNum = 0;
   const result = [];
   for (const item of channelResponse.data.items) {
-    const { id } = item;
+    const {
+      id,
+      snippet: { country },
+    } = item;
+
+    if (country !== "JP") {
+      skipNum += 1;
+      continue;
+    }
+
     const youtubeMainRef = youtubeChannelCollection.doc(id);
     const youtubeDoc = await youtubeMainRef.get();
 
@@ -71,12 +83,19 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
 
     if (youtubeDoc.exists) {
       delete youtubeData.createdAt;
+      updateNum += 1;
+    } else {
+      createNum += 1;
     }
 
     await youtubeMainRef.set(youtubeData, { merge: true });
 
     result.push(youtubeData);
   }
+
+  console.log("createNum:", createNum);
+  console.log("updateNum:", updateNum);
+  console.log("skipNum:", skipNum);
 
   return result;
 };
