@@ -35,7 +35,6 @@ export const YoutubeIndex: React.FC = () => {
               }
             `}
           >
-            <Icon name="user plus" />
             チャンネル登録者数ランキング
           </Header>
 
