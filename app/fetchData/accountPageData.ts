@@ -22,7 +22,8 @@ export const getAccountPageData = async (accountId: string) => {
   if (youtubeMainRef) {
     const youtubeDoc = await youtubeMainRef.get();
     if (youtubeDoc.exists) {
-      youtubeData = youtubeDoc.data();
+      const data = youtubeDoc.data();
+      youtubeData = { ...data, updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000) };
     }
   }
 

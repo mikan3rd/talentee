@@ -1,6 +1,7 @@
 import React from "react";
 import { css } from "@emotion/core";
 import { Icon, Label } from "semantic-ui-react";
+import dayjs from "dayjs";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
 import { Linkify } from "../atoms/Linkify";
@@ -12,7 +13,10 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
       channel: { keywords },
     },
     statistics: { subscriberCount, viewCount, videoCount },
+    updatedAt,
   } = youtubeData;
+
+  const updateAtTime = dayjs.unix(updatedAt);
   return (
     <div>
       <div
@@ -34,7 +38,6 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
         <div
           css={css`
             margin-left: 20px;
-            padding-right: 40px;
           `}
         >
           <div
@@ -45,10 +48,16 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
           >
             {title}
           </div>
+          <div>
+            <Icon name="sync" /> {updateAtTime.format("YYYY年M月D日")}
+          </div>
           <div
             css={css`
               display: flex;
               margin-top: 10px;
+              @media (max-width: 600px) {
+                display: block;
+              }
             `}
           >
             <div css={CountWrapperCss}>

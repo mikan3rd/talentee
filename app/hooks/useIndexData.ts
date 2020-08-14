@@ -9,6 +9,7 @@ export interface IYoutubeData {
   statistics: { subscriberCount: number; videoCount: number; viewCount: number };
   brandingSettings: { channel: { keywords: string[] } };
   accountRef: { id: string };
+  updatedAt: number;
 }
 
 export const useIndexData = () => {

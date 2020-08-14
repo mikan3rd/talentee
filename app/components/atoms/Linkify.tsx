@@ -10,11 +10,3 @@ const componentDecorator = (href: string, text: string, key: number) => (
 export const Linkify = React.memo(({ children }) => {
   return <ReactLinkify componentDecorator={componentDecorator}>{children}</ReactLinkify>;
 });
-
-// const TextLink = styled.a`
-//   &,
-//   &:hover {
-//     color: #4183c4;
-//     text-decoration: underline;
-//   }
-// `;

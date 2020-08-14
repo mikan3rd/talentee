@@ -15,7 +15,7 @@ export const Account: React.FC<{ accountData: IAccountData; youtubeData?: IYoutu
   const panes = [];
   if (youtubeData) {
     panes.push({
-      menuItem: { key: "youtube", icon: "youtube", content: "Youtube" },
+      menuItem: { key: "youtube", icon: "youtube", content: "YouTube" },
       render: () => (
         <Tab.Pane>
           <YoutubeDetail youtubeData={youtubeData} />
