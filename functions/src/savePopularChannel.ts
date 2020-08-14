@@ -93,9 +93,7 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
     result.push(youtubeData);
   }
 
-  console.log("createNum:", createNum);
-  console.log("updateNum:", updateNum);
-  console.log("skipNum:", skipNum);
+  console.log("createNum:", createNum, "updateNum:", updateNum, "skipNum:", skipNum);
 
   return result;
 };
