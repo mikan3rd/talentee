@@ -12,7 +12,7 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
     brandingSettings: {
       channel: { keywords },
     },
-    statistics: { subscriberCount, viewCount, videoCount },
+    statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
     updatedAt,
   } = youtubeData;
 
@@ -62,7 +62,7 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
           >
             <div css={CountWrapperCss}>
               <Icon name="user plus" css={CountIconCss} />
-              <div css={CountTextCss}>{subscriberCount.toLocaleString()}</div>
+              <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : subscriberCount.toLocaleString()}</div>
             </div>
             <div css={CountWrapperCss}>
               <Icon name="video play" css={CountIconCss} />

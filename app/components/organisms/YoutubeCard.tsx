@@ -17,7 +17,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showKe
     brandingSettings: {
       channel: { keywords },
     },
-    statistics: { subscriberCount, viewCount, videoCount },
+    statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
   } = data;
   return (
     <div
@@ -97,7 +97,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showKe
               >
                 <div css={CountWrapperCss}>
                   <Icon name="user plus" css={CountIconCss} />
-                  <div css={CountTextCss}>{subscriberCount.toLocaleString()}</div>
+                  <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : subscriberCount.toLocaleString()}</div>
                 </div>
                 <div css={CountWrapperCss}>
                   <Icon name="video play" css={CountIconCss} />
