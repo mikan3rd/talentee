@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
-import { google, youtube_v3 } from "googleapis";
 import * as dayjs from "dayjs";
 import * as functions from "firebase-functions";
+import { google, youtube_v3 } from "googleapis";
 
 import { AccountCollectionPath, YoutubeChannelCollectionPath } from "./collectionPath";
 
@@ -11,27 +11,33 @@ const { FieldValue } = admin.firestore;
 
 export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
   const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
-  const videoResponse = await service.videoCategories.list({ part: ["id", "snippet"], regionCode: "JP", hl: "ja" });
+  const videoResponse = await service.videoCategories.list({
+    part: ["id", "snippet"],
+    regionCode: "JP",
+    hl: "ja",
+  });
   const filteredItems = videoResponse.data.items.filter((item) => item.snippet.assignable);
   for (const item of filteredItems) {
     const {
-      id,
       snippet: { assignable },
     } = item;
     if (!assignable) {
       continue;
     }
-    await savePopularChannelByCategory(publishedAfter, id);
+    await savePopularChannelByCategory(publishedAfter, item);
   }
 };
 
-const savePopularChannelByCategory = async (publishedAfter: dayjs.Dayjs, videoCategoryId: string) => {
+const savePopularChannelByCategory = async (
+  publishedAfter: dayjs.Dayjs,
+  videoCategory: youtube_v3.Schema$VideoCategory,
+) => {
   const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
 
   const searchResponse = await service.search.list({
     part: ["id", "snippet"],
     type: ["video"],
-    videoCategoryId,
+    videoCategoryId: videoCategory.id,
     regionCode: "JP",
     relevanceLanguage: "ja",
     order: "viewCount",
@@ -93,11 +99,23 @@ const savePopularChannelByCategory = async (publishedAfter: dayjs.Dayjs, videoCa
     const youtubeData = {
       ...data,
       accountRef,
+      videoCategoryIds: [videoCategory.id],
+      videoCategories: [videoCategory],
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     };
 
     if (youtubeDoc.exists) {
+      const prevYoutubeData = youtubeDoc.data();
+
+      const prevVideoCategories = prevYoutubeData.videoCategories || [];
+      const nextVideoCategories = [...prevVideoCategories, videoCategory];
+      const videoCategoryIds = Array.from(new Set(nextVideoCategories.map((category) => category.id)));
+      youtubeData.videoCategoryIds = videoCategoryIds;
+      youtubeData.videoCategories = videoCategoryIds.map((categoryId) => {
+        return nextVideoCategories.find((category) => category.id === categoryId);
+      });
+
       delete youtubeData.createdAt;
       updateNum += 1;
     } else {
@@ -162,7 +180,10 @@ const formatChannelData = (item: youtube_v3.Schema$Channel) => {
     id,
     snippet,
     statistics: formattedStatistics,
-    brandingSettings: { ...brandSettingObjects, channel: { ...channnelObjects, keywords: keywordArray } },
+    brandingSettings: {
+      ...brandSettingObjects,
+      channel: { ...channnelObjects, keywords: keywordArray },
+    },
   };
   return data;
 };
