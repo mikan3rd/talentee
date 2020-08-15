@@ -8,6 +8,7 @@
     "deploy": "firebase deploy --only functions",
     "deploy:prod": "yarn deploy --force",
     "logs": "firebase functions:log",
+    "emulators": "firebase emulators:start",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix"
   },
