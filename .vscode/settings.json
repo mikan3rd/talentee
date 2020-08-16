@@ -4,11 +4,9 @@
   "editor.renderWhitespace": "all",
   "css.lint.ieHack": "warning",
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "editor.codeActionsOnSave": {
-    "editor.formatOnSave": true
-  },
   "eslint.packageManager": "yarn",
   "stylelint.enable": true,
-  "eslint.alwaysShowStatus": true,
-  "eslint.format.enable": true
+  "eslint.format.enable": true,
+  "prettier.printWidth": 120,
+  "prettier.trailingComma": "all"
 }
