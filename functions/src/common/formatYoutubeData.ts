@@ -62,6 +62,7 @@ export const formatVideoData = (item: youtube_v3.Schema$Video) => {
   return data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const toNumber = <T>(targetObject: { [key: string]: any }) => {
   const formattedObject = {} as T;
   Object.entries(targetObject).forEach(([key, value]) => {

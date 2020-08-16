@@ -15,6 +15,7 @@ import { getChannelPopularVideo } from "./getChannelPopularVideo";
 import { getTrendVideoIds } from "./getTrendVideoIds";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
+import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
 
 const REGION = "asia-northeast1" as const;
 const TIMEZONE = "Asia/Tokyo" as const;
@@ -112,3 +113,11 @@ export const deleteChannelTmp = functions.region(REGION).https.onRequest(async (
   const result = await deleteChannel();
   res.send({ result });
 });
+
+export const saveAllChannelVideoTmp = functions
+  .region(REGION)
+  .runWith({ timeoutSeconds: 540, memory: "1GB" })
+  .https.onRequest(async (req, res) => {
+    const result = await saveAllChannelVideo();
+    res.send({ result });
+  });
