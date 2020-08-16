@@ -29,10 +29,15 @@ export const savePopularVideo = async () => {
   const videoCategories = await getVideoCategories();
 
   for (const channel of channelDataArray) {
-    const { uniqueVideCategoryIds, uniqueVideCategories } = await savePopularVideoByChannel(
+    const { uniqueVideoCategoryIds, uniqueVideoCategories } = await savePopularVideoByChannel(
       channel.id,
       videoCategories,
     );
+    const channnelData = {
+      videoCategoryIds: uniqueVideoCategoryIds,
+      videoCategories: uniqueVideoCategories,
+    };
+    youtubeChannelCollection.doc(channel.id).set(channnelData, { merge: true });
   }
 };
 
@@ -62,11 +67,11 @@ const savePopularVideoByChannel = async (channelId: string, videoCategories: you
     const videoRef = youtubeVideoCollection.doc(id);
     const videoDoc = await youtubeVideoCollection.doc(id).get();
 
-    const targetVideCategory = videoCategories.find((category) => categoryId === category.id);
+    const targetVideoCategory = videoCategories.find((category) => categoryId === category.id);
 
     const videoData = {
       ...data,
-      videCategory: targetVideCategory,
+      videoCategory: targetVideoCategory,
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     };
@@ -80,8 +85,8 @@ const savePopularVideoByChannel = async (channelId: string, videoCategories: you
     videoCategoryIds.push(categoryId);
   }
 
-  const uniqueVideCategoryIds = Array.from(new Set(videoCategoryIds));
-  const uniqueVideCategories = videoCategories.filter((category) => uniqueVideCategoryIds.includes(category.id));
+  const uniqueVideoCategoryIds = Array.from(new Set(videoCategoryIds));
+  const uniqueVideoCategories = videoCategories.filter((category) => uniqueVideoCategoryIds.includes(category.id));
 
-  return { uniqueVideCategoryIds, uniqueVideCategories };
+  return { uniqueVideoCategoryIds, uniqueVideoCategories };
 };
