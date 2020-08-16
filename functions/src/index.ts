@@ -12,6 +12,7 @@ db.settings({ ignoreUndefinedProperties: true });
 import { savePopularChannel } from "./savePopularChannel";
 import { savePopularVideo } from "./savePopularVideo";
 import { getChannelPopularVideo } from "./getChannelPopularVideo";
+import { getTrendVideoIds } from "./getTrendVideoIds";
 
 const REGION = "asia-northeast1" as const;
 const TIMEZONE = "Asia/Tokyo" as const;
@@ -77,5 +78,13 @@ export const getChannelVideoTest = functions
   .runWith({ timeoutSeconds: 120, memory: "512MB" })
   .https.onRequest(async (req, res) => {
     const result = await getChannelPopularVideo("UCFOsYGDAw16cr57cCqdJdVQ");
+    res.send({ result });
+  });
+
+export const getTrendVideoIdsTest = functions
+  .region(REGION)
+  .runWith({ timeoutSeconds: 180, memory: "512MB" })
+  .https.onRequest(async (req, res) => {
+    const result = await getTrendVideoIds();
     res.send({ result });
   });
