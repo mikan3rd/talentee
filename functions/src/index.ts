@@ -13,14 +13,24 @@ import { savePopularChannel } from "./savePopularChannel";
 import { savePopularVideo } from "./savePopularVideo";
 import { getChannelPopularVideo } from "./getChannelPopularVideo";
 import { getTrendVideoIds } from "./getTrendVideoIds";
+import { saveTrendChannel } from "./saveTrendChannel";
 
 const REGION = "asia-northeast1" as const;
 const TIMEZONE = "Asia/Tokyo" as const;
 
+export const getYoutubeTrendChannelScheduler = functions
+  .region(REGION)
+  .runWith({ timeoutSeconds: 240, memory: "512MB" })
+  .pubsub.schedule("0 0 * * *")
+  .timeZone(TIMEZONE)
+  .onRun(async (context) => {
+    await saveTrendChannel();
+  });
+
 export const getYoutubePopularChannelWeekly = functions
   .region(REGION)
   .runWith({ timeoutSeconds: 120 })
-  .pubsub.schedule("0 0 * * *")
+  .pubsub.schedule("0 1 * * *")
   .timeZone(TIMEZONE)
   .onRun(async (context) => {
     const publishedAfter = dayjs().subtract(1, "week");
@@ -30,7 +40,7 @@ export const getYoutubePopularChannelWeekly = functions
 export const getYoutubePopularChannelMonthly = functions
   .region(REGION)
   .runWith({ timeoutSeconds: 120 })
-  .pubsub.schedule("0 1 * * *")
+  .pubsub.schedule("0 2 * * *")
   .timeZone(TIMEZONE)
   .onRun(async (context) => {
     const publishedAfter = dayjs().subtract(1, "month");
@@ -40,7 +50,7 @@ export const getYoutubePopularChannelMonthly = functions
 export const savePopularVideoScheduler = functions
   .region(REGION)
   .runWith({ timeoutSeconds: 300, memory: "512MB" })
-  .pubsub.schedule("0 2 * * *")
+  .pubsub.schedule("0 3 * * *")
   .timeZone(TIMEZONE)
   .onRun(async (context) => {
     await savePopularVideo();
@@ -86,5 +96,13 @@ export const getTrendVideoIdsTest = functions
   .runWith({ timeoutSeconds: 180, memory: "512MB" })
   .https.onRequest(async (req, res) => {
     const result = await getTrendVideoIds();
+    res.send({ result });
+  });
+
+export const getYoutubeTrendChannelTest = functions
+  .region(REGION)
+  .runWith({ timeoutSeconds: 240, memory: "512MB" })
+  .https.onRequest(async (req, res) => {
+    const result = await saveTrendChannel();
     res.send({ result });
   });

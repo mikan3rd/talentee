@@ -2,7 +2,7 @@ import * as puppeteer from "puppeteer";
 
 export const getTrendVideoIds = async () => {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     devtools: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
@@ -45,5 +45,7 @@ export const getTrendVideoIds = async () => {
 
   await browser.close();
 
-  return videoIds;
+  const uniqueVideoIds = Array.from(new Set(videoIds));
+
+  return uniqueVideoIds;
 };

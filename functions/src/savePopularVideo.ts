@@ -4,9 +4,9 @@ import * as dayjs from "dayjs";
 import { google, youtube_v3 } from "googleapis";
 
 import { YoutubeChannelCollectionPath, YoutubeVideoCollectionPath } from "./firebase/collectionPath";
-import { formatVideoData } from "./utils/formatYoutubeData";
+import { formatVideoData } from "./common/formatYoutubeData";
 import { getChannelPopularVideo } from "./getChannelPopularVideo";
-import { getVideoCategories } from "./utils/getVideoCategories";
+import { getVideoCategories } from "./common/getVideoCategories";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
