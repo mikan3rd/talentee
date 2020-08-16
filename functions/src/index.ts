@@ -10,30 +10,39 @@ const db = admin.firestore();
 db.settings({ ignoreUndefinedProperties: true });
 
 import { savePopularChannel } from "./savePopularChannel";
-import { getChannelPopularVideo } from "./getChannelVideo";
+import { savePopularVideo } from "./savePopularVideo";
+import { getChannelPopularVideo } from "./getChannelPopularVideo";
 
 const REGION = "asia-northeast1" as const;
+const TIMEZONE = "Asia/Tokyo" as const;
 
 export const getYoutubePopularChannelWeekly = functions
   .region(REGION)
   .runWith({ timeoutSeconds: 120 })
   .pubsub.schedule("0 0 * * *")
-  .timeZone("Asia/Tokyo")
+  .timeZone(TIMEZONE)
   .onRun(async (context) => {
     const publishedAfter = dayjs().subtract(1, "week");
-    const result = await savePopularChannel(publishedAfter);
-    return result;
+    await savePopularChannel(publishedAfter);
   });
 
 export const getYoutubePopularChannelMonthly = functions
   .region(REGION)
   .runWith({ timeoutSeconds: 120 })
   .pubsub.schedule("0 1 * * *")
-  .timeZone("Asia/Tokyo")
+  .timeZone(TIMEZONE)
   .onRun(async (context) => {
     const publishedAfter = dayjs().subtract(1, "month");
-    const result = await savePopularChannel(publishedAfter);
-    return result;
+    await savePopularChannel(publishedAfter);
+  });
+
+export const savePopularVideoScheduler = functions
+  .region(REGION)
+  .runWith({ timeoutSeconds: 300, memory: "512MB" })
+  .pubsub.schedule("0 2 * * *")
+  .timeZone(TIMEZONE)
+  .onRun(async (context) => {
+    await savePopularVideo();
   });
 
 export const getYoutubePopularChannelWeeklyTest = functions

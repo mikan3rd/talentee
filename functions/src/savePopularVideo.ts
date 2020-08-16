@@ -1,31 +1,42 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
+import * as dayjs from "dayjs";
 import { google } from "googleapis";
 
-import { YoutubeVideoCollectionPath } from "./firebase/collectionPath";
+import { YoutubeChannelCollectionPath, YoutubeVideoCollectionPath } from "./firebase/collectionPath";
 import { formatVideoData } from "./utils/formatYoutubeData";
+import { getChannelPopularVideo } from "./getChannelPopularVideo";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 const { FieldValue } = admin.firestore;
 
-export const savePopularVideo = async (channelId: string) => {
+export const savePopularVideo = async () => {
+  const db = admin.firestore();
+  const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
+
+  const now = dayjs().add(9, "hour");
+  const updatedAt = now.subtract(1, "day");
+  const docs = await youtubeChannelCollection.where("updatedAt", ">=", updatedAt).get();
+
+  const channelDataArray: FirebaseFirestore.DocumentData[] = [];
+  docs.forEach((doc) => {
+    const data = doc.data();
+    channelDataArray.push(data);
+  });
+
+  for (const channel of channelDataArray) {
+    await savePopularVideoByChannel(channel.id);
+  }
+};
+
+const savePopularVideoByChannel = async (channelId: string) => {
   const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
 
   const db = admin.firestore();
   const youtubeVideoCollection = db.collection(YoutubeVideoCollectionPath);
 
-  const videoSearchResponse = await service.search.list({
-    part: ["id", "snippet"],
-    type: ["video"],
-    regionCode: "JP",
-    relevanceLanguage: "ja",
-    order: "viewCount",
-    maxResults: 50,
-    channelId,
-  });
-
-  const videoIds = videoSearchResponse.data.items.map((item) => item.id.videoId);
+  const videoIds = await getChannelPopularVideo(channelId);
 
   const videoResponse = await service.videos.list({
     part: ["id", "snippet", "contentDetails", "statistics", "player"],
