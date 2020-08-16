@@ -3,7 +3,8 @@ import * as dayjs from "dayjs";
 import * as functions from "firebase-functions";
 import { google, youtube_v3 } from "googleapis";
 
-import { AccountCollectionPath, YoutubeChannelCollectionPath } from "./collectionPath";
+import { AccountCollectionPath, YoutubeChannelCollectionPath } from "./firebase/collectionPath";
+import { formatChannelData } from "./utils/formatYoutubeData";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
@@ -16,7 +17,8 @@ export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
     regionCode: "JP",
     hl: "ja",
   });
-  const filteredItems = videoResponse.data.items.filter((item) => item.snippet.assignable);
+  const videoCategories = videoResponse.data.items;
+  const filteredItems = videoCategories.filter((item) => item.snippet.assignable);
   for (const item of filteredItems) {
     const {
       snippet: { assignable },
@@ -56,13 +58,13 @@ const savePopularChannelByCategory = async (
   });
 
   const db = admin.firestore();
-  const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
   const accountCollection = db.collection(AccountCollectionPath);
+  const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
 
   let createNum = 0;
   let updateNum = 0;
   let skipNum = 0;
-  const result = [];
+
   for (const item of channelResponse.data.items) {
     const {
       id,
@@ -74,20 +76,26 @@ const savePopularChannelByCategory = async (
       continue;
     }
 
-    const youtubeMainRef = youtubeChannelCollection.doc(id);
-    const youtubeDoc = await youtubeMainRef.get();
+    const data = formatChannelData(item);
+    if (data.statistics.subscriberCount <= 10000 && data.statistics.viewCount <= 1000000) {
+      skipNum += 1;
+      continue;
+    }
 
-    let accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeMainRef).limit(1).get();
+    const youtubeRef = youtubeChannelCollection.doc(id);
+    const youtubeDoc = await youtubeRef.get();
+
+    let accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeRef).limit(1).get();
     if (accountDocs.empty) {
       const accountData = {
         tmpUsername: item.snippet.title,
         thumbnailUrl: item.snippet.thumbnails.medium.url,
-        youtubeMainRef,
+        youtubeMainRef: youtubeRef,
         createdAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
       };
       await accountCollection.doc().set(accountData, { merge: true });
-      accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeMainRef).limit(1).get();
+      accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeRef).limit(1).get();
     }
 
     let accountRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;
@@ -95,95 +103,22 @@ const savePopularChannelByCategory = async (
       accountRef = accountCollection.doc(doc.id);
     });
 
-    const data = formatChannelData(item);
     const youtubeData = {
       ...data,
       accountRef,
-      videoCategoryIds: [videoCategory.id],
-      videoCategories: [videoCategory],
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     };
 
     if (youtubeDoc.exists) {
-      const prevYoutubeData = youtubeDoc.data();
-
-      const prevVideoCategories = prevYoutubeData.videoCategories || [];
-      const nextVideoCategories = [...prevVideoCategories, videoCategory];
-      const videoCategoryIds = Array.from(new Set(nextVideoCategories.map((category) => category.id)));
-      youtubeData.videoCategoryIds = videoCategoryIds;
-      youtubeData.videoCategories = videoCategoryIds.map((categoryId) => {
-        return nextVideoCategories.find((category) => category.id === categoryId);
-      });
-
       delete youtubeData.createdAt;
       updateNum += 1;
     } else {
       createNum += 1;
     }
 
-    await youtubeMainRef.set(youtubeData, { merge: true });
-
-    result.push(youtubeData);
+    await youtubeRef.set(youtubeData, { merge: true });
   }
 
   console.log("createNum:", createNum, "updateNum:", updateNum, "skipNum:", skipNum);
-
-  return result;
-};
-
-const formatChannelData = (item: youtube_v3.Schema$Channel) => {
-  const {
-    id,
-    snippet,
-    statistics,
-    brandingSettings: {
-      channel: { keywords, ...channnelObjects },
-      ...brandSettingObjects
-    },
-  } = item;
-
-  const formattedStatistics = {};
-  Object.entries(statistics).forEach(([key, value]) => {
-    if (typeof value === "string" && !isNaN(Number(value))) {
-      formattedStatistics[key] = Number(value);
-    } else {
-      formattedStatistics[key] = value;
-    }
-  });
-
-  const keywordArray: string[] = [];
-  if (keywords) {
-    let tmpKeyword = "";
-    for (const keyword of keywords.split(/\s/)) {
-      const separator = '"';
-      const firstString = keyword.charAt(0);
-      const lastString = keyword.slice(-1);
-      if (firstString === separator) {
-        tmpKeyword = keyword.substr(1);
-        continue;
-      }
-      if (lastString === separator) {
-        keywordArray.push(`${tmpKeyword} ${keyword.slice(0, -1)}`);
-        tmpKeyword = "";
-        continue;
-      }
-      if (tmpKeyword) {
-        tmpKeyword += " " + keyword;
-        continue;
-      }
-      keywordArray.push(keyword);
-    }
-  }
-
-  const data = {
-    id,
-    snippet,
-    statistics: formattedStatistics,
-    brandingSettings: {
-      ...brandSettingObjects,
-      channel: { ...channnelObjects, keywords: keywordArray },
-    },
-  };
-  return data;
 };
