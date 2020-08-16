@@ -14,6 +14,7 @@ import { savePopularVideo } from "./savePopularVideo";
 import { getChannelPopularVideo } from "./getChannelPopularVideo";
 import { getTrendVideoIds } from "./getTrendVideoIds";
 import { saveTrendChannel } from "./saveTrendChannel";
+import { deleteChannel } from "./tmpFunc/deleteChannel";
 
 const REGION = "asia-northeast1" as const;
 const TIMEZONE = "Asia/Tokyo" as const;
@@ -106,3 +107,8 @@ export const getYoutubeTrendChannelTest = functions
     const result = await saveTrendChannel();
     res.send({ result });
   });
+
+export const deleteChannelTmp = functions.region(REGION).https.onRequest(async (req, res) => {
+  const result = await deleteChannel();
+  res.send({ result });
+});

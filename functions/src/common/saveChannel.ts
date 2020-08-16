@@ -45,7 +45,7 @@ export const saveChannel = async (channelIds: string[]) => {
     }
 
     const data = formatChannelData(item);
-    if (data.statistics.subscriberCount <= 10000 && data.statistics.viewCount <= 1000000) {
+    if (data.statistics.subscriberCount < 10000 && data.statistics.viewCount < 1000000) {
       skipNum += 1;
       continue;
     }
