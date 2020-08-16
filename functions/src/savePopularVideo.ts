@@ -1,11 +1,12 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import * as dayjs from "dayjs";
-import { google } from "googleapis";
+import { google, youtube_v3 } from "googleapis";
 
 import { YoutubeChannelCollectionPath, YoutubeVideoCollectionPath } from "./firebase/collectionPath";
 import { formatVideoData } from "./utils/formatYoutubeData";
 import { getChannelPopularVideo } from "./getChannelPopularVideo";
+import { getVideoCategories } from "./utils/getVideoCategories";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
@@ -25,12 +26,17 @@ export const savePopularVideo = async () => {
     channelDataArray.push(data);
   });
 
+  const videoCategories = await getVideoCategories();
+
   for (const channel of channelDataArray) {
-    await savePopularVideoByChannel(channel.id);
+    const { uniqueVideCategoryIds, uniqueVideCategories } = await savePopularVideoByChannel(
+      channel.id,
+      videoCategories,
+    );
   }
 };
 
-const savePopularVideoByChannel = async (channelId: string) => {
+const savePopularVideoByChannel = async (channelId: string, videoCategories: youtube_v3.Schema$VideoCategory[]) => {
   const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
 
   const db = admin.firestore();
@@ -56,8 +62,11 @@ const savePopularVideoByChannel = async (channelId: string) => {
     const videoRef = youtubeVideoCollection.doc(id);
     const videoDoc = await youtubeVideoCollection.doc(id).get();
 
+    const targetVideCategory = videoCategories.find((category) => categoryId === category.id);
+
     const videoData = {
       ...data,
+      videCategory: targetVideCategory,
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     };
@@ -71,5 +80,8 @@ const savePopularVideoByChannel = async (channelId: string) => {
     videoCategoryIds.push(categoryId);
   }
 
-  return { videoCategoryIds: Array.from(new Set(videoCategoryIds)) };
+  const uniqueVideCategoryIds = Array.from(new Set(videoCategoryIds));
+  const uniqueVideCategories = videoCategories.filter((category) => uniqueVideCategoryIds.includes(category.id));
+
+  return { uniqueVideCategoryIds, uniqueVideCategories };
 };

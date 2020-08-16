@@ -5,28 +5,22 @@ import { google, youtube_v3 } from "googleapis";
 
 import { AccountCollectionPath, YoutubeChannelCollectionPath } from "./firebase/collectionPath";
 import { formatChannelData } from "./utils/formatYoutubeData";
+import { getVideoCategories } from "./utils/getVideoCategories";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 const { FieldValue } = admin.firestore;
 
 export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
-  const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
-  const videoResponse = await service.videoCategories.list({
-    part: ["id", "snippet"],
-    regionCode: "JP",
-    hl: "ja",
-  });
-  const videoCategories = videoResponse.data.items;
-  const filteredItems = videoCategories.filter((item) => item.snippet.assignable);
-  for (const item of filteredItems) {
+  const videoCategories = await getVideoCategories();
+  for (const videoCategory of videoCategories) {
     const {
       snippet: { assignable },
-    } = item;
+    } = videoCategory;
     if (!assignable) {
       continue;
     }
-    await savePopularChannelByCategory(publishedAfter, item);
+    await savePopularChannelByCategory(publishedAfter, videoCategory);
   }
 };
 
