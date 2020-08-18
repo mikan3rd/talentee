@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@emotion/babel-preset-css-prop": "10.0.27",
-    "@emotion/core": "10.0.34",
+    "@emotion/core": "10.0.35",
     "dayjs": "1.8.33",
     "firebase": "7.18.0",
     "firebase-admin": "9.1.0",
