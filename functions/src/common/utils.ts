@@ -24,6 +24,7 @@ export const puppeteerOptions: puppeteer.LaunchOptions = {
     "--no-first-run",
     "--no-zygote",
     "--single-process",
+    "--proxy-server=163.43.108.114:8080",
     // "--lang=ja",
   ],
 };

@@ -1,44 +1,17 @@
-import * as functions from "firebase-functions";
-import puppeteer from "puppeteer-extra";
-import StealthPlugin = require("puppeteer-extra-plugin-stealth");
+import * as puppeteer from "puppeteer";
 
 import { puppeteerOptions } from "./common/utils";
 
-const GMAIL_ENV = functions.config().gmail;
-
 export const getTrendVideoIds = async () => {
-  const browser = await puppeteer.use(StealthPlugin()).launch(puppeteerOptions);
+  const browser = await puppeteer.launch(puppeteerOptions);
   const page = await browser.newPage();
 
-  // await page.setUserAgent(
-  //   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
-  // );
-
-  // await page.setExtraHTTPHeaders({
-  //   "Accept-Language": "ja-JP",
-  // });
-
-  const topUrl = `https://www.youtube.com`;
-  await page.goto(topUrl);
-  const LoginSelector = "#masthead-container #buttons ytd-button-renderer a" as const;
-  await page.waitForSelector(LoginSelector, { timeout: 1000 * 60 });
-  await page.click(LoginSelector);
-
-  const MailSelector = "input[type=email]" as const;
-  await page.waitForSelector(MailSelector);
-  await page.type(MailSelector, GMAIL_ENV.email);
-  await page.keyboard.press("Enter");
-
-  const PasswordSelector = "input[type=password]" as const;
-  await page.waitFor(1000 * 5);
-  await page.waitForSelector(PasswordSelector);
-  await page.type(PasswordSelector, GMAIL_ENV.pass);
-  await page.keyboard.press("Enter");
-
-  await page.waitForSelector("div#start");
+  await page.setUserAgent(
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+  );
 
   const trendUrl = `https://www.youtube.com/feed/trending`;
-  await page.goto(trendUrl);
+  await page.goto(trendUrl, { timeout: 1000 * 120 });
 
   const SubMenuSelector = "#sub-menu #contents a" as const;
   await page.waitForSelector(SubMenuSelector);

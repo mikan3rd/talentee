@@ -24,7 +24,7 @@ const TIMEZONE = "Asia/Tokyo" as const;
 
 export const getYoutubeTrendChannelScheduler = functions
   .region(REGION)
-  .runWith({ timeoutSeconds: 240, memory: "1GB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .pubsub.schedule("0 0 * * *")
   .timeZone(TIMEZONE)
   .onRun(async (context) => {
@@ -105,7 +105,7 @@ export const getChannelVideoTest = functions
 
 export const getTrendVideoIdsTest = functions
   .region(REGION)
-  .runWith({ timeoutSeconds: 180, memory: "1GB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .https.onRequest(async (req, res) => {
     const result = await getTrendVideoIds();
     res.send({ result });
@@ -113,7 +113,7 @@ export const getTrendVideoIdsTest = functions
 
 export const getYoutubeTrendChannelTest = functions
   .region(REGION)
-  .runWith({ timeoutSeconds: 240, memory: "1GB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .https.onRequest(async (req, res) => {
     const result = await saveTrendChannel();
     res.send({ result });
