@@ -9,8 +9,10 @@ admin.initializeApp();
 const db = admin.firestore();
 db.settings({ ignoreUndefinedProperties: true });
 
+import { PopularVideoJsonType, PopularVideoTopic } from "./firebase/topic";
 import { savePopularChannel } from "./savePopularChannel";
-import { savePopularVideo } from "./savePopularVideo";
+import { updateRecentVideo } from "./updateRecentVideo";
+import { updateVideo } from "./updateVideo";
 import { getChannelPopularVideo } from "./getChannelPopularVideo";
 import { getTrendVideoIds } from "./getTrendVideoIds";
 import { saveTrendChannel } from "./saveTrendChannel";
@@ -22,7 +24,7 @@ const TIMEZONE = "Asia/Tokyo" as const;
 
 export const getYoutubeTrendChannelScheduler = functions
   .region(REGION)
-  .runWith({ timeoutSeconds: 240, memory: "512MB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .pubsub.schedule("0 0 * * *")
   .timeZone(TIMEZONE)
   .onRun(async (context) => {
@@ -49,13 +51,21 @@ export const getYoutubePopularChannelMonthly = functions
     await savePopularChannel(publishedAfter);
   });
 
-export const savePopularVideoScheduler = functions
+export const updateRecentVideoScheduler = functions
   .region(REGION)
   .runWith({ timeoutSeconds: 300, memory: "512MB" })
   .pubsub.schedule("0 3 * * *")
   .timeZone(TIMEZONE)
   .onRun(async (context) => {
-    await savePopularVideo();
+    await updateRecentVideo();
+  });
+
+export const updateVideoPubSub = functions
+  .region(REGION)
+  .runWith({ timeoutSeconds: 120, memory: "2GB" })
+  .pubsub.topic(PopularVideoTopic)
+  .onPublish(async (message) => {
+    return await updateVideo(message.json as PopularVideoJsonType);
   });
 
 export const getYoutubePopularChannelWeeklyTest = functions
@@ -95,7 +105,7 @@ export const getChannelVideoTest = functions
 
 export const getTrendVideoIdsTest = functions
   .region(REGION)
-  .runWith({ timeoutSeconds: 180, memory: "512MB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .https.onRequest(async (req, res) => {
     const result = await getTrendVideoIds();
     res.send({ result });
@@ -103,9 +113,17 @@ export const getTrendVideoIdsTest = functions
 
 export const getYoutubeTrendChannelTest = functions
   .region(REGION)
-  .runWith({ timeoutSeconds: 240, memory: "512MB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .https.onRequest(async (req, res) => {
     const result = await saveTrendChannel();
+    res.send({ result });
+  });
+
+export const updateRecentVideoTest = functions
+  .region(REGION)
+  .runWith({ timeoutSeconds: 300, memory: "512MB" })
+  .https.onRequest(async (req, res) => {
+    const result = await updateRecentVideo();
     res.send({ result });
   });
 

@@ -1,12 +1,14 @@
 import * as puppeteer from "puppeteer";
 
+import { puppeteerOptions } from "./common/utils";
+
 export const getChannelPopularVideo = async (channelId: string) => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    devtools: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+  const browser = await puppeteer.launch(puppeteerOptions);
   const page = await browser.newPage();
+
+  // await page.setExtraHTTPHeaders({
+  //   "Accept-Language": "ja-JP",
+  // });
 
   const targetChannelUrl = `https://www.youtube.com/channel/${channelId}/videos?sort=p`;
   await page.goto(targetChannelUrl);
@@ -29,5 +31,6 @@ export const getChannelPopularVideo = async (channelId: string) => {
   await browser.close();
 
   const uniqueVideoIds = Array.from(new Set(videoIds));
+  console.log("channelPopularVideoIds:", uniqueVideoIds);
   return uniqueVideoIds;
 };
