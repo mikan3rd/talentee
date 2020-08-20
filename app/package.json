@@ -15,7 +15,7 @@
     "@emotion/core": "10.0.35",
     "dayjs": "1.8.34",
     "firebase": "7.18.0",
-    "firebase-admin": "9.1.0",
+    "firebase-admin": "9.1.1",
     "next": "9.5.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",

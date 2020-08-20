@@ -19,7 +19,7 @@
   "dependencies": {
     "@google-cloud/pubsub": "2.5.0",
     "dayjs": "1.8.34",
-    "firebase-admin": "9.1.0",
+    "firebase-admin": "9.1.1",
     "firebase-functions": "3.10.0",
     "googleapis": "58.0.0",
     "puppeteer": "5.2.1"
