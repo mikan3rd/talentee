@@ -45,6 +45,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showKe
       </div>
       <Link href={`/account/${accountRef.id}`} passHref>
         <a
+          target="_blank"
           css={css`
             display: block;
             border-radius: 5px;
