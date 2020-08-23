@@ -14,6 +14,7 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
     },
     statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
     updatedAt,
+    videoCategories,
   } = youtubeData;
 
   const updateAtTime = dayjs.unix(updatedAt);
@@ -84,22 +85,26 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
       >
         <Linkify>{description}</Linkify>
       </p>
-      <div
-        css={css`
-          margin-top: 10px;
-        `}
-      >
+
+      {videoCategories && (
+        <div css={LabelWrapeerCss}>
+          {videoCategories.map((category, index) => {
+            const {
+              snippet: { title },
+            } = category;
+            return (
+              <Label key={index} tag color="blue" css={LabelCss}>
+                {title}
+              </Label>
+            );
+          })}
+        </div>
+      )}
+
+      <div css={LabelWrapeerCss}>
         {keywords.map((keyword, index) => {
           return (
-            <Label
-              key={index}
-              tag
-              css={css`
-                &&& {
-                  margin-top: 5px;
-                }
-              `}
-            >
+            <Label key={index} tag css={LabelCss}>
               {keyword}
             </Label>
           );
@@ -129,4 +134,17 @@ const CountIconCss = css`
 
 const CountTextCss = css`
   margin-left: 2px;
+`;
+
+const LabelWrapeerCss = css`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const LabelCss = css`
+  &&& {
+    margin: 5px 10px 0 12px;
+  }
 `;
