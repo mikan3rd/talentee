@@ -90,7 +90,7 @@ export const Index: React.FC = () => {
             `}
           >
             {youtubeData.map((data, index) => {
-              return <YoutubeCard key={data.id} data={data} rankNum={index + 1} showKeywords={false} />;
+              return <YoutubeCard key={data.id} data={data} rankNum={index + 1} showDetails={false} />;
             })}
           </div>
 

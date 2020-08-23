@@ -9,6 +9,7 @@ export interface IYoutubeData {
   statistics: { subscriberCount: number; videoCount: number; viewCount: number; hiddenSubscriberCount: boolean };
   brandingSettings: { channel: { keywords: string[] } };
   accountRef: { id: string };
+  videoCategories: { snippet: { title: string } }[];
   updatedAt: number;
 }
 

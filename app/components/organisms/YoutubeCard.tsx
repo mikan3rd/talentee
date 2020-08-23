@@ -5,19 +5,22 @@ import { Icon, Label } from "semantic-ui-react";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
 
-export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showKeywords?: boolean }> = ({
+const ketwordNum = 10;
+
+export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDetails?: boolean }> = ({
   data,
   rankNum,
-  showKeywords = true,
+  showDetails = true,
 }) => {
   const {
     id,
     accountRef,
-    snippet: { title, thumbnails },
+    snippet: { title, thumbnails, description },
     brandingSettings: {
       channel: { keywords },
     },
     statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
+    videoCategories,
   } = data;
   return (
     <div
@@ -49,7 +52,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showKe
           css={css`
             display: block;
             border-radius: 5px;
-            padding: 20px ${showKeywords ? "60px" : "20px"} 20px 20px;
+            padding: 20px ${showDetails ? "60px" : "20px"} 20px 20px;
             color: inherit;
             background-color: white;
             box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
@@ -111,27 +114,59 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showKe
               </div>
             </div>
           </div>
-          {showKeywords && (
-            <div
+
+          {description && (
+            <p
               css={css`
                 margin-top: 10px;
+                white-space: pre-wrap;
+                word-break: break-word;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                padding-right: ${showDetails ? "0" : "50px"};
               `}
             >
-              {keywords.map((keyword, index) => {
+              {description}
+            </p>
+          )}
+
+          {showDetails && videoCategories && (
+            <div css={LabelWrapeerCss}>
+              {videoCategories.map((category, index) => {
+                const {
+                  snippet: { title },
+                } = category;
                 return (
-                  <Label
-                    key={index}
-                    tag
-                    css={css`
-                      &&& {
-                        margin-top: 5px;
-                      }
-                    `}
-                  >
+                  <Label key={index} tag color="blue" css={LabelCss}>
+                    {title}
+                  </Label>
+                );
+              })}
+            </div>
+          )}
+
+          {showDetails && (
+            <div css={LabelWrapeerCss}>
+              {keywords.slice(0, ketwordNum - 1).map((keyword, index) => {
+                return (
+                  <Label key={index} tag css={LabelCss}>
                     {keyword}
                   </Label>
                 );
               })}
+              {keywords.length > ketwordNum && (
+                <div
+                  css={css`
+                    margin-top: 5px;
+                    color: #00000099;
+                    font-weight: bold;
+                  `}
+                >
+                  他{keywords.length}件
+                </div>
+              )}
             </div>
           )}
         </a>
@@ -160,4 +195,17 @@ const CountIconCss = css`
 
 const CountTextCss = css`
   margin-left: 2px;
+`;
+
+const LabelWrapeerCss = css`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const LabelCss = css`
+  &&& {
+    margin: 5px 10px 0 12px;
+  }
 `;
