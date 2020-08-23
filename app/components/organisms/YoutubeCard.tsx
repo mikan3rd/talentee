@@ -33,26 +33,14 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
         }
       `}
     >
-      <div
-        css={css`
-          position: absolute;
-          bottom: 12px;
-          right: 10px;
-          font-weight: bold;
-          font-size: 100px;
-          color: lightgrey;
-          line-height: 1;
-        `}
-      >
-        {rankNum}
-      </div>
       <Link href={`/account/${accountRef.id}`} passHref>
         <a
           target="_blank"
           css={css`
+            position: relative;
             display: block;
             border-radius: 5px;
-            padding: 20px ${showDetails ? "60px" : "20px"} 20px 20px;
+            padding: 20px;
             color: inherit;
             background-color: white;
             box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
@@ -61,6 +49,19 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
             }
           `}
         >
+          <div
+            css={css`
+              position: absolute;
+              bottom: 12px;
+              right: 10px;
+              font-weight: bold;
+              font-size: 100px;
+              color: lightgrey;
+              line-height: 1;
+            `}
+          >
+            {rankNum}
+          </div>
           <div
             css={css`
               display: flex;
@@ -118,6 +119,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
           {description && (
             <p
               css={css`
+                position: relative;
                 margin-top: 10px;
                 white-space: pre-wrap;
                 word-break: break-word;
@@ -147,7 +149,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
             </div>
           )}
 
-          {showDetails && (
+          {showDetails && keywords.length > 0 && (
             <div css={LabelWrapeerCss}>
               {keywords.slice(0, ketwordNum - 1).map((keyword, index) => {
                 return (
@@ -198,6 +200,7 @@ const CountTextCss = css`
 `;
 
 const LabelWrapeerCss = css`
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

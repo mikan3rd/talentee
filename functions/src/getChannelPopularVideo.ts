@@ -31,6 +31,6 @@ export const getChannelPopularVideo = async (channelId: string) => {
   await browser.close();
 
   const uniqueVideoIds = Array.from(new Set(videoIds));
-  console.log("channelPopularVideoIds:", uniqueVideoIds);
+  // console.log("channelPopularVideoIds:", uniqueVideoIds);
   return uniqueVideoIds;
 };

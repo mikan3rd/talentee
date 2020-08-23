@@ -66,8 +66,6 @@ export const YoutubeIndex: React.FC = () => {
           </Button>
         </Segment>
       )}
-
-      <Segment vertical></Segment>
     </>
   );
 };
