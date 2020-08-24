@@ -3,13 +3,14 @@ import { css } from "@emotion/core";
 import { Button, Tab } from "semantic-ui-react";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
-import { IAccountData } from "../../fetchData/accountPageData";
+import { IAccountData, IYoutubeVideoData } from "../../fetchData/accountPageData";
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 
-export const Account: React.FC<{ accountData: IAccountData; youtubeData?: IYoutubeData }> = ({
-  accountData,
-  youtubeData,
-}) => {
+export const Account: React.FC<{
+  accountData: IAccountData;
+  youtubeData?: IYoutubeData;
+  youtubePopularVideos: IYoutubeVideoData[];
+}> = ({ accountData, youtubeData, youtubePopularVideos }) => {
   const { tmpUsername, thumbnailUrl } = accountData;
 
   const panes = [];
@@ -18,7 +19,7 @@ export const Account: React.FC<{ accountData: IAccountData; youtubeData?: IYoutu
       menuItem: { key: "youtube", icon: "youtube", content: "YouTube" },
       render: () => (
         <Tab.Pane>
-          <YoutubeDetail youtubeData={youtubeData} />
+          <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
         </Tab.Pane>
       ),
     });

@@ -4,9 +4,13 @@ import { Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
+import { IYoutubeVideoData } from "../../fetchData/accountPageData";
 import { Linkify } from "../atoms/Linkify";
 
-export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtubeData }) => {
+export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] }> = ({
+  youtubeData,
+  youtubePopularVideos,
+}) => {
   const {
     snippet: { title, thumbnails, description },
     brandingSettings: {
