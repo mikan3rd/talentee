@@ -34,6 +34,7 @@ export const Account: React.FC<{ accountData: IAccountData; youtubeData?: IYoutu
       >
         <img
           src={thumbnailUrl}
+          alt={tmpUsername}
           css={css`
             width: 120px;
             height: 120px;

@@ -20,9 +20,11 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
     return null;
   }
 
+  const { tmpUsername } = accountData;
+
   return (
     <>
-      <Meta title={accountData.tmpUsername} />
+      <Meta title={tmpUsername} description={`${tmpUsername} のまとめページはコチラ！`} />
 
       <Breadcrumb size="big">
         <TopSection />
