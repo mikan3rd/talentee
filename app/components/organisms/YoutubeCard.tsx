@@ -40,7 +40,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
             position: relative;
             display: block;
             border-radius: 5px;
-            padding: 20px;
+            padding: 15px;
             color: inherit;
             background-color: white;
             box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
@@ -72,15 +72,15 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
                 src={thumbnails.medium.url}
                 alt={title}
                 css={css`
-                  width: 80px;
-                  height: 80px;
+                  width: 64px;
+                  height: 64px;
                   border-radius: 50%;
                 `}
               />
             </div>
             <div
               css={css`
-                margin-left: 20px;
+                margin-left: 10px;
               `}
             >
               <div
@@ -128,6 +128,9 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
                 -webkit-line-clamp: 2;
                 overflow: hidden;
                 padding-right: ${showDetails ? "0" : "50px"};
+                @media (max-width: 600px) {
+                  -webkit-line-clamp: 4;
+                }
               `}
             >
               {description}

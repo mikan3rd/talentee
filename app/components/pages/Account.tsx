@@ -29,21 +29,20 @@ export const Account: React.FC<{ accountData: IAccountData; youtubeData?: IYoutu
       <div
         css={css`
           display: flex;
-          align-items: center;
         `}
       >
         <img
           src={thumbnailUrl}
           alt={tmpUsername}
           css={css`
-            width: 120px;
-            height: 120px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
           `}
         />
         <div
           css={css`
-            margin-left: 20px;
+            margin-left: 10px;
           `}
         >
           <h1>{tmpUsername}</h1>

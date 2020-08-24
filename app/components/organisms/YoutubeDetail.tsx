@@ -30,15 +30,15 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
             src={thumbnails.medium.url}
             alt={title}
             css={css`
-              width: 80px;
-              height: 80px;
+              width: 64px;
+              height: 64px;
               border-radius: 50%;
             `}
           />
         </div>
         <div
           css={css`
-            margin-left: 20px;
+            margin-left: 10px;
           `}
         >
           <div
