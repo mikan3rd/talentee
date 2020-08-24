@@ -62,7 +62,7 @@ export const updateRecentVideoScheduler = functions
 
 export const updateVideoPubSub = functions
   .region(REGION)
-  .runWith({ timeoutSeconds: 120, memory: "2GB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .pubsub.topic(PopularVideoTopic)
   .onPublish(async (message) => {
     return await updateVideo(message.json as PopularVideoJsonType);

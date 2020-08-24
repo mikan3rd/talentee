@@ -1,9 +1,9 @@
 import * as puppeteer from "puppeteer";
 
-import { puppeteerOptions } from "./common/utils";
+import { getPuppeteerOptions } from "./common/utils";
 
 export const getTrendVideoIds = async () => {
-  const browser = await puppeteer.launch(puppeteerOptions);
+  const browser = await puppeteer.launch(getPuppeteerOptions(true));
   const page = await browser.newPage();
 
   await page.setUserAgent(

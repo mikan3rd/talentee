@@ -13,10 +13,8 @@ export const chunk = (arr: any[], len: number) => {
   return chunks;
 };
 
-export const puppeteerOptions: puppeteer.LaunchOptions = {
-  headless: true,
-  devtools: false,
-  args: [
+export const getPuppeteerOptions = (useProxy?: boolean) => {
+  const args = [
     "--no-sandbox",
     "--disable-setuid-sandbox",
     "-–disable-dev-shm-usage",
@@ -24,7 +22,15 @@ export const puppeteerOptions: puppeteer.LaunchOptions = {
     "--no-first-run",
     "--no-zygote",
     "--single-process",
-    "--proxy-server=163.43.108.114:8080",
     // "--lang=ja",
-  ],
+  ];
+  if (useProxy) {
+    args.push("--proxy-server=163.43.108.114:8080");
+  }
+  const options: puppeteer.LaunchOptions = {
+    headless: true,
+    devtools: false,
+    args,
+  };
+  return options;
 };

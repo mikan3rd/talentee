@@ -1,9 +1,9 @@
 import * as puppeteer from "puppeteer";
 
-import { puppeteerOptions } from "./common/utils";
+import { getPuppeteerOptions } from "./common/utils";
 
 export const getChannelPopularVideo = async (channelId: string) => {
-  const browser = await puppeteer.launch(puppeteerOptions);
+  const browser = await puppeteer.launch(getPuppeteerOptions());
   const page = await browser.newPage();
 
   // await page.setExtraHTTPHeaders({
