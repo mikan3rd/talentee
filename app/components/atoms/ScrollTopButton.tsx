@@ -35,7 +35,7 @@ export const ScrollTopButton: React.FC = () => {
           position: fixed;
           visibility: ${isTop ? "hidden" : "visible"};
           opacity: ${isTop ? 0 : 1};
-          bottom: 10px;
+          bottom: 50px;
           right: 10px;
           transition: all 0.5s ease;
         }
