@@ -121,15 +121,17 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: num
             )}
           </div>
         </div>
-        <div>
-          {tags.map((tag, index) => {
-            return (
-              <Label key={index} tag css={LabelCss}>
-                {tag}
-              </Label>
-            );
-          })}
-        </div>
+        {tags && (
+          <div>
+            {tags.map((tag, index) => {
+              return (
+                <Label key={index} tag css={LabelCss}>
+                  {tag}
+                </Label>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
