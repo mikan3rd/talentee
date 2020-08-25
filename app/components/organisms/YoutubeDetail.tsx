@@ -7,6 +7,8 @@ import { IYoutubeData } from "../../hooks/useIndexData";
 import { IYoutubeVideoData } from "../../fetchData/accountPageData";
 import { Linkify } from "../atoms/Linkify";
 
+import { YoutubeVideoCard } from "./YoutubeVideoCard";
+
 export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] }> = ({
   youtubeData,
   youtubePopularVideos,
@@ -132,121 +134,9 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
               人気動画TOP3
             </Header>
             <div>
-              {youtubePopularVideos.map((video) => {
-                const {
-                  id,
-                  snippet: { title, publishedAt, tags },
-                  statistics: { viewCount, likeCount, dislikeCount },
-                } = video;
-                const publishedAtTime = dayjs(publishedAt);
-                const totalCount = likeCount + dislikeCount;
-                return (
-                  <div
-                    key={id}
-                    css={css`
-                      display: flex;
-                      padding: 10px 0;
-                      &:first-of-type {
-                        border-top: none;
-                      }
-                      @media (max-width: 600px) {
-                        display: block;
-                      }
-                    `}
-                  >
-                    <div
-                      css={css`
-                        width: 300px;
-                        flex-shrink: 0;
-                        @media (max-width: 600px) {
-                          width: 100%;
-                        }
-                      `}
-                    >
-                      <div
-                        css={css`
-                          position: relative;
-                          width: 100%;
-                          padding-top: 56.25%;
-                        `}
-                      >
-                        <iframe
-                          src={`//www.youtube.com/embed/${id}`}
-                          frameBorder={0}
-                          allow="fullscreen"
-                          css={css`
-                            position: absolute;
-                            top: 0;
-                            right: 0;
-                            width: 100%;
-                            height: 100%;
-                          `}
-                        />
-                      </div>
-                    </div>
-                    <div
-                      css={css`
-                        margin-left: 10px;
-                        @media (max-width: 600px) {
-                          margin-left: 0;
-                          margin-top: 5px;
-                        }
-                      `}
-                    >
-                      <div>{publishedAtTime.format("YYYY年M月D日")}</div>
-                      <div
-                        css={css`
-                          font-size: 16px;
-                          font-weight: bold;
-                        `}
-                      >
-                        {title}
-                      </div>
-                      <div
-                        css={css`
-                          display: block;
-                        `}
-                      >
-                        <div css={CountWrapperCss}>
-                          <Icon name="video play" css={CountIconCss} />
-                          <div css={CountTextCss}>{viewCount.toLocaleString()}回</div>
-                        </div>
-                        <div
-                          css={css`
-                            display: flex;
-                          `}
-                        >
-                          {likeCount && (
-                            <div css={CountWrapperCss}>
-                              <Icon name="thumbs up" css={CountIconCss} />
-                              <div css={CountTextCss}>
-                                {likeCount.toLocaleString()} ({Math.round((likeCount / totalCount) * 100)}%)
-                              </div>
-                            </div>
-                          )}
-                          {dislikeCount && (
-                            <div css={CountWrapperCss}>
-                              <Icon name="thumbs down" css={CountIconCss} />
-                              <div css={CountTextCss}>
-                                {dislikeCount.toLocaleString()} ({Math.round((dislikeCount / totalCount) * 100)}%)
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div>
-                        {tags.map((tag, index) => {
-                          return (
-                            <Label key={index} tag css={LabelCss}>
-                              {tag}
-                            </Label>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {youtubePopularVideos.map((video) => (
+                <YoutubeVideoCard key={video.id} video={video} />
+              ))}
             </div>
           </div>
         </>
