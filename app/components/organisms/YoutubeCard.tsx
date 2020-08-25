@@ -193,14 +193,11 @@ const CountWrapperCss = css`
 const CountIconCss = css`
   &&& {
     line-height: 1;
-    width: 20px;
     display: flex;
   }
 `;
 
-const CountTextCss = css`
-  margin-left: 2px;
-`;
+const CountTextCss = css``;
 
 const LabelWrapeerCss = css`
   position: relative;

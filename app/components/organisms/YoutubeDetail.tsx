@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Icon, Label } from "semantic-ui-react";
+import { Header, Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
@@ -71,7 +71,9 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
             </div>
             <div css={CountWrapperCss}>
               <Icon name="video play" css={CountIconCss} />
-              <div css={CountTextCss}>{viewCount.toLocaleString()}</div>
+              <div css={CountTextCss}>
+                {viewCount.toLocaleString()} (平均 {Math.round(viewCount / (videoCount | 1)).toLocaleString()})
+              </div>
             </div>
             <div css={CountWrapperCss}>
               <Icon name="video" css={CountIconCss} />
@@ -114,6 +116,84 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
           );
         })}
       </div>
+
+      {youtubePopularVideos.length > 0 && (
+        <div>
+          <Header
+            css={css`
+              &&& {
+                margin: 20px 0 0 0;
+              }
+            `}
+          >
+            <Icon name="video" />
+            人気動画TOP3
+          </Header>
+          {youtubePopularVideos.map((video) => {
+            const {
+              id,
+              snippet: { title, publishedAt },
+              statistics: { viewCount, likeCount, dislikeCount },
+            } = video;
+            const publishedAtTime = dayjs(publishedAt);
+            const totalCount = likeCount + dislikeCount;
+            return (
+              <div
+                key={id}
+                css={css`
+                  display: flex;
+                  margin-top: 10px;
+                `}
+              >
+                <iframe src={`//www.youtube.com/embed/${id}`} frameBorder={0} allow="fullscreen" />
+                <div
+                  css={css`
+                    margin-left: 10px;
+                  `}
+                >
+                  <div>{publishedAtTime.format("YYYY年M月D日")}</div>
+                  <div
+                    css={css`
+                      font-weight: bold;
+                    `}
+                  >
+                    {title}
+                  </div>
+                  <div
+                    css={css`
+                      display: flex;
+                      @media (max-width: 600px) {
+                        display: block;
+                      }
+                    `}
+                  >
+                    <div css={CountWrapperCss}>
+                      <Icon name="video play" css={CountIconCss} />
+                      <div css={CountTextCss}>{viewCount.toLocaleString()}</div>
+                    </div>
+                    {likeCount && (
+                      <div css={CountWrapperCss}>
+                        <Icon name="thumbs up" css={CountIconCss} />
+                        <div css={CountTextCss}>
+                          {likeCount.toLocaleString()} ({Math.round((likeCount / totalCount) * 100)}%)
+                        </div>
+                      </div>
+                    )}
+                    {dislikeCount && (
+                      <div css={CountWrapperCss}>
+                        <Icon name="thumbs down" css={CountIconCss} />
+                        <div css={CountTextCss}>
+                          {dislikeCount.toLocaleString()} ({Math.round((dislikeCount / totalCount) * 100)}%)
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
@@ -131,14 +211,11 @@ const CountWrapperCss = css`
 const CountIconCss = css`
   &&& {
     line-height: 1;
-    width: 20px;
     display: flex;
   }
 `;
 
-const CountTextCss = css`
-  margin-left: 2px;
-`;
+const CountTextCss = css``;
 
 const LabelWrapeerCss = css`
   display: flex;
