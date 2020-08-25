@@ -4,7 +4,7 @@ import Router from "next/router";
 import Link from "next/link";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { IAccountData, getAccountPageData } from "../../fetchData/accountPageData";
+import { IAccountData, IYoutubeVideoData, getAccountPageData } from "../../fetchData/accountPageData";
 import { Account } from "../../components/pages/Account";
 import { Meta } from "../../components/templates/Meta";
 import { IYoutubeData } from "../../hooks/useIndexData";
@@ -13,7 +13,13 @@ import { AccountSection, TopSection } from "../../components/templates/Breadcrum
 const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> = ({
   data: { accountId, jsonData },
 }) => {
-  const { accountData, youtubeData }: { accountData: IAccountData; youtubeData: IYoutubeData } = JSON.parse(jsonData);
+  const {
+    accountData,
+    youtubeData,
+    youtubePopularVideos,
+  }: { accountData: IAccountData; youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] } = JSON.parse(
+    jsonData,
+  );
 
   if (!accountData) {
     Router.push("/");
@@ -40,7 +46,7 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
 
       <Divider />
 
-      <Account accountData={accountData} youtubeData={youtubeData} />
+      <Account accountData={accountData} youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
     </>
   );
 };

@@ -1,12 +1,18 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Icon, Label } from "semantic-ui-react";
+import { Divider, Header, Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { IYoutubeData } from "../../hooks/useIndexData";
+import { IYoutubeVideoData } from "../../fetchData/accountPageData";
 import { Linkify } from "../atoms/Linkify";
 
-export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtubeData }) => {
+import { YoutubeVideoCard } from "./YoutubeVideoCard";
+
+export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] }> = ({
+  youtubeData,
+  youtubePopularVideos,
+}) => {
   const {
     snippet: { title, thumbnails, description },
     brandingSettings: {
@@ -63,15 +69,17 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
           >
             <div css={CountWrapperCss}>
               <Icon name="user plus" css={CountIconCss} />
-              <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : subscriberCount.toLocaleString()}</div>
+              <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : `${subscriberCount.toLocaleString()}人`}</div>
             </div>
             <div css={CountWrapperCss}>
               <Icon name="video play" css={CountIconCss} />
-              <div css={CountTextCss}>{viewCount.toLocaleString()}</div>
+              <div css={CountTextCss}>
+                {viewCount.toLocaleString()}回 (平均 {Math.round(viewCount / (videoCount | 1)).toLocaleString()}回)
+              </div>
             </div>
             <div css={CountWrapperCss}>
               <Icon name="video" css={CountIconCss} />
-              <div css={CountTextCss}>{videoCount.toLocaleString()}</div>
+              <div css={CountTextCss}>{videoCount.toLocaleString()}本</div>
             </div>
           </div>
         </div>
@@ -110,6 +118,29 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData }> = ({ youtube
           );
         })}
       </div>
+
+      {youtubePopularVideos.length > 0 && (
+        <>
+          <Divider />
+          <div>
+            <Header
+              css={css`
+                &&& {
+                  margin: 20px 0 0 0;
+                }
+              `}
+            >
+              <Icon name="video" />
+              人気動画TOP3
+            </Header>
+            <div>
+              {youtubePopularVideos.map((video, index) => (
+                <YoutubeVideoCard key={video.id} video={video} rankNum={index + 1} />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -127,14 +158,11 @@ const CountWrapperCss = css`
 const CountIconCss = css`
   &&& {
     line-height: 1;
-    width: 20px;
     display: flex;
   }
 `;
 
-const CountTextCss = css`
-  margin-left: 2px;
-`;
+const CountTextCss = css``;
 
 const LabelWrapeerCss = css`
   display: flex;
