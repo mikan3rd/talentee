@@ -3,6 +3,8 @@ import { css } from "@emotion/core";
 import { Container } from "semantic-ui-react";
 import { SemanticToastContainer } from "react-semantic-toasts";
 
+import { ScrollTopButton } from "../atoms/ScrollTopButton";
+
 export const Layout: React.FC = ({ children }) => {
   return (
     <>
@@ -22,6 +24,8 @@ export const Layout: React.FC = ({ children }) => {
         >
           {children}
         </Container>
+
+        <ScrollTopButton />
       </div>
 
       <SemanticToastContainer position="top-center" />
