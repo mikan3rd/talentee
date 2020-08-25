@@ -134,8 +134,8 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
               人気動画TOP3
             </Header>
             <div>
-              {youtubePopularVideos.map((video) => (
-                <YoutubeVideoCard key={video.id} video={video} />
+              {youtubePopularVideos.map((video, index) => (
+                <YoutubeVideoCard key={video.id} video={video} rankNum={index + 1} />
               ))}
             </div>
           </div>

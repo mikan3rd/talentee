@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 import { IYoutubeVideoData } from "../../fetchData/accountPageData";
 
-export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData }> = ({ video }) => {
+export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: number }> = ({ video, rankNum }) => {
   const {
     id,
     snippet: { title, publishedAt, tags },
@@ -59,6 +59,7 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData }> = ({ video
       </div>
       <div
         css={css`
+          position: relative;
           margin-left: 10px;
           @media (max-width: 600px) {
             margin-left: 0;
@@ -66,6 +67,19 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData }> = ({ video
           }
         `}
       >
+        <div
+          css={css`
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            font-weight: bold;
+            font-size: 100px;
+            color: lightgrey;
+            line-height: 1;
+          `}
+        >
+          {rankNum}
+        </div>
         <div>{publishedAtTime.format("YYYY年M月D日")}</div>
         <div
           css={css`
