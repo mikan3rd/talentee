@@ -102,15 +102,17 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
               >
                 <div css={CountWrapperCss}>
                   <Icon name="user plus" css={CountIconCss} />
-                  <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : subscriberCount.toLocaleString()}</div>
+                  <div css={CountTextCss}>
+                    {hiddenSubscriberCount ? "非表示" : `${subscriberCount.toLocaleString()}人`}
+                  </div>
                 </div>
                 <div css={CountWrapperCss}>
                   <Icon name="video play" css={CountIconCss} />
-                  <div css={CountTextCss}>{viewCount.toLocaleString()}</div>
+                  <div css={CountTextCss}>{viewCount.toLocaleString()}回</div>
                 </div>
                 <div css={CountWrapperCss}>
                   <Icon name="video" css={CountIconCss} />
-                  <div css={CountTextCss}>{videoCount.toLocaleString()}</div>
+                  <div css={CountTextCss}>{videoCount.toLocaleString()}本</div>
                 </div>
               </div>
             </div>
