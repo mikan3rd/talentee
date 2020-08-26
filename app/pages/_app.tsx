@@ -4,12 +4,12 @@ import dayjs from "dayjs";
 import smoothscroll from "smoothscroll-polyfill";
 
 import "dayjs/locale/ja";
-dayjs.locale("ja");
+import "semantic-ui-css/semantic.min.css";
+import "react-semantic-toasts/styles/react-semantic-alert.css";
 
 import { Layout } from "../components/templates/Layout";
 
-import "semantic-ui-css/semantic.min.css";
-import "react-semantic-toasts/styles/react-semantic-alert.css";
+dayjs.locale("ja");
 
 if (typeof window !== "undefined") {
   smoothscroll.polyfill();
