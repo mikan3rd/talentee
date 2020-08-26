@@ -18,6 +18,7 @@ import { getTrendVideoIds } from "./getTrendVideoIds";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
 import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
+import { getVideoCategories } from "./common/getVideoCategories";
 
 const REGION = "asia-northeast1" as const;
 const TIMEZONE = "Asia/Tokyo" as const;
@@ -126,6 +127,14 @@ export const updateRecentVideoTest = functions
     const result = await updateRecentVideo();
     res.send({ result });
   });
+
+export const getVideoCategoriesTest = functions.region(REGION).https.onRequest(async (req, res) => {
+  const categories = await getVideoCategories();
+  const result = categories
+    .filter((category) => category.snippet.assignable)
+    .map((category) => ({ text: category.snippet.title, value: category.id }));
+  res.send({ result });
+});
 
 export const deleteChannelTmp = functions.region(REGION).https.onRequest(async (req, res) => {
   const result = await deleteChannel();
