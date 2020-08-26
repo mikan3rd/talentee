@@ -31,19 +31,27 @@ export const YoutubeIndex: React.FC = () => {
       </Segment>
 
       <Segment vertical>
-        <Header
-          as="h2"
+        <div
           css={css`
-            &&& {
-              font-size: 18px;
-              margin: 0 0 0 5px;
+            display: flex;
+            align-items: center;
+            @media (max-width: 600px) {
+              display: block;
             }
           `}
         >
-          チャンネル登録者数ランキング
-        </Header>
+          <Header
+            as="h2"
+            css={css`
+              &&& {
+                font-size: 18px;
+                margin: 0 0 0 5px;
+              }
+            `}
+          >
+            チャンネル登録者数ランキング
+          </Header>
 
-        <div>
           <Dropdown
             selection
             options={VideoCategorieOptions}
@@ -51,8 +59,13 @@ export const YoutubeIndex: React.FC = () => {
             onChange={(e, d) => changeSelectedCategory(d.value as string)}
             css={css`
               &&& {
+                margin-left: 20px;
                 .menu {
                   max-height: 50vh;
+                }
+                @media (max-width: 600px) {
+                  margin: 10px 0 0 0;
+                  width: 100%;
                 }
               }
             `}
