@@ -1,4 +1,33 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "youtubeChannel",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "videoCategoryIds",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "statistics.subscriberCount",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "youtubeVideo",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "snippet.channelId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "statistics.viewCount",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }
