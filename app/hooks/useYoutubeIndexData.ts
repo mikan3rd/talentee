@@ -8,7 +8,7 @@ import { IYoutubeData } from "./useIndexData";
 const AllOptionValue = "all" as const;
 
 export const VideoCategorieOptions = [
-  { text: "すべて", value: AllOptionValue },
+  { text: "すべてのカテゴリ", value: AllOptionValue },
   { text: "映画とアニメ", value: "1" },
   { text: "自動車と乗り物", value: "2" },
   { text: "音楽", value: "10" },
@@ -64,6 +64,8 @@ export const useYoutubeIndexData = () => {
 
     if (youtubeDocs.docs.length < PageLimit) {
       setHasNext(false);
+    } else if (!hasNext) {
+      setHasNext(true);
     }
   };
 

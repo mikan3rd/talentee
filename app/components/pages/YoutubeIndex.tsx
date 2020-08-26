@@ -49,38 +49,44 @@ export const YoutubeIndex: React.FC = () => {
             options={VideoCategorieOptions}
             value={selectedCategory}
             onChange={(e, d) => changeSelectedCategory(d.value as string)}
+            css={css`
+              &&& {
+                .menu {
+                  max-height: 50vh;
+                }
+              }
+            `}
           />
         </div>
 
         {youtubeData && (
-          <>
-            <div
-              css={css`
-                margin-top: 10px;
-              `}
-            >
-              {youtubeData.map((data, index) => {
-                return <YoutubeCard key={data.id} data={data} rankNum={index + 1} />;
-              })}
-            </div>
+          <div
+            css={css`
+              margin-top: 10px;
+            `}
+          >
+            {youtubeData.map((data, index) => {
+              return <YoutubeCard key={data.id} data={data} rankNum={index + 1} />;
+            })}
+          </div>
+        )}
 
-            <Button
-              fluid
-              icon
-              labelPosition="left"
-              color="red"
-              disabled={!hasNext}
-              onClick={() => getYoutubeNextPageData()}
-              css={css`
-                &&& {
-                  margin-top: 20px;
-                }
-              `}
-            >
-              <Icon name="hand point right" />
-              {youtubeData.length}位以降を読み込む
-            </Button>
-          </>
+        {hasNext && (
+          <Button
+            fluid
+            icon
+            labelPosition="left"
+            color="red"
+            onClick={() => getYoutubeNextPageData()}
+            css={css`
+              &&& {
+                margin-top: 20px;
+              }
+            `}
+          >
+            <Icon name="hand point right" />
+            {youtubeData.length}位以降を読み込む
+          </Button>
         )}
       </Segment>
     </>
