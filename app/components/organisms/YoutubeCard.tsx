@@ -3,6 +3,8 @@ import Link from "next/link";
 import { css } from "@emotion/core";
 import { Icon, Label } from "semantic-ui-react";
 
+import { toUnitString } from "../../common/utils";
+
 const ketwordNum = 10;
 
 export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDetails?: boolean }> = ({
@@ -101,16 +103,16 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
                 <div css={CountWrapperCss}>
                   <Icon name="user plus" css={CountIconCss} />
                   <div css={CountTextCss}>
-                    {hiddenSubscriberCount ? "非表示" : `${subscriberCount.toLocaleString()}人`}
+                    {hiddenSubscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}
                   </div>
                 </div>
                 <div css={CountWrapperCss}>
                   <Icon name="video play" css={CountIconCss} />
-                  <div css={CountTextCss}>{viewCount.toLocaleString()}回</div>
+                  <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
                 </div>
                 <div css={CountWrapperCss}>
                   <Icon name="video" css={CountIconCss} />
-                  <div css={CountTextCss}>{videoCount.toLocaleString()}本</div>
+                  <div css={CountTextCss}>{toUnitString(videoCount)}本</div>
                 </div>
               </div>
             </div>

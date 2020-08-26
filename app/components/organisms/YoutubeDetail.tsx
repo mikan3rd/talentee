@@ -4,6 +4,7 @@ import { Divider, Header, Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
+import { toUnitString } from "../../common/utils";
 
 import { YoutubeVideoCard } from "./YoutubeVideoCard";
 
@@ -64,17 +65,17 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
           >
             <div css={CountWrapperCss}>
               <Icon name="user plus" css={CountIconCss} />
-              <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : `${subscriberCount.toLocaleString()}人`}</div>
+              <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}</div>
             </div>
             <div css={CountWrapperCss}>
               <Icon name="video play" css={CountIconCss} />
               <div css={CountTextCss}>
-                {viewCount.toLocaleString()}回 (平均 {Math.round(viewCount / (videoCount | 1)).toLocaleString()}回)
+                {toUnitString(viewCount)}回 (平均 {toUnitString(viewCount / (videoCount | 1))}回)
               </div>
             </div>
             <div css={CountWrapperCss}>
               <Icon name="video" css={CountIconCss} />
-              <div css={CountTextCss}>{videoCount.toLocaleString()}本</div>
+              <div css={CountTextCss}>{toUnitString(videoCount)}本</div>
             </div>
           </div>
         </div>

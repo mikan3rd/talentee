@@ -3,6 +3,8 @@ import { css } from "@emotion/core";
 import { Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
+import { toUnitString } from "../../common/utils";
+
 export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: number }> = ({ video, rankNum }) => {
   const {
     id,
@@ -94,7 +96,7 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: num
         >
           <div css={CountWrapperCss}>
             <Icon name="video play" css={CountIconCss} />
-            <div css={CountTextCss}>{viewCount.toLocaleString()}回</div>
+            <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
           </div>
           <div
             css={css`
@@ -105,7 +107,7 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: num
               <div css={CountWrapperCss}>
                 <Icon name="thumbs up" css={CountIconCss} />
                 <div css={CountTextCss}>
-                  {likeCount.toLocaleString()} ({Math.round((likeCount / totalCount) * 100)}%)
+                  {toUnitString(likeCount)} ({Math.round((likeCount / totalCount) * 100)}%)
                 </div>
               </div>
             )}
@@ -113,7 +115,7 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: num
               <div css={CountWrapperCss}>
                 <Icon name="thumbs down" css={CountIconCss} />
                 <div css={CountTextCss}>
-                  {dislikeCount.toLocaleString()} ({Math.round((dislikeCount / totalCount) * 100)}%)
+                  {toUnitString(dislikeCount)} ({Math.round((dislikeCount / totalCount) * 100)}%)
                 </div>
               </div>
             )}
