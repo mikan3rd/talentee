@@ -26,7 +26,7 @@ const TIMEZONE = "Asia/Tokyo" as const;
 export const getYoutubeTrendChannelScheduler = functions
   .region(REGION)
   .runWith({ timeoutSeconds: 540, memory: "2GB" })
-  .pubsub.schedule("0 0 * * *")
+  .pubsub.schedule("0 0,12 * * *")
   .timeZone(TIMEZONE)
   .onRun(async (context) => {
     await saveTrendChannel();
