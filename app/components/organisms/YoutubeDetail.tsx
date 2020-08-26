@@ -3,8 +3,6 @@ import { css } from "@emotion/core";
 import { Divider, Header, Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
-import { IYoutubeData } from "../../hooks/useIndexData";
-import { IYoutubeVideoData } from "../../fetchData/accountPageData";
 import { Linkify } from "../atoms/Linkify";
 
 import { YoutubeVideoCard } from "./YoutubeVideoCard";
@@ -14,7 +12,7 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
   youtubePopularVideos,
 }) => {
   const {
-    snippet: { title, thumbnails, description },
+    snippet: { title, thumbnails, description, publishedAt },
     brandingSettings: {
       channel: { keywords },
     },
@@ -23,6 +21,7 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
     videoCategories,
   } = youtubeData;
 
+  const publishedAtTime = dayjs(publishedAt);
   const updateAtTime = dayjs.unix(updatedAt);
   return (
     <div>
@@ -55,13 +54,9 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
           >
             {title}
           </div>
-          <div>
-            <Icon name="sync" /> {updateAtTime.format("YYYY年M月D日")}
-          </div>
           <div
             css={css`
               display: flex;
-              margin-top: 10px;
               @media (max-width: 600px) {
                 display: block;
               }
@@ -119,6 +114,15 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
         })}
       </div>
 
+      <div
+        css={css`
+          margin-top: 10px;
+          text-align: right;
+        `}
+      >
+        開設日 {publishedAtTime.format("YYYY年M月D日")}
+      </div>
+
       {youtubePopularVideos.length > 0 && (
         <>
           <Divider />
@@ -141,6 +145,15 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
           </div>
         </>
       )}
+
+      <Divider />
+      <div
+        css={css`
+          text-align: right;
+        `}
+      >
+        <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
+      </div>
     </div>
   );
 };

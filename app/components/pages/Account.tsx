@@ -2,8 +2,6 @@ import React from "react";
 import { css } from "@emotion/core";
 import { Button, Tab } from "semantic-ui-react";
 
-import { IYoutubeData } from "../../hooks/useIndexData";
-import { IAccountData, IYoutubeVideoData } from "../../fetchData/accountPageData";
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 
 export const Account: React.FC<{

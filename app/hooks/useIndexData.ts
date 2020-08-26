@@ -3,16 +3,6 @@ import React from "react";
 import firebase from "../firebase/clientApp";
 import { YoutubeChannelCollectionPath } from "../firebase/firestore";
 
-export interface IYoutubeData {
-  id: string;
-  snippet: { title: string; description: string; thumbnails: { medium: { url: string } }; country: string };
-  statistics: { subscriberCount: number; videoCount: number; viewCount: number; hiddenSubscriberCount: boolean };
-  brandingSettings: { channel: { keywords: string[] } };
-  accountRef: { id: string };
-  videoCategories: { snippet: { title: string } }[];
-  updatedAt: number;
-}
-
 export const useIndexData = () => {
   const [youtubeData, setYoutubeData] = React.useState<IYoutubeData[] | null>(null);
 

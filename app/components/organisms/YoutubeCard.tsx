@@ -3,8 +3,6 @@ import Link from "next/link";
 import { css } from "@emotion/core";
 import { Icon, Label } from "semantic-ui-react";
 
-import { IYoutubeData } from "../../hooks/useIndexData";
-
 const ketwordNum = 10;
 
 export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDetails?: boolean }> = ({

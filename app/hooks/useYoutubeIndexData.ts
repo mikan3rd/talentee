@@ -3,8 +3,6 @@ import React from "react";
 import firebase from "../firebase/clientApp";
 import { YoutubeChannelCollectionPath } from "../firebase/firestore";
 
-import { IYoutubeData } from "./useIndexData";
-
 const AllOptionValue = "all" as const;
 
 export const VideoCategorieOptions = [

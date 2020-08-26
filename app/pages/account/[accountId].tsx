@@ -4,10 +4,9 @@ import Router from "next/router";
 import Link from "next/link";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { IAccountData, IYoutubeVideoData, getAccountPageData } from "../../fetchData/accountPageData";
+import { getAccountPageData } from "../../fetchData/accountPageData";
 import { Account } from "../../components/pages/Account";
 import { Meta } from "../../components/templates/Meta";
-import { IYoutubeData } from "../../hooks/useIndexData";
 import { AccountSection, TopSection } from "../../components/templates/BreadcrumbSection";
 
 const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> = ({

@@ -3,8 +3,6 @@ import { css } from "@emotion/core";
 import { Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
-import { IYoutubeVideoData } from "../../fetchData/accountPageData";
-
 export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: number }> = ({ video, rankNum }) => {
   const {
     id,
