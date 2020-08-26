@@ -29,9 +29,9 @@ const PageLimit = 10;
 
 export const useYoutubeIndexData = () => {
   const [selectedCategory, setSelectedCategory] = React.useState(VideoCategorieOptions[0].value);
-  const [youtubeData, setYoutubeData] = React.useState<IYoutubeData[] | null>(null);
+  const [youtubeData, setYoutubeData] = React.useState<IYoutubeData[]>([]);
   const [lastDoc, setLastDoc] = React.useState<firebase.firestore.DocumentData | null>(null);
-  const [hasNext, setHasNext] = React.useState(true);
+  const [hasNext, setHasNext] = React.useState(false);
 
   const getYoutubePageData = async (categoryValue: string, getNext = false) => {
     const db = firebase.firestore();
