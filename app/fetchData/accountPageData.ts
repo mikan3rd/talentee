@@ -10,7 +10,7 @@ export interface IAccountData {
 export interface IYoutubeVideoData {
   id: string;
   snippet: { title: string; description: string; publishedAt: string; tags?: string[] };
-  statistics: { viewCount: number; likeCount?: number; dislikeCount?: number };
+  statistics: { viewCount: number; likeCount?: number; dislikeCount?: number; commentCount: number };
   player: { embedHtml: string };
   videoCategory: { snippet: { title: string } };
 }
