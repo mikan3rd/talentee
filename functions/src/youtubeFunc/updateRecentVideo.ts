@@ -21,8 +21,6 @@ export const updateRecentVideo = async () => {
     channelDataArray.push(data);
   });
 
-  console.log("channelDataArray:", channelDataArray.length);
-
   const videoCategories = await getVideoCategories();
 
   const pubSub = new PubSub();
