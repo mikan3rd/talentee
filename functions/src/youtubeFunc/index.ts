@@ -1,7 +1,6 @@
-import * as functions from "firebase-functions";
 import * as dayjs from "dayjs";
 
-import { REGION, TIMEZONE } from "../firebase/functions";
+import { TIMEZONE, functions } from "../firebase/functions";
 import { PopularVideoJsonType, PopularVideoTopic } from "../firebase/topic";
 
 import { getVideoCategories } from "./common/getVideoCategories";
@@ -15,7 +14,6 @@ import { deleteChannel } from "./tmpFunc/deleteChannel";
 import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
 
 export const getYoutubeTrendChannelScheduler = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .pubsub.schedule("0 0,12 * * *")
   .timeZone(TIMEZONE)
@@ -24,7 +22,6 @@ export const getYoutubeTrendChannelScheduler = functions
   });
 
 export const getYoutubePopularChannelWeekly = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 120 })
   .pubsub.schedule("0 1 * * *")
   .timeZone(TIMEZONE)
@@ -34,7 +31,6 @@ export const getYoutubePopularChannelWeekly = functions
   });
 
 export const getYoutubePopularChannelMonthly = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 120 })
   .pubsub.schedule("0 2 * * *")
   .timeZone(TIMEZONE)
@@ -44,7 +40,6 @@ export const getYoutubePopularChannelMonthly = functions
   });
 
 export const updateRecentVideoScheduler = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 300, memory: "512MB" })
   .pubsub.schedule("0 3 * * *")
   .timeZone(TIMEZONE)
@@ -53,7 +48,6 @@ export const updateRecentVideoScheduler = functions
   });
 
 export const updateVideoPubSub = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .pubsub.topic(PopularVideoTopic)
   .onPublish(async (message) => {
@@ -61,7 +55,6 @@ export const updateVideoPubSub = functions
   });
 
 export const getYoutubePopularChannelWeeklyTest = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 120 })
   .https.onRequest(async (req, res) => {
     const publishedAfter = dayjs().subtract(1, "week");
@@ -70,7 +63,6 @@ export const getYoutubePopularChannelWeeklyTest = functions
   });
 
 export const getYoutubePopularChannelMonthlyTest = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 120 })
   .https.onRequest(async (req, res) => {
     const publishedAfter = dayjs().subtract(1, "month");
@@ -79,7 +71,6 @@ export const getYoutubePopularChannelMonthlyTest = functions
   });
 
 export const getYoutubePopularChannelYearlyTest = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 120 })
   .https.onRequest(async (req, res) => {
     const publishedAfter = dayjs().subtract(1, "year");
@@ -88,7 +79,6 @@ export const getYoutubePopularChannelYearlyTest = functions
   });
 
 export const getChannelVideoTest = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 120, memory: "512MB" })
   .https.onRequest(async (req, res) => {
     const result = await getChannelPopularVideo("UCFOsYGDAw16cr57cCqdJdVQ");
@@ -96,7 +86,6 @@ export const getChannelVideoTest = functions
   });
 
 export const getTrendVideoIdsTest = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .https.onRequest(async (req, res) => {
     const result = await getTrendVideoIds();
@@ -104,7 +93,6 @@ export const getTrendVideoIdsTest = functions
   });
 
 export const getYoutubeTrendChannelTest = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 540, memory: "2GB" })
   .https.onRequest(async (req, res) => {
     const result = await saveTrendChannel();
@@ -112,14 +100,13 @@ export const getYoutubeTrendChannelTest = functions
   });
 
 export const updateRecentVideoTest = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 300, memory: "512MB" })
   .https.onRequest(async (req, res) => {
     const result = await updateRecentVideo();
     res.send({ result });
   });
 
-export const getVideoCategoriesTest = functions.region(REGION).https.onRequest(async (req, res) => {
+export const getVideoCategoriesTest = functions.https.onRequest(async (req, res) => {
   const categories = await getVideoCategories();
   const result = categories
     .filter((category) => category.snippet.assignable)
@@ -127,13 +114,12 @@ export const getVideoCategoriesTest = functions.region(REGION).https.onRequest(a
   res.send({ result });
 });
 
-export const deleteChannelTmp = functions.region(REGION).https.onRequest(async (req, res) => {
+export const deleteChannelTmp = functions.https.onRequest(async (req, res) => {
   const result = await deleteChannel();
   res.send({ result });
 });
 
 export const saveAllChannelVideoTmp = functions
-  .region(REGION)
   .runWith({ timeoutSeconds: 540, memory: "1GB" })
   .https.onRequest(async (req, res) => {
     const result = await saveAllChannelVideo();
