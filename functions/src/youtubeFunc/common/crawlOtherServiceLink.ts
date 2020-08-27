@@ -17,10 +17,9 @@ export const crawlOtherServiceLink = async (channelId: string) => {
   for (const ele of elements) {
     const property = await ele.getProperty("href");
     const value = (await property.jsonValue()) as string;
-    const result = value.match(/(?<=q\=)\S+/);
-    if (result) {
-      const url = decodeURIComponent(result[0]);
-      console.log(url);
+    const decodeUrl = decodeURIComponent(value);
+    const url = new URL(decodeUrl).searchParams.get("q");
+    if (url) {
       linkUrls.push(url);
     }
   }
