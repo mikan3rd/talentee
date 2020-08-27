@@ -14,11 +14,19 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ```shell
 firebase functions:config:set line.user_id="XXX"
-firebase functions:config:get > .runtimeconfig.json
+firebase functions:config:get > .runtimeconfig.dev.json
 ```
 
 ## Set up firestore configuration
 
 ```shell
 firebase firestore:indexes > firestore.indexes.json
+```
+
+## Set up emulators configuration
+
+You must provide environment variables in `.runtimeconfig.json`
+
+```
+firebase emulators:start
 ```
