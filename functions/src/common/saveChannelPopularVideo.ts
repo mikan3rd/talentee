@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { google, youtube_v3 } from "googleapis";
 
 import { YoutubeVideoCollectionPath } from "../firebase/collectionPath";
-import { getChannelPopularVideo } from "../getChannelPopularVideo";
+import { getChannelPopularVideo } from "../youtubeFunc/getChannelPopularVideo";
 
 import { formatVideoData } from "./formatYoutubeData";
 
