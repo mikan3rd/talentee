@@ -1,6 +1,6 @@
 import * as dayjs from "dayjs";
 
-import { TIMEZONE, functions } from "../firebase/functions";
+import { functions, scheduleFunctions } from "../firebase/functions";
 import { PopularVideoJsonType, PopularVideoTopic } from "../firebase/topic";
 
 import { getVideoCategories } from "./common/getVideoCategories";
@@ -13,39 +13,31 @@ import { getTrendVideoIds } from "./common/getTrendVideoIds";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
 import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
 
-export const getYoutubeTrendChannelScheduler = functions
-  .runWith({ timeoutSeconds: 540, memory: "2GB" })
-  .pubsub.schedule("0 0,12 * * *")
-  .timeZone(TIMEZONE)
-  .onRun(async (context) => {
-    await saveTrendChannel();
-  });
+export const getYoutubeTrendChannelScheduler = scheduleFunctions({ timeoutSeconds: 540, memory: "2GB" })(
+  "0 0,12 * * *",
+).onRun(async (context) => {
+  await saveTrendChannel();
+});
 
-export const getYoutubePopularChannelWeekly = functions
-  .runWith({ timeoutSeconds: 120 })
-  .pubsub.schedule("0 1 * * *")
-  .timeZone(TIMEZONE)
-  .onRun(async (context) => {
+export const getYoutubePopularChannelWeekly = scheduleFunctions({ timeoutSeconds: 120 })("0 1 * * *").onRun(
+  async (context) => {
     const publishedAfter = dayjs().subtract(1, "week");
     await savePopularChannel(publishedAfter);
-  });
+  },
+);
 
-export const getYoutubePopularChannelMonthly = functions
-  .runWith({ timeoutSeconds: 120 })
-  .pubsub.schedule("0 2 * * *")
-  .timeZone(TIMEZONE)
-  .onRun(async (context) => {
+export const getYoutubePopularChannelMonthly = scheduleFunctions({ timeoutSeconds: 120 })("0 2 * * *").onRun(
+  async (context) => {
     const publishedAfter = dayjs().subtract(1, "month");
     await savePopularChannel(publishedAfter);
-  });
+  },
+);
 
-export const updateRecentVideoScheduler = functions
-  .runWith({ timeoutSeconds: 300, memory: "512MB" })
-  .pubsub.schedule("0 3 * * *")
-  .timeZone(TIMEZONE)
-  .onRun(async (context) => {
-    await updateRecentVideo();
-  });
+export const updateRecentVideoScheduler = scheduleFunctions({ timeoutSeconds: 300, memory: "512MB" })(
+  "0 3 * * *",
+).onRun(async (context) => {
+  await updateRecentVideo();
+});
 
 export const updateVideoPubSub = functions
   .runWith({ timeoutSeconds: 540, memory: "2GB" })
