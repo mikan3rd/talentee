@@ -2,9 +2,10 @@ import * as admin from "firebase-admin";
 import * as dayjs from "dayjs";
 import { PubSub } from "@google-cloud/pubsub";
 
-import { YoutubeChannelCollectionPath } from "./firebase/collectionPath";
+import { YoutubeChannelCollectionPath } from "../firebase/collectionPath";
+import { PopularVideoJsonType, PopularVideoTopic } from "../firebase/topic";
+
 import { getVideoCategories } from "./common/getVideoCategories";
-import { PopularVideoJsonType, PopularVideoTopic } from "./firebase/topic";
 
 export const updateRecentVideo = async () => {
   const db = admin.firestore();

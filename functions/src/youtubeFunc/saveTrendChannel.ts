@@ -1,9 +1,10 @@
 import * as functions from "firebase-functions";
 import { google } from "googleapis";
 
-import { getTrendVideoIds } from "./getTrendVideoIds";
+import { chunk } from "../common/utils";
+
 import { saveChannel } from "./common/saveChannel";
-import { chunk } from "./common/utils";
+import { getTrendVideoIds } from "./common/getTrendVideoIds";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 

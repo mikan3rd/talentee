@@ -1,6 +1,6 @@
 import * as puppeteer from "puppeteer";
 
-import { getPuppeteerOptions } from "./common/utils";
+import { getPuppeteerOptions } from "../../common/utils";
 
 export const getChannelPopularVideo = async (channelId: string) => {
   const browser = await puppeteer.launch(getPuppeteerOptions());

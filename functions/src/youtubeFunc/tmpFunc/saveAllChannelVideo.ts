@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 
-import { YoutubeChannelCollectionPath } from "../firebase/collectionPath";
+import { YoutubeChannelCollectionPath } from "../../firebase/collectionPath";
 import { getVideoCategories } from "../common/getVideoCategories";
 import { saveChannelPopularVideo } from "../common/saveChannelPopularVideo";
 

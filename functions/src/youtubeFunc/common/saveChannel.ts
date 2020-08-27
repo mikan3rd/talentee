@@ -2,10 +2,10 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import { google, youtube_v3 } from "googleapis";
 
-import { AccountCollectionPath, YoutubeChannelCollectionPath } from "../firebase/collectionPath";
+import { AccountCollectionPath, YoutubeChannelCollectionPath } from "../../firebase/collectionPath";
+import { chunk } from "../../common/utils";
 
 import { formatChannelData } from "./formatYoutubeData";
-import { chunk } from "./utils";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 

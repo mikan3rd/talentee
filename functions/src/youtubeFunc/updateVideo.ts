@@ -1,8 +1,9 @@
 import * as admin from "firebase-admin";
 
-import { YoutubeChannelCollectionPath } from "./firebase/collectionPath";
+import { YoutubeChannelCollectionPath } from "../firebase/collectionPath";
+import { PopularVideoJsonType } from "../firebase/topic";
+
 import { saveChannelPopularVideo } from "./common/saveChannelPopularVideo";
-import { PopularVideoJsonType } from "./firebase/topic";
 
 export const updateVideo = async (data: PopularVideoJsonType) => {
   const { channel, videoCategories } = data;
