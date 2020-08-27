@@ -6,7 +6,9 @@ import "dayjs/locale/ja";
 
 const { dsn, environment } = functions.config().sentry;
 
-Sentry.init({ dsn, environment });
+if (dsn) {
+  Sentry.init({ dsn, environment });
+}
 
 admin.initializeApp();
 const db = admin.firestore();
