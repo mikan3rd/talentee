@@ -9,6 +9,7 @@ import { savePopularChannel } from "./savePopularChannel";
 import { updateRecentVideo } from "./updateRecentVideo";
 import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
+import { getServiceAccount } from "./getServiceAccount";
 import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
@@ -53,6 +54,7 @@ export const updateVideoPubSub = functions
     }),
   );
 
+// ----- TEST ------
 export const getYoutubePopularChannelWeeklyTest = functions.runWith({ timeoutSeconds: 120 }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const publishedAfter = dayjs().subtract(1, "week");
@@ -115,6 +117,14 @@ export const getVideoCategoriesTest = functions.https.onRequest(
   }),
 );
 
+export const getServiceAccountTest = functions.https.onRequest(
+  sentryWrapper(async (req, res) => {
+    const result = await getServiceAccount();
+    res.send(result);
+  }),
+);
+
+// ===== TMP =====
 export const deleteChannelTmp = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const result = await deleteChannel();
