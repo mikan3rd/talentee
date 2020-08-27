@@ -2,16 +2,16 @@ import * as functions from "firebase-functions";
 import * as dayjs from "dayjs";
 
 import { PopularVideoJsonType, PopularVideoTopic } from "../firebase/topic";
-import { deleteChannel } from "../tmpFunc/deleteChannel";
-import { saveAllChannelVideo } from "../tmpFunc/saveAllChannelVideo";
-import { getVideoCategories } from "../common/getVideoCategories";
 
+import { getVideoCategories } from "./common/getVideoCategories";
 import { savePopularChannel } from "./savePopularChannel";
 import { updateRecentVideo } from "./updateRecentVideo";
 import { updateVideo } from "./updateVideo";
-import { getChannelPopularVideo } from "./getChannelPopularVideo";
-import { getTrendVideoIds } from "./getTrendVideoIds";
 import { saveTrendChannel } from "./saveTrendChannel";
+import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
+import { getTrendVideoIds } from "./common/getTrendVideoIds";
+import { deleteChannel } from "./tmpFunc/deleteChannel";
+import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
 
 const REGION = "asia-northeast1" as const;
 const TIMEZONE = "Asia/Tokyo" as const;

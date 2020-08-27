@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 
-import { YoutubeChannelCollectionPath } from "../firebase/collectionPath";
+import { YoutubeChannelCollectionPath } from "../../firebase/collectionPath";
 
 export const deleteChannel = async () => {
   const db = admin.firestore();

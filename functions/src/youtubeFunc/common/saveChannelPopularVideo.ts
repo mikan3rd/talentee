@@ -2,9 +2,9 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import { google, youtube_v3 } from "googleapis";
 
-import { YoutubeVideoCollectionPath } from "../firebase/collectionPath";
-import { getChannelPopularVideo } from "../youtubeFunc/getChannelPopularVideo";
+import { YoutubeVideoCollectionPath } from "../../firebase/collectionPath";
 
+import { getChannelPopularVideo } from "./getChannelPopularVideo";
 import { formatVideoData } from "./formatYoutubeData";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;

@@ -2,8 +2,8 @@ import * as dayjs from "dayjs";
 import * as functions from "firebase-functions";
 import { google, youtube_v3 } from "googleapis";
 
-import { getVideoCategories } from "../common/getVideoCategories";
-import { saveChannel } from "../common/saveChannel";
+import { getVideoCategories } from "./common/getVideoCategories";
+import { saveChannel } from "./common/saveChannel";
 
 const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
