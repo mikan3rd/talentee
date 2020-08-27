@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as dayjs from "dayjs";
 
+import { REGION, TIMEZONE } from "../firebase/functions";
 import { PopularVideoJsonType, PopularVideoTopic } from "../firebase/topic";
 
 import { getVideoCategories } from "./common/getVideoCategories";
@@ -12,9 +13,6 @@ import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
 import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
-
-const REGION = "asia-northeast1" as const;
-const TIMEZONE = "Asia/Tokyo" as const;
 
 export const getYoutubeTrendChannelScheduler = functions
   .region(REGION)
