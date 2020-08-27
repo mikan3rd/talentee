@@ -83,8 +83,6 @@ export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopular
       <p
         css={css`
           margin-top: 10px;
-          white-space: pre-wrap;
-          word-break: break-word;
         `}
       >
         <Linkify>{description}</Linkify>

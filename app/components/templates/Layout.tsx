@@ -3,11 +3,14 @@ import { css } from "@emotion/core";
 import { Container } from "semantic-ui-react";
 import { SemanticToastContainer } from "react-semantic-toasts";
 
+import { GlobalStyle } from "../../style/GlobalStyle";
 import { ScrollTopButton } from "../atoms/ScrollTopButton";
 
 export const Layout: React.FC = ({ children }) => {
   return (
     <>
+      {GlobalStyle}
+
       <div
         css={css`
           display: flex;

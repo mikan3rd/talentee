@@ -123,8 +123,6 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
               css={css`
                 position: relative;
                 margin-top: 10px;
-                white-space: pre-wrap;
-                word-break: break-word;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
