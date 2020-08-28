@@ -7,7 +7,7 @@ export const crawlOtherServiceLink = async (channelId: string) => {
   const page = await browser.newPage();
 
   const trendUrl = `https://www.youtube.com/channel/${channelId}/about`;
-  await page.goto(trendUrl);
+  await page.goto(trendUrl, { timeout: 1000 * 120 });
 
   const LinkSelector = "#link-list-container a" as const;
   await page.waitForSelector(LinkSelector);
