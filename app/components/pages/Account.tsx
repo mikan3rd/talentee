@@ -8,8 +8,15 @@ export const Account: React.FC<{
   accountData: IAccountData;
   youtubeData?: IYoutubeData;
   youtubePopularVideos: IYoutubeVideoData[];
-}> = ({ accountData, youtubeData, youtubePopularVideos }) => {
-  const { tmpUsername, thumbnailUrl } = accountData;
+  twitterUserData: TwitterUserDataType;
+}> = ({ accountData, youtubeData, youtubePopularVideos, twitterUserData }) => {
+  const { tmpUsername } = accountData;
+
+  // TODO: 元のデータを修正する
+  let { thumbnailUrl } = accountData;
+  if (/twimg.com/.test(thumbnailUrl)) {
+    thumbnailUrl = thumbnailUrl.replace("_normal", "");
+  }
 
   const panes = [];
   if (youtubeData) {
@@ -37,6 +44,7 @@ export const Account: React.FC<{
             width: 64px;
             height: 64px;
             border-radius: 50%;
+            flex-shrink: 0;
           `}
         />
         <div
@@ -54,6 +62,18 @@ export const Account: React.FC<{
                 as="a"
                 href={`https://www.youtube.com/channel/${youtubeData.id}`}
                 target="_black"
+                css={LinkButtonCss}
+              />
+            )}
+            {twitterUserData && (
+              <Button
+                circular
+                color="twitter"
+                icon="twitter"
+                as="a"
+                href={`https://twitter.com/${twitterUserData.username}`}
+                target="_black"
+                css={LinkButtonCss}
               />
             )}
           </div>
@@ -70,3 +90,12 @@ export const Account: React.FC<{
     </>
   );
 };
+
+const LinkButtonCss = css`
+  &&& {
+    margin-left: 10px;
+    &:first-of-type {
+      margin-left: 0;
+    }
+  }
+`;

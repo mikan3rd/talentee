@@ -16,9 +16,13 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
     accountData,
     youtubeData,
     youtubePopularVideos,
-  }: { accountData: IAccountData; youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] } = JSON.parse(
-    jsonData,
-  );
+    twitterUserData,
+  }: {
+    accountData: IAccountData;
+    youtubeData?: IYoutubeData;
+    youtubePopularVideos: IYoutubeVideoData[];
+    twitterUserData?: TwitterUserDataType;
+  } = JSON.parse(jsonData);
 
   if (!accountData) {
     Router.push("/");
@@ -45,7 +49,12 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
 
       <Divider />
 
-      <Account accountData={accountData} youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
+      <Account
+        accountData={accountData}
+        youtubeData={youtubeData}
+        youtubePopularVideos={youtubePopularVideos}
+        twitterUserData={twitterUserData}
+      />
     </>
   );
 };
