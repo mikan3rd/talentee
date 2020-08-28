@@ -10,7 +10,7 @@ export const crawlOtherServiceLink = async (channelId: string) => {
   await page.goto(trendUrl, { timeout: 1000 * 120 });
 
   const LinkSelector = "#link-list-container a" as const;
-  await page.waitForSelector(LinkSelector);
+  await page.waitForSelector(LinkSelector, { timeout: 1000 * 120 });
   const elements = await page.$$(LinkSelector);
 
   const linkUrls: string[] = [];

@@ -34,6 +34,6 @@ export const judgeServiceAccount = (url: string) => {
     username,
     url,
   };
-  console.log(result);
+  console.log(JSON.stringify(result));
   return result;
 };
