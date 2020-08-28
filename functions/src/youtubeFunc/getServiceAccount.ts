@@ -5,8 +5,7 @@ import { upsertTwitterUserByChannelId } from "../twitterFunc/common/saveTwitterU
 
 import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
 
-export const getServiceAccount = async () => {
-  const channelId = "UC-ASnhD1JXr-AISPr0tv_OA";
+export const getServiceAccount = async (channelId: string) => {
   const linkUrls = await crawlOtherServiceLink(channelId);
 
   const serviceAccounts = bulkJudgeServiceAccount(linkUrls);

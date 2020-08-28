@@ -1,7 +1,12 @@
 import * as dayjs from "dayjs";
 
 import { functions, scheduleFunctions } from "../firebase/functions";
-import { PopularVideoJsonType, PopularVideoTopic } from "../firebase/topic";
+import {
+  PopularVideoJsonType,
+  PopularVideoTopic,
+  ServiceAccountByYoutubeJsonType,
+  ServiceAccountByYoutubeTopic,
+} from "../firebase/topic";
 import { sentryWrapper } from "../common/sentry";
 
 import { getVideoCategories } from "./common/getVideoCategories";
@@ -14,6 +19,7 @@ import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
 import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
+import { batchGetServiceAccount } from "./tmpFunc/batchGetServiceAccount";
 
 export const getYoutubeTrendChannelScheduler = scheduleFunctions({ timeoutSeconds: 540, memory: "2GB" })(
   "0 0,12 * * *",
@@ -46,11 +52,20 @@ export const updateRecentVideoScheduler = scheduleFunctions({ timeoutSeconds: 30
 );
 
 export const updateVideoPubSub = functions
-  .runWith({ timeoutSeconds: 540, memory: "2GB" })
+  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
   .pubsub.topic(PopularVideoTopic)
   .onPublish(
     sentryWrapper(async (message) => {
       return await updateVideo(message.json as PopularVideoJsonType);
+    }),
+  );
+export const getServiceAccountPubSub = functions
+  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
+  .pubsub.topic(ServiceAccountByYoutubeTopic)
+  .onPublish(
+    sentryWrapper(async (message) => {
+      const { channelId } = message.json as ServiceAccountByYoutubeJsonType;
+      return await getServiceAccount(channelId);
     }),
   );
 
@@ -119,7 +134,8 @@ export const getVideoCategoriesTest = functions.https.onRequest(
 
 export const getServiceAccountTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
-    const result = await getServiceAccount();
+    const channelId = "UC-ASnhD1JXr-AISPr0tv_OA";
+    const result = await getServiceAccount(channelId);
     res.send(result);
   }),
 );
@@ -136,5 +152,12 @@ export const saveAllChannelVideoTmp = functions.runWith({ timeoutSeconds: 540, m
   sentryWrapper(async (req, res) => {
     const result = await saveAllChannelVideo();
     res.send({ result });
+  }),
+);
+
+export const batchGetServiceAccountTmp = functions.https.onRequest(
+  sentryWrapper(async (req, res) => {
+    await batchGetServiceAccount();
+    res.send();
   }),
 );
