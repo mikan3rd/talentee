@@ -45,7 +45,7 @@ declare type TwitterDataType = {
   updatedAt: number;
 };
 
-declare type TwitterUserDataType = {
+type TwitterUserBaseType = {
   verified: boolean;
   id: string;
   username: string;
@@ -62,5 +62,15 @@ declare type TwitterUserDataType = {
   url: string;
   entities: { url: { urls: { start: number; end: number; url: string; expanded_url: string; display_url: string }[] } };
   description: string;
+};
+
+declare type TwitterUserObjectType = TwitterUserBaseType & {
+  created_at: firebase.firestore.Timestamp;
+  createdAt: firebase.firestore.Timestamp;
+  updatedAt: firebase.firestore.Timestamp;
+};
+declare type TwitterUserDataType = TwitterUserBaseType & {
   created_at: number;
+  createdAt: number;
+  updatedAt: number;
 };

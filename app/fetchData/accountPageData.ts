@@ -15,7 +15,7 @@ export const getAccountPageData = async (accountId: string) => {
   const accountData = accountDoc.data() as IAccountData;
   let youtubeData = null;
   const youtubePopularVideos = [];
-  let twitterUserData = null;
+  let twitterUserData: TwitterUserDataType | null = null;
 
   const { youtubeMainRef, twitterMainRef } = accountData;
   if (youtubeMainRef) {
@@ -42,8 +42,13 @@ export const getAccountPageData = async (accountId: string) => {
   if (twitterMainRef) {
     const twitterDoc = await twitterMainRef.get();
     if (twitterDoc.exists) {
-      const data = twitterDoc.data();
-      twitterUserData = { ...data, updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000) };
+      const data = twitterDoc.data() as TwitterUserObjectType;
+      twitterUserData = {
+        ...data,
+        created_at: Math.floor(data.created_at.toDate().getTime() / 1000),
+        createdAt: Math.floor(data.createdAt.toDate().getTime() / 1000),
+        updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000),
+      };
     }
   }
 
