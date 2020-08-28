@@ -48,6 +48,6 @@ export const getTrendVideoIds = async () => {
   await browser.close();
 
   const uniqueVideoIds = Array.from(new Set(videoIds));
-  // console.log("trendVideoIds:", uniqueVideoIds);
+  console.log(JSON.stringify({ uniqueVideoIds }));
   return uniqueVideoIds;
 };

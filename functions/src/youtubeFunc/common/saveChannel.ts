@@ -55,7 +55,7 @@ export const saveChannel = async (channelIds: string[]) => {
 
     let accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeRef).limit(1).get();
     if (accountDocs.empty) {
-      const accountData = {
+      const accountData: IAccountData = {
         tmpUsername: item.snippet.title,
         thumbnailUrl: item.snippet.thumbnails.medium.url,
         youtubeMainRef: youtubeRef,
