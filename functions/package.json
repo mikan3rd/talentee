@@ -17,7 +17,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/pubsub": "2.5.0",
-    "@sentry/node": "5.22.1",
+    "@sentry/node": "5.22.2",
     "axios": "0.20.0",
     "dayjs": "1.8.34",
     "firebase-admin": "9.1.1",
