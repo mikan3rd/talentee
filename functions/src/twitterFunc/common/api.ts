@@ -9,13 +9,12 @@ const endpoint = "https://api.twitter.com";
 const version2Endpoint = `${endpoint}/2`;
 const headers = { Authorization: `Bearer ${bearer_token}` };
 
-export type UserObjectType = {
+type UserBaseType = {
   verified: boolean;
   id: string;
   username: string;
   protected: boolean;
   pinned_tweet_id: string;
-  created_at: string;
   public_metrics: {
     followers_count: number;
     following_count: number;
@@ -28,6 +27,9 @@ export type UserObjectType = {
   entities: { url: { urls: { start: number; end: number; url: string; expanded_url: string; display_url: string }[] } };
   description: string;
 };
+
+export type UserObjectType = UserBaseType & { created_at: string };
+export type UserDataType = UserBaseType & { created_at: Date };
 
 export const getUserByUsername = async (username: string) => {
   const url = `${version2Endpoint}/users/by/username/${username}`;

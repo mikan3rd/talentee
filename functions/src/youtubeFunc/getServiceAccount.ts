@@ -1,11 +1,13 @@
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import { getUserByUsername } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
+import { upsertTwitterUserByChannelId } from "../twitterFunc/common/saveTwitterUser";
 
 import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
 
 export const getServiceAccount = async () => {
-  const linkUrls = await crawlOtherServiceLink("UCHp2q2i85qt_9nn2H7AvGOw");
+  const channelId = "UC-ASnhD1JXr-AISPr0tv_OA";
+  const linkUrls = await crawlOtherServiceLink(channelId);
 
   const serviceAccounts = bulkJudgeServiceAccount(linkUrls);
 
@@ -17,7 +19,7 @@ export const getServiceAccount = async () => {
         data: { data },
       } = await getUserByUsername(firstItem.username);
       const twitterUser = formatTwitterUserData(data);
-      console.log(twitterUser);
+      await upsertTwitterUserByChannelId(twitterUser, channelId);
     }
   }
 
