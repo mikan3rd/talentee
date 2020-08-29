@@ -2,6 +2,7 @@ import * as admin from "firebase-admin";
 import { PubSub } from "@google-cloud/pubsub";
 import * as dayjs from "dayjs";
 
+import { toBufferJson } from "../common/utils";
 import { UpdateAccountJsonType, UpdateAccountTopic } from "../firebase/topic";
 import { AccountCollectionPath } from "../firebase/collectionPath";
 
@@ -26,8 +27,6 @@ export const batchUpdateAccount = async () => {
   const pubSub = new PubSub();
   for (const accountData of dataArray) {
     const data: UpdateAccountJsonType = { accountId: accountData.id };
-    const dataJson = JSON.stringify(data);
-    const dataBuffer = Buffer.from(dataJson);
-    await pubSub.topic(UpdateAccountTopic).publish(dataBuffer);
+    await pubSub.topic(UpdateAccountTopic).publish(toBufferJson(data));
   }
 };
