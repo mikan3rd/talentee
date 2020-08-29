@@ -21,6 +21,13 @@ export const updateAccountPubSub = functions
     }),
   );
 
+export const batchUpdateAccountTest = functions.https.onRequest(
+  sentryWrapper(async (req, res) => {
+    await batchUpdateAccount();
+    res.send();
+  }),
+);
+
 export const updateAccountTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountlId = "wGcUhHuMn3lOcmYrqrrF";

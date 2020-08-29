@@ -18,15 +18,14 @@ export const batchUpdateAccount = async () => {
     .limit(300)
     .get();
 
-  const dataArray: FirebaseFirestore.DocumentData[] = [];
+  const accountIds: string[] = [];
   docs.forEach((doc) => {
-    const data = doc.data();
-    dataArray.push(data);
+    accountIds.push(doc.id);
   });
 
   const pubSub = new PubSub();
-  for (const accountData of dataArray) {
-    const data: UpdateAccountJsonType = { accountId: accountData.id };
+  for (const accountId of accountIds) {
+    const data: UpdateAccountJsonType = { accountId };
     await pubSub.topic(UpdateAccountTopic).publish(toBufferJson(data));
   }
 };
