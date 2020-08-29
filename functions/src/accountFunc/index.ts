@@ -18,9 +18,9 @@ import { updateAccount } from "./updateAccount";
 //     }),
 //   );
 
-export const updateAccountTest = functions.runWith({ timeoutSeconds: 120 }).https.onRequest(
+export const updateAccountTest = functions.runWith({ timeoutSeconds: 30 }).https.onRequest(
   sentryWrapper(async (req, res) => {
-    const accountlId = "BWa2totHra5mPTaxZ528";
+    const accountlId = "wGcUhHuMn3lOcmYrqrrF";
     await updateAccount(accountlId);
     res.send();
   }),

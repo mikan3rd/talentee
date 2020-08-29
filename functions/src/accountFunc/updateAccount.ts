@@ -1,6 +1,9 @@
 import * as admin from "firebase-admin";
 
 import { AccountCollectionPath } from "../firebase/collectionPath";
+import { getUserById } from "../twitterFunc/common/api";
+import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
+import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
 
 export const updateAccount = async (accountId: string) => {
   const db = admin.firestore();
@@ -15,6 +18,11 @@ export const updateAccount = async (accountId: string) => {
   }
 
   if (twitterMainRef) {
-    //
+    const { id } = (await twitterMainRef.get()).data() as TwitterUserDataType;
+    const {
+      data: { data },
+    } = await getUserById(id);
+    const twitterUser = formatTwitterUserData(data);
+    await updateTwitterUser(accountId, twitterUser);
   }
 };
