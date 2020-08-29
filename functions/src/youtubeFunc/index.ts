@@ -1,5 +1,6 @@
 import * as dayjs from "dayjs";
 
+import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";
 import {
   PopularVideoJsonType,
@@ -7,7 +8,6 @@ import {
   ServiceAccountByYoutubeJsonType,
   ServiceAccountByYoutubeTopic,
 } from "../firebase/topic";
-import { sentryWrapper } from "../common/sentry";
 
 import { getVideoCategories } from "./common/getVideoCategories";
 import { savePopularChannel } from "./savePopularChannel";
@@ -66,6 +66,7 @@ export const updateVideoPubSub = functions
       return await updateVideo(message.json as PopularVideoJsonType);
     }),
   );
+
 export const getServiceAccountPubSub = functions
   .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
   .pubsub.topic(ServiceAccountByYoutubeTopic)
