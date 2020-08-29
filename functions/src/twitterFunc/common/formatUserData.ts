@@ -1,8 +1,6 @@
 import * as dayjs from "dayjs";
 
-import { UserDataType, UserObjectType } from "./api";
-
-export const formatTwitterUserData = (userObject: UserObjectType): UserDataType => {
+export const formatTwitterUserData = (userObject: TwitterUserObjectType): TwitterUserDataType => {
   const { created_at, profile_image_url } = userObject;
   return {
     ...userObject,

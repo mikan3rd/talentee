@@ -1,7 +1,7 @@
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import { getUserByUsername } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
-import { upsertTwitterUserByChannelId } from "../twitterFunc/common/saveTwitterUser";
+import { upsertTwitterUserByChannelId } from "../twitterFunc/common/upsertTwitterUserByChannelId";
 
 import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
 

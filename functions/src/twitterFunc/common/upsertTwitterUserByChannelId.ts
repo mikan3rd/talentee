@@ -6,11 +6,9 @@ import {
   YoutubeChannelCollectionPath,
 } from "../../firebase/collectionPath";
 
-import { UserDataType } from "./api";
-
 const { FieldValue } = admin.firestore;
 
-export const upsertTwitterUserByChannelId = async (userData: UserDataType, channelId: string) => {
+export const upsertTwitterUserByChannelId = async (userData: TwitterUserDataType, channelId: string) => {
   const { id, name, profile_image_url } = userData;
 
   const db = admin.firestore();
@@ -50,5 +48,5 @@ export const upsertTwitterUserByChannelId = async (userData: UserDataType, chann
     updatedAt: FieldValue.serverTimestamp(),
   };
 
-  await accountCollection.doc(accountDocId).set(accountData, { merge: true });
+  await accountRef.set(accountData, { merge: true });
 };

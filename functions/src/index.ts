@@ -16,4 +16,5 @@ db.settings({ ignoreUndefinedProperties: true });
 
 dayjs.locale("ja");
 
+export * from "./accountFunc";
 export * from "./youtubeFunc";

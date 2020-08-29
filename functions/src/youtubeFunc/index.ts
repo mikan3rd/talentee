@@ -1,5 +1,6 @@
 import * as dayjs from "dayjs";
 
+import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";
 import {
   PopularVideoJsonType,
@@ -7,7 +8,6 @@ import {
   ServiceAccountByYoutubeJsonType,
   ServiceAccountByYoutubeTopic,
 } from "../firebase/topic";
-import { sentryWrapper } from "../common/sentry";
 
 import { getVideoCategories } from "./common/getVideoCategories";
 import { savePopularChannel } from "./savePopularChannel";
@@ -15,7 +15,6 @@ import { updateRecentVideo } from "./updateRecentVideo";
 import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { getServiceAccount } from "./getServiceAccount";
-import { batchUpdateServiceAccount } from "./batchUpdateServiceAccount";
 import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
@@ -52,12 +51,6 @@ export const updateRecentVideoScheduler = scheduleFunctions({ timeoutSeconds: 30
   }),
 );
 
-export const batchUpdateServiceAccountScheduler = scheduleFunctions({ memory: "512MB" })("0 4 * * *").onRun(
-  sentryWrapper(async (context) => {
-    await batchUpdateServiceAccount();
-  }),
-);
-
 export const updateVideoPubSub = functions
   .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
   .pubsub.topic(PopularVideoTopic)
@@ -66,6 +59,7 @@ export const updateVideoPubSub = functions
       return await updateVideo(message.json as PopularVideoJsonType);
     }),
   );
+
 export const getServiceAccountPubSub = functions
   .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
   .pubsub.topic(ServiceAccountByYoutubeTopic)
