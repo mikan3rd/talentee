@@ -15,7 +15,6 @@ import { updateRecentVideo } from "./updateRecentVideo";
 import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { getServiceAccount } from "./getServiceAccount";
-import { batchUpdateServiceAccount } from "./batchUpdateServiceAccount";
 import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
 import { deleteChannel } from "./tmpFunc/deleteChannel";
@@ -49,12 +48,6 @@ export const updateRecentVideoScheduler = scheduleFunctions({ timeoutSeconds: 30
 ).onRun(
   sentryWrapper(async (context) => {
     await updateRecentVideo();
-  }),
-);
-
-export const batchUpdateServiceAccountScheduler = scheduleFunctions({ memory: "512MB" })("0 4 * * *").onRun(
-  sentryWrapper(async (context) => {
-    await batchUpdateServiceAccount();
   }),
 );
 

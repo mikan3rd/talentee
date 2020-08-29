@@ -5,7 +5,7 @@ import { UpdateAccountJsonType, UpdateAccountTopic } from "../firebase/topic";
 import { batchUpdateAccount } from "./batchUpdateAccount";
 import { updateAccount } from "./updateAccount";
 
-export const batchUpdateAccountScheduler = scheduleFunctions()("0 5,17 * * *").onRun(
+export const batchUpdateAccountScheduler = scheduleFunctions()("0 4,16 * * *").onRun(
   sentryWrapper(async (context) => {
     await batchUpdateAccount();
   }),
