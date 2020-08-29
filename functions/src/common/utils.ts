@@ -1,5 +1,11 @@
 import * as puppeteer from "puppeteer";
 
+export const toBufferJson = (data) => {
+  const dataJson = JSON.stringify(data);
+  const dataBuffer = Buffer.from(dataJson);
+  return dataBuffer;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const chunk = (arr: any[], len: number) => {
   const chunks = [];
