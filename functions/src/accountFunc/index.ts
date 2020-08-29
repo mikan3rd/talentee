@@ -30,7 +30,7 @@ export const batchUpdateAccountTest = functions.https.onRequest(
 
 export const updateAccountTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
-    const accountlId = "wGcUhHuMn3lOcmYrqrrF";
+    const accountlId = "4t2P26lmXTzAaEfSy3ha";
     await updateAccount(accountlId);
     res.send();
   }),
