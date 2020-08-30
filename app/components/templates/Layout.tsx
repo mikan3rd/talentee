@@ -22,7 +22,7 @@ export const Layout: React.FC = ({ children }) => {
         <Container
           text
           css={css`
-            padding: 20px 0;
+            padding: 20px 0 100px 0;
           `}
         >
           {children}

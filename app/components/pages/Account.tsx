@@ -1,8 +1,10 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Button, Tab } from "semantic-ui-react";
+import { Button, Divider, Icon, Tab } from "semantic-ui-react";
+import Link from "next/link";
 
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
+import { TwitterDetail } from "../organisms/TwitterDetail";
 
 export const Account: React.FC<{
   accountData: IAccountData;
@@ -13,10 +15,7 @@ export const Account: React.FC<{
   const { tmpUsername } = accountData;
 
   // TODO: 元のデータを修正する
-  let { thumbnailUrl } = accountData;
-  if (/twimg.com/.test(thumbnailUrl)) {
-    thumbnailUrl = thumbnailUrl.replace("_normal", "");
-  }
+  const thumbnailUrl = accountData.thumbnailUrl.replace(/_normal(?=.jpg$)/, "");
 
   const panes = [];
   if (youtubeData) {
@@ -25,6 +24,17 @@ export const Account: React.FC<{
       render: () => (
         <Tab.Pane>
           <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
+        </Tab.Pane>
+      ),
+    });
+  }
+
+  if (twitterUserData) {
+    panes.push({
+      menuItem: { key: "twitter", icon: "twitter", content: "Twitter" },
+      render: () => (
+        <Tab.Pane>
+          <TwitterDetail twitterUserData={twitterUserData} />
         </Tab.Pane>
       ),
     });
@@ -87,6 +97,25 @@ export const Account: React.FC<{
       >
         <Tab panes={panes} />
       </div>
+
+      <Divider />
+
+      <Link href="/youtube" passHref>
+        <Button
+          icon
+          labelPosition="left"
+          color="red"
+          as="a"
+          css={css`
+            &&& {
+              width: 100%;
+            }
+          `}
+        >
+          <Icon name="hand point right" />
+          他のYouTuberを見つける！
+        </Button>
+      </Link>
     </>
   );
 };
