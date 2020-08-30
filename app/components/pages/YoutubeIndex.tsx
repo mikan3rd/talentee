@@ -4,6 +4,7 @@ import { css } from "@emotion/core";
 
 import { VideoCategorieOptions, useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
 import { YoutubeCard } from "../organisms/YoutubeCard";
+import { TwitterIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const YoutubeIndex: React.FC = () => {
   const {
@@ -98,6 +99,16 @@ export const YoutubeIndex: React.FC = () => {
           {youtubeData.length}位以降を読み込む
         </Button>
       )}
+
+      <Divider />
+
+      <div
+        css={css`
+          margin-top: 40px;
+        `}
+      >
+        <TwitterIndexLinkButton />
+      </div>
     </>
   );
 };

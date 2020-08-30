@@ -4,6 +4,7 @@ import { css } from "@emotion/core";
 
 import { useTwitterIndexData } from "../../hooks/useTwitterIndexData";
 import { TwitterCard } from "../organisms/TwitterCard";
+import { YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const TwitterIndex: React.FC = () => {
   const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();
@@ -72,6 +73,16 @@ export const TwitterIndex: React.FC = () => {
           {twitterData.length}位以降を読み込む
         </Button>
       )}
+
+      <Divider />
+
+      <div
+        css={css`
+          margin-top: 40px;
+        `}
+      >
+        <YoutubeIndexLinkButton />
+      </div>
     </>
   );
 };
