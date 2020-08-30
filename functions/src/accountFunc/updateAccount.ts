@@ -50,8 +50,9 @@ export const updateAccount = async (accountId: string) => {
     } catch (e) {
       if (e instanceof TwitterError && e.name === TwitterNotFound) {
         // pass
+      } else {
+        throw e;
       }
-      throw e;
     }
   }
 

@@ -24,8 +24,9 @@ export const getServiceAccount = async (channelId: string) => {
       } catch (e) {
         if (e instanceof TwitterError && e.name === TwitterNotFound) {
           continue;
+        } else {
+          throw e;
         }
-        throw e;
       }
     }
   }
