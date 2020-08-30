@@ -24,6 +24,7 @@ export const Header: React.FC = () => {
           visibility: ${!isUp ? "hidden" : "visible"};
           opacity: ${!isUp ? 0 : 1};
           transition: all 0.5s ease;
+          cursor: pointer;
         `}
       >
         <div
