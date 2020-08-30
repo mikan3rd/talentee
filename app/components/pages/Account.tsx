@@ -15,7 +15,7 @@ export const Account: React.FC<{
   const { tmpUsername } = accountData;
 
   // TODO: 元のデータを修正する
-  const thumbnailUrl = accountData.thumbnailUrl.replace(/_normal(?=.jpg$)/, "");
+  const thumbnailUrl = accountData.thumbnailUrl.replace(/_normal(?=.(jpg|png)$)/, "");
 
   const panes = [];
   if (youtubeData) {
