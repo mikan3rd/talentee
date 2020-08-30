@@ -20,7 +20,7 @@ export const saveAllChannelVideo = async () => {
 
   let num = 1;
   for (const channel of channelDataArray) {
-    console.log("num", num, "channel:", channel.id);
+    console.log("num:", num, "channel:", channel.id);
     const { uniqueVideoCategoryIds, uniqueVideoCategories } = await saveChannelPopularVideo(
       channel.id,
       videoCategories,

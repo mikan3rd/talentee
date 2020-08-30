@@ -13,7 +13,7 @@ export const bulkJudgeServiceAccount = (urls: string[]) => {
 export const judgeServiceAccount = (url: string) => {
   const pathname = new URL(url).pathname;
   const pathArray = pathname.split("/").reverse();
-  let username = pathArray.find((path) => !!path);
+  let username = pathArray.find((path) => !!path) || "";
 
   let serviceName: serviceNameType = "other";
   if (/twitter.com/.test(url)) {

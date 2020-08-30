@@ -21,6 +21,9 @@ export const saveChannelPopularVideo = async (
   const youtubeVideoCollection = db.collection(YoutubeVideoCollectionPath);
 
   const videoIds = await getChannelPopularVideo(channelId);
+  if (!videoIds.length) {
+    return { uniqueVideoCategoryIds: [], uniqueVideoCategories: [] };
+  }
 
   const videoResponse = await service.videos.list({
     part: ["id", "snippet", "contentDetails", "statistics", "player"],
