@@ -92,9 +92,6 @@ export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: numbe
                 `}
               >
                 <div css={CountWrapperCss}>
-                  <div>{toUnitString(following_count)}フォロー中</div>
-                </div>
-                <div css={CountWrapperCss}>
                   <div>{toUnitString(followers_count)}フォロワー</div>
                 </div>
                 <div css={CountWrapperCss}>
