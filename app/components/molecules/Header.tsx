@@ -3,7 +3,10 @@ import { css } from "@emotion/core";
 import Link from "next/link";
 import { Image } from "semantic-ui-react";
 
+import { useScrollDirection } from "../../hooks/useScrollDirection";
+
 export const Header: React.FC = () => {
+  const isUp = useScrollDirection();
   return (
     <Link href="/" passHref>
       <header
@@ -18,6 +21,9 @@ export const Header: React.FC = () => {
           justify-content: space-between;
           align-items: center;
           z-index: 1;
+          visibility: ${!isUp ? "hidden" : "visible"};
+          opacity: ${!isUp ? 0 : 1};
+          transition: all 0.5s ease;
         `}
       >
         <div
