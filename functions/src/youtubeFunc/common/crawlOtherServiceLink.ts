@@ -6,8 +6,9 @@ export const crawlOtherServiceLink = async (channelId: string) => {
   const browser = await puppeteer.launch(getPuppeteerOptions());
   const page = await browser.newPage();
 
-  const trendUrl = `https://www.youtube.com/channel/${channelId}/about`;
-  await page.goto(trendUrl, { timeout: 1000 * 120 });
+  const targetUrl = `https://www.youtube.com/channel/${channelId}/about`;
+  console.log(targetUrl);
+  await page.goto(targetUrl, { timeout: 1000 * 120 });
 
   const LinkSelector = "#link-list-container a" as const;
   await page.waitForSelector(LinkSelector, { timeout: 1000 * 120 });
