@@ -11,7 +11,7 @@ export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: numbe
     profile_image_url,
     name,
     description,
-    public_metrics: { following_count, followers_count, tweet_count },
+    public_metrics: { followers_count, tweet_count },
   } = data;
   return (
     <div

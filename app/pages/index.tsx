@@ -14,8 +14,6 @@ const Top: React.FC = () => {
         <TopSection active={true} />
       </Breadcrumb>
 
-      <Divider />
-
       <Index />
     </>
   );

@@ -12,8 +12,6 @@ export const Index: React.FC = () => {
 
   return (
     <>
-      <Image src="/logo_header.png" alt="logo" />
-
       {youtubeData.length > 0 && (
         <>
           <Divider />
