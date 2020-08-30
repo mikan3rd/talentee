@@ -72,17 +72,15 @@ export const YoutubeIndex: React.FC = () => {
           />
         </div>
 
-        {youtubeData && (
-          <div
-            css={css`
-              margin-top: 10px;
-            `}
-          >
-            {youtubeData.map((data, index) => {
-              return <YoutubeCard key={data.id} data={data} rankNum={index + 1} />;
-            })}
-          </div>
-        )}
+        <div
+          css={css`
+            margin-top: 10px;
+          `}
+        >
+          {youtubeData.map((data, index) => {
+            return <YoutubeCard key={data.id} data={data} rankNum={index + 1} />;
+          })}
+        </div>
 
         {hasNext && (
           <Button

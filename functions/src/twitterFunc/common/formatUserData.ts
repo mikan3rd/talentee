@@ -4,7 +4,7 @@ export const formatTwitterUserData = (userObject: TwitterUserObjectType): Twitte
   const { created_at, profile_image_url } = userObject;
   return {
     ...userObject,
-    profile_image_url: profile_image_url.replace(/_normal(?=.(jpg|png)$)/, ""),
+    profile_image_url: profile_image_url.replace(/_normal(?=.(jpg|jpeg|png)$)/, ""),
     created_at: dayjs(created_at).toDate(),
   };
 };
