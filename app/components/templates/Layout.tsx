@@ -5,6 +5,7 @@ import { SemanticToastContainer } from "react-semantic-toasts";
 
 import { GlobalStyle } from "../../style/GlobalStyle";
 import { ScrollTopButton } from "../atoms/ScrollTopButton";
+import { Header } from "../molecules/Header";
 
 export const Layout: React.FC = ({ children }) => {
   return (
@@ -19,10 +20,13 @@ export const Layout: React.FC = ({ children }) => {
           background-color: #f7f7f7;
         `}
       >
+        <Header />
+
         <Container
           text
           css={css`
-            padding: 20px 0 100px 0;
+            margin-top: 60px;
+            padding: 10px 0 100px 0;
           `}
         >
           {children}

@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Button, Divider, Icon, Tab } from "semantic-ui-react";
-import Link from "next/link";
+import { Button, Divider, Tab } from "semantic-ui-react";
 
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 import { TwitterDetail } from "../organisms/TwitterDetail";
+import { TwitterIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const Account: React.FC<{
   accountData: IAccountData;
@@ -101,19 +101,8 @@ export const Account: React.FC<{
       <Divider />
 
       <div>
-        <Link href="/youtube" passHref>
-          <Button icon labelPosition="left" color="red" as="a" css={WideButtonCss}>
-            <Icon name="hand point right" />
-            他のYouTuberを見つける！
-          </Button>
-        </Link>
-
-        <Link href="/twitter" passHref>
-          <Button icon labelPosition="left" color="blue" as="a" css={WideButtonCss}>
-            <Icon name="hand point right" />
-            他のTwitterを見つける！
-          </Button>
-        </Link>
+        <YoutubeIndexLinkButton />
+        <TwitterIndexLinkButton />
       </div>
     </>
   );
@@ -124,16 +113,6 @@ const LinkButtonCss = css`
     margin-left: 10px;
     &:first-of-type {
       margin-left: 0;
-    }
-  }
-`;
-
-const WideButtonCss = css`
-  &&& {
-    width: 100%;
-    margin-top: 10px;
-    &:first-of-type {
-      margin-top: 0;
     }
   }
 `;

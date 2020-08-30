@@ -11,7 +11,7 @@ export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: numbe
     profile_image_url,
     name,
     description,
-    public_metrics: { following_count, followers_count, tweet_count },
+    public_metrics: { followers_count, tweet_count },
   } = data;
   return (
     <div
@@ -91,9 +91,6 @@ export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: numbe
                   }
                 `}
               >
-                <div css={CountWrapperCss}>
-                  <div>{toUnitString(following_count)}フォロー中</div>
-                </div>
                 <div css={CountWrapperCss}>
                   <div>{toUnitString(followers_count)}フォロワー</div>
                 </div>
