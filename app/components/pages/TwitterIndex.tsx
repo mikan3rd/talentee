@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 import { useTwitterIndexData } from "../../hooks/useTwitterIndexData";
 import { TwitterCard } from "../organisms/TwitterCard";
-import { YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
+import { IndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const TwitterIndex: React.FC = () => {
   const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();
@@ -82,6 +82,7 @@ export const TwitterIndex: React.FC = () => {
         `}
       >
         <YoutubeIndexLinkButton />
+        <IndexLinkButton />
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 import { VideoCategorieOptions, useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
 import { YoutubeCard } from "../organisms/YoutubeCard";
-import { TwitterIndexLinkButton } from "../atoms/IndexLinkButton";
+import { IndexLinkButton, TwitterIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const YoutubeIndex: React.FC = () => {
   const {
@@ -108,6 +108,7 @@ export const YoutubeIndex: React.FC = () => {
         `}
       >
         <TwitterIndexLinkButton />
+        <IndexLinkButton />
       </div>
     </>
   );
