@@ -18,6 +18,7 @@ export const judgeServiceAccount = (url: string) => {
   let serviceName: serviceNameType = "other";
   if (/twitter.com/.test(url)) {
     serviceName = "twitter" as const;
+    username = username.replace("@", "");
   } else if (/instagram.com/.test(url)) {
     serviceName = "instagram" as const;
   } else if (/ch.nicovideo.jp/.test(url)) {
