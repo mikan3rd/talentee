@@ -26,14 +26,42 @@ const userFields = [
   "withheld",
 ];
 
+const ErrorTitle = "TwitterAPIのレスポンスにエラー";
+export class TwitterError extends Error {}
+export const TwitterNotFound = "Not Found Error";
+
+type UserResponseType = { data: TwitterUserObjectType };
+
 export const getUserByUsername = async (username: string) => {
   const url = `${version2Endpoint}/users/by/username/${username}`;
   const params = { "user.fields": userFields.join(",") };
-  return await axios.get<{ data: TwitterUserObjectType }>(url, { params, headers });
+  const { data } = await axios.get<UserResponseType | TwitterApiErrorType>(url, { params, headers });
+  if (hasError(data)) {
+    const error = handleError(data);
+    throw error;
+  }
+  return data;
 };
 
 export const getUserById = async (id: string) => {
   const url = `${version2Endpoint}/users/${id}`;
   const params = { "user.fields": userFields.join(",") };
-  return await axios.get<{ data: TwitterUserObjectType }>(url, { params, headers });
+  const { data } = await axios.get<UserResponseType | TwitterApiErrorType>(url, { params, headers });
+  if (hasError(data)) {
+    const error = handleError(data);
+    throw error;
+  }
+  return data;
+};
+
+const hasError = (responseData): responseData is TwitterApiErrorType => {
+  return "errors" in responseData;
+};
+
+const handleError = (data: TwitterApiErrorType) => {
+  console.error(JSON.stringify(data.errors));
+  const error = new TwitterError(ErrorTitle);
+  error.name = data.errors[0].title;
+  error.stack = JSON.stringify(data.errors);
+  return error;
 };

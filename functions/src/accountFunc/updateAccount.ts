@@ -5,7 +5,7 @@ import { google } from "googleapis";
 import { toBufferJson } from "../common/utils";
 import { ServiceAccountByYoutubeJsonType, ServiceAccountByYoutubeTopic } from "../firebase/topic";
 import { AccountCollectionPath } from "../firebase/collectionPath";
-import { getUserById } from "../twitterFunc/common/api";
+import { TwitterError, TwitterNotFound, getUserById } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
 import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
 import { formatChannelData } from "../youtubeFunc/common/formatYoutubeData";
@@ -43,11 +43,16 @@ export const updateAccount = async (accountId: string) => {
 
   if (twitterMainRef) {
     const { id } = (await twitterMainRef.get()).data() as TwitterUserDataType;
-    const {
-      data: { data },
-    } = await getUserById(id);
-    const twitterUser = formatTwitterUserData(data);
-    await updateTwitterUser(accountId, twitterUser);
+    try {
+      const { data } = await getUserById(id);
+      const twitterUser = formatTwitterUserData(data);
+      await updateTwitterUser(accountId, twitterUser);
+    } catch (e) {
+      if (e instanceof TwitterError && e.name === TwitterNotFound) {
+        // pass
+      }
+      throw e;
+    }
   }
 
   return true;

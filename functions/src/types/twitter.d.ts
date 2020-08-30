@@ -19,3 +19,14 @@ type UserBaseType = {
 
 declare type TwitterUserObjectType = UserBaseType & { created_at: string };
 declare type TwitterUserDataType = UserBaseType & { created_at: Date };
+
+declare type TwitterApiErrorType = {
+  errors: {
+    title: string;
+    detail: string;
+    resource_type: string;
+    parameter: string;
+    value: string;
+    type: string;
+  }[];
+};

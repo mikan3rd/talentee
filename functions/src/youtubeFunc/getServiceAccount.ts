@@ -1,5 +1,5 @@
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
-import { getUserByUsername } from "../twitterFunc/common/api";
+import { TwitterError, TwitterNotFound, getUserByUsername } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
 import { upsertTwitterUserByChannelId } from "../twitterFunc/common/upsertTwitterUserByChannelId";
 
@@ -14,11 +14,19 @@ export const getServiceAccount = async (channelId: string) => {
     const { serviceName, items } = serviceAccount;
     const firstItem = items[0];
     if (serviceName === "twitter") {
-      const {
-        data: { data },
-      } = await getUserByUsername(firstItem.username);
-      const twitterUser = formatTwitterUserData(data);
-      await upsertTwitterUserByChannelId(twitterUser, channelId);
+      if (!firstItem.username) {
+        continue;
+      }
+      try {
+        const { data } = await getUserByUsername(firstItem.username);
+        const twitterUser = formatTwitterUserData(data);
+        await upsertTwitterUserByChannelId(twitterUser, channelId);
+      } catch (e) {
+        if (e instanceof TwitterError && e.name === TwitterNotFound) {
+          continue;
+        }
+        throw e;
+      }
     }
   }
 
