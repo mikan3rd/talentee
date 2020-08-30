@@ -16,8 +16,8 @@ export const updateAccountPubSub = functions
   .pubsub.topic(UpdateAccountTopic)
   .onPublish(
     sentryWrapper(async (message) => {
-      const { accountId } = message.json as UpdateAccountJsonType;
-      return await updateAccount(accountId);
+      const { accountId, videoCategories } = message.json as UpdateAccountJsonType;
+      return await updateAccount(accountId, videoCategories);
     }),
   );
 
@@ -31,7 +31,7 @@ export const batchUpdateAccountTest = functions.https.onRequest(
 export const updateAccountTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountlId = "4t2P26lmXTzAaEfSy3ha";
-    await updateAccount(accountlId);
+    await updateAccount(accountlId, []);
     res.send();
   }),
 );

@@ -6,10 +6,11 @@ export const ServiceAccountByYoutubeTopic = "GetServiceAccountByYoutubeTopic" as
 
 export type UpdateAccountJsonType = {
   accountId: string;
+  videoCategories: youtube_v3.Schema$VideoCategory[];
 };
 
 export type PopularVideoJsonType = {
-  channel: FirebaseFirestore.DocumentData;
+  channelId: string;
   videoCategories: youtube_v3.Schema$VideoCategory[];
 };
 

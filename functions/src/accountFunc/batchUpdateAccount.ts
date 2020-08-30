@@ -5,6 +5,7 @@ import * as dayjs from "dayjs";
 import { toBufferJson } from "../common/utils";
 import { UpdateAccountJsonType, UpdateAccountTopic } from "../firebase/topic";
 import { AccountCollectionPath } from "../firebase/collectionPath";
+import { getVideoCategories } from "../youtubeFunc/common/getVideoCategories";
 
 export const batchUpdateAccount = async () => {
   const db = admin.firestore();
@@ -23,9 +24,11 @@ export const batchUpdateAccount = async () => {
     accountIds.push(doc.id);
   });
 
+  const videoCategories = await getVideoCategories();
+
   const pubSub = new PubSub();
   for (const accountId of accountIds) {
-    const data: UpdateAccountJsonType = { accountId };
+    const data: UpdateAccountJsonType = { accountId, videoCategories };
     await pubSub.topic(UpdateAccountTopic).publish(toBufferJson(data));
   }
 };

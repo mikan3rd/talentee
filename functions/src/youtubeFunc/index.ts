@@ -11,7 +11,6 @@ import {
 
 import { getVideoCategories } from "./common/getVideoCategories";
 import { savePopularChannel } from "./savePopularChannel";
-import { updateRecentVideo } from "./updateRecentVideo";
 import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { getServiceAccount } from "./getServiceAccount";
@@ -40,14 +39,6 @@ export const getYoutubePopularChannelMonthly = scheduleFunctions({ timeoutSecond
   sentryWrapper(async (context) => {
     const publishedAfter = dayjs().subtract(1, "month");
     await savePopularChannel(publishedAfter);
-  }),
-);
-
-export const updateRecentVideoScheduler = scheduleFunctions({ timeoutSeconds: 300, memory: "512MB" })(
-  "0 3 * * *",
-).onRun(
-  sentryWrapper(async (context) => {
-    await updateRecentVideo();
   }),
 );
 
@@ -112,13 +103,6 @@ export const getTrendVideoIdsTest = functions.runWith({ timeoutSeconds: 540, mem
 export const getYoutubeTrendChannelTest = functions.runWith({ timeoutSeconds: 540, memory: "2GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const result = await saveTrendChannel();
-    res.send({ result });
-  }),
-);
-
-export const updateRecentVideoTest = functions.runWith({ timeoutSeconds: 300, memory: "512MB" }).https.onRequest(
-  sentryWrapper(async (req, res) => {
-    const result = await updateRecentVideo();
     res.send({ result });
   }),
 );

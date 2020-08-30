@@ -1,9 +1,14 @@
 import * as admin from "firebase-admin";
 import { PubSub } from "@google-cloud/pubsub";
-import { google } from "googleapis";
+import { google, youtube_v3 } from "googleapis";
 
 import { toBufferJson } from "../common/utils";
-import { ServiceAccountByYoutubeJsonType, ServiceAccountByYoutubeTopic } from "../firebase/topic";
+import {
+  PopularVideoJsonType,
+  PopularVideoTopic,
+  ServiceAccountByYoutubeJsonType,
+  ServiceAccountByYoutubeTopic,
+} from "../firebase/topic";
 import { AccountCollectionPath } from "../firebase/collectionPath";
 import { TwitterError, TwitterNotFound, getUserById } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
@@ -12,7 +17,7 @@ import { formatChannelData } from "../youtubeFunc/common/formatYoutubeData";
 import { updateChannel } from "../youtubeFunc/common/updateChannel";
 import { api_key } from "../common/config";
 
-export const updateAccount = async (accountId: string) => {
+export const updateAccount = async (accountId: string, videoCategories: youtube_v3.Schema$VideoCategory[]) => {
   const db = admin.firestore();
   const accountCollection = db.collection(AccountCollectionPath);
 
@@ -39,6 +44,9 @@ export const updateAccount = async (accountId: string) => {
     });
     const channelData = formatChannelData(channelResponse.data.items[0]);
     await updateChannel(accountId, channelData);
+
+    const videoTopicdata: PopularVideoJsonType = { channelId: id, videoCategories };
+    await pubSub.topic(PopularVideoTopic).publish(toBufferJson(videoTopicdata));
   }
 
   if (twitterMainRef) {
