@@ -29,22 +29,6 @@ declare interface IYoutubeVideoData {
   videoCategory: { snippet: { title: string } };
 }
 
-declare type TwitterDataType = {
-  id: string;
-  snippet: {
-    title: string;
-    description: string;
-    thumbnails: { medium: { url: string } };
-    country: string;
-    publishedAt: string;
-  };
-  statistics: { subscriberCount: number; videoCount: number; viewCount: number; hiddenSubscriberCount: boolean };
-  brandingSettings: { channel: { keywords: string[] } };
-  accountRef: { id: string };
-  videoCategories: { snippet: { title: string } }[];
-  updatedAt: number;
-};
-
 type TwitterUserBaseType = {
   verified: boolean;
   id: string;
@@ -65,6 +49,7 @@ type TwitterUserBaseType = {
 };
 
 declare type TwitterUserObjectType = TwitterUserBaseType & {
+  accountRef: { id: string };
   created_at: firebase.firestore.Timestamp;
   createdAt: firebase.firestore.Timestamp;
   updatedAt: firebase.firestore.Timestamp;

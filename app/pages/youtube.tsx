@@ -5,7 +5,7 @@ import { YoutubeIndex } from "../components/pages/YoutubeIndex";
 import { Meta } from "../components/templates/Meta";
 import { TopSection, YoutubeSection } from "../components/templates/BreadcrumbSection";
 
-const Top: React.FC = () => {
+const YoutubeIndexPage: React.FC = () => {
   return (
     <>
       <Meta title="Youtube" />
@@ -23,4 +23,4 @@ const Top: React.FC = () => {
   );
 };
 
-export default Top;
+export default YoutubeIndexPage;

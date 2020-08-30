@@ -15,7 +15,7 @@ export const Account: React.FC<{
   const { tmpUsername } = accountData;
 
   // TODO: 元のデータを修正する
-  const thumbnailUrl = accountData.thumbnailUrl.replace(/_normal(?=.jpg$)/, "");
+  const thumbnailUrl = accountData.thumbnailUrl.replace(/_normal(?=.(jpg|jpeg|png)$)/, "");
 
   const panes = [];
   if (youtubeData) {
@@ -100,22 +100,21 @@ export const Account: React.FC<{
 
       <Divider />
 
-      <Link href="/youtube" passHref>
-        <Button
-          icon
-          labelPosition="left"
-          color="red"
-          as="a"
-          css={css`
-            &&& {
-              width: 100%;
-            }
-          `}
-        >
-          <Icon name="hand point right" />
-          他のYouTuberを見つける！
-        </Button>
-      </Link>
+      <div>
+        <Link href="/youtube" passHref>
+          <Button icon labelPosition="left" color="red" as="a" css={WideButtonCss}>
+            <Icon name="hand point right" />
+            他のYouTuberを見つける！
+          </Button>
+        </Link>
+
+        <Link href="/twitter" passHref>
+          <Button icon labelPosition="left" color="blue" as="a" css={WideButtonCss}>
+            <Icon name="hand point right" />
+            他のTwitterを見つける！
+          </Button>
+        </Link>
+      </div>
     </>
   );
 };
@@ -125,6 +124,16 @@ const LinkButtonCss = css`
     margin-left: 10px;
     &:first-of-type {
       margin-left: 0;
+    }
+  }
+`;
+
+const WideButtonCss = css`
+  &&& {
+    width: 100%;
+    margin-top: 10px;
+    &:first-of-type {
+      margin-top: 0;
     }
   }
 `;
