@@ -11,7 +11,17 @@ export const bulkJudgeServiceAccount = (urls: string[]) => {
 };
 
 export const judgeServiceAccount = (url: string) => {
-  const pathname = new URL(url).pathname;
+  let pathname = "";
+  try {
+    pathname = new URL(url).pathname;
+  } catch (e) {
+    console.error(e);
+    return {
+      serviceName: "other",
+      username: "",
+      url,
+    };
+  }
   const pathArray = pathname.split("/").reverse();
   let username = pathArray.find((path) => !!path) || "";
 

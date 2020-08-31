@@ -52,7 +52,7 @@ export const updateVideoPubSub = functions
   );
 
 export const getServiceAccountPubSub = functions
-  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 5 })
+  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 3 })
   .pubsub.topic(ServiceAccountByYoutubeTopic)
   .onPublish(
     sentryWrapper(async (message) => {
