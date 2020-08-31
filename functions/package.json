@@ -23,7 +23,8 @@
     "firebase-admin": "9.1.1",
     "firebase-functions": "3.11.0",
     "googleapis": "58.0.0",
-    "puppeteer": "5.2.1"
+    "puppeteer": "5.2.1",
+    "twitter": "1.7.1"
   },
   "devDependencies": {
     "@types/puppeteer": "3.0.1",
