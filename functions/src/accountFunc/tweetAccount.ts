@@ -37,9 +37,10 @@ export const tweetAccountByYoutube = async () => {
   const client = TwitterClient.getBot();
   const status = [
     title,
-    `チャンネル登録者数 ${toUnitString(subscriberCount)}人`,
-    `再生回数 ${toUnitString(viewCount)}`,
-    `動画投稿数 ${toUnitString(videoCount)}`,
+    ``,
+    `【チャンネル登録者数】${toUnitString(subscriberCount)}人`,
+    `【再生回数】${toUnitString(viewCount)}回`,
+    `【動画投稿数】${toUnitString(videoCount)}本`,
     accountUrl(accountId),
   ].join("\n");
   await client.postTweet(status);
