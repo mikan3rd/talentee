@@ -4,10 +4,17 @@ import { UpdateAccountJsonType, UpdateAccountTopic } from "../firebase/topic";
 
 import { batchUpdateAccount } from "./batchUpdateAccount";
 import { updateAccount } from "./updateAccount";
+import { tweetAccountByYoutube } from "./tweetAccount";
 
-export const batchUpdateAccountScheduler = scheduleFunctions()("0 4,16 * * *").onRun(
+export const batchUpdateAccountScheduler = scheduleFunctions()("0 9,21 * * *").onRun(
   sentryWrapper(async (context) => {
     await batchUpdateAccount();
+  }),
+);
+
+export const tweetAccountByYoutubeScheduler = scheduleFunctions()("1 * * * *").onRun(
+  sentryWrapper(async (context) => {
+    await tweetAccountByYoutube();
   }),
 );
 
@@ -32,6 +39,13 @@ export const updateAccountTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountlId = "4t2P26lmXTzAaEfSy3ha";
     await updateAccount(accountlId, []);
+    res.send();
+  }),
+);
+
+export const tweetAccountByYoutubeTest = functions.https.onRequest(
+  sentryWrapper(async (req, res) => {
+    await tweetAccountByYoutube();
     res.send();
   }),
 );

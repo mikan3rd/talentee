@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import { PubSub } from "@google-cloud/pubsub";
-import { google, youtube_v3 } from "googleapis";
+import { youtube_v3 } from "googleapis";
 
 import { toBufferJson } from "../common/utils";
 import {
