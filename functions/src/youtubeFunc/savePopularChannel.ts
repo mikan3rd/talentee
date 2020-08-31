@@ -1,11 +1,10 @@
 import * as dayjs from "dayjs";
-import * as functions from "firebase-functions";
-import { google, youtube_v3 } from "googleapis";
+import { youtube_v3 } from "googleapis";
+
+import { youtubeService } from "../common/config";
 
 import { getVideoCategories } from "./common/getVideoCategories";
 import { saveChannel } from "./common/saveChannel";
-
-const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 export const savePopularChannel = async (publishedAfter: dayjs.Dayjs) => {
   const videoCategories = await getVideoCategories();
@@ -24,9 +23,7 @@ const savePopularChannelByCategory = async (
   publishedAfter: dayjs.Dayjs,
   videoCategory: youtube_v3.Schema$VideoCategory,
 ) => {
-  const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
-
-  const searchResponse = await service.search.list({
+  const searchResponse = await youtubeService.search.list({
     part: ["id", "snippet"],
     type: ["video"],
     videoCategoryId: videoCategory.id,

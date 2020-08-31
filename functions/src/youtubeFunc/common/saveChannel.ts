@@ -1,24 +1,20 @@
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
-import { google, youtube_v3 } from "googleapis";
+import { youtube_v3 } from "googleapis";
 
 import { AccountCollectionPath, YoutubeChannelCollectionPath } from "../../firebase/collectionPath";
 import { chunk } from "../../common/utils";
+import { youtubeService } from "../../common/config";
 
 import { formatChannelData } from "./formatYoutubeData";
-
-const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 const { FieldValue } = admin.firestore;
 
 export const saveChannel = async (channelIds: string[]) => {
-  const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
-
   const uniqueChannelIds = Array.from(new Set(channelIds));
 
   let channelItems: youtube_v3.Schema$Channel[] = [];
   for (const chunkChannelIds of chunk(uniqueChannelIds, 50)) {
-    const channelResponse = await service.channels.list({
+    const channelResponse = await youtubeService.channels.list({
       part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
       id: chunkChannelIds,
     });
