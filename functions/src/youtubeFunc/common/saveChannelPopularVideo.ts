@@ -1,13 +1,11 @@
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
-import { google, youtube_v3 } from "googleapis";
+import { youtube_v3 } from "googleapis";
 
 import { YoutubeVideoCollectionPath } from "../../firebase/collectionPath";
+import { youtubeService } from "../../common/config";
 
 import { getChannelPopularVideo } from "./getChannelPopularVideo";
 import { formatVideoData } from "./formatYoutubeData";
-
-const YOUTUBE_API_KEY = functions.config().youtube.api_key;
 
 const { FieldValue } = admin.firestore;
 
@@ -15,8 +13,6 @@ export const saveChannelPopularVideo = async (
   channelId: string,
   videoCategories: youtube_v3.Schema$VideoCategory[],
 ) => {
-  const service = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
-
   const db = admin.firestore();
   const youtubeVideoCollection = db.collection(YoutubeVideoCollectionPath);
 
@@ -25,7 +21,7 @@ export const saveChannelPopularVideo = async (
     return { uniqueVideoCategoryIds: [], uniqueVideoCategories: [] };
   }
 
-  const videoResponse = await service.videos.list({
+  const videoResponse = await youtubeService.videos.list({
     part: ["id", "snippet", "contentDetails", "statistics", "player"],
     hl: "ja",
     regionCode: "JP",

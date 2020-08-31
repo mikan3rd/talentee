@@ -15,7 +15,7 @@ import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
 import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
 import { formatChannelData } from "../youtubeFunc/common/formatYoutubeData";
 import { updateChannel } from "../youtubeFunc/common/updateChannel";
-import { api_key } from "../common/config";
+import { youtubeService } from "../common/config";
 
 export const updateAccount = async (accountId: string, videoCategories: youtube_v3.Schema$VideoCategory[]) => {
   const db = admin.firestore();
@@ -37,8 +37,7 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
     const topicData: ServiceAccountByYoutubeJsonType = { channelId: id };
     await pubSub.topic(ServiceAccountByYoutubeTopic).publish(toBufferJson(topicData));
 
-    const service = google.youtube({ version: "v3", auth: api_key });
-    const channelResponse = await service.channels.list({
+    const channelResponse = await youtubeService.channels.list({
       part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
       id: [id],
     });

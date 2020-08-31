@@ -1,13 +1,10 @@
-import * as functions from "firebase-functions";
 import axios from "axios";
 
-const {
-  twitter: { bearer_token },
-} = functions.config();
+import { TWITTER_BEARER_TOKEN } from "../../common/config";
 
 const endpoint = "https://api.twitter.com";
 const version2Endpoint = `${endpoint}/2`;
-const headers = { Authorization: `Bearer ${bearer_token}` };
+const headers = { Authorization: `Bearer ${TWITTER_BEARER_TOKEN}` };
 
 const userFields = [
   "created_at",
