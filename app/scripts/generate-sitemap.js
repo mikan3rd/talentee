@@ -33,10 +33,13 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 </urlset>
 `;
 
-  // If you're not using Prettier, you can remove this.
-  const formattedSireMap = prettier.format(sitemap, {
+  const robots = `User-agent: *
+Sitemap: ${baseUrl}/sitemap.xml`;
+
+  const formattedSiteMap = prettier.format(sitemap, {
     parser: "html",
   });
 
-  fs.writeFileSync("public/sitemap.xml", formattedSireMap);
+  fs.writeFileSync("public/sitemap.xml", formattedSiteMap);
+  fs.writeFileSync("public/robots.txt", robots);
 })();
