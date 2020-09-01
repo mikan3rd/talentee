@@ -40,6 +40,7 @@ export const tweetAccountByYoutube = async () => {
     `【人気YouTuberまとめ】`,
     ``,
     title,
+    ``,
     `【チャンネル登録者数】${toUnitString(subscriberCount)}人`,
     `【再生回数】${toUnitString(viewCount)}回`,
     `【動画投稿数】${toUnitString(videoCount)}本`,
