@@ -119,7 +119,7 @@ export const getVideoCategoriesTest = functions.https.onRequest(
 
 export const getServiceAccountTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
-    const channelId = "UC-ASnhD1JXr-AISPr0tv_OA";
+    const channelId = "UCHp2q2i85qt_9nn2H7AvGOw";
     const result = await getServiceAccount(channelId);
     res.send(result);
   }),
