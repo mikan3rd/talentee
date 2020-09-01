@@ -41,8 +41,10 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
       part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
       id: [id],
     });
-    const channelData = formatChannelData(channelResponse.data.items[0]);
-    await updateChannel(accountId, channelData);
+    if (channelResponse.data.items.length) {
+      const channelData = formatChannelData(channelResponse.data.items[0]);
+      await updateChannel(accountId, channelData);
+    }
 
     const videoTopicdata: PopularVideoJsonType = { channelId: id, videoCategories };
     await pubSub.topic(PopularVideoTopic).publish(toBufferJson(videoTopicdata));
