@@ -10,6 +10,22 @@ export const getTrendVideoIds = async () => {
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
   );
 
+  await page.setRequestInterception(true);
+  page.on("request", (request) => {
+    const resourceType = request.resourceType();
+    const resouceUrl = request.url();
+    const abortCondition =
+      ["image", "stylesheet", "font", "xhr", "manifest", "fetch"].includes(resourceType) ||
+      (resourceType === "script" && !/youtube.com/.test(resouceUrl)) ||
+      (resourceType === "other" && !/ytimg.com/.test(resouceUrl));
+    if (abortCondition) {
+      request.abort();
+    } else {
+      console.log(resourceType, resouceUrl);
+      request.continue();
+    }
+  });
+
   const trendUrl = `https://www.youtube.com/feed/trending`;
   await page.goto(trendUrl, { timeout: 1000 * 120 });
 
