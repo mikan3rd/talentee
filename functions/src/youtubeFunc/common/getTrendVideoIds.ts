@@ -21,7 +21,7 @@ export const getTrendVideoIds = async () => {
     if (abortCondition) {
       request.abort();
     } else {
-      console.log(resourceType, resouceUrl);
+      // console.log(resourceType, resouceUrl);
       request.continue();
     }
   });

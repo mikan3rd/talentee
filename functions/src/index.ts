@@ -18,3 +18,4 @@ dayjs.locale("ja");
 
 export * from "./accountFunc";
 export * from "./youtubeFunc";
+export * from "./twitterFunc";
