@@ -18,7 +18,8 @@ export const tweetAccountByYoutube = async () => {
   const { youtubeStartAfterId } = tweetAccoutData;
   let query = db.collection(YoutubeChannelCollectionPath).orderBy("statistics.subscriberCount", "desc");
   if (youtubeStartAfterId) {
-    query = query.startAfter(youtubeStartAfterId);
+    const startAfterDoc = await db.collection(YoutubeChannelCollectionPath).doc(youtubeStartAfterId).get();
+    query = query.startAfter(startAfterDoc);
   }
   const youtubeDocs = await query.limit(1).get();
 
@@ -36,6 +37,8 @@ export const tweetAccountByYoutube = async () => {
 
   const client = TwitterClient.getBot();
   const status = [
+    `人気YouTuberまとめ！`,
+    ``,
     title,
     ``,
     `【チャンネル登録者数】${toUnitString(subscriberCount)}人`,
@@ -43,6 +46,7 @@ export const tweetAccountByYoutube = async () => {
     `【動画投稿数】${toUnitString(videoCount)}本`,
     accountUrl(accountId),
   ].join("\n");
+
   await client.postTweet(status);
 
   tweetAccoutData.youtubeStartAfterId = youtubeData.id;
