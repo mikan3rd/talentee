@@ -13,11 +13,8 @@ export const getTrendVideoIds = async () => {
   await page.setRequestInterception(true);
   page.on("request", (request) => {
     const resourceType = request.resourceType();
-    const resouceUrl = request.url();
-    const abortCondition =
-      ["image", "stylesheet", "font", "xhr", "manifest", "fetch"].includes(resourceType) ||
-      (resourceType === "script" && !/youtube.com/.test(resouceUrl)) ||
-      (resourceType === "other" && !/ytimg.com/.test(resouceUrl));
+    // const resouceUrl = request.url();
+    const abortCondition = ["image", "stylesheet", "font", "manifest"].includes(resourceType);
     if (abortCondition) {
       request.abort();
     } else {
@@ -47,7 +44,8 @@ export const getTrendVideoIds = async () => {
   const videoIds: string[] = [];
 
   for (const url of trendUrls) {
-    await page.goto(url);
+    console.log(url);
+    await page.goto(url, { timeout: 1000 * 120 });
     await page.waitForSelector(LinkSelector);
     const linkElements = await page.$$(LinkSelector);
 
