@@ -1,4 +1,4 @@
-type UserBaseType = {
+type TwitterUserBaseType = {
   verified: boolean;
   id: string;
   username: string;
@@ -17,8 +17,17 @@ type UserBaseType = {
   description: string;
 };
 
-declare type TwitterUserObjectType = UserBaseType & { created_at: string };
-declare type TwitterUserDataType = UserBaseType & { created_at: Date };
+declare type TwitterUserObjectType = TwitterUserBaseType & {
+  accountRef: firebase.firestore.DocumentReference;
+  created_at: firebase.firestore.Timestamp;
+  createdAt: firebase.firestore.Timestamp;
+  updatedAt: firebase.firestore.Timestamp;
+};
+declare type TwitterUserDataType = TwitterUserBaseType & {
+  created_at: number;
+  createdAt: number;
+  updatedAt: number;
+};
 
 type TweetBaseType = {
   context_annotations: {
@@ -74,16 +83,13 @@ type TweetBaseType = {
   };
 };
 
-declare type TweetObjectType = TweetBaseType & { created_at: string };
-declare type TweetDataType = TweetBaseType & { created_at: Date };
-
-declare type TwitterApiErrorType = {
-  errors: {
-    title: string;
-    detail: string;
-    resource_type: string;
-    parameter: string;
-    value: string;
-    type: string;
-  }[];
+declare type TweetObjectType = TweetBaseType & {
+  created_at: firebase.firestore.Timestamp;
+  createdAt: firebase.firestore.Timestamp;
+  updatedAt: firebase.firestore.Timestamp;
+};
+declare type TweetDataType = TweetBaseType & {
+  created_at: number;
+  createdAt: number;
+  updatedAt: number;
 };

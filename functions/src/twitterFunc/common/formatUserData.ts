@@ -8,3 +8,11 @@ export const formatTwitterUserData = (userObject: TwitterUserObjectType): Twitte
     created_at: dayjs(created_at).toDate(),
   };
 };
+
+export const formatTweetData = (tweetObject: TweetObjectType): TweetDataType => {
+  const { created_at } = tweetObject;
+  return {
+    ...tweetObject,
+    created_at: dayjs(created_at).toDate(),
+  };
+};

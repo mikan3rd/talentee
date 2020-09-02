@@ -11,7 +11,8 @@ export const Account: React.FC<{
   youtubeData?: IYoutubeData;
   youtubePopularVideos: IYoutubeVideoData[];
   twitterUserData: TwitterUserDataType;
-}> = ({ accountData, youtubeData, youtubePopularVideos, twitterUserData }) => {
+  popularTweets: TweetDataType[];
+}> = ({ accountData, youtubeData, youtubePopularVideos, twitterUserData, popularTweets }) => {
   const { tmpUsername } = accountData;
 
   // TODO: 元のデータを修正する
@@ -34,7 +35,7 @@ export const Account: React.FC<{
       menuItem: { key: "twitter", icon: "twitter", content: "Twitter" },
       render: () => (
         <Tab.Pane>
-          <TwitterDetail twitterUserData={twitterUserData} />
+          <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
         </Tab.Pane>
       ),
     });

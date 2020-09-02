@@ -1,20 +1,33 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Divider, Icon } from "semantic-ui-react";
+import { Divider, Header, Icon } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 
-export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType }> = ({ twitterUserData }) => {
+export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; popularTweets: TweetDataType[] }> = ({
+  twitterUserData,
+  popularTweets,
+}) => {
   const {
     name,
+    username,
     profile_image_url,
     description,
     public_metrics: { followers_count, following_count, tweet_count },
     created_at,
     updatedAt,
   } = twitterUserData;
+
+  React.useEffect(() => {
+    const s = document.createElement("script");
+    s.setAttribute("src", "https://platform.twitter.com/widgets.js");
+    s.setAttribute("async", "true");
+    s.setAttribute("charset", "utf-8");
+    document.head.appendChild(s);
+  }, []);
+
   const createdAtTime = dayjs.unix(created_at);
   const updateAtTime = dayjs.unix(updatedAt);
   return (
@@ -86,7 +99,47 @@ export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType }> =
         開設日 {createdAtTime.format("YYYY年M月D日")}
       </div>
 
+      {popularTweets.length > 0 && (
+        <>
+          <Divider />
+
+          <div>
+            <Header
+              css={css`
+                &&& {
+                  margin: 20px 0 0 0;
+                }
+              `}
+            >
+              <Icon name="video" />
+              人気ツイートTOP3
+            </Header>
+            <div
+              css={css`
+                .twitter-tweet {
+                  margin: 0 auto;
+                }
+              `}
+            >
+              {popularTweets.map((tweet) => {
+                const { id, text } = tweet;
+                return (
+                  <blockquote key={tweet.id} className="twitter-tweet">
+                    <p>
+                      <Linkify>{text}</Linkify>
+                    </p>
+                    &mdash; {name} (@{username})
+                    <a href={`https://twitter.com/${username}/status/${id}`} />
+                  </blockquote>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
+
       <Divider />
+
       <div
         css={css`
           text-align: right;
