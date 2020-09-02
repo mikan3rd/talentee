@@ -41,7 +41,7 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
       part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
       id: [id],
     });
-    if (channelResponse.data.items.length) {
+    if (channelResponse.data.items) {
       const channelData = formatChannelData(channelResponse.data.items[0]);
       await updateChannel(accountId, channelData);
     }
