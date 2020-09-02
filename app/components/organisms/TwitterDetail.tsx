@@ -160,7 +160,3 @@ const CountWrapperCss = css`
     margin-right: 0;
   }
 `;
-
-{
-  /* <script async src="https://platform.twitter.com/widgets.js"></script>; */
-}
