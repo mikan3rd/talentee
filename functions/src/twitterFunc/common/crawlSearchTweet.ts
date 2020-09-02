@@ -19,15 +19,27 @@ export const crawlSearchTweet = async (username: string) => {
     }
   });
 
-  const minRetweets = 1000;
-
-  const targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
-
+  let minRetweets = 1000;
+  let targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
   console.log(targetUrl);
   await page.goto(encodeURI(targetUrl));
 
   const LinkSelector = "article a" as const;
-  await page.waitForSelector(LinkSelector);
+  try {
+    await page.waitForSelector(LinkSelector);
+  } catch {
+    try {
+      minRetweets = 100;
+      targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
+      console.log(targetUrl);
+      await page.goto(encodeURI(targetUrl));
+      await page.waitForSelector(LinkSelector);
+    } catch (e) {
+      console.error(e);
+      await browser.close();
+      return [];
+    }
+  }
   const elements = await page.$$(LinkSelector);
 
   const statusUrlReg = new RegExp(`${username}/status/`);

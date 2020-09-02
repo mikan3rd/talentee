@@ -4,3 +4,4 @@ export const YoutubeChannelCollectionPath = "youtubeChannel" as const;
 export const YoutubeVideoCollectionPath = "youtubeVideo" as const;
 
 export const TwitterUserCollectionPath = "twitterUser" as const;
+export const TwitterTweetCollectionPath = "twitterTweet" as const;

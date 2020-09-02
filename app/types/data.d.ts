@@ -16,7 +16,7 @@ declare interface IYoutubeData {
   };
   statistics: { subscriberCount: number; videoCount: number; viewCount: number; hiddenSubscriberCount: boolean };
   brandingSettings: { channel: { keywords: string[] } };
-  accountRef: { id: string };
+  accountRef: firebase.firestore.DocumentReference;
   videoCategories: { snippet: { title: string } }[];
   updatedAt: number;
 }
@@ -28,34 +28,3 @@ declare interface IYoutubeVideoData {
   player: { embedHtml: string };
   videoCategory: { snippet: { title: string } };
 }
-
-type TwitterUserBaseType = {
-  verified: boolean;
-  id: string;
-  username: string;
-  protected: boolean;
-  pinned_tweet_id: string;
-  public_metrics: {
-    followers_count: number;
-    following_count: number;
-    tweet_count: number;
-    listed_count: number;
-  };
-  profile_image_url: string;
-  name: string;
-  url: string;
-  entities: { url: { urls: { start: number; end: number; url: string; expanded_url: string; display_url: string }[] } };
-  description: string;
-};
-
-declare type TwitterUserObjectType = TwitterUserBaseType & {
-  accountRef: { id: string };
-  created_at: firebase.firestore.Timestamp;
-  createdAt: firebase.firestore.Timestamp;
-  updatedAt: firebase.firestore.Timestamp;
-};
-declare type TwitterUserDataType = TwitterUserBaseType & {
-  created_at: number;
-  createdAt: number;
-  updatedAt: number;
-};

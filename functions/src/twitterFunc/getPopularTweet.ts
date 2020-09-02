@@ -14,6 +14,10 @@ export const getPopularTweet = async (username: string) => {
   console.log(JSON.stringify(linkUrls));
   const tweetIds = linkUrls.map((url) => getTweetIdByUrl(url));
 
+  if (!tweetIds.length) {
+    return false;
+  }
+
   const { data } = await getTweets(tweetIds);
 
   const tweetCollection = db.collection(TwitterTweetCollectionPath);
@@ -35,4 +39,6 @@ export const getPopularTweet = async (username: string) => {
 
     await tweetRef.set(firestoreTweetData, { merge: true });
   }
+
+  return true;
 };
