@@ -73,6 +73,7 @@ export class TwitterError extends Error {}
 export const TwitterNotFound = "Not Found Error";
 
 type UserResponseType = { data: TwitterUserObjectType };
+type TweetsResponseType = { data: TweetObjectType[] };
 
 export const getUserByUsername = async (username: string) => {
   const url = `${version2Endpoint}/users/by/username/${username}`;
@@ -107,7 +108,7 @@ export const getTweets = async (ids: string[]) => {
     "poll.fields": pollFields.join(","),
     expansions: expansions.join(","),
   };
-  const { data } = await axios.get<UserResponseType | TwitterApiErrorType>(url, { params, headers });
+  const { data } = await axios.get<TweetsResponseType | TwitterApiErrorType>(url, { params, headers });
   if (hasError(data)) {
     const error = handleError(data);
     throw error;

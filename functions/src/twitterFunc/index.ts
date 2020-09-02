@@ -21,7 +21,6 @@ import { getPopularTweet } from "./getPopularTweet";
 
 export const getPopularTweetTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
-    const accountlId = "4t2P26lmXTzAaEfSy3ha";
     await getPopularTweet();
     res.send();
   }),
