@@ -27,10 +27,10 @@ export const crawlSearchTweet = async (username: string) => {
   await page.goto(encodeURI(targetUrl));
 
   const LinkSelector = "article a" as const;
-  await page.waitForSelector(LinkSelector, { timeout: 1000 * 120 });
+  await page.waitForSelector(LinkSelector);
   const elements = await page.$$(LinkSelector);
 
-  const statusUrlReg = new RegExp(`${username}/status`);
+  const statusUrlReg = new RegExp(`${username}/status/`);
 
   const linkUrls: string[] = [];
   for (const ele of elements) {
