@@ -3,8 +3,12 @@ import * as puppeteer from "puppeteer";
 import { getPuppeteerOptions } from "../../common/utils";
 
 export const crawlSearchTweet = async (username: string) => {
-  const browser = await puppeteer.launch(getPuppeteerOptions());
+  const browser = await puppeteer.launch(getPuppeteerOptions(true));
   const page = await browser.newPage();
+
+  await page.setUserAgent(
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+  );
 
   await page.setRequestInterception(true);
   page.on("request", (request) => {
@@ -22,7 +26,7 @@ export const crawlSearchTweet = async (username: string) => {
   let minRetweets = 1000;
   let targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
   console.log(targetUrl);
-  await page.goto(encodeURI(targetUrl));
+  await page.goto(encodeURI(targetUrl), { timeout: 1000 * 120 });
 
   const LinkSelector = "article a" as const;
   try {
@@ -32,7 +36,7 @@ export const crawlSearchTweet = async (username: string) => {
       minRetweets = 100;
       targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
       console.log(targetUrl);
-      await page.goto(encodeURI(targetUrl));
+      await page.goto(encodeURI(targetUrl), { timeout: 1000 * 120 });
       await page.waitForSelector(LinkSelector);
     } catch (e) {
       console.error(e);
@@ -48,12 +52,15 @@ export const crawlSearchTweet = async (username: string) => {
   for (const ele of elements) {
     const property = await ele.getProperty("href");
     const url = (await property.jsonValue()) as string;
-    if (statusUrlReg.test(url)) {
-      linkUrls.push(url);
+    const formatUrl = url.replace(/\/photo\/\d+$/, "");
+    if (statusUrlReg.test(formatUrl)) {
+      linkUrls.push(formatUrl);
     }
   }
 
   await browser.close();
 
-  return linkUrls;
+  const uniqueUrls = Array.from(new Set(linkUrls));
+  console.log(JSON.stringify({ uniqueUrls }));
+  return uniqueUrls;
 };

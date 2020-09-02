@@ -31,7 +31,7 @@ export const getPuppeteerOptions = (useProxy?: boolean) => {
     // "--lang=ja",
   ];
   if (useProxy) {
-    args.push("--proxy-server=163.43.108.114:8080");
+    args.push("--proxy-server=157.7.223.210:3128");
   }
   const options: puppeteer.LaunchOptions = {
     headless: true,
