@@ -9,11 +9,10 @@ import { formatTweetData } from "./common/formatUserData";
 
 const { FieldValue } = admin.firestore;
 
-export const getPopularTweet = async () => {
-  const username = "monst_mixi";
+export const getPopularTweet = async (username: string) => {
   const linkUrls = await crawlSearchTweet(username);
+  console.log(JSON.stringify(linkUrls));
   const tweetIds = linkUrls.map((url) => getTweetIdByUrl(url));
-  console.log(JSON.stringify({ tweetIds }));
 
   const { data } = await getTweets(tweetIds);
 

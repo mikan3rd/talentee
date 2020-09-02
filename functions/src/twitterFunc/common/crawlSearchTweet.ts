@@ -19,7 +19,7 @@ export const crawlSearchTweet = async (username: string) => {
     }
   });
 
-  const minRetweets = 10000;
+  const minRetweets = 1000;
 
   const targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
 

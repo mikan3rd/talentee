@@ -4,6 +4,8 @@ import { youtube_v3 } from "googleapis";
 
 import { toBufferJson } from "../common/utils";
 import {
+  PopularTweetTopic,
+  PopularTweetsonType,
   PopularVideoJsonType,
   PopularVideoTopic,
   ServiceAccountByYoutubeJsonType,
@@ -51,7 +53,7 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
   }
 
   if (twitterMainRef) {
-    const { id } = (await twitterMainRef.get()).data() as TwitterUserDataType;
+    const { id, username } = (await twitterMainRef.get()).data() as TwitterUserDataType;
     try {
       const { data } = await getUserById(id);
       const twitterUser = formatTwitterUserData(data);
@@ -63,6 +65,9 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
         throw e;
       }
     }
+
+    const tweetTopicdata: PopularTweetsonType = { username, userId: id };
+    await pubSub.topic(PopularTweetTopic).publish(toBufferJson(tweetTopicdata));
   }
 
   return true;
