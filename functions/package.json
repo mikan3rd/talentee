@@ -19,7 +19,7 @@
     "@google-cloud/pubsub": "2.5.0",
     "@sentry/node": "5.22.3",
     "axios": "0.20.0",
-    "dayjs": "1.8.34",
+    "dayjs": "1.8.35",
     "firebase-admin": "9.1.1",
     "firebase-functions": "3.11.0",
     "googleapis": "58.0.0",
