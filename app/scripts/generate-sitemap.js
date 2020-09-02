@@ -37,6 +37,17 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
     accountPages.push(accountPath);
   });
 
+  const twitterDocs = await db
+    .collection("twitterUser")
+    .orderBy("public_metrics.followers_count", "desc")
+    .limit(100)
+    .get();
+  twitterDocs.forEach((doc) => {
+    const { accountRef } = doc.data();
+    const accountPath = `/account/${accountRef.id}`;
+    accountPages.push(accountPath);
+  });
+
   // Combine them into the pages you care about
   const allPages = [...pages, ...accountPages];
 
