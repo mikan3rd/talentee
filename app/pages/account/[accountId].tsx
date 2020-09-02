@@ -17,11 +17,13 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
     youtubeData,
     youtubePopularVideos,
     twitterUserData,
+    popularTweets,
   }: {
     accountData: IAccountData;
     youtubeData?: IYoutubeData;
     youtubePopularVideos: IYoutubeVideoData[];
     twitterUserData?: TwitterUserDataType;
+    popularTweets: TweetDataType[];
   } = JSON.parse(jsonData);
 
   if (!accountData) {
@@ -54,6 +56,7 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
         youtubeData={youtubeData}
         youtubePopularVideos={youtubePopularVideos}
         twitterUserData={twitterUserData}
+        popularTweets={popularTweets}
       />
     </>
   );
