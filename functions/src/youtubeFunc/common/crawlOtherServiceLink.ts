@@ -26,7 +26,14 @@ export const crawlOtherServiceLink = async (channelId: string) => {
   await page.goto(targetUrl, { timeout: 1000 * 120 });
 
   const LinkSelector = "#link-list-container a" as const;
-  await page.waitForSelector(LinkSelector, { timeout: 1000 * 120 });
+  try {
+    await page.waitForSelector(LinkSelector);
+  } catch (e) {
+    console.error(e);
+    await browser.close();
+    return [];
+  }
+
   const elements = await page.$$(LinkSelector);
 
   const linkUrls: string[] = [];
