@@ -28,10 +28,10 @@ export const getPuppeteerOptions = (useProxy?: boolean) => {
     "--no-first-run",
     "--no-zygote",
     "--single-process",
-    // "--lang=ja",
+    "--lang=ja",
   ];
   if (useProxy) {
-    args.push("--proxy-server=157.7.223.210:3128");
+    args.push("--proxy-server=140.227.123.218:3128");
   }
   const options: puppeteer.LaunchOptions = {
     headless: true,

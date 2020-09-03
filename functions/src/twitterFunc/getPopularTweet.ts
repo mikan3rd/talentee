@@ -11,7 +11,6 @@ const { FieldValue } = admin.firestore;
 
 export const getPopularTweet = async (username: string) => {
   const linkUrls = await crawlSearchTweet(username);
-  console.log(JSON.stringify(linkUrls));
   const tweetIds = linkUrls.map((url) => getTweetIdByUrl(url));
 
   if (!tweetIds.length) {

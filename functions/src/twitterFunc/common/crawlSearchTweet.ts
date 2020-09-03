@@ -24,9 +24,9 @@ export const crawlSearchTweet = async (username: string) => {
   });
 
   let minRetweets = 1000;
-  let targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
+  let targetUrl = encodeURI(`https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`);
   console.log(targetUrl);
-  await page.goto(encodeURI(targetUrl), { timeout: 1000 * 120 });
+  await page.goto(targetUrl, { timeout: 1000 * 120 });
 
   const LinkSelector = "article a" as const;
   try {
@@ -34,9 +34,9 @@ export const crawlSearchTweet = async (username: string) => {
   } catch {
     try {
       minRetweets = 100;
-      targetUrl = `https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`;
+      targetUrl = encodeURI(`https://twitter.com/search?q=from:${username} min_retweets:${minRetweets}`);
       console.log(targetUrl);
-      await page.goto(encodeURI(targetUrl), { timeout: 1000 * 120 });
+      await page.goto(targetUrl, { timeout: 1000 * 120 });
       await page.waitForSelector(LinkSelector);
     } catch (e) {
       console.error(e);
