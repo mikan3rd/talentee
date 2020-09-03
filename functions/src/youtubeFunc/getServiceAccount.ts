@@ -1,3 +1,5 @@
+import { service } from "firebase-functions/lib/providers/analytics";
+
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import { TwitterError, TwitterNotFound, getUserByUsername } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
@@ -27,6 +29,12 @@ export const getServiceAccount = async (channelId: string) => {
         } else {
           throw e;
         }
+      }
+    }
+
+    if (serviceName === "instagram") {
+      if (!firstItem.username) {
+        continue;
       }
     }
   }
