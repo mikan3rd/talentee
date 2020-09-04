@@ -7,7 +7,7 @@ export const upsertProfile = async (accountId: string, username: string) => {
   const userData = await getUserData(username);
 
   const { id } = userData;
-  if (!id) {
+  if (!accountId || !id) {
     console.error(`NOT FOUND: accountId: ${accountId}, username: ${username}`);
     return false;
   }
