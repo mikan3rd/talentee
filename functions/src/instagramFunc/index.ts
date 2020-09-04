@@ -1,19 +1,18 @@
 import { sentryWrapper } from "../common/sentry";
 import { functions } from "../firebase/functions";
-import { PopularTweetTopic, PopularTweetsonType } from "../firebase/topic";
+import { UpsertInstagramUserJsonType, UpsertInstagramUserTopic } from "../firebase/topic";
 
 import { upsertProfile } from "./upsertProfile";
 
-// export const getPopularTweetPubSub = functions
-//   .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
-//   .pubsub.topic(PopularTweetTopic)
-//   .onPublish(
-//     sentryWrapper(async (message) => {
-//       const { username, userId } = message.json as PopularTweetsonType;
-//       console.log(userId);
-//       return await getPopularTweet(username);
-//     }),
-//   );
+export const upsertProfilePubSub = functions
+  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
+  .pubsub.topic(UpsertInstagramUserTopic)
+  .onPublish(
+    sentryWrapper(async (message) => {
+      const { accountId, username } = message.json as UpsertInstagramUserJsonType;
+      return await upsertProfile(accountId, username);
+    }),
+  );
 
 export const upsertProfileTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
