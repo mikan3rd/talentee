@@ -1,4 +1,4 @@
-import { AccountCollectionPath, FieldValue, InstagramProfileCollectionPath, db } from "../firebase/collectionPath";
+import { AccountCollectionPath, FieldValue, InstagramUserCollectionPath, db } from "../firebase/collectionPath";
 
 import { getUserData } from "./common/getUserData";
 
@@ -13,7 +13,7 @@ export const upsertProfile = async (accountId: string, username: string) => {
   }
 
   const accountCollection = db.collection(AccountCollectionPath);
-  const instagramProfileCollection = db.collection(InstagramProfileCollectionPath);
+  const instagramProfileCollection = db.collection(InstagramUserCollectionPath);
 
   const accountRef = accountCollection.doc(accountId);
   const instagramMainRef = instagramProfileCollection.doc(id);
