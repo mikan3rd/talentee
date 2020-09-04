@@ -2,6 +2,8 @@ import * as puppeteer from "puppeteer";
 
 import { getPuppeteerOptions } from "../../common/utils";
 
+type LabelType = "followers_count" | "following_count" | "post_count";
+
 export const crawlProfile = async (username: string) => {
   const browser = await puppeteer.launch(getPuppeteerOptions());
   const page = await browser.newPage();
@@ -27,6 +29,12 @@ export const crawlProfile = async (username: string) => {
   console.log(targetUrl);
   await page.goto(targetUrl, { timeout: 1000 * 120 });
 
+  // const UserIdSelector = `meta[property="instapp:owner_user_id"]`;
+  // await page.waitForSelector(UserIdSelector);
+  // const userIdEle = await page.$(UserIdSelector);
+  // const userId = (await (await userIdEle.getProperty("content")).jsonValue()) as string;
+  // console.log(userId);
+
   const ImageSelector = "header img" as const;
   await page.waitForSelector(ImageSelector);
   const imageEle = await page.$(ImageSelector);
@@ -45,26 +53,47 @@ export const crawlProfile = async (username: string) => {
   const StatSelector = "header ul a" as const;
   await page.waitForSelector(StatSelector);
   const statElements = await page.$$(StatSelector);
-  const stats = [];
+  const stats: { label: LabelType; num: number }[] = [];
   for (const ele of statElements) {
     const stat = (await (await ele.getProperty("textContent")).jsonValue()) as string;
     const statNum = stat.match(/\d+(\.\d)?/);
     const statUnit = stat.match(/(?<=(\d+(\.\d)?))\D/g);
     const statLabel = stat.match(/^\D+(?=\d)/);
-    if (statNum && statUnit) {
+    if (statNum && statUnit && statLabel) {
       let num = Number(statNum[0]);
       const unit = statUnit[statUnit.length - 1];
       if (unit === "万") {
         num *= 10000;
       }
-      stats.push({
-        label: statLabel[0],
-        num,
-      });
+      let label: LabelType;
+      switch (statLabel[0]) {
+        case "投稿":
+          label = "post_count";
+          break;
+        case "フォロワー":
+          label = "followers_count";
+          break;
+        case "フォロー中":
+          label = "following_count";
+          break;
+        default:
+          break;
+      }
+      stats.push({ label, num });
     }
   }
 
   await browser.close();
 
-  return { name, description, imageUrl, stats };
+  const data = {
+    // userId,
+    name,
+    description,
+    imageUrl,
+    stats,
+  };
+
+  console.log(JSON.stringify(data));
+
+  return data;
 };
