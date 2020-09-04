@@ -10,8 +10,10 @@ import {
   PopularVideoTopic,
   ServiceAccountByYoutubeJsonType,
   ServiceAccountByYoutubeTopic,
+  UpsertInstagramUserJsonType,
+  UpsertInstagramUserTopic,
 } from "../firebase/topic";
-import { AccountCollectionPath } from "../firebase/collectionPath";
+import { AccountCollectionPath, db } from "../firebase/collectionPath";
 import { TwitterError, TwitterNotFound, getUserById } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
 import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
@@ -20,9 +22,7 @@ import { updateChannel } from "../youtubeFunc/common/updateChannel";
 import { youtubeService } from "../common/config";
 
 export const updateAccount = async (accountId: string, videoCategories: youtube_v3.Schema$VideoCategory[]) => {
-  const db = admin.firestore();
   const accountCollection = db.collection(AccountCollectionPath);
-
   const accountRef = accountCollection.doc(accountId);
   const accountDoc = await accountRef.get();
 
@@ -31,7 +31,7 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
     return false;
   }
 
-  const { youtubeMainRef, twitterMainRef } = accountDoc.data() as IAccountData;
+  const { youtubeMainRef, twitterMainRef, instagramMainRef } = accountDoc.data() as IAccountData;
 
   const pubSub = new PubSub();
   if (youtubeMainRef) {
@@ -68,6 +68,12 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
 
     const tweetTopicdata: PopularTweetsonType = { username, userId: id };
     await pubSub.topic(PopularTweetTopic).publish(toBufferJson(tweetTopicdata));
+  }
+
+  if (instagramMainRef) {
+    const { username } = (await instagramMainRef.get()).data() as InstagramUserType;
+    const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username };
+    await pubSub.topic(UpsertInstagramUserTopic).publish(toBufferJson(instagramUserTopicData));
   }
 
   return true;

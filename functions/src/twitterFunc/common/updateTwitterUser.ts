@@ -11,12 +11,18 @@ export const updateTwitterUser = async (accountId: string, userData: TwitterUser
 
   const accountRef = accountCollection.doc(accountId);
   const twitterMainRef = twitterUserCollection.doc(userData.id);
+  const twitterMainDoc = await twitterMainRef.get();
 
   const twitterUserData = {
     ...userData,
     accountRef,
+    createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
   };
+
+  if (twitterMainDoc.exists) {
+    delete twitterUserData.createdAt;
+  }
 
   await twitterMainRef.set(twitterUserData, { merge: true });
 
