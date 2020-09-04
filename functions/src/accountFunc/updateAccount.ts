@@ -71,7 +71,7 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
   }
 
   if (instagramMainRef) {
-    const { username } = (await twitterMainRef.get()).data() as InstagramUserType;
+    const { username } = (await instagramMainRef.get()).data() as InstagramUserType;
     const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username };
     await pubSub.topic(UpsertInstagramUserTopic).publish(toBufferJson(instagramUserTopicData));
   }
