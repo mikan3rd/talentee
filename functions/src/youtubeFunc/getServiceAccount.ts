@@ -4,7 +4,7 @@ import { YoutubeChannelCollectionPath, db } from "../firebase/collectionPath";
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import { TwitterError, TwitterNotFound, getUserByUsername } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
-import { upsertTwitterUserByChannelId } from "../twitterFunc/common/upsertTwitterUserByChannelId";
+import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
 import { UpsertInstagramUserJsonType, UpsertInstagramUserTopic } from "../firebase/topic";
 import { toBufferJson } from "../common/utils";
 
@@ -34,7 +34,7 @@ export const getServiceAccount = async (channelId: string) => {
       try {
         const { data } = await getUserByUsername(firstItem.username);
         const twitterUser = formatTwitterUserData(data);
-        await upsertTwitterUserByChannelId(twitterUser, channelId);
+        await updateTwitterUser(accountId, twitterUser);
       } catch (e) {
         if (e instanceof TwitterError && e.name === TwitterNotFound) {
           continue;
