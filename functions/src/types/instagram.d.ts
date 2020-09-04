@@ -12,4 +12,8 @@ declare type InstagramUserType = {
   profile_pic_url_hd: string;
   edge_felix_video_timeline: unknown[];
   edge_media_collections: unknown[];
+  edge_owner_to_timeline_media: unknown[];
+  edge_related_profiles: unknown[];
+  edge_mutual_followed_by: unknown[];
+  edge_saved_media: unknown[];
 };
