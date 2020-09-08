@@ -19,6 +19,7 @@
     "@google-cloud/pubsub": "2.5.0",
     "@sentry/node": "5.22.3",
     "axios": "0.20.0",
+    "cheerio": "1.0.0-rc.3",
     "dayjs": "1.8.35",
     "firebase-admin": "9.1.1",
     "firebase-functions": "3.11.0",
@@ -27,6 +28,7 @@
     "twitter": "1.7.1"
   },
   "devDependencies": {
+    "@types/cheerio": "0.22.21",
     "@types/puppeteer": "3.0.1",
     "@types/twitter": "1.7.0",
     "@typescript-eslint/eslint-plugin": "3.10.1",
