@@ -11,6 +11,8 @@ import {
   ServiceAccountByYoutubeTopic,
   UpsertInstagramUserJsonType,
   UpsertInstagramUserTopic,
+  UpsertTiktokUserJsonType,
+  UpsertTiktokUserTopic,
 } from "../firebase/topic";
 import { AccountCollectionPath, db } from "../firebase/collectionPath";
 import { TwitterError, TwitterNotFound, getUserById } from "../twitterFunc/common/api";
@@ -30,7 +32,7 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
     return false;
   }
 
-  const { youtubeMainRef, twitterMainRef, instagramMainRef } = accountDoc.data() as IAccountData;
+  const { youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = accountDoc.data() as IAccountData;
 
   const pubSub = new PubSub();
   if (youtubeMainRef) {
@@ -73,6 +75,14 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
     const { username } = (await instagramMainRef.get()).data() as InstagramUserType;
     const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username };
     await pubSub.topic(UpsertInstagramUserTopic).publish(toBufferJson(instagramUserTopicData));
+  }
+
+  if (tiktokMainRef) {
+    const {
+      user: { uniqueId },
+    } = (await tiktokMainRef.get()).data() as TiktokUserType;
+    const tiktokUserTopicData: UpsertTiktokUserJsonType = { accountId, uniqueId };
+    await pubSub.topic(UpsertTiktokUserTopic).publish(toBufferJson(tiktokUserTopicData));
   }
 
   return true;

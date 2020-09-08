@@ -14,4 +14,6 @@ export const TwitterBotCollectionPath = "twitterBot" as const;
 
 export const InstagramUserCollectionPath = "instagramUser" as const;
 
+export const TiktokUserCollectionPath = "tiktokUser" as const;
+
 export const tweetAccountRef = db.collection(TwitterBotCollectionPath).doc("tweetAccount");
