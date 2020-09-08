@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/cheerio": "0.22.21",
-    "@types/puppeteer": "3.0.1",
+    "@types/puppeteer": "3.0.2",
     "@types/twitter": "1.7.0",
     "@typescript-eslint/eslint-plugin": "3.10.1",
     "@typescript-eslint/parser": "3.10.1",
