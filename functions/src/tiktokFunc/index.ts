@@ -4,7 +4,7 @@ import { UpsertTiktokUserJsonType, UpsertTiktokUserTopic } from "../firebase/top
 
 import { upsertUserData } from "./upsertUserData";
 
-export const upsertInstagramUserDataPubSub = functions
+export const upsertTiktokUserDataPubSub = functions
   .runWith({ maxInstances: 10 })
   .pubsub.topic(UpsertTiktokUserTopic)
   .onPublish(
@@ -14,7 +14,7 @@ export const upsertInstagramUserDataPubSub = functions
     }),
   );
 
-export const upsertInstagramUserDataTest = functions.https.onRequest(
+export const upsertTiktokUserDataTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountId = "";
     const uniqueId = "kageihina";
