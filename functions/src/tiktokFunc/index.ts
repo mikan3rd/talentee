@@ -9,16 +9,16 @@ export const upsertInstagramUserDataPubSub = functions
   .pubsub.topic(UpsertTiktokUserTopic)
   .onPublish(
     sentryWrapper(async (message) => {
-      const { accountId, username } = message.json as UpsertTiktokUserJsonType;
-      return await upsertUserData(accountId, username);
+      const { accountId, uniqueId } = message.json as UpsertTiktokUserJsonType;
+      return await upsertUserData(accountId, uniqueId);
     }),
   );
 
 export const upsertInstagramUserDataTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountId = "";
-    const username = "kageihina";
-    await upsertUserData(accountId, username);
+    const uniqueId = "kageihina";
+    await upsertUserData(accountId, uniqueId);
     res.send();
   }),
 );

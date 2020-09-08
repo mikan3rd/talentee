@@ -19,7 +19,7 @@ export type UpsertInstagramUserJsonType = {
 
 export type UpsertTiktokUserJsonType = {
   accountId: string;
-  username: string;
+  uniqueId: string;
 };
 
 export type PopularVideoJsonType = {

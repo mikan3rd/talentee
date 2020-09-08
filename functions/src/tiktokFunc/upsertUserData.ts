@@ -2,15 +2,15 @@ import { AccountCollectionPath, FieldValue, TiktokUserCollectionPath, db } from 
 
 import { getUserDetail } from "./common/getUserDetail";
 
-export const upsertUserData = async (accountId: string, username: string) => {
-  console.log(`accountId: ${accountId}, username: ${username}`);
-  const userData = await getUserDetail(username);
+export const upsertUserData = async (accountId: string, uniqueId: string) => {
+  console.log(`accountId: ${accountId}, uniqueId: ${uniqueId}`);
+  const userData = await getUserDetail(uniqueId);
 
   const {
     user: { id },
   } = userData;
   if (!accountId || !id) {
-    console.error(`NOT FOUND: accountId: ${accountId}, username: ${username}`);
+    console.error(`NOT FOUND: accountId: ${accountId}, uniqueId: ${uniqueId}`);
     return false;
   }
 

@@ -7,8 +7,8 @@ type ContentDataType = {
   props: { pageProps: { userInfo: TiktokUserType; userData } };
 };
 
-export const getUserDetail = async (username: string) => {
-  const url = `https://www.tiktok.com/@${username}`;
+export const getUserDetail = async (uniqueId: string) => {
+  const url = `https://www.tiktok.com/@${uniqueId}`;
   const { data } = await axios.get<string>(url, { headers: { "User-Agent": UserAgent, maxRedirects: 0 } });
 
   const $ = cheerio.load(data);
