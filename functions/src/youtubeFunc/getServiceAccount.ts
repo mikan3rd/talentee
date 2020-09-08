@@ -5,7 +5,12 @@ import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import { TwitterError, TwitterNotFound, getUserByUsername } from "../twitterFunc/common/api";
 import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
 import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
-import { UpsertInstagramUserJsonType, UpsertInstagramUserTopic } from "../firebase/topic";
+import {
+  UpsertInstagramUserJsonType,
+  UpsertInstagramUserTopic,
+  UpsertTiktokUserJsonType,
+  UpsertTiktokUserTopic,
+} from "../firebase/topic";
 import { toBufferJson } from "../common/utils";
 
 import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
@@ -27,10 +32,12 @@ export const getServiceAccount = async (channelId: string) => {
   for (const serviceAccount of serviceAccounts) {
     const { serviceName, items } = serviceAccount;
     const firstItem = items[0];
+
+    if (!firstItem.username) {
+      continue;
+    }
+
     if (serviceName === "twitter") {
-      if (!firstItem.username) {
-        continue;
-      }
       try {
         const { data } = await getUserByUsername(firstItem.username);
         const twitterUser = formatTwitterUserData(data);
@@ -45,11 +52,13 @@ export const getServiceAccount = async (channelId: string) => {
     }
 
     if (serviceName === "instagram") {
-      if (!firstItem.username) {
-        continue;
-      }
       const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username: firstItem.username };
       await pubSub.topic(UpsertInstagramUserTopic).publish(toBufferJson(instagramUserTopicData));
+    }
+
+    if (serviceName === "tiktok") {
+      const tiktokUserTopicData: UpsertTiktokUserJsonType = { accountId, uniqueId: firstItem.username };
+      await pubSub.topic(UpsertTiktokUserTopic).publish(toBufferJson(tiktokUserTopicData));
     }
   }
 
