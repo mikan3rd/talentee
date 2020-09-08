@@ -1,4 +1,3 @@
-import * as admin from "firebase-admin";
 import { PubSub } from "@google-cloud/pubsub";
 import { youtube_v3 } from "googleapis";
 
