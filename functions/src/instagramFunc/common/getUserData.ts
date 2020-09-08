@@ -8,7 +8,7 @@ type shareDataType = {
 
 export const getUserData = async (username: string) => {
   const url = `https://www.instagram.com/${username}/`;
-  const { data } = await axios.get<string>(url, { headers: { "User-Agent": UserAgent } });
+  const { data } = await axios.get<string>(url, { headers: { "User-Agent": UserAgent, maxRedirects: 0 } });
   const scriptMatch = data.match(/(?<=(window\._sharedData\s=\s))(.*)(?=(;<\/script>))/);
   if (!scriptMatch) {
     return null;
