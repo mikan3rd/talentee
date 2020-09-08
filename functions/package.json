@@ -25,6 +25,8 @@
     "firebase-functions": "3.11.0",
     "googleapis": "59.0.0",
     "puppeteer": "5.2.1",
+    "puppeteer-extra": "3.1.13",
+    "puppeteer-extra-plugin-stealth": "2.5.0",
     "twitter": "1.7.1"
   },
   "devDependencies": {
