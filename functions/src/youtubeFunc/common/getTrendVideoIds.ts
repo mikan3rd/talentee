@@ -1,14 +1,12 @@
 import * as puppeteer from "puppeteer";
 
-import { getPuppeteerOptions } from "../../common/utils";
+import { UserAgent, getPuppeteerOptions } from "../../common/utils";
 
 export const getTrendVideoIds = async () => {
   const browser = await puppeteer.launch(getPuppeteerOptions(true));
   const page = await browser.newPage();
 
-  await page.setUserAgent(
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
-  );
+  await page.setUserAgent(UserAgent);
 
   await page.setRequestInterception(true);
   page.on("request", (request) => {
