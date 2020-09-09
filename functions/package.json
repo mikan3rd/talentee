@@ -17,7 +17,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/pubsub": "2.5.0",
-    "@sentry/node": "5.22.3",
+    "@sentry/node": "5.23.0",
     "axios": "0.20.0",
     "cheerio": "1.0.0-rc.3",
     "dayjs": "1.8.35",
