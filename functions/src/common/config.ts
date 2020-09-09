@@ -1,7 +1,10 @@
 import * as functions from "firebase-functions";
 import { google } from "googleapis";
 
-const { youtube, twitter } = functions.config();
+const { youtube, twitter, sentry } = functions.config();
+
+export const SENTRY_DSN = sentry.dsn;
+export const SENTRY_ENV = sentry.environment;
 
 const YOUTUBE_API_KEY = youtube.api_key;
 export const youtubeService = google.youtube({ version: "v3", auth: YOUTUBE_API_KEY });
