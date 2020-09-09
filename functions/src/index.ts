@@ -1,13 +1,12 @@
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
 import * as dayjs from "dayjs";
 import * as Sentry from "@sentry/node";
 import "dayjs/locale/ja";
 
-const { dsn, environment } = functions.config().sentry;
+import { SENTRY_DSN, SENTRY_ENV } from "./common/config";
 
-if (dsn) {
-  Sentry.init({ dsn, environment });
+if (SENTRY_DSN) {
+  Sentry.init({ dsn: SENTRY_DSN, environment: SENTRY_ENV });
 }
 
 admin.initializeApp();
