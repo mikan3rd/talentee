@@ -12,7 +12,8 @@ export const Account: React.FC<{
   youtubePopularVideos: IYoutubeVideoData[];
   twitterUserData: TwitterUserDataType;
   popularTweets: TweetDataType[];
-}> = ({ accountData, youtubeData, youtubePopularVideos, twitterUserData, popularTweets }) => {
+  tiktokUserData: TiktokUserDataType;
+}> = ({ accountData, youtubeData, youtubePopularVideos, twitterUserData, popularTweets, tiktokUserData }) => {
   const { tmpUsername } = accountData;
 
   // TODO: 元のデータを修正する
@@ -87,6 +88,23 @@ export const Account: React.FC<{
                 css={LinkButtonCss}
               />
             )}
+            {tiktokUserData && (
+              <Button
+                circular
+                color="black"
+                as="a"
+                href={`https://www.tiktok.com/@${tiktokUserData.user.uniqueId}`}
+                target="_black"
+                css={LinkButtonCss}
+              >
+                <img
+                  src="/icon_tiktok.svg"
+                  css={css`
+                    width: 100%;
+                  `}
+                />
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -112,8 +130,13 @@ export const Account: React.FC<{
 const LinkButtonCss = css`
   &&& {
     margin-left: 10px;
+    padding: 11px;
     &:first-of-type {
       margin-left: 0;
+    }
+    > * {
+      width: 14px;
+      height: 12px;
     }
   }
 `;

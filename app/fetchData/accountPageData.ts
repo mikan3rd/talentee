@@ -16,10 +16,11 @@ export const getAccountPageData = async (accountId: string) => {
   const accountData = accountDoc.data() as IAccountData;
   let youtubeData: IYoutubeData | null = null;
   let twitterUserData: TwitterUserDataType | null = null;
+  let tiktokUserData: TiktokUserDataType | null = null;
   const youtubePopularVideos: IYoutubeVideoData[] = [];
   const popularTweets: TweetObjectType[] = [];
 
-  const { youtubeMainRef, twitterMainRef } = accountData;
+  const { youtubeMainRef, twitterMainRef, tiktokMainRef } = accountData;
   if (youtubeMainRef) {
     const youtubeDoc = await youtubeMainRef.get();
     if (youtubeDoc.exists) {
@@ -67,5 +68,24 @@ export const getAccountPageData = async (accountId: string) => {
     }
   }
 
-  return JSON.stringify({ accountData, youtubeData, youtubePopularVideos, twitterUserData, popularTweets });
+  if (tiktokMainRef) {
+    const tiktokDoc = await tiktokMainRef.get();
+    if (tiktokDoc.exists) {
+      const data = tiktokDoc.data() as TiktokUserObjectType;
+      tiktokUserData = {
+        ...data,
+        createdAt: Math.floor(data.createdAt.toDate().getTime() / 1000),
+        updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000),
+      };
+    }
+  }
+
+  return JSON.stringify({
+    accountData,
+    youtubeData,
+    youtubePopularVideos,
+    twitterUserData,
+    popularTweets,
+    tiktokUserData,
+  });
 };

@@ -3,6 +3,7 @@ declare interface IAccountData {
   thumbnailUrl: string;
   youtubeMainRef?: FirebaseFirestore.DocumentReference;
   twitterMainRef?: FirebaseFirestore.DocumentReference;
+  tiktokMainRef?: FirebaseFirestore.DocumentReference;
 }
 
 declare interface IYoutubeData {
