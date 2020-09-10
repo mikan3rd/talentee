@@ -1,14 +1,13 @@
-import axios from "axios";
-
-import { UserAgent } from "../../common/utils";
+import { axiosSetup } from "../../common/utils";
 
 type shareDataType = {
   entry_data: { ProfilePage: { graphql: { user: InstagramUserType } }[] };
 };
 
 export const getUserData = async (username: string) => {
+  const axios = axiosSetup();
   const url = `https://www.instagram.com/${username}/`;
-  const { data } = await axios.get<string>(url, { headers: { "User-Agent": UserAgent, maxRedirects: 0 } });
+  const { data } = await axios.get<string>(url);
   const scriptMatch = data.match(/(?<=(window\._sharedData\s=\s))(.*)(?=(;<\/script>))/);
   if (!scriptMatch) {
     return null;

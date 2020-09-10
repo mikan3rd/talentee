@@ -1,15 +1,15 @@
-import axios from "axios";
 import * as cheerio from "cheerio";
 
-import { UserAgent } from "../../common/utils";
+import { axiosSetup } from "../../common/utils";
 
 type ContentDataType = {
   props: { pageProps: { userInfo: TiktokUserType; userData } };
 };
 
 export const getUserDetail = async (uniqueId: string) => {
+  const axios = axiosSetup();
   const url = `https://www.tiktok.com/@${uniqueId}`;
-  const { data } = await axios.get<string>(url, { headers: { "User-Agent": UserAgent }, maxRedirects: 0 });
+  const { data } = await axios.get<string>(url);
 
   const $ = cheerio.load(data);
   const DataSelector = "script#__NEXT_DATA__";

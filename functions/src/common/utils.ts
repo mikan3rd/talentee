@@ -1,5 +1,5 @@
 import * as puppeteer from "puppeteer";
-import { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
 
 import { PROXY_HOST, PROXY_PASSWORD, PROXY_PORT, PROXY_USERNAME } from "./config";
@@ -59,7 +59,7 @@ export const puppeteerSetup = async (useProxy = false) => {
   return { browser, page };
 };
 
-export const axiosConfig = (useProxy = false) => {
+export const axiosSetup = (useProxy = false) => {
   const config: AxiosRequestConfig = {
     headers: { "User-Agent": UserAgent },
     maxRedirects: 0,
@@ -67,10 +67,11 @@ export const axiosConfig = (useProxy = false) => {
 
   if (useProxy) {
     config.proxy = false;
-    config.httpsAgent = new HttpsProxyAgent(`http://${PROXY_USERNAME}:${PROXY_PASSWORD}@${PROXY_HOST}:${PROXY_PORT}`);
+    const proxyPath = `http://${PROXY_USERNAME}:${PROXY_PASSWORD}@${PROXY_HOST}:${PROXY_PORT}`;
+    config.httpsAgent = new HttpsProxyAgent(proxyPath);
   }
 
-  return config;
+  return axios.create(config);
 };
 
 export const groupByObject = <K, V>(
