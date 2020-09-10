@@ -67,8 +67,11 @@ export const axiosSetup = (useProxy = false) => {
 
   if (useProxy) {
     config.proxy = false;
-    const proxyPath = `http://${PROXY_USERNAME}:${PROXY_PASSWORD}@${PROXY_HOST}:${PROXY_PORT}`;
-    config.httpsAgent = new HttpsProxyAgent(proxyPath);
+    config.httpsAgent = new HttpsProxyAgent({
+      host: PROXY_HOST,
+      port: PROXY_PORT,
+      auth: `${PROXY_USERNAME}:${PROXY_PASSWORD}`,
+    });
   }
 
   return axios.create(config);
