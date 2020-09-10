@@ -39,7 +39,7 @@ export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; pop
       >
         <div>
           <img
-            src={profile_image_url.replace(/_normal(?=.(jpg|jpeg|png)$)/, "")}
+            src={profile_image_url}
             alt={name}
             css={css`
               width: 64px;

@@ -1,28 +1,37 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Button, Divider, Tab } from "semantic-ui-react";
+import { Button, Divider, Icon, Menu, Tab } from "semantic-ui-react";
 
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 import { TwitterDetail } from "../organisms/TwitterDetail";
+import { TiktokDetail } from "../organisms/TiktokDetail";
 import { TwitterIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const Account: React.FC<{
   accountData: IAccountData;
   youtubeData?: IYoutubeData;
   youtubePopularVideos: IYoutubeVideoData[];
-  twitterUserData: TwitterUserDataType;
+  twitterUserData?: TwitterUserDataType;
   popularTweets: TweetDataType[];
-  tiktokUserData: TiktokUserDataType;
+  tiktokUserData?: TiktokUserDataType;
 }> = ({ accountData, youtubeData, youtubePopularVideos, twitterUserData, popularTweets, tiktokUserData }) => {
-  const { tmpUsername } = accountData;
-
-  // TODO: 元のデータを修正する
-  const thumbnailUrl = accountData.thumbnailUrl.replace(/_normal(?=.(jpg|jpeg|png)$)/, "");
+  const { tmpUsername, thumbnailUrl } = accountData;
 
   const panes = [];
+
   if (youtubeData) {
     panes.push({
-      menuItem: { key: "youtube", icon: "youtube", content: "YouTube" },
+      menuItem: (
+        <Menu.Item key="youtube">
+          <Icon
+            name="youtube"
+            css={css`
+              color: red;
+            `}
+          />
+          YouTube
+        </Menu.Item>
+      ),
       render: () => (
         <Tab.Pane>
           <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
@@ -33,10 +42,45 @@ export const Account: React.FC<{
 
   if (twitterUserData) {
     panes.push({
-      menuItem: { key: "twitter", icon: "twitter", content: "Twitter" },
+      menuItem: (
+        <Menu.Item key="twitter" disabled={!twitterUserData}>
+          <Icon
+            name="twitter"
+            css={css`
+              color: #55acee;
+            `}
+          />
+          Twitter
+        </Menu.Item>
+      ),
       render: () => (
         <Tab.Pane>
           <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
+        </Tab.Pane>
+      ),
+    });
+  }
+
+  if (tiktokUserData) {
+    panes.push({
+      menuItem: (
+        <Menu.Item key="tiktok">
+          <img
+            src="/icon_tiktok_black.svg"
+            css={css`
+              &&& {
+                width: 16px !important;
+                height: 14px !important;
+                margin-right: 5px !important;
+              }
+            `}
+          />
+          TikTok
+        </Menu.Item>
+      ),
+      render: () => (
+        <Tab.Pane>
+          <TiktokDetail tiktokUserData={tiktokUserData} />
         </Tab.Pane>
       ),
     });
@@ -77,6 +121,7 @@ export const Account: React.FC<{
                 css={LinkButtonCss}
               />
             )}
+
             {twitterUserData && (
               <Button
                 circular
@@ -88,6 +133,7 @@ export const Account: React.FC<{
                 css={LinkButtonCss}
               />
             )}
+
             {tiktokUserData && (
               <Button
                 circular
@@ -114,7 +160,16 @@ export const Account: React.FC<{
           margin-top: 20px;
         `}
       >
-        <Tab panes={panes} />
+        <Tab
+          panes={panes}
+          menu={{ attached: false }}
+          css={css`
+            .menu {
+              overflow-x: scroll;
+              margin-bottom: 5px;
+            }
+          `}
+        />
       </div>
 
       <Divider />
