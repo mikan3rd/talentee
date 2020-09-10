@@ -1,12 +1,7 @@
-import * as puppeteer from "puppeteer";
-
-import { UserAgent, getPuppeteerOptions } from "../../common/utils";
+import { puppeteerSetup } from "../../common/utils";
 
 export const crawlSearchTweet = async (username: string) => {
-  const browser = await puppeteer.launch(getPuppeteerOptions(true));
-  const page = await browser.newPage();
-
-  await page.setUserAgent(UserAgent);
+  const { browser, page } = await puppeteerSetup();
 
   await page.setRequestInterception(true);
   page.on("request", (request) => {

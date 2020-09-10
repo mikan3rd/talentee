@@ -1,10 +1,10 @@
 import { AccountCollectionPath, FieldValue, InstagramUserCollectionPath, db } from "../firebase/collectionPath";
 
-import { getUserData } from "./common/getUserData";
+import { crawlProfile } from "./common/crawlProfile";
 
 export const upsertProfile = async (accountId: string, username: string) => {
   console.log(`accountId: ${accountId}, username: ${username}`);
-  const userData = await getUserData(username);
+  const userData = await crawlProfile(username);
 
   const { id } = userData;
   if (!accountId || !id) {

@@ -1,4 +1,10 @@
 import * as puppeteer from "puppeteer";
+import { AxiosRequestConfig } from "axios";
+
+// import { PROXY_HOST, PROXY_PASSWORD, PROXY_PORT, PROXY_USERNAME } from "./config";
+
+const PROXY_HOST = "219.106.240.198";
+const PROXY_PORT = 80;
 
 export const toBufferJson = (data) => {
   const dataJson = JSON.stringify(data);
@@ -22,7 +28,7 @@ export const chunk = (arr: any[], len: number) => {
 export const UserAgent =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36";
 
-export const getPuppeteerOptions = (useProxy?: boolean) => {
+export const puppeteerSetup = async (useProxy = false) => {
   const args = [
     "--no-sandbox",
     "--disable-setuid-sandbox",
@@ -34,17 +40,42 @@ export const getPuppeteerOptions = (useProxy?: boolean) => {
     "--lang=ja",
   ];
   if (useProxy) {
-    const proxy1 = "219.106.240.198:80";
-    // const proxy2 = "150.95.178.151:8888";
+    const proxy = `${PROXY_HOST}:${PROXY_PORT}`;
     // -w "%{time_starttransfer}\n"
-    args.push(`--proxy-server=${proxy1}`);
+    args.push(`--proxy-server=${proxy}`);
   }
   const options: puppeteer.LaunchOptions = {
+    // ignoreHTTPSErrors: true,
     headless: true,
     devtools: false,
     args,
   };
-  return options;
+
+  const browser = await puppeteer.launch(options);
+  const page = await browser.newPage();
+
+  // await page.authenticate({ username: PROXY_USERNAME, password: PROXY_PASSWORD });
+  await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
+  await page.setUserAgent(UserAgent);
+
+  return { browser, page };
+};
+
+export const axiosConfig = (useProxy = false) => {
+  const config: AxiosRequestConfig = {
+    headers: { "User-Agent": UserAgent },
+    maxRedirects: 0,
+  };
+
+  if (useProxy) {
+    config.proxy = {
+      host: PROXY_HOST,
+      port: PROXY_PORT,
+      // auth: { username: PROXY_USERNAME, password: PROXY_PASSWORD },
+    };
+  }
+
+  return config;
 };
 
 export const groupByObject = <K, V>(

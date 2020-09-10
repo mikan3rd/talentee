@@ -9,7 +9,7 @@ type ContentDataType = {
 
 export const getUserDetail = async (uniqueId: string) => {
   const url = `https://www.tiktok.com/@${uniqueId}`;
-  const { data } = await axios.get<string>(url, { headers: { "User-Agent": UserAgent, maxRedirects: 0 } });
+  const { data } = await axios.get<string>(url, { headers: { "User-Agent": UserAgent }, maxRedirects: 0 });
 
   const $ = cheerio.load(data);
   const DataSelector = "script#__NEXT_DATA__";
