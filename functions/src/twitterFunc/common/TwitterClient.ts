@@ -1,12 +1,11 @@
+import Twitter from "twitter";
+
 import {
   TWITTER_ACCESS_TOKEN,
   TWITTER_ACCESS_TOKEN_SECRET,
   TWITTER_API_KEY,
   TWITTER_API_SECRET_KET,
 } from "../../common/config";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Twitter = require("twitter");
 
 export type TweetObjectType = {
   id_str: string;
@@ -30,9 +29,9 @@ export type TweetUserType = {
 };
 
 export class TwitterClient {
-  client: typeof Twitter;
+  client: Twitter;
 
-  constructor(client: typeof Twitter) {
+  constructor(client: Twitter) {
     this.client = client;
   }
 

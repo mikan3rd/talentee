@@ -1875,6 +1875,11 @@ decompress-response@^3.3.0:
   dependencies:
     mimic-response "^1.0.0"
 
+deep-extend@^0.5.0:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.5.1.tgz#b894a9dd90d3023fbf1c55a394fb858eb2066f1f"
+  integrity sha512-N8vBdOa+DF7zkRrDCsaOXoCs/E2fJfx9B9MrKnnSiHNh4ws7eSys6YQE4KvT1cecKmOASYQBhbKjeuDD9lT81w==
+
 deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
@@ -5182,7 +5187,7 @@ registry-url@^5.0.0:
   dependencies:
     rc "^1.2.8"
 
-request@^2.87.0, request@^2.88.2:
+request@^2.72.0, request@^2.87.0, request@^2.88.2:
   version "2.88.2"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
@@ -5979,6 +5984,14 @@ tweetsodium@0.0.5:
   dependencies:
     blakejs "^1.1.0"
     tweetnacl "^1.0.1"
+
+twitter@1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/twitter/-/twitter-1.7.1.tgz#0762378f1dc1c050e48f666aca904e24b1a962f4"
+  integrity sha1-B2I3jx3BwFDkj2ZqypBOJLGpYvQ=
+  dependencies:
+    deep-extend "^0.5.0"
+    request "^2.72.0"
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
