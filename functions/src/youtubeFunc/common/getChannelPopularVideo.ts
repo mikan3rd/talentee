@@ -1,14 +1,7 @@
-import * as puppeteer from "puppeteer";
-
-import { getPuppeteerOptions } from "../../common/utils";
+import { puppeteerSetup } from "../../common/utils";
 
 export const getChannelPopularVideo = async (channelId: string) => {
-  const browser = await puppeteer.launch(getPuppeteerOptions());
-  const page = await browser.newPage();
-
-  // await page.setExtraHTTPHeaders({
-  //   "Accept-Language": "ja-JP",
-  // });
+  const { browser, page } = await puppeteerSetup();
 
   const targetChannelUrl = `https://www.youtube.com/channel/${channelId}/videos?sort=p`;
   await page.goto(targetChannelUrl);

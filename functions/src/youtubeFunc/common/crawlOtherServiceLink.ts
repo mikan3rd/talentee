@@ -1,10 +1,7 @@
-import * as puppeteer from "puppeteer";
-
-import { getPuppeteerOptions } from "../../common/utils";
+import { puppeteerSetup } from "../../common/utils";
 
 export const crawlOtherServiceLink = async (channelId: string) => {
-  const browser = await puppeteer.launch(getPuppeteerOptions());
-  const page = await browser.newPage();
+  const { browser, page } = await puppeteerSetup();
 
   await page.setRequestInterception(true);
   page.on("request", (request) => {
