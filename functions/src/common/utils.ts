@@ -42,7 +42,7 @@ export const puppeteerSetup = async (useProxy = false) => {
   }
   const options: puppeteer.LaunchOptions = {
     // ignoreHTTPSErrors: true,
-    headless: false,
+    headless: true,
     devtools: false,
     args,
   };

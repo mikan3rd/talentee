@@ -29,8 +29,6 @@ export const crawlProfile = async (username: string) => {
   console.log(targetUrl);
   await page.goto(targetUrl, { timeout: 1000 * 120 });
 
-  await page.waitFor(1000 * 60);
-
   const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
   const user = sharedData.entry_data.ProfilePage[0].graphql.user;
 
