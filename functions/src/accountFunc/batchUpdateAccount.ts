@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import { PubSub } from "@google-cloud/pubsub";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 
 import { toBufferJson } from "../common/utils";
 import { UpdateAccountJsonType, UpdateAccountTopic } from "../firebase/topic";

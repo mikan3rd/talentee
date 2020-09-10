@@ -1,4 +1,4 @@
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 
 export const formatTwitterUserData = (userObject: TwitterUserObjectType): TwitterUserDataType => {
   const { created_at, profile_image_url } = userObject;
