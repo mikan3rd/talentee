@@ -1,7 +1,7 @@
 import { puppeteerSetup } from "../../common/utils";
 
 export const crawlSearchTweet = async (username: string) => {
-  const { browser, page } = await puppeteerSetup(true);
+  const { browser, page } = await puppeteerSetup();
 
   await page.setRequestInterception(true);
   page.on("request", (request) => {
