@@ -1,7 +1,10 @@
 import * as puppeteer from "puppeteer";
 import { AxiosRequestConfig } from "axios";
 
-import { PROXY_HOST, PROXY_PASSWORD, PROXY_PORT, PROXY_USERNAME } from "./config";
+// import { PROXY_HOST, PROXY_PASSWORD, PROXY_PORT, PROXY_USERNAME } from "./config";
+
+const PROXY_HOST = "219.106.240.198";
+const PROXY_PORT = 80;
 
 export const toBufferJson = (data) => {
   const dataJson = JSON.stringify(data);
@@ -51,7 +54,7 @@ export const puppeteerSetup = async (useProxy = false) => {
   const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
 
-  await page.authenticate({ username: PROXY_USERNAME, password: PROXY_PASSWORD });
+  // await page.authenticate({ username: PROXY_USERNAME, password: PROXY_PASSWORD });
   await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
   await page.setUserAgent(UserAgent);
 
@@ -65,7 +68,11 @@ export const axiosConfig = (useProxy = false) => {
   };
 
   if (useProxy) {
-    config.proxy = { host: PROXY_HOST, port: PROXY_PORT, auth: { username: PROXY_USERNAME, password: PROXY_PASSWORD } };
+    config.proxy = {
+      host: PROXY_HOST,
+      port: PROXY_PORT,
+      // auth: { username: PROXY_USERNAME, password: PROXY_PASSWORD },
+    };
   }
 
   return config;
