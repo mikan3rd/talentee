@@ -1,4 +1,5 @@
 import * as puppeteer from "puppeteer";
+import { AxiosRequestConfig } from "axios";
 
 import { PROXY_HOST, PROXY_PASSWORD, PROXY_PORT, PROXY_USERNAME } from "./config";
 
@@ -55,6 +56,19 @@ export const puppeteerSetup = async (useProxy = false) => {
   await page.setUserAgent(UserAgent);
 
   return { browser, page };
+};
+
+export const axiosConfig = (useProxy = false) => {
+  const config: AxiosRequestConfig = {
+    headers: { "User-Agent": UserAgent },
+    maxRedirects: 0,
+  };
+
+  if (useProxy) {
+    config.proxy = { host: PROXY_HOST, port: PROXY_PORT, auth: { username: PROXY_USERNAME, password: PROXY_PASSWORD } };
+  }
+
+  return config;
 };
 
 export const groupByObject = <K, V>(

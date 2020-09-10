@@ -1,58 +1,32 @@
-import { puppeteerSetup } from "../../common/utils";
+import axios from "axios";
+
+import { axiosConfig } from "../../common/utils";
 
 export const getTrendVideoIds = async () => {
-  const { browser, page } = await puppeteerSetup(true);
+  const baseUrl = `https://www.youtube.com`;
+  const trendUrl = `${baseUrl}/feed/trending`;
 
-  await page.setRequestInterception(true);
-  page.on("request", (request) => {
-    const resourceType = request.resourceType();
-    // const resouceUrl = request.url();
-    const abortCondition = ["image", "stylesheet", "font", "manifest"].includes(resourceType);
-    if (abortCondition) {
-      request.abort();
-    } else {
-      // console.log(resourceType, resouceUrl);
-      request.continue();
-    }
-  });
+  const { data } = await axios.get<string>(trendUrl, axiosConfig(true));
 
-  const trendUrl = `https://www.youtube.com/feed/trending`;
-  await page.goto(trendUrl, { timeout: 1000 * 120 });
-
-  const SubMenuSelector = "#sub-menu #contents a" as const;
-  await page.waitForSelector(SubMenuSelector);
-  const subMenuElements = await page.$$(SubMenuSelector);
-
-  const trendUrls = [trendUrl];
-
-  for (const ele of subMenuElements) {
-    const property = await ele.getProperty("href");
-    const value = (await property.jsonValue()) as string;
-    if (value) {
-      trendUrls.push(value);
-    }
+  // eslint-disable-next-line no-useless-escape
+  const trendUrlReg = new RegExp(`/feed/trending\?[^"]*(?=")`, "g");
+  const matchResults = data.match(trendUrlReg);
+  if (!matchResults) {
+    return null;
   }
 
-  const LinkSelector = "a#thumbnail" as const;
-  const videoIds: string[] = [];
+  const trendUrls = Array.from(new Set(matchResults)).map((path) => `${baseUrl}${path}`);
 
+  let videoIds: string[] = [];
   for (const url of trendUrls) {
     console.log(url);
-    await page.goto(url, { timeout: 1000 * 120 });
-    await page.waitForSelector(LinkSelector);
-    const linkElements = await page.$$(LinkSelector);
-
-    for (const ele of linkElements) {
-      const property = await ele.getProperty("href");
-      const value = (await property.jsonValue()) as string;
-      const videoId = value.replace("https://www.youtube.com/watch?v=", "");
-      if (videoId) {
-        videoIds.push(videoId);
-      }
+    const { data } = await axios.get<string>(url, axiosConfig());
+    const videoMatchResults = data.match(/(?<=("\/watch\?v=))[^"]*(?=")/g);
+    console.log(videoMatchResults);
+    if (videoMatchResults) {
+      videoIds = videoIds.concat(videoMatchResults);
     }
   }
-
-  await browser.close();
 
   const uniqueVideoIds = Array.from(new Set(videoIds));
   console.log(JSON.stringify({ uniqueVideoIds }));
