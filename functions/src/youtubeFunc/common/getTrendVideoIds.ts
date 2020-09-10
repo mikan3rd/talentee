@@ -22,7 +22,6 @@ export const getTrendVideoIds = async () => {
     console.log(url);
     const { data } = await axios.get<string>(url, axiosConfig());
     const videoMatchResults = data.match(/(?<=("\/watch\?v=))[^"]*(?=")/g);
-    console.log(videoMatchResults);
     if (videoMatchResults) {
       videoIds = videoIds.concat(videoMatchResults);
     }

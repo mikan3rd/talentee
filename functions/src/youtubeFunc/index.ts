@@ -1,4 +1,4 @@
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 
 import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";

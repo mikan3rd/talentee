@@ -24,8 +24,9 @@
     "firebase-admin": "9.1.1",
     "firebase-functions": "3.11.0",
     "googleapis": "59.0.0",
-    "puppeteer": "5.2.1",
-    "twitter": "1.7.1"
+    "https-proxy-agent": "5.0.0",
+    "net": "^1.0.2",
+    "puppeteer": "5.2.1"
   },
   "devDependencies": {
     "@types/cheerio": "0.22.21",

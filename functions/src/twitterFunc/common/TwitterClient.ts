@@ -1,4 +1,4 @@
-import * as Twitter from "twitter";
+import Twitter from "twitter";
 
 import {
   TWITTER_ACCESS_TOKEN,

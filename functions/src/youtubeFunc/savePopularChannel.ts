@@ -1,4 +1,4 @@
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 import { youtube_v3 } from "googleapis";
 
 import { youtubeService } from "../common/config";

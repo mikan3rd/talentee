@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 import * as Sentry from "@sentry/node";
 import "dayjs/locale/ja";
 
