@@ -11,13 +11,16 @@ interface customWindow extends Window {
 let window: customWindow;
 
 export const crawlProfile = async (username: string) => {
-  const { browser, page } = await puppeteerSetup(true);
+  const { browser, page } = await puppeteerSetup();
 
   const targetUrl = `http://www.instagram.com/${username}/`;
   console.log(targetUrl);
-  await page.goto(targetUrl, { timeout: 1000 * 120 });
+  await page.goto(targetUrl, { timeout: 1000 * 120, waitUntil: ["load", "networkidle2"] });
 
-  if (page.url().includes("login")) {
+  const firstUrl = page.url();
+  console.log("firstUrl:", firstUrl);
+
+  if (firstUrl.includes("login")) {
     console.log("LOGIN!!");
     const UsernameSelector = "input[name=username]";
     const PasswordSelector = "input[name=password]";
@@ -31,14 +34,24 @@ export const crawlProfile = async (username: string) => {
     await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
   }
 
-  if (page.url().includes("onetap")) {
+  const secondUrl = page.url();
+  console.log("secondUrl:", secondUrl);
+
+  if (secondUrl.includes("onetap")) {
     console.log("ONETAP!!");
     const ButtonSelector = "main section button";
     await page.waitFor(ButtonSelector);
     await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
   }
 
+  const thirdUrl = page.url();
+  console.log("thirdUrl:", thirdUrl);
+
+  // const imageBuffer = await page.screenshot();
+  // return imageBuffer;
+
   const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
+
   const user = sharedData.entry_data.ProfilePage[0].graphql.user;
 
   await browser.close();
