@@ -1,4 +1,5 @@
 import { puppeteerSetup } from "../../common/utils";
+import { INSTAGRAM_PASSWORD, INSTAGRAM_USERNAME } from "../../common/config";
 
 type shareDataType = {
   entry_data: { ProfilePage: { graphql: { user: InstagramUserType } }[] };
@@ -12,22 +13,30 @@ let window: customWindow;
 export const crawlProfile = async (username: string) => {
   const { browser, page } = await puppeteerSetup(true);
 
-  // await page.setRequestInterception(true);
-  // page.on("request", (request) => {
-  //   // const resourceType = request.resourceType();
-  //   // const resouceUrl = request.url();
-  //   // const abortCondition = ["image", "stylesheet", "font", "xhr", "manifest"].includes(resourceType);
-  //   if (request.isNavigationRequest()) {
-  //     console.log("REDIRECT!!");
-  //     request.continue();
-  //   } else {
-  //     request.continue();
-  //   }
-  // });
-
   const targetUrl = `http://www.instagram.com/${username}/`;
   console.log(targetUrl);
   await page.goto(targetUrl, { timeout: 1000 * 120 });
+
+  if (page.url().includes("login")) {
+    console.log("LOGIN!!");
+    const UsernameSelector = "input[name=username]";
+    const PasswordSelector = "input[name=password]";
+
+    await page.waitForSelector(UsernameSelector);
+    await page.waitForSelector(PasswordSelector);
+
+    await page.type(UsernameSelector, INSTAGRAM_USERNAME);
+    await page.type(PasswordSelector, INSTAGRAM_PASSWORD);
+
+    await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
+  }
+
+  if (page.url().includes("onetap")) {
+    console.log("ONETAP!!");
+    const ButtonSelector = "main section button";
+    await page.waitFor(ButtonSelector);
+    await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
+  }
 
   const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
   const user = sharedData.entry_data.ProfilePage[0].graphql.user;

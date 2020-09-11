@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { google } from "googleapis";
 
-const { youtube, twitter, sentry, proxy } = functions.config();
+const { youtube, twitter, sentry, proxy, instagram } = functions.config();
 
 export const SENTRY_DSN = sentry.dsn;
 export const SENTRY_ENV = sentry.environment;
@@ -14,6 +14,9 @@ export const TWITTER_API_KEY = twitter.api_key;
 export const TWITTER_API_SECRET_KET = twitter.api_secret_key;
 export const TWITTER_ACCESS_TOKEN = twitter.access_token;
 export const TWITTER_ACCESS_TOKEN_SECRET = twitter.access_token_secret;
+
+export const INSTAGRAM_USERNAME = instagram.username;
+export const INSTAGRAM_PASSWORD = instagram.password;
 
 export const PROXY_HOST = proxy.host;
 export const PROXY_PORT = proxy.port;
