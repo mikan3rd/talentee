@@ -52,7 +52,10 @@ export const puppeteerSetup = async (useProxy = false) => {
   const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
 
-  await page.authenticate({ username: PROXY_USERNAME, password: PROXY_PASSWORD });
+  if (useProxy) {
+    await page.authenticate({ username: PROXY_USERNAME, password: PROXY_PASSWORD });
+  }
+
   await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
   await page.setUserAgent(UserAgent);
 

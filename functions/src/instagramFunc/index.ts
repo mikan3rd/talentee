@@ -4,7 +4,7 @@ import { functions } from "../firebase/functions";
 
 import { upsertProfile } from "./upsertProfile";
 
-// export const upsertProfilePubSub = functions
+// export const upsertInstagramProfilePubSub = functions
 //   .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
 //   .pubsub.topic(UpsertInstagramUserTopic)
 //   .onPublish(
@@ -14,7 +14,7 @@ import { upsertProfile } from "./upsertProfile";
 //     }),
 //   );
 
-export const upsertProfileTest = functions.runWith({ timeoutSeconds: 540, memory: "2GB" }).https.onRequest(
+export const upsertInstagramProfileTest = functions.runWith({ timeoutSeconds: 540, memory: "2GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountId = "";
     const username = "yukos0520";
