@@ -21,7 +21,7 @@ export const crawlProfile = async (username: string) => {
   console.log("firstUrl:", firstUrl);
 
   if (firstUrl.includes("login")) {
-    console.log("LOGIN!!");
+    console.log("LOGIN: start");
     const UsernameSelector = "input[name=username]";
     const PasswordSelector = "input[name=password]";
 
@@ -32,16 +32,18 @@ export const crawlProfile = async (username: string) => {
     await page.type(PasswordSelector, INSTAGRAM_PASSWORD);
 
     await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
+    console.log("LOGIN: end");
   }
 
   const secondUrl = page.url();
   console.log("secondUrl:", secondUrl);
 
   if (secondUrl.includes("onetap")) {
-    console.log("ONETAP!!");
+    console.log("ONETAP: start");
     const ButtonSelector = "main section button";
     await page.waitFor(ButtonSelector);
     await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
+    console.log("ONETAP: end");
   }
 
   const thirdUrl = page.url();
