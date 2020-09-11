@@ -19,12 +19,14 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
     twitterUserData,
     popularTweets,
     tiktokUserData,
+    instagramUserData,
   }: {
     accountData: IAccountData;
     youtubeData?: IYoutubeData;
     youtubePopularVideos: IYoutubeVideoData[];
     twitterUserData?: TwitterUserDataType;
     popularTweets: TweetDataType[];
+    instagramUserData: InstagramUserDataType;
     tiktokUserData: TiktokUserDataType;
   } = JSON.parse(jsonData);
 
@@ -59,6 +61,7 @@ const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> =
         youtubePopularVideos={youtubePopularVideos}
         twitterUserData={twitterUserData}
         popularTweets={popularTweets}
+        instagramUserData={instagramUserData}
         tiktokUserData={tiktokUserData}
       />
     </>

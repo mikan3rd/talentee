@@ -13,8 +13,17 @@ export const Account: React.FC<{
   youtubePopularVideos: IYoutubeVideoData[];
   twitterUserData?: TwitterUserDataType;
   popularTweets: TweetDataType[];
+  instagramUserData?: InstagramUserDataType;
   tiktokUserData?: TiktokUserDataType;
-}> = ({ accountData, youtubeData, youtubePopularVideos, twitterUserData, popularTweets, tiktokUserData }) => {
+}> = ({
+  accountData,
+  youtubeData,
+  youtubePopularVideos,
+  twitterUserData,
+  popularTweets,
+  instagramUserData,
+  tiktokUserData,
+}) => {
   const { tmpUsername, thumbnailUrl } = accountData;
 
   const panes = [];
@@ -131,6 +140,30 @@ export const Account: React.FC<{
                 href={`https://twitter.com/${twitterUserData.username}`}
                 target="_black"
                 css={LinkButtonCss}
+              />
+            )}
+
+            {instagramUserData && (
+              <Button
+                circular
+                color="black"
+                icon="instagram"
+                as="a"
+                href={`https://instagram.com/${instagramUserData.username}/`}
+                target="_black"
+                css={css`
+                  ${LinkButtonCss}
+                  &&& {
+                    background: radial-gradient(
+                      circle at 30% 107%,
+                      #fdf497 0%,
+                      #fdf497 5%,
+                      #fd5949 45%,
+                      #d6249f 60%,
+                      #285aeb 90%
+                    );
+                  }
+                `}
               />
             )}
 

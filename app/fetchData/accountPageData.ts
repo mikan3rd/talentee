@@ -16,11 +16,12 @@ export const getAccountPageData = async (accountId: string) => {
   const accountData = accountDoc.data() as IAccountData;
   let youtubeData: IYoutubeData | null = null;
   let twitterUserData: TwitterUserDataType | null = null;
+  let instagramUserData: InstagramUserDataType | null = null;
   let tiktokUserData: TiktokUserDataType | null = null;
   const youtubePopularVideos: IYoutubeVideoData[] = [];
   const popularTweets: TweetObjectType[] = [];
 
-  const { youtubeMainRef, twitterMainRef, tiktokMainRef } = accountData;
+  const { youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = accountData;
   if (youtubeMainRef) {
     const youtubeDoc = await youtubeMainRef.get();
     if (youtubeDoc.exists) {
@@ -68,6 +69,18 @@ export const getAccountPageData = async (accountId: string) => {
     }
   }
 
+  if (instagramMainRef) {
+    const instagramDoc = await instagramMainRef.get();
+    if (instagramDoc.exists) {
+      const data = instagramDoc.data() as InstagramUserObjectType;
+      instagramUserData = {
+        ...data,
+        createdAt: Math.floor(data.createdAt.toDate().getTime() / 1000),
+        updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000),
+      };
+    }
+  }
+
   if (tiktokMainRef) {
     const tiktokDoc = await tiktokMainRef.get();
     if (tiktokDoc.exists) {
@@ -86,6 +99,7 @@ export const getAccountPageData = async (accountId: string) => {
     youtubePopularVideos,
     twitterUserData,
     popularTweets,
+    instagramUserData,
     tiktokUserData,
   });
 };
