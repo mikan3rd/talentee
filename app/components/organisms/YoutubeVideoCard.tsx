@@ -85,6 +85,7 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: num
           css={css`
             font-size: 16px;
             font-weight: bold;
+            position: relative;
           `}
         >
           {title}

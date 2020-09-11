@@ -127,7 +127,7 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
                 overflow: hidden;
-                padding-right: ${showDetails ? "0" : "50px"};
+                padding-right: 0;
                 @media (max-width: 600px) {
                   -webkit-line-clamp: 4;
                 }

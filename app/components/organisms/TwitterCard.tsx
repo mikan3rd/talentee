@@ -110,7 +110,7 @@ export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: numbe
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
                 overflow: hidden;
-                padding-right: 50px;
+                padding-right: 0;
                 @media (max-width: 600px) {
                   -webkit-line-clamp: 4;
                 }
