@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 import { VideoCategorieOptions, useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
 import { YoutubeCard } from "../organisms/YoutubeCard";
-import { IndexLinkButton, TwitterIndexLinkButton } from "../atoms/IndexLinkButton";
+import { IndexLinkButton, InstagramIndexLinkButton, TwitterIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const YoutubeIndex: React.FC = () => {
   const {
@@ -26,7 +26,7 @@ export const YoutubeIndex: React.FC = () => {
         `}
       >
         <Icon name="youtube" color="red" size="big" />
-        YouTube
+        YouTube ランキング
       </Header>
 
       <Divider />
@@ -87,11 +87,11 @@ export const YoutubeIndex: React.FC = () => {
           fluid
           icon
           labelPosition="left"
-          color="red"
+          color="youtube"
           onClick={() => getYoutubeNextPageData()}
           css={css`
             &&& {
-              margin-top: 20px;
+              margin: 20px 0 40px 0;
             }
           `}
         >
@@ -102,14 +102,14 @@ export const YoutubeIndex: React.FC = () => {
 
       <Divider />
 
-      <div
-        css={css`
-          margin-top: 40px;
-        `}
-      >
+      <div>
         <TwitterIndexLinkButton />
-        <IndexLinkButton />
+        <InstagramIndexLinkButton />
       </div>
+
+      <Divider />
+
+      <IndexLinkButton />
     </>
   );
 };

@@ -1,11 +1,16 @@
 import React from "react";
 
 import firebase from "../firebase/clientApp";
-import { TwitterUserCollectionPath, YoutubeChannelCollectionPath } from "../firebase/firestore";
+import {
+  InstagramUserCollectionPath,
+  TwitterUserCollectionPath,
+  YoutubeChannelCollectionPath,
+} from "../firebase/firestore";
 
 export const useIndexData = () => {
   const [youtubeData, setYoutubeData] = React.useState<IYoutubeData[]>([]);
   const [twitterData, setTwitterData] = React.useState<TwitterUserObjectType[]>([]);
+  const [instagramData, setInstagramData] = React.useState<InstagramUserObjectType[]>([]);
 
   const getYoutubePageData = async () => {
     const db = firebase.firestore();
@@ -31,10 +36,23 @@ export const useIndexData = () => {
     setTwitterData(twitterData);
   };
 
+  const getInstagramPageData = async () => {
+    const db = firebase.firestore();
+    const instagramCollection = db.collection(InstagramUserCollectionPath);
+    const instagramDocs = await instagramCollection.orderBy("edge_followed_by.count", "desc").limit(3).get();
+    const instagramData: InstagramUserObjectType[] = [];
+    instagramDocs.forEach((doc) => {
+      const data = doc.data() as InstagramUserObjectType;
+      instagramData.push(data);
+    });
+    setInstagramData(instagramData);
+  };
+
   React.useEffect(() => {
     getYoutubePageData();
     getTwitterPageData();
+    getInstagramPageData();
   }, []);
 
-  return { youtubeData, twitterData };
+  return { youtubeData, twitterData, instagramData };
 };
