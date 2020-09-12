@@ -5,7 +5,7 @@ import { UpsertInstagramUserJsonType, UpsertInstagramUserTopic } from "../fireba
 import { upsertProfile } from "./upsertProfile";
 
 export const upsertInstagramProfilePubSub = functions
-  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 5 })
+  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 3 })
   .pubsub.topic(UpsertInstagramUserTopic)
   .onPublish(
     sentryWrapper(async (message) => {
