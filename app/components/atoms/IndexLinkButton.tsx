@@ -17,9 +17,9 @@ export const IndexLinkButton: React.FC = () => {
 export const YoutubeIndexLinkButton: React.FC = () => {
   return (
     <Link href="/youtube" passHref>
-      <Button icon labelPosition="left" color="red" as="a" css={WideButtonCss}>
+      <Button icon labelPosition="left" color="youtube" as="a" css={WideButtonCss}>
         <Icon name="hand point right" />
-        他のYouTuberを見つける！
+        Youtuberの一覧を見る
       </Button>
     </Link>
   );
@@ -28,9 +28,20 @@ export const YoutubeIndexLinkButton: React.FC = () => {
 export const TwitterIndexLinkButton: React.FC = () => {
   return (
     <Link href="/twitter" passHref>
-      <Button icon labelPosition="left" color="blue" as="a" css={WideButtonCss}>
+      <Button icon labelPosition="left" color="twitter" as="a" css={WideButtonCss}>
         <Icon name="hand point right" />
-        他のTwitterを見つける！
+        Twitterの一覧を見る
+      </Button>
+    </Link>
+  );
+};
+
+export const InstagramIndexLinkButton: React.FC = () => {
+  return (
+    <Link href="/instagram" passHref>
+      <Button icon labelPosition="left" color="instagram" as="a" css={WideButtonCss}>
+        <Icon name="hand point right" />
+        Instagramerの一覧を見る
       </Button>
     </Link>
   );

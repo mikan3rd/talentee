@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 import { useTwitterIndexData } from "../../hooks/useTwitterIndexData";
 import { TwitterCard } from "../organisms/TwitterCard";
-import { IndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
+import { IndexLinkButton, InstagramIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const TwitterIndex: React.FC = () => {
   const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();
@@ -61,11 +61,11 @@ export const TwitterIndex: React.FC = () => {
           fluid
           icon
           labelPosition="left"
-          color="blue"
+          color="twitter"
           onClick={() => getTwitterNextPageData()}
           css={css`
             &&& {
-              margin-top: 20px;
+              margin: 20px 0 40px 0;
             }
           `}
         >
@@ -76,14 +76,14 @@ export const TwitterIndex: React.FC = () => {
 
       <Divider />
 
-      <div
-        css={css`
-          margin-top: 40px;
-        `}
-      >
+      <div>
         <YoutubeIndexLinkButton />
-        <IndexLinkButton />
+        <InstagramIndexLinkButton />
       </div>
+
+      <Divider />
+
+      <IndexLinkButton />
     </>
   );
 };

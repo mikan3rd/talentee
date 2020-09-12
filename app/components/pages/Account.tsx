@@ -6,7 +6,12 @@ import { YoutubeDetail } from "../organisms/YoutubeDetail";
 import { TwitterDetail } from "../organisms/TwitterDetail";
 import { TiktokDetail } from "../organisms/TiktokDetail";
 import { InstagramDetail } from "../organisms/InstagramDetail";
-import { TwitterIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
+import {
+  IndexLinkButton,
+  InstagramIndexLinkButton,
+  TwitterIndexLinkButton,
+  YoutubeIndexLinkButton,
+} from "../atoms/IndexLinkButton";
 
 export const Account: React.FC<{
   accountData: IAccountData;
@@ -218,7 +223,12 @@ export const Account: React.FC<{
       <div>
         <YoutubeIndexLinkButton />
         <TwitterIndexLinkButton />
+        <InstagramIndexLinkButton />
       </div>
+
+      <Divider />
+
+      <IndexLinkButton />
     </>
   );
 };

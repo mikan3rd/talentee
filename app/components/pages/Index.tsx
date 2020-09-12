@@ -286,8 +286,8 @@ export const Index: React.FC = () => {
                 as="a"
                 css={css`
                   &&& {
-                    color: black;
-                    background-color: white;
+                    color: white;
+                    background-color: #49769c;
                     border: 1px solid black;
                     @media (max-width: 600px) {
                       width: 100%;
@@ -321,8 +321,8 @@ export const Index: React.FC = () => {
                 css={css`
                   &&& {
                     width: 100%;
-                    color: black;
-                    background-color: white;
+                    color: white;
+                    background-color: #49769c;
                     border: 1px solid black;
                   }
                 `}
