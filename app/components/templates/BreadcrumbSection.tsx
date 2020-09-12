@@ -16,7 +16,7 @@ export const YoutubeSection: React.FC<{ active?: boolean }> = ({ active = false 
   return (
     <Link href="/youtube">
       <Breadcrumb.Section href="/youtube" active={active}>
-        YouTube
+        YouTube ランキング
       </Breadcrumb.Section>
     </Link>
   );
@@ -26,7 +26,17 @@ export const TwitterSection: React.FC<{ active?: boolean }> = ({ active = false 
   return (
     <Link href="/youtube">
       <Breadcrumb.Section href="/twitter" active={active}>
-        Twitter
+        Twitter ランキング
+      </Breadcrumb.Section>
+    </Link>
+  );
+};
+
+export const InstagramSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+  return (
+    <Link href="/instagram">
+      <Breadcrumb.Section href="/instagram" active={active}>
+        Instagram ランキング
       </Breadcrumb.Section>
     </Link>
   );

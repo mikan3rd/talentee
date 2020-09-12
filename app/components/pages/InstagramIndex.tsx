@@ -2,24 +2,31 @@ import React from "react";
 import { Button, Divider, Header, Icon } from "semantic-ui-react";
 import { css } from "@emotion/core";
 
-import { useTwitterIndexData } from "../../hooks/useTwitterIndexData";
-import { TwitterCard } from "../organisms/TwitterCard";
-import { IndexLinkButton, InstagramIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
+import { useInstagramIndexData } from "../../hooks/useInstagramIndexData";
+import { InstagramCard } from "../organisms/InstagramCard";
+import { IndexLinkButton, TwitterIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
 
-export const TwitterIndex: React.FC = () => {
-  const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();
+export const InstagramIndex: React.FC = () => {
+  const { instagramData, hasNext, getInstagramNextPageData } = useInstagramIndexData();
   return (
     <>
       <Header
         as="h1"
-        color="blue"
         css={css`
           display: flex;
           align-items: center;
         `}
       >
-        <Icon name="twitter" color="blue" size="big" />
-        Twitter ランキング
+        <img
+          src="/icon_instagram.svg"
+          css={css`
+            &&& {
+              width: 42px;
+              margin-right: 5px;
+            }
+          `}
+        />
+        Instagram ランキング
       </Header>
 
       <Divider />
@@ -51,8 +58,8 @@ export const TwitterIndex: React.FC = () => {
           margin-top: 10px;
         `}
       >
-        {twitterData.map((data, index) => {
-          return <TwitterCard key={data.id} data={data} rankNum={index + 1} />;
+        {instagramData.map((data, index) => {
+          return <InstagramCard key={data.id} data={data} rankNum={index + 1} />;
         })}
       </div>
 
@@ -61,8 +68,8 @@ export const TwitterIndex: React.FC = () => {
           fluid
           icon
           labelPosition="left"
-          color="twitter"
-          onClick={() => getTwitterNextPageData()}
+          color="instagram"
+          onClick={() => getInstagramNextPageData()}
           css={css`
             &&& {
               margin: 20px 0 40px 0;
@@ -70,7 +77,7 @@ export const TwitterIndex: React.FC = () => {
           `}
         >
           <Icon name="hand point right" />
-          {twitterData.length}位以降を読み込む
+          {instagramData.length}位以降を読み込む
         </Button>
       )}
 
@@ -78,7 +85,7 @@ export const TwitterIndex: React.FC = () => {
 
       <div>
         <YoutubeIndexLinkButton />
-        <InstagramIndexLinkButton />
+        <TwitterIndexLinkButton />
       </div>
 
       <Divider />

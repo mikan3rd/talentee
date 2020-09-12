@@ -80,7 +80,7 @@ export const Index: React.FC = () => {
                   }
                 `}
               >
-                一覧を見る
+                ランキングを見る
               </Button>
             </Link>
           </div>
@@ -110,7 +110,7 @@ export const Index: React.FC = () => {
                   }
                 `}
               >
-                一覧を見る
+                ランキングを見る
               </Button>
             </Link>
           </div>
@@ -184,7 +184,7 @@ export const Index: React.FC = () => {
                   }
                 `}
               >
-                一覧を見る
+                ランキングを見る
               </Button>
             </Link>
           </div>
@@ -214,7 +214,7 @@ export const Index: React.FC = () => {
                   }
                 `}
               >
-                一覧を見る
+                ランキングを見る
               </Button>
             </Link>
           </div>
@@ -295,7 +295,7 @@ export const Index: React.FC = () => {
                   }
                 `}
               >
-                一覧を見る
+                ランキングを見る
               </Button>
             </Link>
           </div>
@@ -327,7 +327,7 @@ export const Index: React.FC = () => {
                   }
                 `}
               >
-                一覧を見る
+                ランキングを見る
               </Button>
             </Link>
           </div>

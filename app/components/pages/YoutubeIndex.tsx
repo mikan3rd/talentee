@@ -26,7 +26,7 @@ export const YoutubeIndex: React.FC = () => {
         `}
       >
         <Icon name="youtube" color="red" size="big" />
-        YouTube
+        YouTube ランキング
       </Header>
 
       <Divider />

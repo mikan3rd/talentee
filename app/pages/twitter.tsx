@@ -8,7 +8,7 @@ import { TopSection, TwitterSection } from "../components/templates/BreadcrumbSe
 const TwitterIndexPage: React.FC = () => {
   return (
     <>
-      <Meta title="Twitter" />
+      <Meta title="Twitter" description="人気のTwitterアカウント一覧" />
 
       <Breadcrumb size="big">
         <TopSection />
