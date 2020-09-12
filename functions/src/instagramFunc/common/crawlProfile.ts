@@ -58,12 +58,20 @@ export const crawlProfile = async (username: string) => {
 
   await browser.close();
 
-  delete user.edge_owner_to_timeline_media;
+  const {
+    edge_owner_to_timeline_media,
+    edge_felix_video_timeline,
+    edge_media_collections,
+    edge_mutual_followed_by,
+    edge_saved_media,
+  } = user;
+
+  user.edge_owner_to_timeline_media = { count: edge_owner_to_timeline_media.count };
+  user.edge_felix_video_timeline = { count: edge_felix_video_timeline.count };
+  user.edge_media_collections = { count: edge_media_collections.count };
+  user.edge_mutual_followed_by = { count: edge_mutual_followed_by.count };
+  user.edge_saved_media = { count: edge_saved_media.count };
   delete user.edge_related_profiles;
-  delete user.edge_felix_video_timeline;
-  delete user.edge_media_collections;
-  delete user.edge_mutual_followed_by;
-  delete user.edge_saved_media;
 
   console.log(JSON.stringify(user));
 

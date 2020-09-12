@@ -10,12 +10,12 @@ type InstagramUserBaseType = {
   is_verified: boolean;
   profile_pic_url: string;
   profile_pic_url_hd: string;
-  edge_felix_video_timeline: unknown[];
-  edge_media_collections: unknown[];
-  edge_owner_to_timeline_media: unknown[];
-  edge_related_profiles: unknown[];
-  edge_mutual_followed_by: unknown[];
-  edge_saved_media: unknown[];
+  edge_felix_video_timeline: { count: number };
+  edge_media_collections: { count: number };
+  edge_owner_to_timeline_media: { count: number };
+  edge_mutual_followed_by: { count: number };
+  edge_saved_media: { count: number };
+  edge_related_profiles: { edges: unknown[] };
 };
 
 declare type InstagramUserObjectType = InstagramUserBaseType & {
