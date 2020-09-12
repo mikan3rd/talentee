@@ -5,6 +5,7 @@ import { Button, Divider, Icon, Menu, Tab } from "semantic-ui-react";
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 import { TwitterDetail } from "../organisms/TwitterDetail";
 import { TiktokDetail } from "../organisms/TiktokDetail";
+import { InstagramDetail } from "../organisms/InstagramDetail";
 import { TwitterIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
 
 export const Account: React.FC<{
@@ -52,7 +53,7 @@ export const Account: React.FC<{
   if (twitterUserData) {
     panes.push({
       menuItem: (
-        <Menu.Item key="twitter" disabled={!twitterUserData}>
+        <Menu.Item key="twitter">
           <Icon
             name="twitter"
             css={css`
@@ -70,20 +71,27 @@ export const Account: React.FC<{
     });
   }
 
+  if (instagramUserData) {
+    panes.push({
+      menuItem: (
+        <Menu.Item key="instagram">
+          <img src="/icon_instagram.svg" css={TabIconCss} />
+          Instagram
+        </Menu.Item>
+      ),
+      render: () => (
+        <Tab.Pane>
+          <InstagramDetail instagramUserData={instagramUserData} />
+        </Tab.Pane>
+      ),
+    });
+  }
+
   if (tiktokUserData) {
     panes.push({
       menuItem: (
         <Menu.Item key="tiktok">
-          <img
-            src="/icon_tiktok_black.svg"
-            css={css`
-              &&& {
-                width: 16px !important;
-                height: 14px !important;
-                margin-right: 5px !important;
-              }
-            `}
-          />
+          <img src="/icon_tiktok_black.svg" css={TabIconCss} />
           TikTok
         </Menu.Item>
       ),
@@ -226,5 +234,13 @@ const LinkButtonCss = css`
       width: 14px;
       height: 12px;
     }
+  }
+`;
+
+const TabIconCss = css`
+  &&& {
+    width: 16px !important;
+    height: 14px !important;
+    margin-right: 5px !important;
   }
 `;
