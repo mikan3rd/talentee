@@ -20,7 +20,6 @@ const clientCredentials = {
 // Check that `window` is in scope for the analytics module!
 if (typeof window !== "undefined" && !firebase.apps.length) {
   firebase.initializeApp(clientCredentials);
-  console.log(process.env.CONFIG_ENV);
   if (process.env.CONFIG_ENV === "prod") {
     firebase.analytics();
     firebase.performance();
