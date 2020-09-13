@@ -13,7 +13,6 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
   showDetails = true,
 }) => {
   const {
-    id,
     accountRef,
     snippet: { title, thumbnails, description },
     brandingSettings: {
@@ -24,7 +23,6 @@ export const YoutubeCard: React.FC<{ data: IYoutubeData; rankNum: number; showDe
   } = data;
   return (
     <div
-      key={id}
       css={css`
         position: relative;
         margin-top: 12px;

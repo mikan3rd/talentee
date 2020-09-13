@@ -26,6 +26,7 @@ declare type TiktokUserObjectType = TiktokUserBaseType & {
   createdAt: firebase.firestore.Timestamp;
   updatedAt: firebase.firestore.Timestamp;
 };
+
 declare type TiktokUserDataType = TiktokUserBaseType & {
   createdAt: number;
   updatedAt: number;

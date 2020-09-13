@@ -6,7 +6,6 @@ import { toUnitString } from "../../common/utils";
 
 export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: number }> = ({ data, rankNum }) => {
   const {
-    id,
     accountRef,
     profile_image_url,
     name,
@@ -15,7 +14,6 @@ export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: numbe
   } = data;
   return (
     <div
-      key={id}
       css={css`
         position: relative;
         margin-top: 12px;

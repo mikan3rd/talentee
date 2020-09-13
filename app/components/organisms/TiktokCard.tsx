@@ -4,8 +4,12 @@ import { css } from "@emotion/core";
 
 import { toUnitString } from "../../common/utils";
 
-export const InstagramCard: React.FC<{ data: InstagramUserObjectType; rankNum: number }> = ({ data, rankNum }) => {
-  const { accountRef, full_name, biography, profile_pic_url, edge_followed_by, edge_owner_to_timeline_media } = data;
+export const TiktokCard: React.FC<{ data: TiktokUserObjectType; rankNum: number }> = ({ data, rankNum }) => {
+  const {
+    accountRef,
+    user: { nickname, signature, avatarMedium },
+    stats: { followerCount, followingCount, heartCount, videoCount },
+  } = data;
   return (
     <div
       css={css`
@@ -52,8 +56,8 @@ export const InstagramCard: React.FC<{ data: InstagramUserObjectType; rankNum: n
           >
             <div>
               <img
-                src={profile_pic_url}
-                alt={full_name}
+                src={avatarMedium}
+                alt={nickname}
                 css={css`
                   width: 64px;
                   height: 64px;
@@ -72,7 +76,7 @@ export const InstagramCard: React.FC<{ data: InstagramUserObjectType; rankNum: n
                   font-weight: bold;
                 `}
               >
-                {full_name}
+                {nickname}
               </div>
               <div
                 css={css`
@@ -84,18 +88,19 @@ export const InstagramCard: React.FC<{ data: InstagramUserObjectType; rankNum: n
                 `}
               >
                 <div css={CountWrapperCss}>
-                  <div>フォロワー {toUnitString(edge_followed_by.count)}人</div>
+                  <div>{toUnitString(followerCount)} フォロワー</div>
                 </div>
-                {edge_owner_to_timeline_media && (
-                  <div css={CountWrapperCss}>
-                    <div>投稿 {toUnitString(edge_owner_to_timeline_media.count)}件</div>
-                  </div>
-                )}
+                <div css={CountWrapperCss}>
+                  <div>{toUnitString(Number(heartCount))} いいね</div>
+                </div>
+                <div css={CountWrapperCss}>
+                  <div>{toUnitString(videoCount)} 本</div>
+                </div>
               </div>
             </div>
           </div>
 
-          {biography && (
+          {signature && (
             <p
               css={css`
                 position: relative;
@@ -110,7 +115,7 @@ export const InstagramCard: React.FC<{ data: InstagramUserObjectType; rankNum: n
                 }
               `}
             >
-              {biography}
+              {signature}
             </p>
           )}
         </a>
