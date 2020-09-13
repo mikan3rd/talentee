@@ -4,7 +4,12 @@ import { css } from "@emotion/core";
 
 import { useInstagramIndexData } from "../../hooks/useInstagramIndexData";
 import { InstagramCard } from "../organisms/InstagramCard";
-import { IndexLinkButton, TwitterIndexLinkButton, YoutubeIndexLinkButton } from "../atoms/IndexLinkButton";
+import {
+  IndexLinkButton,
+  TiktokIndexLinkButton,
+  TwitterIndexLinkButton,
+  YoutubeIndexLinkButton,
+} from "../atoms/IndexLinkButton";
 
 export const InstagramIndex: React.FC = () => {
   const { instagramData, hasNext, getInstagramNextPageData } = useInstagramIndexData();
@@ -86,6 +91,7 @@ export const InstagramIndex: React.FC = () => {
       <div>
         <YoutubeIndexLinkButton />
         <TwitterIndexLinkButton />
+        <TiktokIndexLinkButton />
       </div>
 
       <Divider />

@@ -9,6 +9,7 @@ import { InstagramDetail } from "../organisms/InstagramDetail";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
+  TiktokIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
@@ -224,6 +225,7 @@ export const Account: React.FC<{
         <YoutubeIndexLinkButton />
         <TwitterIndexLinkButton />
         <InstagramIndexLinkButton />
+        <TiktokIndexLinkButton />
       </div>
 
       <Divider />
