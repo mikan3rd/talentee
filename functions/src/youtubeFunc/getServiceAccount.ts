@@ -1,6 +1,12 @@
 import { PubSub } from "@google-cloud/pubsub";
 
-import { YoutubeChannelCollectionPath, db } from "../firebase/collectionPath";
+import {
+  InstagramUserCollectionPath,
+  TiktokUserCollectionPath,
+  TwitterUserCollectionPath,
+  YoutubeChannelCollectionPath,
+  db,
+} from "../firebase/collectionPath";
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import {
   UpsertInstagramUserJsonType,
@@ -31,23 +37,54 @@ export const getServiceAccount = async (channelId: string) => {
   for (const serviceAccount of serviceAccounts) {
     const { serviceName, items } = serviceAccount;
     const firstItem = items[0];
+    const { username } = firstItem;
 
-    if (!firstItem.username) {
+    if (!username) {
       continue;
     }
 
     if (serviceName === "twitter") {
-      const instagramUserTopicData: UpsertTwitterUserJsonType = { accountId, username: firstItem.username };
-      await pubSub.topic(UpsertTwitterUserTopic).publish(toBufferJson(instagramUserTopicData));
+      const twitterUserDoc = await db
+        .collection(TwitterUserCollectionPath)
+        .where("username", "==", username)
+        .limit(1)
+        .get();
+
+      if (!twitterUserDoc.empty) {
+        continue;
+      }
+
+      const twitterUserTopicData: UpsertTwitterUserJsonType = { accountId, username };
+      await pubSub.topic(UpsertTwitterUserTopic).publish(toBufferJson(twitterUserTopicData));
     }
 
     if (serviceName === "instagram") {
-      const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username: firstItem.username };
+      const instagramUserDoc = await db
+        .collection(InstagramUserCollectionPath)
+        .where("username", "==", username)
+        .limit(1)
+        .get();
+
+      if (!instagramUserDoc.empty) {
+        continue;
+      }
+
+      const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username };
       await pubSub.topic(UpsertInstagramUserTopic).publish(toBufferJson(instagramUserTopicData));
     }
 
     if (serviceName === "tiktok") {
-      const tiktokUserTopicData: UpsertTiktokUserJsonType = { accountId, uniqueId: firstItem.username };
+      const tiktokUserDoc = await db
+        .collection(TiktokUserCollectionPath)
+        .where("uniqueId", "==", username)
+        .limit(1)
+        .get();
+
+      if (!tiktokUserDoc.empty) {
+        continue;
+      }
+
+      const tiktokUserTopicData: UpsertTiktokUserJsonType = { accountId, uniqueId: username };
       await pubSub.topic(UpsertTiktokUserTopic).publish(toBufferJson(tiktokUserTopicData));
     }
   }
