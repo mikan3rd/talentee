@@ -147,7 +147,17 @@ export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; pop
           <Icon name="home" />
           最近のツイート
         </Header>
-        <a className="twitter-timeline" data-height="500" href={`https://twitter.com/${username}`} />
+        <div
+          css={css`
+            margin: 20px 0 0 0;
+            .twitter-timeline {
+              border: 1px solid #ccd6dd !important;
+              border-radius: 15px;
+            }
+          `}
+        >
+          <a className="twitter-timeline" data-height="500" href={`https://twitter.com/${username}`} />
+        </div>
       </div>
 
       <Divider />
