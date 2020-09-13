@@ -15,7 +15,7 @@ export const crawlProfile = async (username: string) => {
 
   const targetUrl = `http://www.instagram.com/${username}/`;
   console.log(targetUrl);
-  await page.goto(targetUrl, { timeout: 1000 * 120, waitUntil: ["load", "networkidle2"] });
+  await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
 
   const firstUrl = page.url();
   console.log("firstUrl:", firstUrl);
