@@ -2,14 +2,13 @@ import { PubSub } from "@google-cloud/pubsub";
 
 import { YoutubeChannelCollectionPath, db } from "../firebase/collectionPath";
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
-import { TwitterError, TwitterNotFound, getUserByUsername } from "../twitterFunc/common/api";
-import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
-import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
 import {
   UpsertInstagramUserJsonType,
   UpsertInstagramUserTopic,
   UpsertTiktokUserJsonType,
   UpsertTiktokUserTopic,
+  UpsertTwitterUserJsonType,
+  UpsertTwitterUserTopic,
 } from "../firebase/topic";
 import { toBufferJson } from "../common/utils";
 
@@ -38,17 +37,8 @@ export const getServiceAccount = async (channelId: string) => {
     }
 
     if (serviceName === "twitter") {
-      try {
-        const { data } = await getUserByUsername(firstItem.username);
-        const twitterUser = formatTwitterUserData(data);
-        await updateTwitterUser(accountId, twitterUser);
-      } catch (e) {
-        if (e instanceof TwitterError && e.name === TwitterNotFound) {
-          continue;
-        } else {
-          throw e;
-        }
-      }
+      const instagramUserTopicData: UpsertTwitterUserJsonType = { accountId, username: firstItem.username };
+      await pubSub.topic(UpsertTwitterUserTopic).publish(toBufferJson(instagramUserTopicData));
     }
 
     if (serviceName === "instagram") {

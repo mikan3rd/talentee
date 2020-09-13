@@ -13,11 +13,10 @@ import {
   UpsertInstagramUserTopic,
   UpsertTiktokUserJsonType,
   UpsertTiktokUserTopic,
+  UpsertTwitterUserJsonType,
+  UpsertTwitterUserTopic,
 } from "../firebase/topic";
 import { AccountCollectionPath, db } from "../firebase/collectionPath";
-import { TwitterError, TwitterNotFound, getUserById } from "../twitterFunc/common/api";
-import { formatTwitterUserData } from "../twitterFunc/common/formatUserData";
-import { updateTwitterUser } from "../twitterFunc/common/updateTwitterUser";
 import { formatChannelData } from "../youtubeFunc/common/formatYoutubeData";
 import { updateChannel } from "../youtubeFunc/common/updateChannel";
 import { youtubeService } from "../common/config";
@@ -55,17 +54,8 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
 
   if (twitterMainRef) {
     const { id, username } = (await twitterMainRef.get()).data() as TwitterUserDataType;
-    try {
-      const { data } = await getUserById(id);
-      const twitterUser = formatTwitterUserData(data);
-      await updateTwitterUser(accountId, twitterUser);
-    } catch (e) {
-      if (e instanceof TwitterError && e.name === TwitterNotFound) {
-        // pass
-      } else {
-        throw e;
-      }
-    }
+    const twitterUserTopicData: UpsertTwitterUserJsonType = { accountId, username };
+    await pubSub.topic(UpsertTwitterUserTopic).publish(toBufferJson(twitterUserTopicData));
 
     const tweetTopicdata: PopularTweetsonType = { username, userId: id };
     await pubSub.topic(PopularTweetTopic).publish(toBufferJson(tweetTopicdata));
