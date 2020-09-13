@@ -111,7 +111,7 @@ export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; pop
                 }
               `}
             >
-              <Icon name="video" />
+              <Icon name="retweet" />
               人気ツイートTOP3
             </Header>
             <div
@@ -122,13 +122,9 @@ export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; pop
               `}
             >
               {popularTweets.map((tweet) => {
-                const { id, text } = tweet;
+                const { id } = tweet;
                 return (
-                  <blockquote key={tweet.id} className="twitter-tweet">
-                    <p>
-                      <Linkify>{text}</Linkify>
-                    </p>
-                    &mdash; {name} (@{username})
+                  <blockquote key={id} className="twitter-tweet">
                     <a href={`https://twitter.com/${username}/status/${id}`} />
                   </blockquote>
                 );
@@ -137,6 +133,22 @@ export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; pop
           </div>
         </>
       )}
+
+      <Divider />
+
+      <div>
+        <Header
+          css={css`
+            &&& {
+              margin: 20px 0 0 0;
+            }
+          `}
+        >
+          <Icon name="home" />
+          最近のツイート
+        </Header>
+        <a className="twitter-timeline" data-height="500" href={`https://twitter.com/${username}`} />
+      </div>
 
       <Divider />
 
