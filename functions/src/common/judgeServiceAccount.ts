@@ -1,6 +1,13 @@
 import { groupByObject } from "../common/utils";
 
-export type serviceNameType = "twitter" | "instagram" | "nicovideo_channel" | "nicovideo_user" | "tiktok" | "other";
+export type serviceNameType =
+  | "twitter"
+  | "instagram"
+  | "nicovideo_channel"
+  | "nicovideo_user"
+  | "tiktok"
+  | "tiktok_vt"
+  | "other";
 
 export const bulkJudgeServiceAccount = (urls: string[]) => {
   const accounts = urls.map((url) => judgeServiceAccount(url));
@@ -35,6 +42,9 @@ export const judgeServiceAccount = (url: string) => {
     serviceName = "nicovideo_channel" as const;
   } else if (/nicovideo.jp/.test(url)) {
     serviceName = "nicovideo_user" as const;
+  } else if (/vt.tiktok.com/.test(url)) {
+    serviceName = "tiktok_vt" as const;
+    username = username.replace("@", "");
   } else if (/tiktok.com/.test(url)) {
     serviceName = "tiktok" as const;
     username = username.replace("@", "");

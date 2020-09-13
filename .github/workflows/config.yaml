@@ -39,6 +39,7 @@ jobs:
       - run: yarn build
         working-directory: ./app
         env:
+          CONFIG_ENV: "dev"
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
           FIREBASE_DATABASE_URL: ${{ secrets.FIREBASE_DATABASE_URL }}
