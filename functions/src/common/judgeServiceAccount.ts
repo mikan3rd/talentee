@@ -42,7 +42,7 @@ export const judgeServiceAccount = (url: string) => {
     serviceName = "nicovideo_channel" as const;
   } else if (/nicovideo.jp/.test(url)) {
     serviceName = "nicovideo_user" as const;
-  } else if (/vt.tiktok.com/.test(url)) {
+  } else if (/v?t.tiktok.com/.test(url)) {
     serviceName = "tiktok_vt" as const;
     username = username.replace("@", "");
   } else if (/tiktok.com/.test(url)) {

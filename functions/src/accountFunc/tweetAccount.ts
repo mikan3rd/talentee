@@ -47,6 +47,8 @@ export const tweetAccountByYoutube = async () => {
     accountUrl(accountId),
   ].join("\n");
 
+  console.log(status);
+
   await client.postTweet(status);
 
   tweetAccoutData.youtubeStartAfterId = youtubeData.id;
