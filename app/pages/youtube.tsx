@@ -8,7 +8,7 @@ import { TopSection, YoutubeSection } from "../components/templates/BreadcrumbSe
 const YoutubeIndexPage: React.FC = () => {
   return (
     <>
-      <Meta title="Youtube" description="人気のYoutube一覧" />
+      <Meta title="Youtube" description="人気のYoutubeランキング" />
 
       <Breadcrumb size="big">
         <TopSection />

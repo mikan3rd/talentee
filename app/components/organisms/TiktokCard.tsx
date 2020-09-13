@@ -8,7 +8,7 @@ export const TiktokCard: React.FC<{ data: TiktokUserObjectType; rankNum: number 
   const {
     accountRef,
     user: { nickname, signature, avatarMedium },
-    stats: { followerCount, followingCount, heartCount, videoCount },
+    stats: { followerCount, heartCount, videoCount },
   } = data;
   return (
     <div

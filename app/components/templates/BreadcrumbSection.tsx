@@ -42,6 +42,16 @@ export const InstagramSection: React.FC<{ active?: boolean }> = ({ active = fals
   );
 };
 
+export const TiktokSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+  return (
+    <Link href="/tiktok">
+      <Breadcrumb.Section href="/tiktok" active={active}>
+        Tiktok ランキング
+      </Breadcrumb.Section>
+    </Link>
+  );
+};
+
 export const AccountSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
   return <Breadcrumb.Section active={active}>Account</Breadcrumb.Section>;
 };
