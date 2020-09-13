@@ -12,7 +12,7 @@ export const Meta = React.memo<{
       <meta name="description" content={description} />
       <meta property="og:title" content={titleWithSiteName} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content="https://talentee.vercel.app/ogp.png" />
+      <meta property="og:image" content="https://talentee.jp/ogp.png" />
       <meta property="og:type" content="website" />
       <meta name="twitter:title" content={titleWithSiteName} />
       <meta name="twitter:description" content={description} />

@@ -6,7 +6,7 @@ type TweetAccountDataType = {
   youtubeStartAfterId: string;
 };
 
-const accountUrl = (accountId: string) => `https://talentee.vercel.app/account/${accountId}`;
+const accountUrl = (accountId: string) => `https://talentee.jp/account/${accountId}`;
 
 export const tweetAccountByYoutube = async () => {
   const doc = await tweetAccountRef.get();

@@ -17,7 +17,7 @@ admin.initializeApp({
   databaseURL: process.env.FIREBASE_DATABASE_URL,
 });
 
-const baseUrl = "https://talentee.vercel.app";
+const baseUrl = "https://talentee.jp";
 const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 
 (async () => {
