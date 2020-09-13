@@ -1,10 +1,10 @@
-import { AccountCollectionPath, FieldValue, InstagramUserCollectionPath, db } from "../firebase/collectionPath";
-
 import { crawlProfile } from "./common/crawlProfile";
+import { upsertUser } from "./common/upsertUser";
+import { upsertMedia } from "./common/upsertMedia";
 
 export const upsertProfile = async (accountId: string, username: string) => {
   console.log(`accountId: ${accountId}, username: ${username}`);
-  const userData = await crawlProfile(username);
+  const { userData, mediaDataList } = await crawlProfile(username);
 
   const { id } = userData;
   if (!accountId || !id) {
@@ -12,32 +12,8 @@ export const upsertProfile = async (accountId: string, username: string) => {
     return false;
   }
 
-  const accountCollection = db.collection(AccountCollectionPath);
-  const instagramProfileCollection = db.collection(InstagramUserCollectionPath);
-
-  const accountRef = accountCollection.doc(accountId);
-  const instagramMainRef = instagramProfileCollection.doc(id);
-  const instagramMainDoc = await instagramMainRef.get();
-
-  const instagramProfilerData = {
-    ...userData,
-    accountRef,
-    updatedAt: FieldValue.serverTimestamp(),
-    createdAt: FieldValue.serverTimestamp(),
-  };
-
-  if (instagramMainDoc.exists) {
-    delete instagramProfilerData.createdAt;
-  }
-
-  await instagramMainRef.set(instagramProfilerData, { merge: true });
-
-  const accountData: IAccountData = {
-    instagramMainRef,
-    updatedAt: FieldValue.serverTimestamp(),
-  };
-
-  await accountRef.set(accountData, { merge: true });
+  await upsertUser(accountId, userData);
+  await upsertMedia(mediaDataList);
 
   return true;
 };

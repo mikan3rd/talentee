@@ -2,7 +2,7 @@ import { puppeteerSetup } from "../../common/utils";
 import { INSTAGRAM_PASSWORD, INSTAGRAM_USERNAME } from "../../common/config";
 
 type shareDataType = {
-  entry_data: { ProfilePage: { graphql: { user: InstagramUserType } }[] };
+  entry_data: { ProfilePage: { graphql: { user: InstagramUserRawType } }[] };
 };
 interface customWindow extends Window {
   _sharedData;
@@ -66,14 +66,19 @@ export const crawlProfile = async (username: string) => {
     edge_saved_media,
   } = user;
 
-  user.edge_owner_to_timeline_media = { count: edge_owner_to_timeline_media.count };
-  user.edge_felix_video_timeline = { count: edge_felix_video_timeline.count };
-  user.edge_media_collections = { count: edge_media_collections.count };
-  user.edge_mutual_followed_by = { count: edge_mutual_followed_by.count };
-  user.edge_saved_media = { count: edge_saved_media.count };
-  delete user.edge_related_profiles;
+  const formattedUser: InstagramUserType = {
+    ...user,
+    edge_owner_to_timeline_media: { count: edge_owner_to_timeline_media.count },
+    edge_felix_video_timeline: { count: edge_felix_video_timeline.count },
+    edge_media_collections: { count: edge_media_collections.count },
+    edge_mutual_followed_by: { count: edge_mutual_followed_by.count },
+    edge_saved_media: { count: edge_saved_media.count },
+    edge_related_profiles: { edges: [] },
+  };
 
-  console.log(JSON.stringify(user));
+  console.log(JSON.stringify(formattedUser));
 
-  return user;
+  const mediaDataList: InstagramMediaType[] = edge_owner_to_timeline_media.edges.map((edge) => edge.node);
+
+  return { userData: formattedUser, mediaDataList };
 };
