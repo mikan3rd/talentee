@@ -2,7 +2,7 @@ import { puppeteerSetup } from "../../common/utils";
 import { INSTAGRAM_PASSWORD, INSTAGRAM_USERNAME } from "../../common/config";
 
 type shareDataType = {
-  entry_data: { ProfilePage: { graphql: { user: InstagramUserRawType } }[] };
+  entry_data: { ProfilePage?: { graphql: { user: InstagramUserRawType } }[] };
 };
 interface customWindow extends Window {
   _sharedData;
@@ -41,7 +41,7 @@ export const crawlProfile = async (username: string) => {
   if (secondUrl.includes("onetap")) {
     console.log("ONETAP: start");
     const ButtonSelector = "main section button";
-    await page.waitFor(ButtonSelector);
+    await page.waitForSelector(ButtonSelector);
     await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
     console.log("ONETAP: end");
   }
@@ -54,9 +54,15 @@ export const crawlProfile = async (username: string) => {
 
   const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
 
-  const user = sharedData.entry_data.ProfilePage[0].graphql.user;
-
   await browser.close();
+
+  const { ProfilePage } = sharedData.entry_data;
+
+  if (!ProfilePage) {
+    return { userData: null, mediaDataList: [] };
+  }
+
+  const { user } = ProfilePage[0].graphql;
 
   const {
     edge_owner_to_timeline_media,
