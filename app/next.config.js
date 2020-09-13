@@ -1,6 +1,7 @@
 module.exports = {
   target: "serverless",
   env: {
+    CONFIG_ENV: process.env.CONFIG_ENV,
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
     FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
