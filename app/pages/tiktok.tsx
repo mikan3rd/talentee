@@ -1,24 +1,24 @@
 import React from "react";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { InstagramIndex } from "../components/pages/InstagramIndex";
+import { TiktokIndex } from "../components/pages/TiktokIndex";
 import { Meta } from "../components/templates/Meta";
-import { InstagramSection, TopSection } from "../components/templates/BreadcrumbSection";
+import { TiktokSection, TopSection } from "../components/templates/BreadcrumbSection";
 
 const InstagramIndexPage: React.FC = () => {
   return (
     <>
-      <Meta title="Instagram" description="人気のInstagramランキング" />
+      <Meta title="TikTok" description="人気のTikTokランキング" />
 
       <Breadcrumb size="big">
         <TopSection />
         <Breadcrumb.Divider />
-        <InstagramSection active={true} />
+        <TiktokSection active={true} />
       </Breadcrumb>
 
       <Divider />
 
-      <InstagramIndex />
+      <TiktokIndex />
     </>
   );
 };

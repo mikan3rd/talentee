@@ -41,7 +41,18 @@ export const InstagramIndexLinkButton: React.FC = () => {
     <Link href="/instagram" passHref>
       <Button icon labelPosition="left" color="instagram" as="a" css={WideButtonCss}>
         <Icon name="hand point right" />
-        Instagramerのランキングを見る
+        Instagramのランキングを見る
+      </Button>
+    </Link>
+  );
+};
+
+export const TiktokIndexLinkButton: React.FC = () => {
+  return (
+    <Link href="/tiktok" passHref>
+      <Button icon labelPosition="left" color="black" as="a" css={WideButtonCss}>
+        <Icon name="hand point right" />
+        TikTokのランキングを見る
       </Button>
     </Link>
   );
