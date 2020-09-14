@@ -13,7 +13,7 @@ export const Header = React.memo(() => {
         id="header"
         css={css`
           position: fixed;
-          top: 0;
+          top: ${!isUp ? "-60px" : "0"};
           left: 0;
           right: 0;
           height: 60px;
@@ -22,8 +22,6 @@ export const Header = React.memo(() => {
           justify-content: space-between;
           align-items: center;
           z-index: 1;
-          visibility: ${!isUp ? "hidden" : "visible"};
-          opacity: ${!isUp ? 0 : 1};
           transition: all 0.5s ease;
           cursor: pointer;
         `}
