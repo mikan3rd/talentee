@@ -6,6 +6,8 @@ export const upsertProfile = async (accountId: string, username: string) => {
   console.log(`accountId: ${accountId}, username: ${username}`);
   const { userData, mediaDataList } = await crawlProfile(username);
 
+  console.log("mediaDataList:", mediaDataList.length);
+
   if (!accountId || !userData || !userData.id) {
     console.error(`NOT FOUND: accountId: ${accountId}, username: ${username}`);
     return false;

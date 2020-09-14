@@ -6,7 +6,7 @@ export const upsertUserData = async (accountId: string, uniqueId: string) => {
   console.log(`accountId: ${accountId}, uniqueId: ${uniqueId}`);
   const { userData, itemList } = await getUserDetail(uniqueId);
 
-  console.log(JSON.stringify({ itemList }));
+  console.log("itemList:", itemList.length);
 
   const {
     user: { id },

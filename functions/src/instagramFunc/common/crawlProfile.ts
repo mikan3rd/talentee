@@ -13,7 +13,7 @@ let window: customWindow;
 export const crawlProfile = async (username: string) => {
   const { browser, page } = await puppeteerSetup();
 
-  const targetUrl = `http://www.instagram.com/${username}/`;
+  const targetUrl = `https://www.instagram.com/${username}/`;
   console.log(targetUrl);
   await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
 
