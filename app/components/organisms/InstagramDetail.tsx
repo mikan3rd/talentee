@@ -11,6 +11,7 @@ export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserData
   const {
     full_name,
     biography,
+    external_url,
     profile_pic_url,
     edge_followed_by,
     edge_follow,
@@ -78,7 +79,15 @@ export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserData
           margin-top: 10px;
         `}
       >
-        <Linkify>{biography}</Linkify>
+        <Linkify>
+          {biography}
+          {external_url && (
+            <>
+              <br />
+              {external_url}
+            </>
+          )}
+        </Linkify>
       </p>
 
       <div
