@@ -188,7 +188,7 @@ export const Account = React.memo<{
               margin-top: 20px;
               background-color: #f7f7f7;
               transition: all 0.5s ease;
-              /* overflow-x: scroll; */
+              overflow-x: scroll;
               padding-bottom: 2px;
               .item {
                 transition: all 0.5s ease !important;
