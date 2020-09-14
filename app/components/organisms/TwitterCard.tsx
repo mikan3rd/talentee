@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 import { toUnitString } from "../../common/utils";
 
-export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: number }> = ({ data, rankNum }) => {
+export const TwitterCard = React.memo<{ data: TwitterUserObjectType; rankNum: number }>(({ data, rankNum }) => {
   const {
     accountRef,
     profile_image_url,
@@ -121,7 +121,7 @@ export const TwitterCard: React.FC<{ data: TwitterUserObjectType; rankNum: numbe
       </Link>
     </div>
   );
-};
+});
 
 const CountWrapperCss = css`
   display: flex;

@@ -11,7 +11,7 @@ import {
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
 
-export const InstagramIndex: React.FC = () => {
+export const InstagramIndex = React.memo(() => {
   const { instagramData, hasNext, getInstagramNextPageData } = useInstagramIndexData();
   return (
     <>
@@ -99,4 +99,4 @@ export const InstagramIndex: React.FC = () => {
       <IndexLinkButton />
     </>
   );
-};
+});

@@ -9,154 +9,153 @@ import { ElementIds } from "../pages/Account";
 
 import { YoutubeVideoCard } from "./YoutubeVideoCard";
 
-export const YoutubeDetail: React.FC<{ youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] }> = ({
-  youtubeData,
-  youtubePopularVideos,
-}) => {
-  const {
-    snippet: { title, thumbnails, description, publishedAt },
-    brandingSettings: {
-      channel: { keywords },
-    },
-    statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
-    updatedAt,
-    videoCategories,
-  } = youtubeData;
+export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] }>(
+  ({ youtubeData, youtubePopularVideos }) => {
+    const {
+      snippet: { title, thumbnails, description, publishedAt },
+      brandingSettings: {
+        channel: { keywords },
+      },
+      statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
+      updatedAt,
+      videoCategories,
+    } = youtubeData;
 
-  const publishedAtTime = dayjs(publishedAt);
-  const updateAtTime = dayjs.unix(updatedAt);
-  return (
-    <div id={ElementIds.Youtube}>
-      <div
-        css={css`
-          display: flex;
-        `}
-      >
-        <div>
-          <img
-            src={thumbnails.medium.url}
-            alt={title}
-            css={css`
-              width: 64px;
-              height: 64px;
-              border-radius: 50%;
-            `}
-          />
-        </div>
+    const publishedAtTime = dayjs(publishedAt);
+    const updateAtTime = dayjs.unix(updatedAt);
+    return (
+      <div id={ElementIds.Youtube}>
         <div
           css={css`
-            margin-left: 10px;
+            display: flex;
           `}
         >
-          <div
-            css={css`
-              font-size: 20px;
-              font-weight: bold;
-            `}
-          >
-            {title}
+          <div>
+            <img
+              src={thumbnails.medium.url}
+              alt={title}
+              css={css`
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+              `}
+            />
           </div>
           <div
             css={css`
-              display: flex;
-              @media (max-width: 600px) {
-                display: block;
-              }
+              margin-left: 10px;
             `}
           >
-            <div css={CountWrapperCss}>
-              <Icon name="user plus" css={CountIconCss} />
-              <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}</div>
+            <div
+              css={css`
+                font-size: 20px;
+                font-weight: bold;
+              `}
+            >
+              {title}
             </div>
-            <div css={CountWrapperCss}>
-              <Icon name="video play" css={CountIconCss} />
-              <div css={CountTextCss}>
-                {toUnitString(viewCount)}回 (平均 {toUnitString(viewCount / (videoCount | 1))}回)
+            <div
+              css={css`
+                display: flex;
+                @media (max-width: 600px) {
+                  display: block;
+                }
+              `}
+            >
+              <div css={CountWrapperCss}>
+                <Icon name="user plus" css={CountIconCss} />
+                <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}</div>
               </div>
-            </div>
-            <div css={CountWrapperCss}>
-              <Icon name="video" css={CountIconCss} />
-              <div css={CountTextCss}>{toUnitString(videoCount)}本</div>
+              <div css={CountWrapperCss}>
+                <Icon name="video play" css={CountIconCss} />
+                <div css={CountTextCss}>
+                  {toUnitString(viewCount)}回 (平均 {toUnitString(viewCount / (videoCount | 1))}回)
+                </div>
+              </div>
+              <div css={CountWrapperCss}>
+                <Icon name="video" css={CountIconCss} />
+                <div css={CountTextCss}>{toUnitString(videoCount)}本</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <p
-        css={css`
-          margin-top: 10px;
-        `}
-      >
-        <Linkify>{description}</Linkify>
-      </p>
+        <p
+          css={css`
+            margin-top: 10px;
+          `}
+        >
+          <Linkify>{description}</Linkify>
+        </p>
 
-      {videoCategories && (
+        {videoCategories && (
+          <div css={LabelWrapeerCss}>
+            {videoCategories.map((category, index) => {
+              const {
+                snippet: { title },
+              } = category;
+              return (
+                <Label key={index} tag color="blue" css={LabelCss}>
+                  {title}
+                </Label>
+              );
+            })}
+          </div>
+        )}
+
         <div css={LabelWrapeerCss}>
-          {videoCategories.map((category, index) => {
-            const {
-              snippet: { title },
-            } = category;
+          {keywords.map((keyword, index) => {
             return (
-              <Label key={index} tag color="blue" css={LabelCss}>
-                {title}
+              <Label key={index} tag css={LabelCss}>
+                {keyword}
               </Label>
             );
           })}
         </div>
-      )}
 
-      <div css={LabelWrapeerCss}>
-        {keywords.map((keyword, index) => {
-          return (
-            <Label key={index} tag css={LabelCss}>
-              {keyword}
-            </Label>
-          );
-        })}
-      </div>
+        <div
+          css={css`
+            margin-top: 10px;
+            text-align: right;
+          `}
+        >
+          開設日 {publishedAtTime.format("YYYY年M月D日")}
+        </div>
 
-      <div
-        css={css`
-          margin-top: 10px;
-          text-align: right;
-        `}
-      >
-        開設日 {publishedAtTime.format("YYYY年M月D日")}
-      </div>
-
-      {youtubePopularVideos.length > 0 && (
-        <>
-          <Divider />
-          <div>
-            <Header
-              css={css`
-                &&& {
-                  margin: 20px 0 0 0;
-                }
-              `}
-            >
-              <Icon name="video" />
-              人気動画TOP3
-            </Header>
+        {youtubePopularVideos.length > 0 && (
+          <>
+            <Divider />
             <div>
-              {youtubePopularVideos.map((video, index) => (
-                <YoutubeVideoCard key={video.id} video={video} rankNum={index + 1} />
-              ))}
+              <Header
+                css={css`
+                  &&& {
+                    margin: 20px 0 0 0;
+                  }
+                `}
+              >
+                <Icon name="video" />
+                人気動画TOP3
+              </Header>
+              <div>
+                {youtubePopularVideos.map((video, index) => (
+                  <YoutubeVideoCard key={video.id} video={video} rankNum={index + 1} />
+                ))}
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
 
-      <Divider />
-      <div
-        css={css`
-          text-align: right;
-        `}
-      >
-        <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
+        <Divider />
+        <div
+          css={css`
+            text-align: right;
+          `}
+        >
+          <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
 
 const CountWrapperCss = css`
   display: flex;

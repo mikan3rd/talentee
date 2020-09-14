@@ -7,7 +7,7 @@ import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 import { ElementIds } from "../pages/Account";
 
-export const TiktokDetail: React.FC<{ tiktokUserData: TiktokUserDataType }> = ({ tiktokUserData }) => {
+export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType }>(({ tiktokUserData }) => {
   const {
     user: { nickname, signature, avatarMedium },
     stats: { followerCount, followingCount, heartCount, videoCount },
@@ -89,7 +89,7 @@ export const TiktokDetail: React.FC<{ tiktokUserData: TiktokUserDataType }> = ({
       </div>
     </div>
   );
-};
+});
 
 const CountWrapperCss = css`
   display: flex;

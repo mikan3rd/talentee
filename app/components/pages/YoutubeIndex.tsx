@@ -11,7 +11,7 @@ import {
   TwitterIndexLinkButton,
 } from "../atoms/IndexLinkButton";
 
-export const YoutubeIndex: React.FC = () => {
+export const YoutubeIndex = React.memo(() => {
   const {
     selectedCategory,
     youtubeData,
@@ -118,4 +118,4 @@ export const YoutubeIndex: React.FC = () => {
       <IndexLinkButton />
     </>
   );
-};
+});

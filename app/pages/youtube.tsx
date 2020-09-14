@@ -5,7 +5,7 @@ import { YoutubeIndex } from "../components/pages/YoutubeIndex";
 import { Meta } from "../components/templates/Meta";
 import { TopSection, YoutubeSection } from "../components/templates/BreadcrumbSection";
 
-const YoutubeIndexPage: React.FC = () => {
+const YoutubeIndexPage = React.memo(() => {
   return (
     <>
       <Meta title="Youtube" description="人気のYoutubeランキング" />
@@ -21,6 +21,6 @@ const YoutubeIndexPage: React.FC = () => {
       <YoutubeIndex />
     </>
   );
-};
+});
 
 export default YoutubeIndexPage;

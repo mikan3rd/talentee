@@ -9,7 +9,7 @@ import { TwitterCard } from "../organisms/TwitterCard";
 import { InstagramCard } from "../organisms/InstagramCard";
 import { TiktokCard } from "../organisms/TiktokCard";
 
-export const Index: React.FC = () => {
+export const Index = React.memo(() => {
   const { youtubeData, twitterData, instagramData, tiktokData } = useIndexData();
 
   return (
@@ -449,4 +449,4 @@ export const Index: React.FC = () => {
       )}
     </>
   );
-};
+});

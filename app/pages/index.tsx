@@ -5,7 +5,7 @@ import { Index } from "../components/pages/Index";
 import { Meta } from "../components/templates/Meta";
 import { TopSection } from "../components/templates/BreadcrumbSection";
 
-const Top: React.FC = () => {
+const Top = React.memo(() => {
   return (
     <>
       <Meta title="Top" />
@@ -17,6 +17,6 @@ const Top: React.FC = () => {
       <Index />
     </>
   );
-};
+});
 
 export default Top;

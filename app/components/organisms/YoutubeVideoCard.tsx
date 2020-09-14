@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 import { toUnitString } from "../../common/utils";
 
-export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: number }> = ({ video, rankNum }) => {
+export const YoutubeVideoCard = React.memo<{ video: IYoutubeVideoData; rankNum: number }>(({ video, rankNum }) => {
   const {
     id,
     snippet: { title, publishedAt, tags },
@@ -136,7 +136,7 @@ export const YoutubeVideoCard: React.FC<{ video: IYoutubeVideoData; rankNum: num
       </div>
     </div>
   );
-};
+});
 
 const CountWrapperCss = css`
   display: flex;

@@ -3,7 +3,7 @@ import { css } from "@emotion/core";
 import { Button, Icon } from "semantic-ui-react";
 import Link from "next/link";
 
-export const IndexLinkButton: React.FC = () => {
+export const IndexLinkButton = React.memo(() => {
   return (
     <Link href="/" passHref>
       <Button icon labelPosition="left" as="a" css={WideButtonCss}>
@@ -12,9 +12,9 @@ export const IndexLinkButton: React.FC = () => {
       </Button>
     </Link>
   );
-};
+});
 
-export const YoutubeIndexLinkButton: React.FC = () => {
+export const YoutubeIndexLinkButton = React.memo(() => {
   return (
     <Link href="/youtube" passHref>
       <Button icon labelPosition="left" color="youtube" as="a" css={WideButtonCss}>
@@ -23,9 +23,9 @@ export const YoutubeIndexLinkButton: React.FC = () => {
       </Button>
     </Link>
   );
-};
+});
 
-export const TwitterIndexLinkButton: React.FC = () => {
+export const TwitterIndexLinkButton = React.memo(() => {
   return (
     <Link href="/twitter" passHref>
       <Button icon labelPosition="left" color="twitter" as="a" css={WideButtonCss}>
@@ -34,9 +34,9 @@ export const TwitterIndexLinkButton: React.FC = () => {
       </Button>
     </Link>
   );
-};
+});
 
-export const InstagramIndexLinkButton: React.FC = () => {
+export const InstagramIndexLinkButton = React.memo(() => {
   return (
     <Link href="/instagram" passHref>
       <Button icon labelPosition="left" color="instagram" as="a" css={WideButtonCss}>
@@ -45,9 +45,9 @@ export const InstagramIndexLinkButton: React.FC = () => {
       </Button>
     </Link>
   );
-};
+});
 
-export const TiktokIndexLinkButton: React.FC = () => {
+export const TiktokIndexLinkButton = React.memo(() => {
   return (
     <Link href="/tiktok" passHref>
       <Button icon labelPosition="left" color="black" as="a" css={WideButtonCss}>
@@ -56,7 +56,7 @@ export const TiktokIndexLinkButton: React.FC = () => {
       </Button>
     </Link>
   );
-};
+});
 
 const WideButtonCss = css`
   &&& {

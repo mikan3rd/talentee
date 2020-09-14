@@ -5,7 +5,7 @@ import { InstagramIndex } from "../components/pages/InstagramIndex";
 import { Meta } from "../components/templates/Meta";
 import { InstagramSection, TopSection } from "../components/templates/BreadcrumbSection";
 
-const InstagramIndexPage: React.FC = () => {
+const InstagramIndexPage = React.memo(() => {
   return (
     <>
       <Meta title="Instagram" description="人気のInstagramランキング" />
@@ -21,6 +21,6 @@ const InstagramIndexPage: React.FC = () => {
       <InstagramIndex />
     </>
   );
-};
+});
 
 export default InstagramIndexPage;

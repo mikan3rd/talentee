@@ -7,7 +7,7 @@ import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 import { ElementIds } from "../pages/Account";
 
-export const InstagramDetail: React.FC<{ instagramUserData: InstagramUserDataType }> = ({ instagramUserData }) => {
+export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserDataType }>(({ instagramUserData }) => {
   const {
     full_name,
     biography,
@@ -92,7 +92,7 @@ export const InstagramDetail: React.FC<{ instagramUserData: InstagramUserDataTyp
       </div>
     </div>
   );
-};
+});
 
 const CountWrapperCss = css`
   display: flex;

@@ -11,7 +11,7 @@ import {
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
 
-export const TwitterIndex: React.FC = () => {
+export const TwitterIndex = React.memo(() => {
   const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();
   return (
     <>
@@ -92,4 +92,4 @@ export const TwitterIndex: React.FC = () => {
       <IndexLinkButton />
     </>
   );
-};
+});

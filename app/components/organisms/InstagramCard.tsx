@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 import { toUnitString } from "../../common/utils";
 
-export const InstagramCard: React.FC<{ data: InstagramUserObjectType; rankNum: number }> = ({ data, rankNum }) => {
+export const InstagramCard = React.memo<{ data: InstagramUserObjectType; rankNum: number }>(({ data, rankNum }) => {
   const { accountRef, full_name, biography, profile_pic_url, edge_followed_by, edge_owner_to_timeline_media } = data;
   return (
     <div
@@ -117,7 +117,7 @@ export const InstagramCard: React.FC<{ data: InstagramUserObjectType; rankNum: n
       </Link>
     </div>
   );
-};
+});
 
 const CountWrapperCss = css`
   display: flex;
