@@ -1,10 +1,12 @@
-import { AccountCollectionPath, FieldValue, TiktokUserCollectionPath, db } from "../firebase/collectionPath";
-
 import { getUserDetail } from "./common/getUserDetail";
+import { upsertUser } from "./common/upsertUser";
+import { upsertItem } from "./common/upsertItem";
 
 export const upsertUserData = async (accountId: string, uniqueId: string) => {
   console.log(`accountId: ${accountId}, uniqueId: ${uniqueId}`);
-  const userData = await getUserDetail(uniqueId);
+  const { userData, itemList } = await getUserDetail(uniqueId);
+
+  console.log(JSON.stringify({ itemList }));
 
   const {
     user: { id },
@@ -14,32 +16,8 @@ export const upsertUserData = async (accountId: string, uniqueId: string) => {
     return false;
   }
 
-  const accountCollection = db.collection(AccountCollectionPath);
-  const tiktokUserCollection = db.collection(TiktokUserCollectionPath);
-
-  const accountRef = accountCollection.doc(accountId);
-  const tiktokMainRef = tiktokUserCollection.doc(id);
-  const tiktokMainDoc = await tiktokMainRef.get();
-
-  const tiktokUserData = {
-    ...userData,
-    accountRef,
-    updatedAt: FieldValue.serverTimestamp(),
-    createdAt: FieldValue.serverTimestamp(),
-  };
-
-  if (tiktokMainDoc.exists) {
-    delete tiktokUserData.createdAt;
-  }
-
-  await tiktokMainRef.set(tiktokUserData, { merge: true });
-
-  const accountData: IAccountData = {
-    tiktokMainRef,
-    updatedAt: FieldValue.serverTimestamp(),
-  };
-
-  await accountRef.set(accountData, { merge: true });
+  await upsertUser(accountId, userData);
+  await upsertItem(itemList);
 
   return true;
 };

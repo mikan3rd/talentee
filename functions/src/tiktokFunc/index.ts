@@ -14,11 +14,11 @@ export const upsertTiktokUserDataPubSub = functions
     }),
   );
 
-export const upsertTiktokUserDataTest = functions.https.onRequest(
+export const upsertTiktokUserDataTest = functions.runWith({ memory: "1GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountId = "";
     const uniqueId = "kageihina";
-    await upsertUserData(accountId, uniqueId);
-    res.send();
+    const result = await upsertUserData(accountId, uniqueId);
+    res.send(result);
   }),
 );

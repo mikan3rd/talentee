@@ -3,15 +3,15 @@ import * as admin from "firebase-admin";
 import { TwitterTweetCollectionPath, db } from "../firebase/collectionPath";
 
 import { crawlSearchTweet } from "./common/crawlSearchTweet";
-import { getTweetIdByUrl } from "./common/getTweetIdByUrl";
 import { getTweets } from "./common/api";
 import { formatTweetData } from "./common/formatUserData";
 
 const { FieldValue } = admin.firestore;
 
 export const getPopularTweet = async (username: string) => {
-  const linkUrls = await crawlSearchTweet(username);
-  const tweetIds = linkUrls.map((url) => getTweetIdByUrl(url));
+  const tweetIds = await crawlSearchTweet(username);
+
+  console.log(tweetIds);
 
   if (!tweetIds.length) {
     return false;
