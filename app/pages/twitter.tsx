@@ -5,7 +5,7 @@ import { TwitterIndex } from "../components/pages/TwitterIndex";
 import { Meta } from "../components/templates/Meta";
 import { TopSection, TwitterSection } from "../components/templates/BreadcrumbSection";
 
-const TwitterIndexPage: React.FC = () => {
+const TwitterIndexPage = React.memo(() => {
   return (
     <>
       <Meta title="Twitter" description="人気のTwitterランキング" />
@@ -21,6 +21,6 @@ const TwitterIndexPage: React.FC = () => {
       <TwitterIndex />
     </>
   );
-};
+});
 
 export default TwitterIndexPage;

@@ -2,7 +2,7 @@ import React from "react";
 import { Breadcrumb } from "semantic-ui-react";
 import Link from "next/link";
 
-export const TopSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+export const TopSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
     <Link href="/">
       <Breadcrumb.Section href="/" active={active}>
@@ -10,9 +10,9 @@ export const TopSection: React.FC<{ active?: boolean }> = ({ active = false }) =
       </Breadcrumb.Section>
     </Link>
   );
-};
+});
 
-export const YoutubeSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+export const YoutubeSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
     <Link href="/youtube">
       <Breadcrumb.Section href="/youtube" active={active}>
@@ -20,9 +20,9 @@ export const YoutubeSection: React.FC<{ active?: boolean }> = ({ active = false 
       </Breadcrumb.Section>
     </Link>
   );
-};
+});
 
-export const TwitterSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+export const TwitterSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
     <Link href="/youtube">
       <Breadcrumb.Section href="/twitter" active={active}>
@@ -30,9 +30,9 @@ export const TwitterSection: React.FC<{ active?: boolean }> = ({ active = false 
       </Breadcrumb.Section>
     </Link>
   );
-};
+});
 
-export const InstagramSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+export const InstagramSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
     <Link href="/instagram">
       <Breadcrumb.Section href="/instagram" active={active}>
@@ -40,9 +40,9 @@ export const InstagramSection: React.FC<{ active?: boolean }> = ({ active = fals
       </Breadcrumb.Section>
     </Link>
   );
-};
+});
 
-export const TiktokSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+export const TiktokSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
     <Link href="/tiktok">
       <Breadcrumb.Section href="/tiktok" active={active}>
@@ -50,8 +50,8 @@ export const TiktokSection: React.FC<{ active?: boolean }> = ({ active = false }
       </Breadcrumb.Section>
     </Link>
   );
-};
+});
 
-export const AccountSection: React.FC<{ active?: boolean }> = ({ active = false }) => {
+export const AccountSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return <Breadcrumb.Section active={active}>Account</Breadcrumb.Section>;
-};
+});

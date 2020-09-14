@@ -11,7 +11,7 @@ import {
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
 
-export const TiktokIndex: React.FC = () => {
+export const TiktokIndex = React.memo(() => {
   const { tiktokData, hasNext, getTiktokNextPageData } = useTiktokIndexData();
   return (
     <>
@@ -99,4 +99,4 @@ export const TiktokIndex: React.FC = () => {
       <IndexLinkButton />
     </>
   );
-};
+});

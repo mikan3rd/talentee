@@ -4,7 +4,7 @@ import { css } from "@emotion/core";
 
 import { toUnitString } from "../../common/utils";
 
-export const TiktokCard: React.FC<{ data: TiktokUserObjectType; rankNum: number }> = ({ data, rankNum }) => {
+export const TiktokCard = React.memo<{ data: TiktokUserObjectType; rankNum: number }>(({ data, rankNum }) => {
   const {
     accountRef,
     user: { nickname, signature, avatarMedium },
@@ -122,7 +122,7 @@ export const TiktokCard: React.FC<{ data: TiktokUserObjectType; rankNum: number 
       </Link>
     </div>
   );
-};
+});
 
 const CountWrapperCss = css`
   display: flex;

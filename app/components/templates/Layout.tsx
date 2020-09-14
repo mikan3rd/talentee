@@ -7,7 +7,7 @@ import { GlobalStyle } from "../../style/GlobalStyle";
 import { ScrollTopButton } from "../atoms/ScrollTopButton";
 import { Header } from "../molecules/Header";
 
-export const Layout: React.FC = ({ children }) => {
+export const Layout = React.memo(({ children }) => {
   return (
     <>
       {GlobalStyle}
@@ -38,4 +38,4 @@ export const Layout: React.FC = ({ children }) => {
       <SemanticToastContainer position="top-center" />
     </>
   );
-};
+});

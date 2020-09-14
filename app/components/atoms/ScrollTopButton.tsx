@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "@emotion/core";
 import { Button } from "semantic-ui-react";
 
-export const ScrollTopButton: React.FC = () => {
+export const ScrollTopButton = React.memo(() => {
   const [isTop, setIsTop] = React.useState(true);
 
   React.useEffect(() => {
@@ -42,4 +42,4 @@ export const ScrollTopButton: React.FC = () => {
       `}
     />
   );
-};
+});

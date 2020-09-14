@@ -9,64 +9,64 @@ import { Account } from "../../components/pages/Account";
 import { Meta } from "../../components/templates/Meta";
 import { AccountSection, TopSection } from "../../components/templates/BreadcrumbSection";
 
-const ProfilePage: React.FC<{ data: { accountId: string; jsonData: string } }> = ({
-  data: { accountId, jsonData },
-}) => {
-  const {
-    accountData,
-    youtubeData,
-    youtubePopularVideos,
-    twitterUserData,
-    popularTweets,
-    tiktokUserData,
-    instagramUserData,
-  }: {
-    accountData: IAccountData;
-    youtubeData?: IYoutubeData;
-    youtubePopularVideos: IYoutubeVideoData[];
-    twitterUserData?: TwitterUserDataType;
-    popularTweets: TweetDataType[];
-    instagramUserData: InstagramUserDataType;
-    tiktokUserData: TiktokUserDataType;
-  } = JSON.parse(jsonData);
+const ProfilePage = React.memo<{ data: { accountId: string; jsonData: string } }>(
+  ({ data: { accountId, jsonData } }) => {
+    const {
+      accountData,
+      youtubeData,
+      youtubePopularVideos,
+      twitterUserData,
+      popularTweets,
+      tiktokUserData,
+      instagramUserData,
+    }: {
+      accountData: IAccountData;
+      youtubeData?: IYoutubeData;
+      youtubePopularVideos: IYoutubeVideoData[];
+      twitterUserData?: TwitterUserDataType;
+      popularTweets: TweetDataType[];
+      instagramUserData: InstagramUserDataType;
+      tiktokUserData: TiktokUserDataType;
+    } = JSON.parse(jsonData);
 
-  if (!accountData) {
-    Router.push("/");
-    return null;
-  }
+    if (!accountData) {
+      Router.push("/");
+      return null;
+    }
 
-  const { tmpUsername } = accountData;
+    const { tmpUsername } = accountData;
 
-  return (
-    <>
-      <Meta title={tmpUsername} description={`${tmpUsername} のまとめページはコチラ！`} />
+    return (
+      <>
+        <Meta title={tmpUsername} description={`${tmpUsername} のまとめページはコチラ！`} />
 
-      <Breadcrumb size="big">
-        <TopSection />
-        <Breadcrumb.Divider />
-        <AccountSection />
-        <Breadcrumb.Divider />
-        <Link href={`/account/${accountId}`}>
-          <Breadcrumb.Section href={`/account/${accountId}`} active={true}>
-            {accountData.tmpUsername}
-          </Breadcrumb.Section>
-        </Link>
-      </Breadcrumb>
+        <Breadcrumb size="big">
+          <TopSection />
+          <Breadcrumb.Divider />
+          <AccountSection />
+          <Breadcrumb.Divider />
+          <Link href={`/account/${accountId}`}>
+            <Breadcrumb.Section href={`/account/${accountId}`} active={true}>
+              {accountData.tmpUsername}
+            </Breadcrumb.Section>
+          </Link>
+        </Breadcrumb>
 
-      <Divider />
+        <Divider />
 
-      <Account
-        accountData={accountData}
-        youtubeData={youtubeData}
-        youtubePopularVideos={youtubePopularVideos}
-        twitterUserData={twitterUserData}
-        popularTweets={popularTweets}
-        instagramUserData={instagramUserData}
-        tiktokUserData={tiktokUserData}
-      />
-    </>
-  );
-};
+        <Account
+          accountData={accountData}
+          youtubeData={youtubeData}
+          youtubePopularVideos={youtubePopularVideos}
+          twitterUserData={twitterUserData}
+          popularTweets={popularTweets}
+          instagramUserData={instagramUserData}
+          tiktokUserData={tiktokUserData}
+        />
+      </>
+    );
+  },
+);
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const accountId = params.accountId as string;

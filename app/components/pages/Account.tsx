@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Button, Divider, Icon, Menu, Tab } from "semantic-ui-react";
+import { Button, Divider, Icon, Menu } from "semantic-ui-react";
 
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 import { TwitterDetail } from "../organisms/TwitterDetail";
@@ -13,8 +13,25 @@ import {
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
+import { useScrollDirection } from "../../hooks/useScrollDirection";
 
-export const Account: React.FC<{
+export enum ElementIds {
+  Youtube = "youtube",
+  Twitter = "twitter",
+  Instagram = "instagram",
+  Tiktok = "tiktok",
+}
+
+const scrollToElement = (elementId: ElementIds) => {
+  const header = document.getElementById("header");
+  const tab = document.getElementById("service_tab");
+  const target = document.getElementById(elementId);
+  if (header && tab && target) {
+    window.scrollTo({ top: target.offsetTop - header.clientHeight - tab.clientHeight, behavior: "smooth" });
+  }
+};
+
+export const Account = React.memo<{
   accountData: IAccountData;
   youtubeData?: IYoutubeData;
   youtubePopularVideos: IYoutubeVideoData[];
@@ -22,218 +39,252 @@ export const Account: React.FC<{
   popularTweets: TweetDataType[];
   instagramUserData?: InstagramUserDataType;
   tiktokUserData?: TiktokUserDataType;
-}> = ({
-  accountData,
-  youtubeData,
-  youtubePopularVideos,
-  twitterUserData,
-  popularTweets,
-  instagramUserData,
-  tiktokUserData,
-}) => {
-  const { tmpUsername, thumbnailUrl } = accountData;
+}>(
+  ({
+    accountData,
+    youtubeData,
+    youtubePopularVideos,
+    twitterUserData,
+    popularTweets,
+    instagramUserData,
+    tiktokUserData,
+  }) => {
+    const [headerHeight, setHeaderHeight] = React.useState(0);
+    const [selectedTab, setSelectedTab] = React.useState<ElementIds>(null);
 
-  const panes = [];
+    React.useEffect(() => {
+      const headerHeight = document.getElementById("header").clientHeight;
+      setHeaderHeight(headerHeight);
+    }, []);
 
-  if (youtubeData) {
-    panes.push({
-      menuItem: (
-        <Menu.Item key="youtube">
-          <Icon
-            name="youtube"
-            css={css`
-              color: red;
-            `}
-          />
-          YouTube
-        </Menu.Item>
-      ),
-      render: () => (
-        <Tab.Pane>
-          <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
-        </Tab.Pane>
-      ),
-    });
-  }
+    const isUp = useScrollDirection();
 
-  if (twitterUserData) {
-    panes.push({
-      menuItem: (
-        <Menu.Item key="twitter">
-          <Icon
-            name="twitter"
-            css={css`
-              color: #55acee;
-            `}
-          />
-          Twitter
-        </Menu.Item>
-      ),
-      render: () => (
-        <Tab.Pane>
-          <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
-        </Tab.Pane>
-      ),
-    });
-  }
+    const { tmpUsername, thumbnailUrl } = accountData;
 
-  if (instagramUserData) {
-    panes.push({
-      menuItem: (
-        <Menu.Item key="instagram">
-          <img src="/icon_instagram.svg" css={TabIconCss} />
-          Instagram
-        </Menu.Item>
-      ),
-      render: () => (
-        <Tab.Pane>
-          <InstagramDetail instagramUserData={instagramUserData} />
-        </Tab.Pane>
-      ),
-    });
-  }
+    const handleOnClickTab = (elementId: ElementIds) => {
+      scrollToElement(elementId);
+      setSelectedTab(elementId);
+    };
 
-  if (tiktokUserData) {
-    panes.push({
-      menuItem: (
-        <Menu.Item key="tiktok">
-          <img src="/icon_tiktok_black.svg" css={TabIconCss} />
-          TikTok
-        </Menu.Item>
-      ),
-      render: () => (
-        <Tab.Pane>
-          <TiktokDetail tiktokUserData={tiktokUserData} />
-        </Tab.Pane>
-      ),
-    });
-  }
+    const createTabContents = () => {
+      const tabContents: ElementIds[] = [];
+      if (youtubeData) {
+        tabContents.push(ElementIds.Youtube);
+      }
+      if (twitterUserData) {
+        tabContents.push(ElementIds.Twitter);
+      }
+      if (instagramUserData) {
+        tabContents.push(ElementIds.Instagram);
+      }
+      if (tiktokUserData) {
+        tabContents.push(ElementIds.Tiktok);
+      }
+      return tabContents;
+    };
 
-  return (
-    <>
-      <div
-        css={css`
-          display: flex;
-        `}
-      >
-        <img
-          src={thumbnailUrl}
-          alt={tmpUsername}
-          css={css`
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            flex-shrink: 0;
-          `}
-        />
+    return (
+      <>
         <div
           css={css`
-            margin-left: 10px;
+            display: flex;
           `}
         >
-          <h1>{tmpUsername}</h1>
-          <div>
-            {youtubeData && (
-              <Button
-                circular
-                color="youtube"
-                icon="youtube"
-                as="a"
-                href={`https://www.youtube.com/channel/${youtubeData.id}`}
-                target="_black"
-                css={LinkButtonCss}
-              />
-            )}
+          <img
+            src={thumbnailUrl}
+            alt={tmpUsername}
+            css={css`
+              width: 64px;
+              height: 64px;
+              border-radius: 50%;
+              flex-shrink: 0;
+            `}
+          />
+          <div
+            css={css`
+              margin-left: 10px;
+            `}
+          >
+            <h1>{tmpUsername}</h1>
+            <div>
+              {youtubeData && (
+                <Button
+                  circular
+                  color="youtube"
+                  icon="youtube"
+                  as="a"
+                  href={`https://www.youtube.com/channel/${youtubeData.id}`}
+                  target="_black"
+                  css={LinkButtonCss}
+                />
+              )}
 
-            {twitterUserData && (
-              <Button
-                circular
-                color="twitter"
-                icon="twitter"
-                as="a"
-                href={`https://twitter.com/${twitterUserData.username}`}
-                target="_black"
-                css={LinkButtonCss}
-              />
-            )}
+              {twitterUserData && (
+                <Button
+                  circular
+                  color="twitter"
+                  icon="twitter"
+                  as="a"
+                  href={`https://twitter.com/${twitterUserData.username}`}
+                  target="_black"
+                  css={LinkButtonCss}
+                />
+              )}
 
-            {instagramUserData && (
-              <Button
-                circular
-                color="black"
-                icon="instagram"
-                as="a"
-                href={`https://instagram.com/${instagramUserData.username}/`}
-                target="_black"
-                css={css`
-                  ${LinkButtonCss}
-                  &&& {
-                    background: radial-gradient(
-                      circle at 30% 107%,
-                      #fdf497 0%,
-                      #fdf497 5%,
-                      #fd5949 45%,
-                      #d6249f 60%,
-                      #285aeb 90%
-                    );
-                  }
-                `}
-              />
-            )}
-
-            {tiktokUserData && (
-              <Button
-                circular
-                color="black"
-                as="a"
-                href={`https://www.tiktok.com/@${tiktokUserData.user.uniqueId}`}
-                target="_black"
-                css={LinkButtonCss}
-              >
-                <img
-                  src="/icon_tiktok.svg"
+              {instagramUserData && (
+                <Button
+                  circular
+                  color="black"
+                  icon="instagram"
+                  as="a"
+                  href={`https://instagram.com/${instagramUserData.username}/`}
+                  target="_black"
                   css={css`
-                    width: 100%;
+                    ${LinkButtonCss}
+                    &&& {
+                      background: radial-gradient(
+                        circle at 30% 107%,
+                        #fdf497 0%,
+                        #fdf497 5%,
+                        #fd5949 45%,
+                        #d6249f 60%,
+                        #285aeb 90%
+                      );
+                    }
                   `}
                 />
-              </Button>
-            )}
+              )}
+
+              {tiktokUserData && (
+                <Button
+                  circular
+                  color="black"
+                  as="a"
+                  href={`https://www.tiktok.com/@${tiktokUserData.user.uniqueId}`}
+                  target="_black"
+                  css={LinkButtonCss}
+                >
+                  <img
+                    src="/icon_tiktok.svg"
+                    css={css`
+                      width: 100%;
+                    `}
+                  />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div
-        css={css`
-          margin-top: 20px;
-        `}
-      >
-        <Tab
-          panes={panes}
-          menu={{ attached: false }}
+        <Menu
+          id="service_tab"
+          pointing
+          secondary
           css={css`
-            .menu {
-              overflow-x: scroll;
-              margin-bottom: 5px;
+            &&& {
+              position: sticky;
+              top: ${isUp ? `${headerHeight}px` : 0};
+              z-index: 1;
+              margin-top: 20px;
+              background-color: #f7f7f7;
+              transition: all 0.5s ease;
+              /* overflow-x: scroll; */
+              padding-bottom: 2px;
+              .item {
+                transition: all 0.5s ease !important;
+              }
             }
           `}
-        />
-      </div>
+        >
+          {createTabContents().map((tab) => {
+            if (tab == ElementIds.Youtube) {
+              return (
+                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                  <Icon
+                    name="youtube"
+                    css={css`
+                      color: red;
+                    `}
+                  />
+                  YouTube
+                </Menu.Item>
+              );
+            }
+            if (tab == ElementIds.Twitter) {
+              return (
+                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                  <Icon
+                    name="twitter"
+                    css={css`
+                      color: #55acee;
+                    `}
+                  />
+                  Twitter
+                </Menu.Item>
+              );
+            }
+            if (tab === ElementIds.Instagram) {
+              return (
+                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                  <img src="/icon_instagram.svg" css={TabIconCss} />
+                  Instagram
+                </Menu.Item>
+              );
+            }
+            if (tab === ElementIds.Tiktok) {
+              return (
+                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                  <img src="/icon_tiktok_black.svg" css={TabIconCss} />
+                  TikTok
+                </Menu.Item>
+              );
+            }
+          })}
+        </Menu>
 
-      <Divider />
+        {youtubeData && (
+          <>
+            <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
+          </>
+        )}
 
-      <div>
-        <YoutubeIndexLinkButton />
-        <TwitterIndexLinkButton />
-        <InstagramIndexLinkButton />
-        <TiktokIndexLinkButton />
-      </div>
+        {twitterUserData && (
+          <>
+            <Divider />
+            <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
+          </>
+        )}
 
-      <Divider />
+        {instagramUserData && (
+          <>
+            <Divider />
+            <InstagramDetail instagramUserData={instagramUserData} />
+          </>
+        )}
 
-      <IndexLinkButton />
-    </>
-  );
-};
+        {tiktokUserData && (
+          <>
+            <Divider />
+            <TiktokDetail tiktokUserData={tiktokUserData} />
+          </>
+        )}
+
+        <Divider />
+
+        <div>
+          <YoutubeIndexLinkButton />
+          <TwitterIndexLinkButton />
+          <InstagramIndexLinkButton />
+          <TiktokIndexLinkButton />
+        </div>
+
+        <Divider />
+
+        <IndexLinkButton />
+      </>
+    );
+  },
+);
 
 const LinkButtonCss = css`
   &&& {
