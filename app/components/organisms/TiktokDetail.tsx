@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
+import { ElementIds } from "../pages/Account";
 
 export const TiktokDetail: React.FC<{ tiktokUserData: TiktokUserDataType }> = ({ tiktokUserData }) => {
   const {
@@ -15,7 +16,7 @@ export const TiktokDetail: React.FC<{ tiktokUserData: TiktokUserDataType }> = ({
 
   const updateAtTime = dayjs.unix(updatedAt);
   return (
-    <div>
+    <div id={ElementIds.Tiktok}>
       <div
         css={css`
           display: flex;

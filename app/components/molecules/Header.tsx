@@ -5,11 +5,12 @@ import { Image } from "semantic-ui-react";
 
 import { useScrollDirection } from "../../hooks/useScrollDirection";
 
-export const Header: React.FC = () => {
+export const Header = React.memo(() => {
   const isUp = useScrollDirection();
   return (
     <Link href="/" passHref>
       <header
+        id="header"
         css={css`
           position: fixed;
           top: 0;
@@ -44,4 +45,4 @@ export const Header: React.FC = () => {
       </header>
     </Link>
   );
-};
+});

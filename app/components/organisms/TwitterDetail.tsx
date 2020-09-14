@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
+import { ElementIds } from "../pages/Account";
 
 export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; popularTweets: TweetDataType[] }> = ({
   twitterUserData,
@@ -31,7 +32,7 @@ export const TwitterDetail: React.FC<{ twitterUserData: TwitterUserDataType; pop
   const createdAtTime = dayjs.unix(created_at);
   const updateAtTime = dayjs.unix(updatedAt);
   return (
-    <div>
+    <div id={ElementIds.Twitter}>
       <div
         css={css`
           display: flex;

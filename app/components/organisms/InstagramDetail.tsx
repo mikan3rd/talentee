@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
+import { ElementIds } from "../pages/Account";
 
 export const InstagramDetail: React.FC<{ instagramUserData: InstagramUserDataType }> = ({ instagramUserData }) => {
   const {
@@ -19,7 +20,7 @@ export const InstagramDetail: React.FC<{ instagramUserData: InstagramUserDataTyp
 
   const updateAtTime = dayjs.unix(updatedAt);
   return (
-    <div>
+    <div id={ElementIds.Instagram}>
       <div
         css={css`
           display: flex;

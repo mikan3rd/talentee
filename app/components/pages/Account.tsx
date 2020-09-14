@@ -13,6 +13,22 @@ import {
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
+import { useScrollDirection } from "../../hooks/useScrollDirection";
+
+export enum ElementIds {
+  Youtube = "youtube",
+  Twitter = "twitter",
+  Instagram = "instagram",
+  Tiktok = "tiktok",
+}
+
+const scrollToElement = (elementId: ElementIds) => {
+  const header = document.getElementById("header");
+  const target = document.getElementById(elementId);
+  if (header && target) {
+    window.scrollTo({ top: target.offsetTop - header.clientHeight, behavior: "smooth" });
+  }
+};
 
 export const Account: React.FC<{
   accountData: IAccountData;
@@ -31,6 +47,17 @@ export const Account: React.FC<{
   instagramUserData,
   tiktokUserData,
 }) => {
+  const [headerHeight, setHeaderHeight] = React.useState(0);
+  React.useEffect(() => {
+    const headerHeight = document.getElementById("header").clientHeight;
+    console.log("!!!", headerHeight);
+    setHeaderHeight(headerHeight);
+  }, []);
+
+  console.log(headerHeight);
+
+  const isUp = useScrollDirection();
+
   const { tmpUsername, thumbnailUrl } = accountData;
 
   const panes = [];
@@ -38,7 +65,7 @@ export const Account: React.FC<{
   if (youtubeData) {
     panes.push({
       menuItem: (
-        <Menu.Item key="youtube">
+        <Menu.Item key="youtube" onClick={() => scrollToElement(ElementIds.Youtube)}>
           <Icon
             name="youtube"
             css={css`
@@ -48,18 +75,13 @@ export const Account: React.FC<{
           YouTube
         </Menu.Item>
       ),
-      render: () => (
-        <Tab.Pane>
-          <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
-        </Tab.Pane>
-      ),
     });
   }
 
   if (twitterUserData) {
     panes.push({
       menuItem: (
-        <Menu.Item key="twitter">
+        <Menu.Item key="twitter" onClick={() => scrollToElement(ElementIds.Twitter)}>
           <Icon
             name="twitter"
             css={css`
@@ -69,26 +91,16 @@ export const Account: React.FC<{
           Twitter
         </Menu.Item>
       ),
-      render: () => (
-        <Tab.Pane>
-          <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
-        </Tab.Pane>
-      ),
     });
   }
 
   if (instagramUserData) {
     panes.push({
       menuItem: (
-        <Menu.Item key="instagram">
+        <Menu.Item key="instagram" onClick={() => scrollToElement(ElementIds.Instagram)}>
           <img src="/icon_instagram.svg" css={TabIconCss} />
           Instagram
         </Menu.Item>
-      ),
-      render: () => (
-        <Tab.Pane>
-          <InstagramDetail instagramUserData={instagramUserData} />
-        </Tab.Pane>
       ),
     });
   }
@@ -96,15 +108,10 @@ export const Account: React.FC<{
   if (tiktokUserData) {
     panes.push({
       menuItem: (
-        <Menu.Item key="tiktok">
+        <Menu.Item key="tiktok" onClick={() => scrollToElement(ElementIds.Tiktok)}>
           <img src="/icon_tiktok_black.svg" css={TabIconCss} />
           TikTok
         </Menu.Item>
-      ),
-      render: () => (
-        <Tab.Pane>
-          <TiktokDetail tiktokUserData={tiktokUserData} />
-        </Tab.Pane>
       ),
     });
   }
@@ -202,22 +209,55 @@ export const Account: React.FC<{
         </div>
       </div>
 
-      <div
+      <Tab
+        panes={panes}
+        menu={{ secondary: true, pointing: true }}
         css={css`
-          margin-top: 20px;
-        `}
-      >
-        <Tab
-          panes={panes}
-          menu={{ attached: false }}
-          css={css`
+          &&& {
+            position: sticky;
+            top: ${isUp ? `${headerHeight}px` : 0};
+            z-index: 1;
+            margin-top: 20px;
+            background-color: #f7f7f7;
+            transition: all 0.5s ease;
             .menu {
               overflow-x: scroll;
-              margin-bottom: 5px;
+              padding-bottom: 2px;
             }
-          `}
-        />
-      </div>
+            .item {
+              transition: all 0.5s ease !important;
+            }
+          }
+        `}
+      />
+
+      {youtubeData && (
+        <>
+          <Divider />
+          <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
+        </>
+      )}
+
+      {twitterUserData && (
+        <>
+          <Divider />
+          <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
+        </>
+      )}
+
+      {instagramUserData && (
+        <>
+          <Divider />
+          <InstagramDetail instagramUserData={instagramUserData} />
+        </>
+      )}
+
+      {tiktokUserData && (
+        <>
+          <Divider />
+          <TiktokDetail tiktokUserData={tiktokUserData} />
+        </>
+      )}
 
       <Divider />
 
