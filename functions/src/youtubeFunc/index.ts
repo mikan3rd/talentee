@@ -126,23 +126,23 @@ export const getServiceAccountTest = functions.https.onRequest(
 );
 
 // ===== TMP =====
-export const deleteChannelTmp = functions.https.onRequest(
-  sentryWrapper(async (req, res) => {
-    const result = await deleteChannel();
-    res.send({ result });
-  }),
-);
+// export const deleteChannelTmp = functions.https.onRequest(
+//   sentryWrapper(async (req, res) => {
+//     const result = await deleteChannel();
+//     res.send({ result });
+//   }),
+// );
 
-export const saveAllChannelVideoTmp = functions.runWith({ timeoutSeconds: 540, memory: "1GB" }).https.onRequest(
-  sentryWrapper(async (req, res) => {
-    const result = await saveAllChannelVideo();
-    res.send({ result });
-  }),
-);
+// export const saveAllChannelVideoTmp = functions.runWith({ timeoutSeconds: 540, memory: "1GB" }).https.onRequest(
+//   sentryWrapper(async (req, res) => {
+//     const result = await saveAllChannelVideo();
+//     res.send({ result });
+//   }),
+// );
 
-export const batchGetServiceAccountTmp = functions.https.onRequest(
-  sentryWrapper(async (req, res) => {
-    await batchGetServiceAccount();
-    res.send();
-  }),
-);
+// export const batchGetServiceAccountTmp = functions.https.onRequest(
+//   sentryWrapper(async (req, res) => {
+//     await batchGetServiceAccount();
+//     res.send();
+//   }),
+// );
