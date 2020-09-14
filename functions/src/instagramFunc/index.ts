@@ -5,7 +5,7 @@ import { UpsertInstagramUserJsonType, UpsertInstagramUserTopic } from "../fireba
 import { upsertProfile } from "./upsertProfile";
 
 export const upsertInstagramProfilePubSub = functions
-  .runWith({ memory: "2GB", maxInstances: 1 })
+  .runWith({ memory: "1GB", maxInstances: 1 })
   .pubsub.topic(UpsertInstagramUserTopic)
   .onPublish(
     sentryWrapper(async (message) => {
@@ -14,7 +14,7 @@ export const upsertInstagramProfilePubSub = functions
     }),
   );
 
-export const upsertInstagramProfileTest = functions.runWith({ memory: "2GB" }).https.onRequest(
+export const upsertInstagramProfileTest = functions.runWith({ memory: "1GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const accountId = "";
     const username = "yukos0520";

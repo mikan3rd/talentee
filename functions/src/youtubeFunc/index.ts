@@ -20,7 +20,7 @@ import { getTrendVideoIds } from "./common/getTrendVideoIds";
 // import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
 // import { batchGetServiceAccount } from "./tmpFunc/batchGetServiceAccount";
 
-export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "2GB" })("0 0,12 * * *").onRun(
+export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "1GB" })("0 0,12 * * *").onRun(
   sentryWrapper(async (context) => {
     await saveTrendChannel();
   }),
@@ -41,7 +41,7 @@ export const getYoutubePopularChannelMonthly = scheduleFunctions()("0 2 * * *").
 );
 
 export const updateVideoPubSub = functions
-  .runWith({ memory: "2GB", maxInstances: 10 })
+  .runWith({ memory: "1GB", maxInstances: 10 })
   .pubsub.topic(PopularVideoTopic)
   .onPublish(
     sentryWrapper(async (message) => {
@@ -50,7 +50,7 @@ export const updateVideoPubSub = functions
   );
 
 export const getServiceAccountPubSub = functions
-  .runWith({ memory: "2GB", maxInstances: 3 })
+  .runWith({ memory: "1GB", maxInstances: 3 })
   .pubsub.topic(ServiceAccountByYoutubeTopic)
   .onPublish(
     sentryWrapper(async (message) => {
@@ -91,14 +91,14 @@ export const getChannelVideoTest = functions.runWith({ memory: "512MB" }).https.
   }),
 );
 
-export const getTrendVideoIdsTest = functions.runWith({ memory: "2GB" }).https.onRequest(
+export const getTrendVideoIdsTest = functions.runWith({ memory: "1GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const result = await getTrendVideoIds();
     res.send({ result });
   }),
 );
 
-export const getYoutubeTrendChannelTest = functions.runWith({ memory: "2GB" }).https.onRequest(
+export const getYoutubeTrendChannelTest = functions.runWith({ memory: "1GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const result = await saveTrendChannel();
     res.send({ result });

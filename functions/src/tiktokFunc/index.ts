@@ -5,7 +5,7 @@ import { UpsertTiktokUserJsonType, UpsertTiktokUserTopic } from "../firebase/top
 import { upsertUserData } from "./upsertUserData";
 
 export const upsertTiktokUserDataPubSub = functions
-  .runWith({ maxInstances: 10 })
+  .runWith({ memory: "1GB", maxInstances: 10 })
   .pubsub.topic(UpsertTiktokUserTopic)
   .onPublish(
     sentryWrapper(async (message) => {
