@@ -16,26 +16,24 @@ import { saveTrendChannel } from "./saveTrendChannel";
 import { getServiceAccount } from "./getServiceAccount";
 import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
-import { deleteChannel } from "./tmpFunc/deleteChannel";
-import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
-import { batchGetServiceAccount } from "./tmpFunc/batchGetServiceAccount";
+// import { deleteChannel } from "./tmpFunc/deleteChannel";
+// import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
+// import { batchGetServiceAccount } from "./tmpFunc/batchGetServiceAccount";
 
-export const getYoutubeTrendChannelScheduler = scheduleFunctions({ timeoutSeconds: 540, memory: "2GB" })(
-  "0 0,12 * * *",
-).onRun(
+export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "2GB" })("0 0,12 * * *").onRun(
   sentryWrapper(async (context) => {
     await saveTrendChannel();
   }),
 );
 
-export const getYoutubePopularChannelWeekly = scheduleFunctions({ timeoutSeconds: 120 })("0 1 * * *").onRun(
+export const getYoutubePopularChannelWeekly = scheduleFunctions()("0 1 * * *").onRun(
   sentryWrapper(async (context) => {
     const publishedAfter = dayjs().subtract(1, "week");
     await savePopularChannel(publishedAfter);
   }),
 );
 
-export const getYoutubePopularChannelMonthly = scheduleFunctions({ timeoutSeconds: 120 })("0 2 * * *").onRun(
+export const getYoutubePopularChannelMonthly = scheduleFunctions()("0 2 * * *").onRun(
   sentryWrapper(async (context) => {
     const publishedAfter = dayjs().subtract(1, "month");
     await savePopularChannel(publishedAfter);
@@ -43,7 +41,7 @@ export const getYoutubePopularChannelMonthly = scheduleFunctions({ timeoutSecond
 );
 
 export const updateVideoPubSub = functions
-  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
+  .runWith({ memory: "2GB", maxInstances: 10 })
   .pubsub.topic(PopularVideoTopic)
   .onPublish(
     sentryWrapper(async (message) => {
@@ -52,7 +50,7 @@ export const updateVideoPubSub = functions
   );
 
 export const getServiceAccountPubSub = functions
-  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 3 })
+  .runWith({ memory: "2GB", maxInstances: 3 })
   .pubsub.topic(ServiceAccountByYoutubeTopic)
   .onPublish(
     sentryWrapper(async (message) => {
@@ -62,7 +60,7 @@ export const getServiceAccountPubSub = functions
   );
 
 // ----- TEST ------
-export const getYoutubePopularChannelWeeklyTest = functions.runWith({ timeoutSeconds: 120 }).https.onRequest(
+export const getYoutubePopularChannelWeeklyTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const publishedAfter = dayjs().subtract(1, "week");
     const result = await savePopularChannel(publishedAfter);
@@ -70,7 +68,7 @@ export const getYoutubePopularChannelWeeklyTest = functions.runWith({ timeoutSec
   }),
 );
 
-export const getYoutubePopularChannelMonthlyTest = functions.runWith({ timeoutSeconds: 120 }).https.onRequest(
+export const getYoutubePopularChannelMonthlyTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const publishedAfter = dayjs().subtract(1, "month");
     const result = await savePopularChannel(publishedAfter);
@@ -78,7 +76,7 @@ export const getYoutubePopularChannelMonthlyTest = functions.runWith({ timeoutSe
   }),
 );
 
-export const getYoutubePopularChannelYearlyTest = functions.runWith({ timeoutSeconds: 120 }).https.onRequest(
+export const getYoutubePopularChannelYearlyTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     const publishedAfter = dayjs().subtract(1, "year");
     const result = await savePopularChannel(publishedAfter);
@@ -86,21 +84,21 @@ export const getYoutubePopularChannelYearlyTest = functions.runWith({ timeoutSec
   }),
 );
 
-export const getChannelVideoTest = functions.runWith({ timeoutSeconds: 120, memory: "512MB" }).https.onRequest(
+export const getChannelVideoTest = functions.runWith({ memory: "512MB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const result = await getChannelPopularVideo("UCFOsYGDAw16cr57cCqdJdVQ");
     res.send({ result });
   }),
 );
 
-export const getTrendVideoIdsTest = functions.runWith({ timeoutSeconds: 540, memory: "2GB" }).https.onRequest(
+export const getTrendVideoIdsTest = functions.runWith({ memory: "2GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const result = await getTrendVideoIds();
     res.send({ result });
   }),
 );
 
-export const getYoutubeTrendChannelTest = functions.runWith({ timeoutSeconds: 540, memory: "2GB" }).https.onRequest(
+export const getYoutubeTrendChannelTest = functions.runWith({ memory: "2GB" }).https.onRequest(
   sentryWrapper(async (req, res) => {
     const result = await saveTrendChannel();
     res.send({ result });
@@ -133,7 +131,7 @@ export const getServiceAccountTest = functions.https.onRequest(
 //   }),
 // );
 
-// export const saveAllChannelVideoTmp = functions.runWith({ timeoutSeconds: 540, memory: "1GB" }).https.onRequest(
+// export const saveAllChannelVideoTmp = functions.runWith({ memory: "1GB" }).https.onRequest(
 //   sentryWrapper(async (req, res) => {
 //     const result = await saveAllChannelVideo();
 //     res.send({ result });

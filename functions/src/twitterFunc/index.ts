@@ -30,7 +30,7 @@ export const upsertTwitterUserDataTest = functions.https.onRequest(
 );
 
 export const getPopularTweetPubSub = functions
-  .runWith({ timeoutSeconds: 540, memory: "2GB", maxInstances: 10 })
+  .runWith({ memory: "2GB", maxInstances: 10 })
   .pubsub.topic(PopularTweetTopic)
   .onPublish(
     sentryWrapper(async (message) => {
