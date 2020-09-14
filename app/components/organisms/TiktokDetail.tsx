@@ -24,7 +24,7 @@ export const TiktokDetail: React.FC<{ tiktokUserData: TiktokUserDataType }> = ({
         <div>
           <img
             src={avatarMedium}
-            alt={name}
+            alt={nickname}
             css={css`
               width: 64px;
               height: 64px;
