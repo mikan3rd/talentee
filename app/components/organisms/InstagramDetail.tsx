@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Divider, Icon } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
@@ -80,8 +80,6 @@ export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserData
       >
         <Linkify>{biography}</Linkify>
       </p>
-
-      <Divider />
 
       <div
         css={css`

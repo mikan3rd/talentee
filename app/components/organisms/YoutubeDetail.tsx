@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Divider, Header, Icon, Label } from "semantic-ui-react";
+import { Header, Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
@@ -122,29 +122,25 @@ export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopu
         </div>
 
         {youtubePopularVideos.length > 0 && (
-          <>
-            <Divider />
+          <div>
+            <Header
+              css={css`
+                &&& {
+                  margin: 20px 0 0 0;
+                }
+              `}
+            >
+              <Icon name="video" />
+              人気動画TOP3
+            </Header>
             <div>
-              <Header
-                css={css`
-                  &&& {
-                    margin: 20px 0 0 0;
-                  }
-                `}
-              >
-                <Icon name="video" />
-                人気動画TOP3
-              </Header>
-              <div>
-                {youtubePopularVideos.map((video, index) => (
-                  <YoutubeVideoCard key={video.id} video={video} rankNum={index + 1} />
-                ))}
-              </div>
+              {youtubePopularVideos.map((video, index) => (
+                <YoutubeVideoCard key={video.id} video={video} rankNum={index + 1} />
+              ))}
             </div>
-          </>
+          </div>
         )}
 
-        <Divider />
         <div
           css={css`
             text-align: right;

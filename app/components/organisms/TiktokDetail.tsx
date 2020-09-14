@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Divider, Icon } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
@@ -77,8 +77,6 @@ export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType }>((
       >
         <Linkify>{signature}</Linkify>
       </p>
-
-      <Divider />
 
       <div
         css={css`

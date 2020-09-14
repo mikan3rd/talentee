@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Divider, Header, Icon } from "semantic-ui-react";
+import { Header, Icon } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
@@ -99,41 +99,35 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
         </div>
 
         {popularTweets.length > 0 && (
-          <>
-            <Divider />
-
-            <div>
-              <Header
-                css={css`
-                  &&& {
-                    margin: 20px 0 0 0;
-                  }
-                `}
-              >
-                <Icon name="retweet" />
-                人気ツイートTOP3
-              </Header>
-              <div
-                css={css`
-                  .twitter-tweet {
-                    margin: 0 auto;
-                  }
-                `}
-              >
-                {popularTweets.map((tweet) => {
-                  const { id } = tweet;
-                  return (
-                    <blockquote key={id} className="twitter-tweet">
-                      <a href={`https://twitter.com/${username}/status/${id}`} />
-                    </blockquote>
-                  );
-                })}
-              </div>
+          <div>
+            <Header
+              css={css`
+                &&& {
+                  margin: 20px 0 0 0;
+                }
+              `}
+            >
+              <Icon name="retweet" />
+              人気ツイートTOP3
+            </Header>
+            <div
+              css={css`
+                .twitter-tweet {
+                  margin: 0 auto;
+                }
+              `}
+            >
+              {popularTweets.map((tweet) => {
+                const { id } = tweet;
+                return (
+                  <blockquote key={id} className="twitter-tweet">
+                    <a href={`https://twitter.com/${username}/status/${id}`} />
+                  </blockquote>
+                );
+              })}
             </div>
-          </>
+          </div>
         )}
-
-        <Divider />
 
         <div>
           <Header
@@ -158,8 +152,6 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
             <a className="twitter-timeline" data-height="500" href={`https://twitter.com/${username}`} />
           </div>
         </div>
-
-        <Divider />
 
         <div
           css={css`

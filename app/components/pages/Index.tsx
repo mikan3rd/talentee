@@ -289,7 +289,6 @@ export const Index = React.memo(() => {
                   &&& {
                     color: white;
                     background-color: #49769c;
-                    border: 1px solid black;
                     @media (max-width: 600px) {
                       width: 100%;
                     }
@@ -324,7 +323,6 @@ export const Index = React.memo(() => {
                     width: 100%;
                     color: white;
                     background-color: #49769c;
-                    border: 1px solid black;
                   }
                 `}
               >
