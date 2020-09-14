@@ -1,4 +1,6 @@
 import puppeteer from "puppeteer";
+import puppeteerExtra from "puppeteer-extra";
+import StealthPlugin = require("puppeteer-extra-plugin-stealth");
 import axios, { AxiosRequestConfig } from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
 
@@ -49,7 +51,7 @@ export const puppeteerSetup = async (useProxy = false) => {
     args,
   };
 
-  const browser = await puppeteer.launch(options);
+  const browser = await puppeteerExtra.use(StealthPlugin()).launch(options);
   const page = await browser.newPage();
 
   if (useProxy) {
