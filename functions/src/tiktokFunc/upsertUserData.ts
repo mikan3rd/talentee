@@ -1,6 +1,7 @@
 import { getUserDetail } from "./common/getUserDetail";
 import { upsertUser } from "./common/upsertUser";
 import { upsertItem } from "./common/upsertItem";
+import { formatUserData } from "./common/formatUserData";
 
 export const upsertUserData = async (accountId: string, uniqueId: string) => {
   console.log(`accountId: ${accountId}, uniqueId: ${uniqueId}`);
@@ -8,15 +9,18 @@ export const upsertUserData = async (accountId: string, uniqueId: string) => {
 
   console.log("itemList:", itemList.length);
 
+  const formattedUserData = formatUserData(userData);
+
   const {
     user: { id },
-  } = userData;
+  } = formattedUserData;
+
   if (!accountId || !id) {
     console.error(`NOT FOUND: accountId: ${accountId}, uniqueId: ${uniqueId}`);
     return false;
   }
 
-  await upsertUser(accountId, userData);
+  await upsertUser(accountId, formattedUserData);
   await upsertItem(itemList);
 
   return true;
