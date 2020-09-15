@@ -9,7 +9,7 @@ type SearchResponseType = {
 };
 
 export const crawlSearchTweet = async (username: string) => {
-  const { browser, page } = await puppeteerSetup();
+  const { browser, page } = await puppeteerSetup("normal");
 
   let searchResponse: SearchResponseType;
 

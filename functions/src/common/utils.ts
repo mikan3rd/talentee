@@ -4,7 +4,18 @@ import StealthPlugin = require("puppeteer-extra-plugin-stealth");
 import axios, { AxiosRequestConfig } from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
 
-import { PROXY_HOST, PROXY_PASSWORD, PROXY_PORT, PROXY_USERNAME } from "./config";
+import {
+  PROXY_HOST,
+  PROXY_HOST_2,
+  PROXY_PASSWORD,
+  PROXY_PASSWORD_2,
+  PROXY_PORT,
+  PROXY_PORT_2,
+  PROXY_USERNAME,
+  PROXY_USERNAME_2,
+} from "./config";
+
+type ProxyType = "none" | "normal" | "exclusive";
 
 export const toBufferJson = (data) => {
   const dataJson = JSON.stringify(data);
@@ -28,7 +39,7 @@ export const chunk = (arr: any[], len: number) => {
 export const UserAgent =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36";
 
-export const puppeteerSetup = async (useProxy = false) => {
+export const puppeteerSetup = async (proxyType: ProxyType = "none") => {
   const args = [
     "--no-sandbox",
     "--disable-setuid-sandbox",
@@ -39,11 +50,17 @@ export const puppeteerSetup = async (useProxy = false) => {
     "--single-process",
     "--lang=ja",
   ];
-  if (useProxy) {
-    const proxy = `${PROXY_HOST}:${PROXY_PORT}`;
-    // -w "%{time_starttransfer}\n"
+
+  // -w "%{time_starttransfer}\n"
+  if (proxyType === "normal") {
+    const proxy = `${PROXY_HOST_2}:${PROXY_PORT_2}`;
     args.push(`--proxy-server=${proxy}`);
   }
+  if (proxyType === "exclusive") {
+    const proxy = `${PROXY_HOST}:${PROXY_PORT}`;
+    args.push(`--proxy-server=${proxy}`);
+  }
+
   const options: puppeteer.LaunchOptions = {
     // ignoreHTTPSErrors: true,
     headless: true,
@@ -54,7 +71,12 @@ export const puppeteerSetup = async (useProxy = false) => {
   const browser = await puppeteerExtra.use(StealthPlugin()).launch(options);
   const page = await browser.newPage();
 
-  if (useProxy) {
+  if (proxyType === "normal") {
+    await page.authenticate({ username: PROXY_USERNAME_2, password: PROXY_PASSWORD_2 });
+    // ERR_CONNECTION_RESET を防ぐため
+    await page.goto("https://talentee.jp");
+  }
+  if (proxyType === "exclusive") {
     await page.authenticate({ username: PROXY_USERNAME, password: PROXY_PASSWORD });
   }
 
@@ -64,13 +86,21 @@ export const puppeteerSetup = async (useProxy = false) => {
   return { browser, page };
 };
 
-export const axiosSetup = (useProxy = false) => {
+export const axiosSetup = (proxyType: ProxyType = "none") => {
   const config: AxiosRequestConfig = {
     headers: { "User-Agent": UserAgent },
     maxRedirects: 0,
   };
 
-  if (useProxy) {
+  if (proxyType === "normal") {
+    config.proxy = false;
+    config.httpsAgent = new HttpsProxyAgent({
+      host: PROXY_HOST_2,
+      port: PROXY_PORT_2,
+      auth: `${PROXY_USERNAME_2}:${PROXY_PASSWORD_2}`,
+    });
+  }
+  if (proxyType === "exclusive") {
     config.proxy = false;
     config.httpsAgent = new HttpsProxyAgent({
       host: PROXY_HOST,

@@ -11,7 +11,7 @@ interface customWindow extends Window {
 let window: customWindow;
 
 export const crawlProfile = async (username: string) => {
-  const { browser, page } = await puppeteerSetup();
+  const { browser, page } = await puppeteerSetup("normal");
 
   const targetUrl = `https://www.instagram.com/${username}/`;
   console.log(targetUrl);

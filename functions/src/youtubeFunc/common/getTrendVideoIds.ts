@@ -4,7 +4,7 @@ export const getTrendVideoIds = async () => {
   const baseUrl = `https://www.youtube.com`;
   const trendUrl = `${baseUrl}/feed/trending`;
 
-  const axios = axiosSetup(true);
+  const axios = axiosSetup("exclusive");
   const { data } = await axios.get<string>(trendUrl);
 
   // eslint-disable-next-line no-useless-escape
