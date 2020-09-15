@@ -12,7 +12,7 @@ export const InstagramDetail = React.memo<{
 }>(({ instagramUserData, instagramPopularMedia }) => {
   React.useEffect(() => {
     const s = document.createElement("script");
-    s.setAttribute("src", "//www.instagram.com/embed.js");
+    s.setAttribute("src", "https://www.instagram.com/embed.js");
     s.setAttribute("async", "true");
     document.head.appendChild(s);
   }, []);
