@@ -16,14 +16,14 @@ import {
 } from "../atoms/IndexLinkButton";
 import { useScrollDirection } from "../../hooks/useScrollDirection";
 
-export enum ElementIds {
-  Youtube = "youtube",
-  Twitter = "twitter",
-  Instagram = "instagram",
-  Tiktok = "tiktok",
-}
+const ServiceList = ["youtube", "twitter", "instagram", "tiktok"] as const;
+export type ServiceType = typeof ServiceList[number];
+export const ServiceYoutube = ServiceList[0];
+export const ServiceTwitter = ServiceList[1];
+export const ServiceInstagram = ServiceList[2];
+export const ServiceTiktok = ServiceList[3];
 
-const scrollToElement = (elementId: ElementIds) => {
+const scrollToElement = (elementId: ServiceType) => {
   const header = document.getElementById("header");
   const tab = document.getElementById("service_tab");
   const target = document.getElementById(elementId);
@@ -55,7 +55,7 @@ export const Account = React.memo<{
     tiktokPopularItem,
   }) => {
     const [headerHeight, setHeaderHeight] = React.useState(0);
-    const [selectedTab, setSelectedTab] = React.useState<ElementIds>(null);
+    const [selectedTab, setSelectedTab] = React.useState<ServiceType>(null);
 
     React.useEffect(() => {
       const headerHeight = document.getElementById("header").clientHeight;
@@ -66,26 +66,9 @@ export const Account = React.memo<{
 
     const { tmpUsername, thumbnailUrl, updatedAt } = accountData;
 
-    const handleOnClickTab = (elementId: ElementIds) => {
+    const handleOnClickTab = (elementId: ServiceType) => {
       scrollToElement(elementId);
       setSelectedTab(elementId);
-    };
-
-    const createTabContents = () => {
-      const tabContents: ElementIds[] = [];
-      if (youtubeData) {
-        tabContents.push(ElementIds.Youtube);
-      }
-      if (twitterUserData) {
-        tabContents.push(ElementIds.Twitter);
-      }
-      if (instagramUserData) {
-        tabContents.push(ElementIds.Instagram);
-      }
-      if (tiktokUserData) {
-        tabContents.push(ElementIds.Tiktok);
-      }
-      return tabContents;
     };
 
     const updateAtTime = dayjs.unix(updatedAt);
@@ -213,10 +196,15 @@ export const Account = React.memo<{
             }
           `}
         >
-          {createTabContents().map((tab) => {
-            if (tab == ElementIds.Youtube) {
+          {ServiceList.map((serviceName) => {
+            console.log(serviceName);
+            if (serviceName === ServiceYoutube && youtubeData) {
               return (
-                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                <Menu.Item
+                  key={serviceName}
+                  active={serviceName === selectedTab}
+                  onClick={() => handleOnClickTab(serviceName)}
+                >
                   <Icon
                     name="youtube"
                     css={css`
@@ -227,9 +215,13 @@ export const Account = React.memo<{
                 </Menu.Item>
               );
             }
-            if (tab == ElementIds.Twitter) {
+            if (serviceName === ServiceTwitter && twitterUserData) {
               return (
-                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                <Menu.Item
+                  key={serviceName}
+                  active={serviceName === selectedTab}
+                  onClick={() => handleOnClickTab(serviceName)}
+                >
                   <Icon
                     name="twitter"
                     css={css`
@@ -240,22 +232,31 @@ export const Account = React.memo<{
                 </Menu.Item>
               );
             }
-            if (tab === ElementIds.Instagram) {
+            if (serviceName === ServiceInstagram && instagramUserData) {
               return (
-                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                <Menu.Item
+                  key={serviceName}
+                  active={serviceName === selectedTab}
+                  onClick={() => handleOnClickTab(serviceName)}
+                >
                   <img src="/icon_instagram.svg" alt="icon_instagram" css={TabIconCss} />
                   Instagram
                 </Menu.Item>
               );
             }
-            if (tab === ElementIds.Tiktok) {
+            if (serviceName === ServiceTiktok && tiktokUserData) {
               return (
-                <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
+                <Menu.Item
+                  key={serviceName}
+                  active={serviceName === selectedTab}
+                  onClick={() => handleOnClickTab(serviceName)}
+                >
                   <img src="/icon_tiktok_black.svg" alt="icon_tiktok" css={TabIconCss} />
                   TikTok
                 </Menu.Item>
               );
             }
+            return null;
           })}
         </Menu>
 
