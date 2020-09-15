@@ -173,6 +173,7 @@ export const Account = React.memo<{
                 >
                   <img
                     src="/icon_tiktok.svg"
+                    alt="icon_tiktok"
                     css={css`
                       width: 100%;
                     `}
@@ -242,7 +243,7 @@ export const Account = React.memo<{
             if (tab === ElementIds.Instagram) {
               return (
                 <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
-                  <img src="/icon_instagram.svg" css={TabIconCss} />
+                  <img src="/icon_instagram.svg" alt="icon_instagram" css={TabIconCss} />
                   Instagram
                 </Menu.Item>
               );
@@ -250,7 +251,7 @@ export const Account = React.memo<{
             if (tab === ElementIds.Tiktok) {
               return (
                 <Menu.Item key={tab} active={tab === selectedTab} onClick={() => handleOnClickTab(tab)}>
-                  <img src="/icon_tiktok_black.svg" css={TabIconCss} />
+                  <img src="/icon_tiktok_black.svg" alt="icon_tiktok" css={TabIconCss} />
                   TikTok
                 </Menu.Item>
               );
