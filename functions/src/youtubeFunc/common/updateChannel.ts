@@ -21,7 +21,7 @@ export const updateChannel = async (accountId: string, channelData) => {
   await youtubeMainRef.set(youtubeData, { merge: true });
 
   const { twitterMainRef } = (await accountRef.get()).data();
-  const accountData: AccountObjectType = {
+  const accountData: IAccountData = {
     tmpUsername: channelData.snippet.title,
     thumbnailUrl: channelData.snippet.thumbnails.medium.url,
     youtubeMainRef,

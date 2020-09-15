@@ -1,4 +1,4 @@
-declare interface AccountObjectType {
+declare interface IAccountData {
   tmpUsername?: string;
   thumbnailUrl?: string;
   youtubeMainRef?: FirebaseFirestore.DocumentReference;
