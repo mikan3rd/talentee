@@ -73,8 +73,6 @@ export const puppeteerSetup = async (proxyType: ProxyType = "none") => {
 
   if (proxyType === "normal") {
     await page.authenticate({ username: PROXY_USERNAME_2, password: PROXY_PASSWORD_2 });
-    // ERR_CONNECTION_RESET を防ぐため
-    await page.goto("https://talentee.jp");
   }
   if (proxyType === "exclusive") {
     await page.authenticate({ username: PROXY_USERNAME, password: PROXY_PASSWORD });
