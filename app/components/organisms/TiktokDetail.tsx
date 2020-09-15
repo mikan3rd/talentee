@@ -1,7 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Icon } from "semantic-ui-react";
-import dayjs from "dayjs";
+import { Header, Icon } from "semantic-ui-react";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
@@ -9,13 +8,18 @@ import { ElementIds } from "../pages/Account";
 
 export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tiktokPopularItem: TiktokItemType[] }>(
   ({ tiktokUserData, tiktokPopularItem }) => {
+    React.useEffect(() => {
+      const s = document.createElement("script");
+      s.setAttribute("src", "https://www.tiktok.com/embed.js");
+      s.setAttribute("async", "true");
+      document.head.appendChild(s);
+    }, []);
+
     const {
-      user: { nickname, signature, avatarMedium },
+      user: { uniqueId, nickname, signature, avatarMedium },
       stats: { followerCount, followingCount, heartCount, videoCount },
-      updatedAt,
     } = tiktokUserData;
 
-    const updateAtTime = dayjs.unix(updatedAt);
     return (
       <div id={ElementIds.Tiktok}>
         <div
@@ -79,12 +83,34 @@ export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tik
           <Linkify>{signature}</Linkify>
         </p>
 
-        <div
-          css={css`
-            text-align: right;
-          `}
-        >
-          <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
+        <div>
+          <Header
+            css={css`
+              &&& {
+                margin: 20px 0 0 0;
+              }
+            `}
+          >
+            <Icon name="heart" />
+            人気の動画TOP3
+          </Header>
+          {tiktokPopularItem.map((item) => {
+            const { id } = item;
+            return (
+              <blockquote
+                key={id}
+                className="tiktok-embed"
+                cite={`https://www.tiktok.com/@${uniqueId}/video/${item}`}
+                data-video-id={id}
+                css={css`
+                  max-width: 605px;
+                  min-width: 325px;
+                `}
+              >
+                <section />
+              </blockquote>
+            );
+          })}
         </div>
       </div>
     );

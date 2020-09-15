@@ -1,7 +1,5 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Icon } from "semantic-ui-react";
-import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
@@ -19,10 +17,8 @@ export const InstagramDetail = React.memo<{
     edge_followed_by,
     edge_follow,
     edge_owner_to_timeline_media,
-    updatedAt,
   } = instagramUserData;
 
-  const updateAtTime = dayjs.unix(updatedAt);
   return (
     <div id={ElementIds.Instagram}>
       <div
@@ -92,14 +88,6 @@ export const InstagramDetail = React.memo<{
           )}
         </Linkify>
       </p>
-
-      <div
-        css={css`
-          text-align: right;
-        `}
-      >
-        <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
-      </div>
     </div>
   );
 });

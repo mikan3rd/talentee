@@ -23,6 +23,7 @@ declare type InstagramUserObjectType = InstagramUserBaseType & {
   createdAt: firebase.firestore.Timestamp;
   updatedAt: firebase.firestore.Timestamp;
 };
+
 declare type InstagramUserDataType = InstagramUserBaseType & {
   createdAt: number;
   updatedAt: number;

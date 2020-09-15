@@ -21,7 +21,12 @@ export const getAccountPageData = async (accountId: string) => {
     return null;
   }
 
-  const accountData = accountDoc.data() as IAccountData;
+  const accountRawData = accountDoc.data() as AccountObjectType;
+  const accountData: AccountDataType = {
+    ...accountRawData,
+    createdAt: Math.floor(accountRawData.createdAt.toDate().getTime() / 1000),
+    updatedAt: Math.floor(accountRawData.updatedAt.toDate().getTime() / 1000),
+  };
   let youtubeData: IYoutubeData | null = null;
   let twitterUserData: TwitterUserDataType | null = null;
   let instagramUserData: InstagramUserDataType | null = null;

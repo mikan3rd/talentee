@@ -17,12 +17,11 @@ export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopu
         channel: { keywords },
       },
       statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
-      updatedAt,
       videoCategories,
     } = youtubeData;
 
     const publishedAtTime = dayjs(publishedAt);
-    const updateAtTime = dayjs.unix(updatedAt);
+
     return (
       <div id={ElementIds.Youtube}>
         <div
@@ -140,14 +139,6 @@ export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopu
             </div>
           </div>
         )}
-
-        <div
-          css={css`
-            text-align: right;
-          `}
-        >
-          <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
-        </div>
       </div>
     );
   },

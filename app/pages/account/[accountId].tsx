@@ -22,7 +22,7 @@ const ProfilePage = React.memo<{ data: { accountId: string; jsonData: string } }
       tiktokUserData,
       tiktokPopularItem,
     }: {
-      accountData: IAccountData;
+      accountData: AccountDataType;
       youtubeData?: IYoutubeData;
       youtubePopularVideos: IYoutubeVideoData[];
       twitterUserData?: TwitterUserDataType;
