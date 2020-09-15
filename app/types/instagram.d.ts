@@ -46,7 +46,7 @@ declare type InstagramMediaType = {
   edge_media_preview_like: { count: number };
   edge_media_to_caption: { edges: { node: { text: string } }[] };
   edge_media_to_comment: { count: number };
-  edge_media_to_tagged_user: { edges: { node: { user: InstagramUserType } } };
+  edge_media_to_tagged_user: { edges: { node: { user: InstagramUserBaseType } } };
   edge_sidecar_to_children: { edges: { node: InstagramMediaType }[] };
   has_audio: boolean;
   video_view_count: number;

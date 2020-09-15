@@ -1,24 +1,28 @@
-type TiktokUserBaseType = {
-  user: {
-    id: string;
-    uniqueId: string;
-    nickname: string;
-    avatarThumb: string;
-    avatarMedium: string;
-    signature: string;
-    verified: boolean;
-    secret: boolean;
-    secUid: string;
-    openFavorite: boolean;
-    relation: number;
-  };
-  stats: {
-    followingCount: number;
-    followerCount: number;
-    heartCount: string;
-    videoCount: number;
-    diggCount: string;
-  };
+type TiktokUserInfoType = {
+  id: string;
+  uniqueId: string;
+  nickname: string;
+  avatarThumb: string;
+  avatarMedium: string;
+  signature: string;
+  verified: boolean;
+  secret: boolean;
+  secUid: string;
+  openFavorite: boolean;
+  relation: number;
+};
+
+type TiktokUserStatType = {
+  followingCount: number;
+  followerCount: number;
+  heartCount: string;
+  videoCount: number;
+  diggCount: string;
+};
+
+declare type TiktokUserBaseType = {
+  user: TiktokUserInfoType;
+  stats: TiktokUserStatType;
 };
 
 declare type TiktokUserObjectType = TiktokUserBaseType & {
