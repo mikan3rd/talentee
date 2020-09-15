@@ -1,5 +1,5 @@
 import { formatTwitterUserData } from "./common/formatUserData";
-import { TwitterError, TwitterNotFound, getUserByUsername } from "./common/api";
+import { TwitterError, TwitterForbidden, TwitterNotFound, getUserByUsername } from "./common/api";
 import { updateTwitterUser } from "./common/updateTwitterUser";
 
 export const upsertUserData = async (accountId: string, username: string) => {
@@ -11,7 +11,7 @@ export const upsertUserData = async (accountId: string, username: string) => {
     const { data } = await getUserByUsername(username);
     userObject = data;
   } catch (e) {
-    if (e instanceof TwitterError && e.name === TwitterNotFound) {
+    if (e instanceof TwitterError && [TwitterNotFound, TwitterForbidden].includes(e.name)) {
       return false;
     } else {
       throw e;

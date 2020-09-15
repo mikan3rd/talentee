@@ -71,6 +71,7 @@ const expansions = [
 const ErrorTitle = "TwitterAPIのレスポンスにエラー";
 export class TwitterError extends Error {}
 export const TwitterNotFound = "Not Found Error";
+export const TwitterForbidden = "Forbidden Error";
 
 type UserResponseType = { data: TwitterUserObjectType };
 type TweetsResponseType = { data: TweetObjectType[] };
