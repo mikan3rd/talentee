@@ -21,7 +21,7 @@
     "axios": "0.20.0",
     "cheerio": "1.0.0-rc.3",
     "dayjs": "1.8.35",
-    "firebase-admin": "9.1.1",
+    "firebase-admin": "9.2.0",
     "firebase-functions": "3.11.0",
     "googleapis": "59.0.0",
     "https-proxy-agent": "5.0.0",
