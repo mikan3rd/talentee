@@ -1,5 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
+import { Header, Icon } from "semantic-ui-react";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
@@ -9,6 +10,13 @@ export const InstagramDetail = React.memo<{
   instagramUserData: InstagramUserDataType;
   instagramPopularMedia: InstagramMediaType[];
 }>(({ instagramUserData, instagramPopularMedia }) => {
+  React.useEffect(() => {
+    const s = document.createElement("script");
+    s.setAttribute("src", "//www.instagram.com/embed.js");
+    s.setAttribute("async", "true");
+    document.head.appendChild(s);
+  }, []);
+
   const {
     full_name,
     biography,
@@ -86,6 +94,33 @@ export const InstagramDetail = React.memo<{
           </>
         )}
       </p>
+
+      <div>
+        <Header
+          css={css`
+            &&& {
+              margin: 20px 0 10px 0;
+            }
+          `}
+        >
+          <Icon name="heart" />
+          人気の投稿TOP3
+        </Header>
+        {instagramPopularMedia.map((media) => {
+          const { id, shortcode } = media;
+          return (
+            <blockquote
+              key={id}
+              className="instagram-media"
+              data-instgrm-captioned
+              data-instgrm-permalink={`https://www.instagram.com/p/${shortcode}/`}
+              css={css`
+                width: 100%;
+              `}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 });

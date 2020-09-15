@@ -129,7 +129,7 @@ export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopu
                 }
               `}
             >
-              <Icon name="video" />
+              <Icon name="video play" />
               人気動画TOP3
             </Header>
             <div>
