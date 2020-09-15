@@ -7,5 +7,7 @@ export const TwitterUserCollectionPath = "twitterUser" as const;
 export const TwitterTweetCollectionPath = "twitterTweet" as const;
 
 export const InstagramUserCollectionPath = "instagramUser" as const;
+export const InstagramMediaCollectionPath = "instagramMedia" as const;
 
 export const TiktokUserCollectionPath = "tiktokUser" as const;
+export const TiktokItemCollectionPath = "tiktokItem" as const;

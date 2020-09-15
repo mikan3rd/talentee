@@ -38,7 +38,9 @@ export const Account = React.memo<{
   twitterUserData?: TwitterUserDataType;
   popularTweets: TweetDataType[];
   instagramUserData?: InstagramUserDataType;
+  instagramPopularMedia: InstagramMediaType[];
   tiktokUserData?: TiktokUserDataType;
+  tiktokPopularItem: TiktokItemType[];
 }>(
   ({
     accountData,
@@ -47,7 +49,9 @@ export const Account = React.memo<{
     twitterUserData,
     popularTweets,
     instagramUserData,
+    instagramPopularMedia,
     tiktokUserData,
+    tiktokPopularItem,
   }) => {
     const [headerHeight, setHeaderHeight] = React.useState(0);
     const [selectedTab, setSelectedTab] = React.useState<ElementIds>(null);
@@ -258,14 +262,14 @@ export const Account = React.memo<{
         {instagramUserData && (
           <>
             <Divider />
-            <InstagramDetail instagramUserData={instagramUserData} />
+            <InstagramDetail instagramUserData={instagramUserData} instagramPopularMedia={instagramPopularMedia} />
           </>
         )}
 
         {tiktokUserData && (
           <>
             <Divider />
-            <TiktokDetail tiktokUserData={tiktokUserData} />
+            <TiktokDetail tiktokUserData={tiktokUserData} tiktokPopularItem={tiktokPopularItem} />
           </>
         )}
 

@@ -1,6 +1,48 @@
 {
   "indexes": [
     {
+      "collectionGroup": "instagramMedia",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "owner.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "edge_liked_by.count",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "tiktokItem",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "author.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "stats.diggCount",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "twitterTweet",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "author_id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "public_metrics.retweet_count",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "youtubeChannel",
       "queryScope": "COLLECTION",
       "fields": [

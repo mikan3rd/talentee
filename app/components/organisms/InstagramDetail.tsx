@@ -7,7 +7,10 @@ import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 import { ElementIds } from "../pages/Account";
 
-export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserDataType }>(({ instagramUserData }) => {
+export const InstagramDetail = React.memo<{
+  instagramUserData: InstagramUserDataType;
+  instagramPopularMedia: InstagramMediaType[];
+}>(({ instagramUserData, instagramPopularMedia }) => {
   const {
     full_name,
     biography,

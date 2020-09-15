@@ -1,11 +1,19 @@
 import admin from "../firebase/nodeApp";
-import { AccountCollectionPath, TwitterTweetCollectionPath, YoutubeVideoCollectionPath } from "../firebase/firestore";
+import {
+  AccountCollectionPath,
+  InstagramMediaCollectionPath,
+  TiktokItemCollectionPath,
+  TwitterTweetCollectionPath,
+  YoutubeVideoCollectionPath,
+} from "../firebase/firestore";
 
 export const getAccountPageData = async (accountId: string) => {
   const db = admin.firestore();
   const accountCollection = db.collection(AccountCollectionPath);
   const youtubeVideoCollection = db.collection(YoutubeVideoCollectionPath);
   const tweetCollection = db.collection(TwitterTweetCollectionPath);
+  const instagramMediaCollection = db.collection(InstagramMediaCollectionPath);
+  const tiktokItemCollection = db.collection(TiktokItemCollectionPath);
 
   const accountDoc = await accountCollection.doc(accountId).get();
 
@@ -20,6 +28,8 @@ export const getAccountPageData = async (accountId: string) => {
   let tiktokUserData: TiktokUserDataType | null = null;
   const youtubePopularVideos: IYoutubeVideoData[] = [];
   const popularTweets: TweetObjectType[] = [];
+  const instagramPopularMedia: InstagramMediaType[] = [];
+  const tiktokPopularItem: TiktokItemType[] = [];
 
   const { youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = accountData;
   if (youtubeMainRef) {
@@ -78,6 +88,18 @@ export const getAccountPageData = async (accountId: string) => {
         createdAt: Math.floor(data.createdAt.toDate().getTime() / 1000),
         updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000),
       };
+
+      const instagramPopularMediaDocs = await instagramMediaCollection
+        .where("owner.id", "==", data.id)
+        .orderBy("edge_liked_by.count", "desc")
+        .limit(3)
+        .get();
+
+      if (!instagramPopularMediaDocs.empty) {
+        instagramPopularMediaDocs.forEach((doc) => {
+          instagramPopularMedia.push(doc.data() as InstagramMediaType);
+        });
+      }
     }
   }
 
@@ -90,6 +112,18 @@ export const getAccountPageData = async (accountId: string) => {
         createdAt: Math.floor(data.createdAt.toDate().getTime() / 1000),
         updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000),
       };
+
+      const tiktokPopularItemDocs = await tiktokItemCollection
+        .where("author.id", "==", data.user.id)
+        .orderBy("stats.diggCount", "desc")
+        .limit(3)
+        .get();
+
+      if (!tiktokPopularItemDocs.empty) {
+        tiktokPopularItemDocs.forEach((doc) => {
+          tiktokPopularItem.push(doc.data() as TiktokItemType);
+        });
+      }
     }
   }
 
@@ -100,6 +134,8 @@ export const getAccountPageData = async (accountId: string) => {
     twitterUserData,
     popularTweets,
     instagramUserData,
+    instagramPopularMedia,
     tiktokUserData,
+    tiktokPopularItem,
   });
 };
