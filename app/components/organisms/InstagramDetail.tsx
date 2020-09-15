@@ -78,15 +78,13 @@ export const InstagramDetail = React.memo<{
           margin-top: 10px;
         `}
       >
-        <Linkify>
-          {biography}
-          {external_url && (
-            <>
-              <br />
-              {external_url}
-            </>
-          )}
-        </Linkify>
+        <Linkify>{biography}</Linkify>
+        {external_url && (
+          <>
+            <br />
+            <Linkify>{external_url}</Linkify>
+          </>
+        )}
       </p>
     </div>
   );
