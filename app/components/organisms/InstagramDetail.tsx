@@ -95,32 +95,34 @@ export const InstagramDetail = React.memo<{
         )}
       </p>
 
-      <div>
-        <Header
-          css={css`
-            &&& {
-              margin: 20px 0 10px 0;
-            }
-          `}
-        >
-          <Icon name="heart" />
-          人気の投稿TOP3
-        </Header>
-        {instagramPopularMedia.map((media) => {
-          const { id, shortcode } = media;
-          return (
-            <blockquote
-              key={id}
-              className="instagram-media"
-              data-instgrm-captioned
-              data-instgrm-permalink={`https://www.instagram.com/p/${shortcode}/`}
-              css={css`
-                width: 100%;
-              `}
-            />
-          );
-        })}
-      </div>
+      {instagramPopularMedia.length > 0 && (
+        <div>
+          <Header
+            css={css`
+              &&& {
+                margin: 20px 0 10px 0;
+              }
+            `}
+          >
+            <Icon name="heart" />
+            人気の投稿TOP3
+          </Header>
+          {instagramPopularMedia.map((media) => {
+            const { id, shortcode } = media;
+            return (
+              <blockquote
+                key={id}
+                className="instagram-media"
+                data-instgrm-captioned
+                data-instgrm-permalink={`https://www.instagram.com/p/${shortcode}/`}
+                css={css`
+                  width: 100%;
+                `}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 });

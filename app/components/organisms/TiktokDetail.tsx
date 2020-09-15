@@ -83,35 +83,37 @@ export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tik
           <Linkify>{signature}</Linkify>
         </p>
 
-        <div>
-          <Header
-            css={css`
-              &&& {
-                margin: 20px 0 0 0;
-              }
-            `}
-          >
-            <Icon name="heart" />
-            人気の動画TOP3
-          </Header>
-          {tiktokPopularItem.map((item) => {
-            const { id } = item;
-            return (
-              <blockquote
-                key={id}
-                className="tiktok-embed"
-                cite={`https://www.tiktok.com/@${uniqueId}/video/${item}`}
-                data-video-id={id}
-                css={css`
-                  max-width: 605px;
-                  min-width: 325px;
-                `}
-              >
-                <section />
-              </blockquote>
-            );
-          })}
-        </div>
+        {tiktokPopularItem.length > 0 && (
+          <div>
+            <Header
+              css={css`
+                &&& {
+                  margin: 20px 0 0 0;
+                }
+              `}
+            >
+              <Icon name="heart" />
+              人気の動画TOP3
+            </Header>
+            {tiktokPopularItem.map((item) => {
+              const { id } = item;
+              return (
+                <blockquote
+                  key={id}
+                  className="tiktok-embed"
+                  cite={`https://www.tiktok.com/@${uniqueId}/video/${item}`}
+                  data-video-id={id}
+                  css={css`
+                    max-width: 605px;
+                    min-width: 325px;
+                  `}
+                >
+                  <section />
+                </blockquote>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   },
