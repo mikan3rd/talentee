@@ -16,7 +16,6 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
       description,
       public_metrics: { followers_count, following_count, tweet_count },
       created_at,
-      updatedAt,
     } = twitterUserData;
 
     React.useEffect(() => {
@@ -28,7 +27,7 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
     }, []);
 
     const createdAtTime = dayjs.unix(created_at);
-    const updateAtTime = dayjs.unix(updatedAt);
+
     return (
       <div id={ElementIds.Twitter}>
         <div
@@ -151,14 +150,6 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
           >
             <a className="twitter-timeline" data-height="500" href={`https://twitter.com/${username}`} />
           </div>
-        </div>
-
-        <div
-          css={css`
-            text-align: right;
-          `}
-        >
-          <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
         </div>
       </div>
     );

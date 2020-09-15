@@ -1,12 +1,3 @@
-declare interface IAccountData {
-  tmpUsername: string;
-  thumbnailUrl: string;
-  youtubeMainRef?: FirebaseFirestore.DocumentReference;
-  twitterMainRef?: FirebaseFirestore.DocumentReference;
-  instagramMainRef?: FirebaseFirestore.DocumentReference;
-  tiktokMainRef?: FirebaseFirestore.DocumentReference;
-}
-
 declare interface IYoutubeData {
   id: string;
   snippet: {

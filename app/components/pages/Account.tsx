@@ -1,6 +1,7 @@
 import React from "react";
 import { css } from "@emotion/core";
 import { Button, Divider, Icon, Menu } from "semantic-ui-react";
+import dayjs from "dayjs";
 
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 import { TwitterDetail } from "../organisms/TwitterDetail";
@@ -32,13 +33,15 @@ const scrollToElement = (elementId: ElementIds) => {
 };
 
 export const Account = React.memo<{
-  accountData: IAccountData;
+  accountData: AccountDataType;
   youtubeData?: IYoutubeData;
   youtubePopularVideos: IYoutubeVideoData[];
   twitterUserData?: TwitterUserDataType;
   popularTweets: TweetDataType[];
   instagramUserData?: InstagramUserDataType;
+  instagramPopularMedia: InstagramMediaType[];
   tiktokUserData?: TiktokUserDataType;
+  tiktokPopularItem: TiktokItemType[];
 }>(
   ({
     accountData,
@@ -47,7 +50,9 @@ export const Account = React.memo<{
     twitterUserData,
     popularTweets,
     instagramUserData,
+    instagramPopularMedia,
     tiktokUserData,
+    tiktokPopularItem,
   }) => {
     const [headerHeight, setHeaderHeight] = React.useState(0);
     const [selectedTab, setSelectedTab] = React.useState<ElementIds>(null);
@@ -59,7 +64,7 @@ export const Account = React.memo<{
 
     const isUp = useScrollDirection();
 
-    const { tmpUsername, thumbnailUrl } = accountData;
+    const { tmpUsername, thumbnailUrl, updatedAt } = accountData;
 
     const handleOnClickTab = (elementId: ElementIds) => {
       scrollToElement(elementId);
@@ -82,6 +87,8 @@ export const Account = React.memo<{
       }
       return tabContents;
     };
+
+    const updateAtTime = dayjs.unix(updatedAt);
 
     return (
       <>
@@ -176,6 +183,15 @@ export const Account = React.memo<{
           </div>
         </div>
 
+        <div
+          css={css`
+            margin-top: 20px;
+            text-align: right;
+          `}
+        >
+          <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
+        </div>
+
         <Menu
           id="service_tab"
           pointing
@@ -258,14 +274,14 @@ export const Account = React.memo<{
         {instagramUserData && (
           <>
             <Divider />
-            <InstagramDetail instagramUserData={instagramUserData} />
+            <InstagramDetail instagramUserData={instagramUserData} instagramPopularMedia={instagramPopularMedia} />
           </>
         )}
 
         {tiktokUserData && (
           <>
             <Divider />
-            <TiktokDetail tiktokUserData={tiktokUserData} />
+            <TiktokDetail tiktokUserData={tiktokUserData} tiktokPopularItem={tiktokPopularItem} />
           </>
         )}
 

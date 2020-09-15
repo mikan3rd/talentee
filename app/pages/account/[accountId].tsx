@@ -17,16 +17,20 @@ const ProfilePage = React.memo<{ data: { accountId: string; jsonData: string } }
       youtubePopularVideos,
       twitterUserData,
       popularTweets,
-      tiktokUserData,
       instagramUserData,
+      instagramPopularMedia,
+      tiktokUserData,
+      tiktokPopularItem,
     }: {
-      accountData: IAccountData;
+      accountData: AccountDataType;
       youtubeData?: IYoutubeData;
       youtubePopularVideos: IYoutubeVideoData[];
       twitterUserData?: TwitterUserDataType;
       popularTweets: TweetDataType[];
       instagramUserData: InstagramUserDataType;
+      instagramPopularMedia: InstagramMediaType[];
       tiktokUserData: TiktokUserDataType;
+      tiktokPopularItem: TiktokItemType[];
     } = JSON.parse(jsonData);
 
     if (!accountData) {
@@ -61,7 +65,9 @@ const ProfilePage = React.memo<{ data: { accountId: string; jsonData: string } }
           twitterUserData={twitterUserData}
           popularTweets={popularTweets}
           instagramUserData={instagramUserData}
+          instagramPopularMedia={instagramPopularMedia}
           tiktokUserData={tiktokUserData}
+          tiktokPopularItem={tiktokPopularItem}
         />
       </>
     );

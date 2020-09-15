@@ -1,13 +1,22 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Icon } from "semantic-ui-react";
-import dayjs from "dayjs";
+import { Header, Icon } from "semantic-ui-react";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 import { ElementIds } from "../pages/Account";
 
-export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserDataType }>(({ instagramUserData }) => {
+export const InstagramDetail = React.memo<{
+  instagramUserData: InstagramUserDataType;
+  instagramPopularMedia: InstagramMediaType[];
+}>(({ instagramUserData, instagramPopularMedia }) => {
+  React.useEffect(() => {
+    const s = document.createElement("script");
+    s.setAttribute("src", "//www.instagram.com/embed.js");
+    s.setAttribute("async", "true");
+    document.head.appendChild(s);
+  }, []);
+
   const {
     full_name,
     biography,
@@ -16,10 +25,8 @@ export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserData
     edge_followed_by,
     edge_follow,
     edge_owner_to_timeline_media,
-    updatedAt,
   } = instagramUserData;
 
-  const updateAtTime = dayjs.unix(updatedAt);
   return (
     <div id={ElementIds.Instagram}>
       <div
@@ -79,24 +86,43 @@ export const InstagramDetail = React.memo<{ instagramUserData: InstagramUserData
           margin-top: 10px;
         `}
       >
-        <Linkify>
-          {biography}
-          {external_url && (
-            <>
-              <br />
-              {external_url}
-            </>
-          )}
-        </Linkify>
+        <Linkify>{biography}</Linkify>
+        {external_url && (
+          <>
+            <br />
+            <Linkify>{external_url}</Linkify>
+          </>
+        )}
       </p>
 
-      <div
-        css={css`
-          text-align: right;
-        `}
-      >
-        <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
-      </div>
+      {instagramPopularMedia.length > 0 && (
+        <div>
+          <Header
+            css={css`
+              &&& {
+                margin: 20px 0 10px 0;
+              }
+            `}
+          >
+            <Icon name="heart" />
+            人気の投稿TOP3
+          </Header>
+          {instagramPopularMedia.map((media) => {
+            const { id, shortcode } = media;
+            return (
+              <blockquote
+                key={id}
+                className="instagram-media"
+                data-instgrm-captioned
+                data-instgrm-permalink={`https://www.instagram.com/p/${shortcode}/`}
+                css={css`
+                  width: 100%;
+                `}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 });

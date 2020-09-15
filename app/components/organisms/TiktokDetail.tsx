@@ -1,93 +1,123 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Icon } from "semantic-ui-react";
-import dayjs from "dayjs";
+import { Header, Icon } from "semantic-ui-react";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 import { ElementIds } from "../pages/Account";
 
-export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType }>(({ tiktokUserData }) => {
-  const {
-    user: { nickname, signature, avatarMedium },
-    stats: { followerCount, followingCount, heartCount, videoCount },
-    updatedAt,
-  } = tiktokUserData;
+export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tiktokPopularItem: TiktokItemType[] }>(
+  ({ tiktokUserData, tiktokPopularItem }) => {
+    React.useEffect(() => {
+      const s = document.createElement("script");
+      s.setAttribute("src", "https://www.tiktok.com/embed.js");
+      s.setAttribute("async", "true");
+      document.head.appendChild(s);
+    }, []);
 
-  const updateAtTime = dayjs.unix(updatedAt);
-  return (
-    <div id={ElementIds.Tiktok}>
-      <div
-        css={css`
-          display: flex;
-        `}
-      >
-        <div>
-          <img
-            src={avatarMedium}
-            alt={nickname}
-            css={css`
-              width: 64px;
-              height: 64px;
-              border-radius: 50%;
-            `}
-          />
-        </div>
+    const {
+      user: { uniqueId, nickname, signature, avatarMedium },
+      stats: { followerCount, followingCount, heartCount, videoCount },
+    } = tiktokUserData;
+
+    return (
+      <div id={ElementIds.Tiktok}>
         <div
           css={css`
-            margin-left: 10px;
+            display: flex;
           `}
         >
-          <div
-            css={css`
-              font-size: 20px;
-              font-weight: bold;
-            `}
-          >
-            {nickname}
+          <div>
+            <img
+              src={avatarMedium}
+              alt={nickname}
+              css={css`
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+              `}
+            />
           </div>
           <div
             css={css`
-              display: flex;
-              @media (max-width: 600px) {
-                display: block;
-              }
+              margin-left: 10px;
             `}
           >
-            <div css={CountWrapperCss}>
-              <div>{toUnitString(followingCount)} フォロー中</div>
+            <div
+              css={css`
+                font-size: 20px;
+                font-weight: bold;
+              `}
+            >
+              {nickname}
             </div>
-            <div css={CountWrapperCss}>
-              <div>{toUnitString(followerCount)} フォロワー</div>
-            </div>
-            <div css={CountWrapperCss}>
-              <div>{toUnitString(Number(heartCount))} いいね</div>
-            </div>
-            <div css={CountWrapperCss}>
-              <div>{toUnitString(videoCount)} 本</div>
+            <div
+              css={css`
+                display: flex;
+                @media (max-width: 600px) {
+                  display: block;
+                }
+              `}
+            >
+              <div css={CountWrapperCss}>
+                <div>{toUnitString(followingCount)} フォロー中</div>
+              </div>
+              <div css={CountWrapperCss}>
+                <div>{toUnitString(followerCount)} フォロワー</div>
+              </div>
+              <div css={CountWrapperCss}>
+                <div>{toUnitString(Number(heartCount))} いいね</div>
+              </div>
+              <div css={CountWrapperCss}>
+                <div>{toUnitString(videoCount)} 本</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <p
-        css={css`
-          margin-top: 10px;
-        `}
-      >
-        <Linkify>{signature}</Linkify>
-      </p>
+        <p
+          css={css`
+            margin-top: 10px;
+          `}
+        >
+          <Linkify>{signature}</Linkify>
+        </p>
 
-      <div
-        css={css`
-          text-align: right;
-        `}
-      >
-        <Icon name="history" /> {updateAtTime.format("YYYY年M月D日")}
+        {tiktokPopularItem.length > 0 && (
+          <div>
+            <Header
+              css={css`
+                &&& {
+                  margin: 20px 0 0 0;
+                }
+              `}
+            >
+              <Icon name="heart" />
+              人気の動画TOP3
+            </Header>
+            {tiktokPopularItem.map((item) => {
+              const { id } = item;
+              return (
+                <blockquote
+                  key={id}
+                  className="tiktok-embed"
+                  cite={`https://www.tiktok.com/@${uniqueId}/video/${item}`}
+                  data-video-id={id}
+                  css={css`
+                    max-width: 605px;
+                    min-width: 325px;
+                  `}
+                >
+                  <section />
+                </blockquote>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 const CountWrapperCss = css`
   display: flex;
