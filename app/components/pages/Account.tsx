@@ -17,11 +17,11 @@ import {
 import { useScrollDirection } from "../../hooks/useScrollDirection";
 
 const ServiceList = ["youtube", "twitter", "instagram", "tiktok"] as const;
-export type ServiceType = typeof ServiceList[number];
-export const ServiceYoutube = ServiceList[0];
-export const ServiceTwitter = ServiceList[1];
-export const ServiceInstagram = ServiceList[2];
-export const ServiceTiktok = ServiceList[3];
+type ServiceType = typeof ServiceList[number];
+const ServiceYoutube = ServiceList[0];
+const ServiceTwitter = ServiceList[1];
+const ServiceInstagram = ServiceList[2];
+const ServiceTiktok = ServiceList[3];
 
 const scrollToElement = (elementId: ServiceType) => {
   const header = document.getElementById("header");
@@ -69,7 +69,7 @@ export const Account = React.memo<{
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               const tmpId = entry.target.id as ServiceType;
-              setSelectedTab(tmpId);
+              handleSelectedTab(tmpId);
             }
           });
         },
@@ -88,9 +88,16 @@ export const Account = React.memo<{
 
     const { tmpUsername, thumbnailUrl, updatedAt } = accountData;
 
+    const handleSelectedTab = (elementId: ServiceType) => {
+      const tabEle = document.getElementById("service_tab");
+      const targetEle = document.getElementById(`service_tab_${elementId}`);
+      tabEle.scrollTo({ left: targetEle.offsetLeft, behavior: "smooth" });
+      setSelectedTab(elementId);
+    };
+
     const handleOnClickTab = (elementId: ServiceType) => {
       scrollToElement(elementId);
-      setSelectedTab(elementId);
+      handleSelectedTab(elementId);
     };
 
     const updateAtTime = dayjs.unix(updatedAt);
@@ -223,6 +230,7 @@ export const Account = React.memo<{
               return (
                 <Menu.Item
                   key={serviceName}
+                  id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
                 >
@@ -240,6 +248,7 @@ export const Account = React.memo<{
               return (
                 <Menu.Item
                   key={serviceName}
+                  id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
                 >
@@ -257,6 +266,7 @@ export const Account = React.memo<{
               return (
                 <Menu.Item
                   key={serviceName}
+                  id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
                 >
@@ -269,6 +279,7 @@ export const Account = React.memo<{
               return (
                 <Menu.Item
                   key={serviceName}
+                  id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
                 >
@@ -279,6 +290,12 @@ export const Account = React.memo<{
             }
             return null;
           })}
+          <div
+            css={css`
+              flex-shrink: 0;
+              width: calc(100% - 100px);
+            `}
+          />
         </Menu>
 
         {youtubeData && (
