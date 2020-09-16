@@ -57,9 +57,31 @@ export const Account = React.memo<{
     const [headerHeight, setHeaderHeight] = React.useState(0);
     const [selectedTab, setSelectedTab] = React.useState<ServiceType>(null);
 
+    const refs = React.useRef<HTMLDivElement[]>([]);
+
     React.useEffect(() => {
+      // SSRの場合にdocumentを直で呼び出せないため
       const headerHeight = document.getElementById("header").clientHeight;
       setHeaderHeight(headerHeight);
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const tmpId = entry.target.id as ServiceType;
+              setSelectedTab(tmpId);
+            }
+          });
+        },
+        { rootMargin: "-50% 0px" },
+      );
+
+      refs.current = refs.current.slice(0, ServiceList.length);
+      refs.current.forEach((ele) => observer.observe(ele));
+
+      return () => {
+        refs.current.forEach((ele) => observer.unobserve(ele));
+      };
     }, []);
 
     const isUp = useScrollDirection();
@@ -197,7 +219,6 @@ export const Account = React.memo<{
           `}
         >
           {ServiceList.map((serviceName) => {
-            console.log(serviceName);
             if (serviceName === ServiceYoutube && youtubeData) {
               return (
                 <Menu.Item
@@ -262,28 +283,36 @@ export const Account = React.memo<{
 
         {youtubeData && (
           <>
-            <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
+            <div id={ServiceYoutube} ref={(el) => (refs.current[0] = el)}>
+              <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
+            </div>
           </>
         )}
 
         {twitterUserData && (
           <>
             <Divider />
-            <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
+            <div id={ServiceTwitter} ref={(el) => (refs.current[1] = el)}>
+              <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
+            </div>
           </>
         )}
 
         {instagramUserData && (
           <>
             <Divider />
-            <InstagramDetail instagramUserData={instagramUserData} instagramPopularMedia={instagramPopularMedia} />
+            <div id={ServiceInstagram} ref={(el) => (refs.current[2] = el)}>
+              <InstagramDetail instagramUserData={instagramUserData} instagramPopularMedia={instagramPopularMedia} />
+            </div>
           </>
         )}
 
         {tiktokUserData && (
           <>
             <Divider />
-            <TiktokDetail tiktokUserData={tiktokUserData} tiktokPopularItem={tiktokPopularItem} />
+            <div id={ServiceTiktok} ref={(el) => (refs.current[3] = el)}>
+              <TiktokDetail tiktokUserData={tiktokUserData} tiktokPopularItem={tiktokPopularItem} />
+            </div>
           </>
         )}
 
