@@ -4,7 +4,6 @@ import { Header, Icon } from "semantic-ui-react";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
-import { ElementIds } from "../pages/Account";
 
 export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tiktokPopularItem: TiktokItemType[] }>(
   ({ tiktokUserData, tiktokPopularItem }) => {
@@ -21,7 +20,7 @@ export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tik
     } = tiktokUserData;
 
     return (
-      <div id={ElementIds.Tiktok}>
+      <div>
         <div
           css={css`
             display: flex;

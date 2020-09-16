@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
-import { ElementIds } from "../pages/Account";
 
 import { YoutubeVideoCard } from "./YoutubeVideoCard";
 
@@ -23,7 +22,7 @@ export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopu
     const publishedAtTime = dayjs(publishedAt);
 
     return (
-      <div id={ElementIds.Youtube}>
+      <div>
         <div
           css={css`
             display: flex;

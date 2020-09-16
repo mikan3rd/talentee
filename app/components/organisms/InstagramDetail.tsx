@@ -4,7 +4,6 @@ import { Header, Icon } from "semantic-ui-react";
 
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
-import { ElementIds } from "../pages/Account";
 
 export const InstagramDetail = React.memo<{
   instagramUserData: InstagramUserDataType;
@@ -28,7 +27,7 @@ export const InstagramDetail = React.memo<{
   } = instagramUserData;
 
   return (
-    <div id={ElementIds.Instagram}>
+    <div>
       <div
         css={css`
           display: flex;
