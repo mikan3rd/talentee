@@ -1,5 +1,12 @@
 {
   "extends": ["config:base"],
   "timezone": "Asia/Tokyo",
-  "labels": ["renovate"]
+  "labels": ["renovate"],
+  "baseBranches": ["renovate/main"],
+  "packageRules": [
+    {
+      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    }
+  ]
 }
