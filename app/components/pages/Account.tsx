@@ -290,12 +290,6 @@ export const Account = React.memo<{
             }
             return null;
           })}
-          <div
-            css={css`
-              flex-shrink: 0;
-              width: calc(100% - 100px);
-            `}
-          />
         </Menu>
 
         {youtubeData && (
