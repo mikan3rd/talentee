@@ -3,6 +3,7 @@ import { css } from "@emotion/core";
 import { Header, Icon } from "semantic-ui-react";
 import dayjs from "dayjs";
 
+import { TwitterSocialButton } from "../atoms/SocialButton";
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 
@@ -28,7 +29,19 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
     const createdAtTime = dayjs.unix(created_at);
 
     return (
-      <div>
+      <div
+        css={css`
+          position: relative;
+        `}
+      >
+        <TwitterSocialButton
+          username={username}
+          css={css`
+            position: absolute;
+            right: 0px;
+            top: 0px;
+          `}
+        />
         <div
           css={css`
             display: flex;
@@ -54,6 +67,7 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
               css={css`
                 font-size: 20px;
                 font-weight: bold;
+                margin-right: 45px;
               `}
             >
               {name}
@@ -67,13 +81,13 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
               `}
             >
               <div css={CountWrapperCss}>
-                <div>{toUnitString(following_count)}フォロー中</div>
+                <div>{toUnitString(following_count)} フォロー中</div>
               </div>
               <div css={CountWrapperCss}>
-                <div>{toUnitString(followers_count)}フォロワー</div>
+                <div>{toUnitString(followers_count)} フォロワー</div>
               </div>
               <div css={CountWrapperCss}>
-                <div>{toUnitString(tweet_count)}ツイート</div>
+                <div>{toUnitString(tweet_count)} ツイート</div>
               </div>
             </div>
           </div>

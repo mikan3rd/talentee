@@ -3,6 +3,12 @@ import { css } from "@emotion/core";
 import { Button, Divider, Icon, Menu } from "semantic-ui-react";
 import dayjs from "dayjs";
 
+import {
+  InstagramSocialButton,
+  TiktokSocialButton,
+  TwitterSocialButton,
+  YoutubeSocialButton,
+} from "../atoms/SocialButton";
 import { YoutubeDetail } from "../organisms/YoutubeDetail";
 import { TwitterDetail } from "../organisms/TwitterDetail";
 import { TiktokDetail } from "../organisms/TiktokDetail";
@@ -126,72 +132,10 @@ export const Account = React.memo<{
           >
             <h1>{tmpUsername}</h1>
             <div>
-              {youtubeData && (
-                <Button
-                  circular
-                  color="youtube"
-                  icon="youtube"
-                  as="a"
-                  href={`https://www.youtube.com/channel/${youtubeData.id}`}
-                  target="_black"
-                  css={LinkButtonCss}
-                />
-              )}
-
-              {twitterUserData && (
-                <Button
-                  circular
-                  color="twitter"
-                  icon="twitter"
-                  as="a"
-                  href={`https://twitter.com/${twitterUserData.username}`}
-                  target="_black"
-                  css={LinkButtonCss}
-                />
-              )}
-
-              {instagramUserData && (
-                <Button
-                  circular
-                  color="black"
-                  icon="instagram"
-                  as="a"
-                  href={`https://instagram.com/${instagramUserData.username}/`}
-                  target="_black"
-                  css={css`
-                    ${LinkButtonCss}
-                    &&& {
-                      background: radial-gradient(
-                        circle at 30% 107%,
-                        #fdf497 0%,
-                        #fdf497 5%,
-                        #fd5949 45%,
-                        #d6249f 60%,
-                        #285aeb 90%
-                      );
-                    }
-                  `}
-                />
-              )}
-
-              {tiktokUserData && (
-                <Button
-                  circular
-                  color="black"
-                  as="a"
-                  href={`https://www.tiktok.com/@${tiktokUserData.user.uniqueId}`}
-                  target="_black"
-                  css={LinkButtonCss}
-                >
-                  <img
-                    src="/icon_tiktok.svg"
-                    alt="icon_tiktok"
-                    css={css`
-                      width: 100%;
-                    `}
-                  />
-                </Button>
-              )}
+              {youtubeData && <YoutubeSocialButton channelId={youtubeData.id} />}
+              {twitterUserData && <TwitterSocialButton username={twitterUserData.username} />}
+              {instagramUserData && <InstagramSocialButton username={instagramUserData.username} />}
+              {tiktokUserData && <TiktokSocialButton uniqueId={tiktokUserData.user.uniqueId} />}
             </div>
           </div>
         </div>

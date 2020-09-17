@@ -3,6 +3,7 @@ import { css } from "@emotion/core";
 import { Header, Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
 
+import { YoutubeSocialButton } from "../atoms/SocialButton";
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 
@@ -22,7 +23,19 @@ export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopu
     const publishedAtTime = dayjs(publishedAt);
 
     return (
-      <div>
+      <div
+        css={css`
+          position: relative;
+        `}
+      >
+        <YoutubeSocialButton
+          channelId={youtubeData.id}
+          css={css`
+            position: absolute;
+            right: 0px;
+            top: 0px;
+          `}
+        />
         <div
           css={css`
             display: flex;
@@ -48,6 +61,7 @@ export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopu
               css={css`
                 font-size: 20px;
                 font-weight: bold;
+                margin-right: 45px;
               `}
             >
               {title}

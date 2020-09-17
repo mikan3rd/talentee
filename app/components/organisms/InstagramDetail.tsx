@@ -2,6 +2,7 @@ import React from "react";
 import { css } from "@emotion/core";
 import { Header, Icon } from "semantic-ui-react";
 
+import { InstagramSocialButton } from "../atoms/SocialButton";
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 
@@ -42,6 +43,7 @@ export const InstagramDetail = React.memo<{
   }, []);
 
   const {
+    username,
     full_name,
     biography,
     external_url,
@@ -52,7 +54,19 @@ export const InstagramDetail = React.memo<{
   } = instagramUserData;
 
   return (
-    <div>
+    <div
+      css={css`
+        position: relative;
+      `}
+    >
+      <InstagramSocialButton
+        username={username}
+        css={css`
+          position: absolute;
+          right: 0px;
+          top: 0px;
+        `}
+      />
       <div
         css={css`
           display: flex;
@@ -78,6 +92,7 @@ export const InstagramDetail = React.memo<{
             css={css`
               font-size: 20px;
               font-weight: bold;
+              margin-right: 45px;
             `}
           >
             {full_name}
