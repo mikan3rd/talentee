@@ -5,6 +5,29 @@ import { Header, Icon } from "semantic-ui-react";
 import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
 
+// Instagramの埋め込みiframeのheightが正しく認識されない場合があるため
+const resetIframeHeight = (repeatNum = 1) => {
+  if (repeatNum > 5) {
+    // 無限ループ回避
+    return;
+  }
+
+  setTimeout(() => {
+    const eles = document.querySelectorAll<HTMLElement>("iframe.instagram-media-rendered");
+
+    eles.forEach((ele) => {
+      ele.style.height = "fit-content";
+      setTimeout(() => {
+        ele.style.height = "";
+      }, 1000);
+    });
+
+    if (eles.length === 0) {
+      resetIframeHeight((repeatNum += 1));
+    }
+  }, 1000);
+};
+
 export const InstagramDetail = React.memo<{
   instagramUserData: InstagramUserDataType;
   instagramPopularMedia: InstagramMediaType[];
@@ -14,6 +37,8 @@ export const InstagramDetail = React.memo<{
     s.setAttribute("src", "https://www.instagram.com/embed.js");
     s.setAttribute("async", "true");
     document.head.appendChild(s);
+
+    resetIframeHeight();
   }, []);
 
   const {
@@ -106,20 +131,22 @@ export const InstagramDetail = React.memo<{
             <Icon name="heart" />
             人気の投稿TOP3
           </Header>
-          {instagramPopularMedia.map((media) => {
-            const { id, shortcode } = media;
-            return (
-              <blockquote
-                key={id}
-                className="instagram-media"
-                data-instgrm-captioned
-                data-instgrm-permalink={`https://www.instagram.com/p/${shortcode}/`}
-                css={css`
-                  width: 100%;
-                `}
-              />
-            );
-          })}
+          <div>
+            {instagramPopularMedia.map((media) => {
+              const { id, shortcode } = media;
+              return (
+                <blockquote
+                  key={id}
+                  className="instagram-media"
+                  data-instgrm-captioned
+                  data-instgrm-permalink={`https://www.instagram.com/p/${shortcode}/`}
+                  css={css`
+                    width: 100%;
+                  `}
+                />
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
