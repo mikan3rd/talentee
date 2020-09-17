@@ -233,6 +233,7 @@ export const Account = React.memo<{
                   id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
+                  css={TabItemCss}
                 >
                   <Icon
                     name="youtube"
@@ -251,6 +252,7 @@ export const Account = React.memo<{
                   id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
+                  css={TabItemCss}
                 >
                   <Icon
                     name="twitter"
@@ -269,6 +271,7 @@ export const Account = React.memo<{
                   id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
+                  css={TabItemCss}
                 >
                   <img src="/icon_instagram.svg" alt="icon_instagram" css={TabIconCss} />
                   Instagram
@@ -282,6 +285,7 @@ export const Account = React.memo<{
                   id={`service_tab_${serviceName}`}
                   active={serviceName === selectedTab}
                   onClick={() => handleOnClickTab(serviceName)}
+                  css={TabItemCss}
                 >
                   <img src="/icon_tiktok_black.svg" alt="icon_tiktok" css={TabIconCss} />
                   TikTok
@@ -355,6 +359,12 @@ const LinkButtonCss = css`
       width: 14px;
       height: 12px;
     }
+  }
+`;
+
+const TabItemCss = css`
+  &&& {
+    height: 50px;
   }
 `;
 
