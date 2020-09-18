@@ -14,6 +14,22 @@ export const Index = React.memo(() => {
 
   return (
     <>
+      <img
+        src="/logo.png"
+        alt="logo"
+        css={css`
+          width: 100%;
+        `}
+      />
+
+      <p
+        css={css`
+          text-align: center;
+        `}
+      >
+        Talenteeで世界が注目するインフルエンサーを見つけよう！
+      </p>
+
       {youtubeData.length > 0 && (
         <>
           <Divider />
