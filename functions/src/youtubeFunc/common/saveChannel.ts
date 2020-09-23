@@ -6,6 +6,7 @@ import { chunk } from "../../common/utils";
 import { youtubeService } from "../../common/config";
 
 import { formatChannelData } from "./formatYoutubeData";
+import { updateChannel } from "./updateChannel";
 
 const { FieldValue } = admin.firestore;
 
@@ -26,7 +27,7 @@ export const saveChannel = async (channelIds: string[]) => {
   const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
 
   let createNum = 0;
-  let updateNum = 0;
+  let existNum = 0;
   let skipNum = 0;
 
   for (const item of channelItems) {
@@ -47,42 +48,33 @@ export const saveChannel = async (channelIds: string[]) => {
     }
 
     const youtubeRef = youtubeChannelCollection.doc(id);
-    const youtubeDoc = await youtubeRef.get();
 
     let accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeRef).limit(1).get();
-    if (accountDocs.empty) {
-      const accountData: IAccountData = {
-        tmpUsername: item.snippet.title,
-        thumbnailUrl: item.snippet.thumbnails.medium.url,
-        youtubeMainRef: youtubeRef,
-        createdAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      };
-      await accountCollection.doc().set(accountData, { merge: true });
-      accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeRef).limit(1).get();
+
+    if (!accountDocs.empty) {
+      existNum += 1;
+      continue;
     }
 
-    let accountRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;
-    accountDocs.forEach((doc) => {
-      accountRef = accountCollection.doc(doc.id);
-    });
-
-    const youtubeData = {
-      ...data,
-      accountRef,
+    const accountData: IAccountData = {
+      tmpUsername: item.snippet.title,
+      thumbnailUrl: item.snippet.thumbnails.medium.url,
+      youtubeMainRef: youtubeRef,
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     };
+    await accountCollection.doc().set(accountData, { merge: true });
+    accountDocs = await accountCollection.where("youtubeMainRef", "==", youtubeRef).limit(1).get();
 
-    if (youtubeDoc.exists) {
-      delete youtubeData.createdAt;
-      updateNum += 1;
-    } else {
-      createNum += 1;
-    }
+    let accountId: string;
+    accountDocs.forEach((doc) => {
+      accountId = doc.id;
+    });
 
-    await youtubeRef.set(youtubeData, { merge: true });
+    await updateChannel(accountId, data);
+
+    createNum += 1;
   }
 
-  console.log("createNum:", createNum, "updateNum:", updateNum, "skipNum:", skipNum);
+  console.log("createNum:", createNum, "existNum:", existNum, "skipNum:", skipNum);
 };

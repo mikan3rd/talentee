@@ -7,10 +7,13 @@ import {
   PopularVideoTopic,
   ServiceAccountByYoutubeJsonType,
   ServiceAccountByYoutubeTopic,
+  UpsertYoutubeChannelJsonType,
+  UpsertYoutubeChannelTopic,
 } from "../firebase/topic";
 
 import { getVideoCategories } from "./common/getVideoCategories";
 import { savePopularChannel } from "./savePopularChannel";
+import { upsertChannelData } from "./upsertChannelData";
 import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { getServiceAccount } from "./getServiceAccount";
@@ -37,6 +40,13 @@ export const getYoutubePopularChannelMonthly = scheduleFunctions()("0 2 * * *").
   sentryWrapper(async (context) => {
     const publishedAfter = dayjs().subtract(1, "month");
     await savePopularChannel(publishedAfter);
+  }),
+);
+
+export const upsertChannelPubsub = functions.pubsub.topic(UpsertYoutubeChannelTopic).onPublish(
+  sentryWrapper(async (message) => {
+    const { accountId, channelId } = message.json as UpsertYoutubeChannelJsonType;
+    return await upsertChannelData(accountId, channelId);
   }),
 );
 

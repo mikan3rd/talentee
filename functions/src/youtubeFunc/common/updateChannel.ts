@@ -11,12 +11,17 @@ export const updateChannel = async (accountId: string, channelData) => {
 
   const accountRef = accountCollection.doc(accountId);
   const youtubeMainRef = youtubeChannelCollection.doc(channelData.id);
+  const youtubeMainDoc = await youtubeMainRef.get();
 
   const youtubeData = {
     ...channelData,
     accountRef,
     updatedAt: FieldValue.serverTimestamp(),
   };
+
+  if (youtubeMainDoc.exists) {
+    delete youtubeData.createdAt;
+  }
 
   await youtubeMainRef.set(youtubeData, { merge: true });
 

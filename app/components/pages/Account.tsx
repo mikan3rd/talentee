@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "@emotion/core";
-import { Button, Divider, Icon, Menu } from "semantic-ui-react";
+import { Divider, Icon, Menu } from "semantic-ui-react";
 import dayjs from "dayjs";
 
 import {
@@ -291,20 +291,6 @@ export const Account = React.memo<{
     );
   },
 );
-
-const LinkButtonCss = css`
-  &&& {
-    margin-left: 10px;
-    padding: 11px;
-    &:first-of-type {
-      margin-left: 0;
-    }
-    > * {
-      width: 14px;
-      height: 12px;
-    }
-  }
-`;
 
 const TabItemCss = css`
   &&& {

@@ -27,6 +27,4 @@ export const upsertUser = async (accountId: string, userData: TiktokUserType) =>
   };
 
   await accountRef.set(accountData, { merge: true });
-
-  return true;
 };

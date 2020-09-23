@@ -15,11 +15,10 @@ import {
   UpsertTiktokUserTopic,
   UpsertTwitterUserJsonType,
   UpsertTwitterUserTopic,
+  UpsertYoutubeChannelJsonType,
+  UpsertYoutubeChannelTopic,
 } from "../firebase/topic";
 import { AccountCollectionPath, db } from "../firebase/collectionPath";
-import { formatChannelData } from "../youtubeFunc/common/formatYoutubeData";
-import { updateChannel } from "../youtubeFunc/common/updateChannel";
-import { youtubeService } from "../common/config";
 
 export const updateAccount = async (accountId: string, videoCategories: youtube_v3.Schema$VideoCategory[]) => {
   const accountCollection = db.collection(AccountCollectionPath);
@@ -36,20 +35,15 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
   const pubSub = new PubSub();
   if (youtubeMainRef) {
     const { id } = (await youtubeMainRef.get()).data();
-    const topicData: ServiceAccountByYoutubeJsonType = { channelId: id };
-    await pubSub.topic(ServiceAccountByYoutubeTopic).publish(toBufferJson(topicData));
 
-    const channelResponse = await youtubeService.channels.list({
-      part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
-      id: [id],
-    });
-    if (channelResponse.data.items) {
-      const channelData = formatChannelData(channelResponse.data.items[0]);
-      await updateChannel(accountId, channelData);
-    }
+    const channelTopicdata: UpsertYoutubeChannelJsonType = { channelId: id, accountId };
+    await pubSub.topic(UpsertYoutubeChannelTopic).publish(toBufferJson(channelTopicdata));
 
     const videoTopicdata: PopularVideoJsonType = { channelId: id, videoCategories };
     await pubSub.topic(PopularVideoTopic).publish(toBufferJson(videoTopicdata));
+
+    const topicData: ServiceAccountByYoutubeJsonType = { channelId: id };
+    await pubSub.topic(ServiceAccountByYoutubeTopic).publish(toBufferJson(topicData));
   }
 
   if (twitterMainRef) {
