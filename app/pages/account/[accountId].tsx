@@ -80,12 +80,19 @@ const ProfilePage = React.memo<Props>(({ data: { accountId, jsonData }, statusCo
 });
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const accountId = params.accountId as string;
-  const jsonData = await getAccountPageData(accountId);
-
   let statusCode = 200;
-  if (jsonData === null) {
+  let accountId = "";
+  let jsonData = "";
+
+  if (!params) {
     statusCode = 404;
+  } else {
+    accountId = params.accountId as string;
+    jsonData = await getAccountPageData(accountId);
+
+    if (jsonData === null) {
+      statusCode = 404;
+    }
   }
 
   const result: GetServerSidePropsResult<Props> = { props: { data: { accountId, jsonData }, statusCode } };
