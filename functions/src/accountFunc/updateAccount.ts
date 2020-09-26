@@ -7,8 +7,8 @@ import {
   PopularTweetsonType,
   PopularVideoJsonType,
   PopularVideoTopic,
-  ServiceAccountByYoutubeJsonType,
-  ServiceAccountByYoutubeTopic,
+  ServiceAccountJsonType,
+  ServiceAccountTopic,
   UpsertInstagramUserJsonType,
   UpsertInstagramUserTopic,
   UpsertTiktokUserJsonType,
@@ -33,6 +33,10 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
   const { youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = accountDoc.data() as IAccountData;
 
   const pubSub = new PubSub();
+
+  const topicData: ServiceAccountJsonType = { accountId };
+  await pubSub.topic(ServiceAccountTopic).publish(toBufferJson(topicData));
+
   if (youtubeMainRef) {
     const { id } = (await youtubeMainRef.get()).data();
 
@@ -41,9 +45,6 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
 
     const videoTopicdata: PopularVideoJsonType = { channelId: id, videoCategories };
     await pubSub.topic(PopularVideoTopic).publish(toBufferJson(videoTopicdata));
-
-    const topicData: ServiceAccountByYoutubeJsonType = { channelId: id };
-    await pubSub.topic(ServiceAccountByYoutubeTopic).publish(toBufferJson(topicData));
   }
 
   if (twitterMainRef) {

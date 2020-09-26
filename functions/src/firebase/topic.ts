@@ -7,7 +7,7 @@ export const UpsertInstagramUserTopic = "UpsertInstagramUserTopic" as const;
 export const UpsertTiktokUserTopic = "UpsertTiktokUserTopic" as const;
 export const PopularVideoTopic = "PopularVideoTopic" as const;
 export const PopularTweetTopic = "PopularTweetTopic" as const;
-export const ServiceAccountByYoutubeTopic = "GetServiceAccountByYoutubeTopic" as const;
+export const ServiceAccountTopic = "ServiceAccountTopic" as const;
 
 export type UpdateAccountJsonType = {
   accountId: string;
@@ -44,6 +44,6 @@ export type PopularTweetsonType = {
   username: string;
 };
 
-export type ServiceAccountByYoutubeJsonType = {
-  channelId: string;
+export type ServiceAccountJsonType = {
+  accountId: string;
 };

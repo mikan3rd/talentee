@@ -1,7 +1,13 @@
 import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";
-import { UpdateAccountJsonType, UpdateAccountTopic } from "../firebase/topic";
+import {
+  ServiceAccountJsonType,
+  ServiceAccountTopic,
+  UpdateAccountJsonType,
+  UpdateAccountTopic,
+} from "../firebase/topic";
 
+import { getServiceAccount } from "./getServiceAccount";
 import { batchUpdateAccount } from "./batchUpdateAccount";
 import { updateAccount } from "./updateAccount";
 import { tweetAccountByYoutube } from "./tweetAccount";
@@ -28,6 +34,16 @@ export const updateAccountPubSub = functions
     }),
   );
 
+export const getServiceAccountPubSub = functions
+  .runWith({ memory: "1GB", maxInstances: 3 })
+  .pubsub.topic(ServiceAccountTopic)
+  .onPublish(
+    sentryWrapper(async (message) => {
+      const { accountId } = message.json as ServiceAccountJsonType;
+      return await getServiceAccount(accountId);
+    }),
+  );
+
 export const batchUpdateAccountTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     await batchUpdateAccount();
@@ -47,5 +63,13 @@ export const tweetAccountByYoutubeTest = functions.https.onRequest(
   sentryWrapper(async (req, res) => {
     await tweetAccountByYoutube();
     res.send();
+  }),
+);
+
+export const getServiceAccountTest = functions.https.onRequest(
+  sentryWrapper(async (req, res) => {
+    const accountlId = "UCHp2q2i85qt_9nn2H7AvGOw";
+    const result = await getServiceAccount(accountlId);
+    res.send(result);
   }),
 );

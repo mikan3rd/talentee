@@ -5,8 +5,6 @@ import { functions, scheduleFunctions } from "../firebase/functions";
 import {
   PopularVideoJsonType,
   PopularVideoTopic,
-  ServiceAccountByYoutubeJsonType,
-  ServiceAccountByYoutubeTopic,
   UpsertYoutubeChannelJsonType,
   UpsertYoutubeChannelTopic,
 } from "../firebase/topic";
@@ -16,12 +14,10 @@ import { savePopularChannel } from "./savePopularChannel";
 import { upsertChannelData } from "./upsertChannelData";
 import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
-import { getServiceAccount } from "./getServiceAccount";
 import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
 // import { deleteChannel } from "./tmpFunc/deleteChannel";
 // import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
-// import { batchGetServiceAccount } from "./tmpFunc/batchGetServiceAccount";
 
 export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "1GB" })("0 0,12 * * *").onRun(
   sentryWrapper(async (context) => {
@@ -56,16 +52,6 @@ export const updateVideoPubSub = functions
   .onPublish(
     sentryWrapper(async (message) => {
       return await updateVideo(message.json as PopularVideoJsonType);
-    }),
-  );
-
-export const getServiceAccountPubSub = functions
-  .runWith({ memory: "1GB", maxInstances: 3 })
-  .pubsub.topic(ServiceAccountByYoutubeTopic)
-  .onPublish(
-    sentryWrapper(async (message) => {
-      const { channelId } = message.json as ServiceAccountByYoutubeJsonType;
-      return await getServiceAccount(channelId);
     }),
   );
 
@@ -122,14 +108,6 @@ export const getVideoCategoriesTest = functions.https.onRequest(
       .filter((category) => category.snippet.assignable)
       .map((category) => ({ text: category.snippet.title, value: category.id }));
     res.send({ result });
-  }),
-);
-
-export const getServiceAccountTest = functions.https.onRequest(
-  sentryWrapper(async (req, res) => {
-    const channelId = "UCHp2q2i85qt_9nn2H7AvGOw";
-    const result = await getServiceAccount(channelId);
-    res.send(result);
   }),
 );
 

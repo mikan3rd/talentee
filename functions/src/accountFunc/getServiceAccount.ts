@@ -1,10 +1,10 @@
 import { PubSub } from "@google-cloud/pubsub";
 
 import {
+  AccountCollectionPath,
   InstagramUserCollectionPath,
   TiktokUserCollectionPath,
   TwitterUserCollectionPath,
-  YoutubeChannelCollectionPath,
   db,
 } from "../firebase/collectionPath";
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
@@ -17,21 +17,23 @@ import {
   UpsertTwitterUserTopic,
 } from "../firebase/topic";
 import { toBufferJson } from "../common/utils";
+import { crawlOtherServiceLink } from "../youtubeFunc/common/crawlOtherServiceLink";
 
-import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
+export const getServiceAccount = async (accountId: string) => {
+  const accountCollection = db.collection(AccountCollectionPath);
+  const accountRef = accountCollection.doc(accountId);
+  const accountDoc = await accountRef.get();
+  const { youtubeMainRef } = accountDoc.data() as IAccountData;
 
-export const getServiceAccount = async (channelId: string) => {
-  const linkUrls = await crawlOtherServiceLink(channelId);
-  const serviceAccounts = bulkJudgeServiceAccount(linkUrls);
+  let linkUrls: string[] = [];
 
-  const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
-  const youtubeChannel = await youtubeChannelCollection.doc(channelId).get();
-
-  if (!youtubeChannel.exists) {
-    return false;
+  if (youtubeMainRef) {
+    const { id } = (await youtubeMainRef.get()).data();
+    const urls = await crawlOtherServiceLink(id);
+    linkUrls = linkUrls.concat(urls);
   }
-  const channelData = youtubeChannel.data();
-  const accountId = channelData.accountRef.id;
+
+  const serviceAccounts = bulkJudgeServiceAccount(linkUrls);
 
   const pubSub = new PubSub();
   for (const serviceAccount of serviceAccounts) {
