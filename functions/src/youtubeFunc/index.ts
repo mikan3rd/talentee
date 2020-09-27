@@ -11,8 +11,6 @@ import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
-// import { deleteChannel } from "./tmpFunc/deleteChannel";
-// import { saveAllChannelVideo } from "./tmpFunc/saveAllChannelVideo";
 
 export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "1GB" })("0 0,12 * * *").onRun(
   sentryWrapper(async (context) => {
@@ -46,7 +44,8 @@ export const updateVideoPubSub = functions
   .pubsub.topic(Topic.PopularVideo)
   .onPublish(
     sentryWrapper(async (message) => {
-      return await updateVideo(message.json as PopularVideoJsonType);
+      const { channelId, videoCategories } = message.json as PopularVideoJsonType;
+      return await updateVideo(channelId, videoCategories);
     }),
   );
 
@@ -106,17 +105,11 @@ export const getVideoCategoriesTest = functions.https.onRequest(
   }),
 );
 
-// ===== TMP =====
-// export const deleteChannelTmp = functions.https.onRequest(
-//   sentryWrapper(async (req, res) => {
-//     const result = await deleteChannel();
-//     res.send({ result });
-//   }),
-// );
-
-// export const saveAllChannelVideoTmp = functions.runWith({ memory: "1GB" }).https.onRequest(
-//   sentryWrapper(async (req, res) => {
-//     const result = await saveAllChannelVideo();
-//     res.send({ result });
-//   }),
-// );
+export const updateVideoTest = functions.https.onRequest(
+  sentryWrapper(async (req, res) => {
+    const channelId = "UCFOsYGDAw16cr57cCqdJdVQ";
+    const videoCategories = [];
+    const result = await updateVideo(channelId, videoCategories);
+    res.send({ result });
+  }),
+);

@@ -28,7 +28,7 @@ export const saveChannelPopularVideo = async (
     id: videoIds.slice(0, 49),
   });
 
-  const videoCategoryIds: string[] = [];
+  const videoCategoryIdsObject: { [key: string]: number } = {};
 
   for (const item of videoResponse.data.items) {
     const {
@@ -54,11 +54,25 @@ export const saveChannelPopularVideo = async (
 
     await videoRef.set(videoData, { merge: true });
 
-    videoCategoryIds.push(categoryId);
+    if (!videoCategoryIdsObject[categoryId]) {
+      videoCategoryIdsObject[categoryId] = 0;
+    }
+    videoCategoryIdsObject[categoryId] += 1;
   }
 
-  const uniqueVideoCategoryIds = Array.from(new Set(videoCategoryIds));
-  const uniqueVideoCategories = videoCategories.filter((category) => uniqueVideoCategoryIds.includes(category.id));
+  const videoCategoryIds = Object.entries(videoCategoryIdsObject)
+    .map(([key, value]) => ({ key, value }))
+    .sort((a, b) => (a.value > b.value ? -1 : 1))
+    .map(({ key, value }) => key);
 
-  return { uniqueVideoCategoryIds, uniqueVideoCategories };
+  const uniqueVideoCategories = videoCategoryIds.map((categoryId) =>
+    videoCategories.find((category) => category.id === categoryId),
+  );
+
+  return {
+    videoCategoryIds,
+    uniqueVideoCategories,
+    mainVideoCategoryId: videoCategoryIds[0],
+    mainVideoCategory: uniqueVideoCategories[0],
+  };
 };

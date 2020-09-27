@@ -1,20 +1,27 @@
 import * as admin from "firebase-admin";
+import { youtube_v3 } from "googleapis";
 
 import { YoutubeChannelCollectionPath } from "../firebase/collectionPath";
-import { PopularVideoJsonType } from "../firebase/topic";
 
 import { saveChannelPopularVideo } from "./common/saveChannelPopularVideo";
 
-export const updateVideo = async (data: PopularVideoJsonType) => {
-  const { channelId, videoCategories } = data;
-
+export const updateVideo = async (channelId: string, videoCategories: youtube_v3.Schema$VideoCategory[]) => {
   const db = admin.firestore();
   const youtubeChannelCollection = db.collection(YoutubeChannelCollectionPath);
 
-  const { uniqueVideoCategoryIds, uniqueVideoCategories } = await saveChannelPopularVideo(channelId, videoCategories);
+  const {
+    videoCategoryIds,
+    uniqueVideoCategories,
+    mainVideoCategoryId,
+    mainVideoCategory,
+  } = await saveChannelPopularVideo(channelId, videoCategories);
+
   const channnelData = {
-    videoCategoryIds: uniqueVideoCategoryIds,
+    mainVideoCategoryId,
+    mainVideoCategory,
+    videoCategoryIds,
     videoCategories: uniqueVideoCategories,
   };
+
   youtubeChannelCollection.doc(channelId).set(channnelData, { merge: true });
 };
