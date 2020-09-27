@@ -19,12 +19,13 @@ import {
 import { toBufferJson } from "../common/utils";
 import { crawlOtherServiceLink } from "../youtubeFunc/common/crawlOtherServiceLink";
 import { getUserById } from "../twitterFunc/common/api";
+import { getUserDetail } from "../tiktokFunc/common/getUserDetail";
 
 export const getServiceAccount = async (accountId: string) => {
   const accountCollection = db.collection(AccountCollectionPath);
   const accountRef = accountCollection.doc(accountId);
   const accountDoc = await accountRef.get();
-  const { youtubeMainRef, twitterMainRef } = accountDoc.data() as IAccountData;
+  const { youtubeMainRef, twitterMainRef, tiktokMainRef } = accountDoc.data() as IAccountData;
 
   let linkUrls: string[] = [];
 
@@ -40,6 +41,20 @@ export const getServiceAccount = async (accountId: string) => {
       data: { url },
     } = await getUserById(id);
     linkUrls.push(url);
+  }
+
+  if (tiktokMainRef) {
+    const {
+      user: { uniqueId },
+    } = (await tiktokMainRef.get()).data() as TiktokUserType;
+    const {
+      userData: {
+        user: {
+          bioLink: { link },
+        },
+      },
+    } = await getUserDetail(uniqueId);
+    linkUrls.push(link);
   }
 
   const serviceAccounts = bulkJudgeServiceAccount(linkUrls);
