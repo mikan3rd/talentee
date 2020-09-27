@@ -7,6 +7,7 @@ export type serviceNameType =
   | "nicovideo_user"
   | "tiktok"
   | "tiktok_vt"
+  | "youtube"
   | "other";
 
 export const bulkJudgeServiceAccount = (urls: string[]) => {
@@ -24,7 +25,7 @@ export const judgeServiceAccount = (url: string) => {
   } catch (e) {
     console.error(e);
     return {
-      serviceName: "other",
+      serviceName: "other" as serviceNameType,
       username: "",
       url,
     };
@@ -48,6 +49,8 @@ export const judgeServiceAccount = (url: string) => {
   } else if (/tiktok.com/.test(url)) {
     serviceName = "tiktok" as const;
     username = username.replace("@", "");
+  } else if (/youtube.com/.test(url)) {
+    serviceName = "youtube" as const;
   }
 
   const result = {

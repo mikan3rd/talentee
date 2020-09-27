@@ -1,11 +1,6 @@
 import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";
-import {
-  ServiceAccountJsonType,
-  ServiceAccountTopic,
-  UpdateAccountJsonType,
-  UpdateAccountTopic,
-} from "../firebase/topic";
+import { ServiceAccountJsonType, Topic, UpdateAccountJsonType } from "../firebase/topic";
 
 import { getServiceAccount } from "./getServiceAccount";
 import { batchUpdateAccount } from "./batchUpdateAccount";
@@ -26,7 +21,7 @@ export const tweetAccountByYoutubeScheduler = scheduleFunctions()("1 * * * *").o
 
 export const updateAccountPubSub = functions
   .runWith({ maxInstances: 10 })
-  .pubsub.topic(UpdateAccountTopic)
+  .pubsub.topic(Topic.UpdateAccount)
   .onPublish(
     sentryWrapper(async (message) => {
       const { accountId, videoCategories } = message.json as UpdateAccountJsonType;
@@ -36,7 +31,7 @@ export const updateAccountPubSub = functions
 
 export const getServiceAccountPubSub = functions
   .runWith({ memory: "1GB", maxInstances: 3 })
-  .pubsub.topic(ServiceAccountTopic)
+  .pubsub.topic(Topic.ServiceAccount)
   .onPublish(
     sentryWrapper(async (message) => {
       const { accountId } = message.json as ServiceAccountJsonType;

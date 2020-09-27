@@ -1,12 +1,12 @@
 import { sentryWrapper } from "../common/sentry";
 import { functions } from "../firebase/functions";
-import { UpsertInstagramUserJsonType, UpsertInstagramUserTopic } from "../firebase/topic";
+import { Topic, UpsertInstagramUserJsonType } from "../firebase/topic";
 
 import { upsertProfile } from "./upsertProfile";
 
 export const upsertInstagramProfilePubSub = functions
   .runWith({ memory: "1GB", maxInstances: 1 })
-  .pubsub.topic(UpsertInstagramUserTopic)
+  .pubsub.topic(Topic.UpsertInstagramUser)
   .onPublish(
     sentryWrapper(async (message) => {
       const { accountId, username } = message.json as UpsertInstagramUserJsonType;

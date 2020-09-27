@@ -5,16 +5,16 @@ import {
   InstagramUserCollectionPath,
   TiktokUserCollectionPath,
   TwitterUserCollectionPath,
+  YoutubeChannelCollectionPath,
   db,
 } from "../firebase/collectionPath";
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import {
+  Topic,
   UpsertInstagramUserJsonType,
-  UpsertInstagramUserTopic,
   UpsertTiktokUserJsonType,
-  UpsertTiktokUserTopic,
   UpsertTwitterUserJsonType,
-  UpsertTwitterUserTopic,
+  UpsertYoutubeChannelJsonType,
 } from "../firebase/topic";
 import { toBufferJson } from "../common/utils";
 import { crawlOtherServiceLink } from "../youtubeFunc/common/crawlOtherServiceLink";
@@ -22,6 +22,8 @@ import { getUserById } from "../twitterFunc/common/api";
 import { getUserDetail } from "../tiktokFunc/common/getUserDetail";
 
 export const getServiceAccount = async (accountId: string) => {
+  console.log(`accountId: ${accountId}`);
+
   const accountCollection = db.collection(AccountCollectionPath);
   const accountRef = accountCollection.doc(accountId);
   const accountDoc = await accountRef.get();
@@ -49,12 +51,12 @@ export const getServiceAccount = async (accountId: string) => {
     } = (await tiktokMainRef.get()).data() as TiktokUserType;
     const {
       userData: {
-        user: {
-          bioLink: { link },
-        },
+        user: { bioLink },
       },
     } = await getUserDetail(uniqueId);
-    linkUrls.push(link);
+    if (bioLink) {
+      linkUrls.push(bioLink.link);
+    }
   }
 
   const serviceAccounts = bulkJudgeServiceAccount(linkUrls);
@@ -69,6 +71,21 @@ export const getServiceAccount = async (accountId: string) => {
       continue;
     }
 
+    if (serviceName == "youtube") {
+      const youtubeChannelDoc = await db
+        .collection(YoutubeChannelCollectionPath)
+        .where("id", "==", username)
+        .limit(1)
+        .get();
+
+      if (!youtubeChannelDoc.empty) {
+        continue;
+      }
+
+      const channelTopicdata: UpsertYoutubeChannelJsonType = { channelId: username, accountId };
+      await pubSub.topic(Topic.UpsertYoutubeChannel).publish(toBufferJson(channelTopicdata));
+    }
+
     if (serviceName === "twitter") {
       const twitterUserDoc = await db
         .collection(TwitterUserCollectionPath)
@@ -81,7 +98,7 @@ export const getServiceAccount = async (accountId: string) => {
       }
 
       const twitterUserTopicData: UpsertTwitterUserJsonType = { accountId, username };
-      await pubSub.topic(UpsertTwitterUserTopic).publish(toBufferJson(twitterUserTopicData));
+      await pubSub.topic(Topic.UpsertTwitterUser).publish(toBufferJson(twitterUserTopicData));
     }
 
     if (serviceName === "instagram") {
@@ -96,7 +113,7 @@ export const getServiceAccount = async (accountId: string) => {
       }
 
       const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username };
-      await pubSub.topic(UpsertInstagramUserTopic).publish(toBufferJson(instagramUserTopicData));
+      await pubSub.topic(Topic.UpsertInstagramUser).publish(toBufferJson(instagramUserTopicData));
     }
 
     if (serviceName === "tiktok") {
@@ -111,7 +128,7 @@ export const getServiceAccount = async (accountId: string) => {
       }
 
       const tiktokUserTopicData: UpsertTiktokUserJsonType = { accountId, uniqueId: username };
-      await pubSub.topic(UpsertTiktokUserTopic).publish(toBufferJson(tiktokUserTopicData));
+      await pubSub.topic(Topic.UpsertTiktokUser).publish(toBufferJson(tiktokUserTopicData));
     }
   }
 

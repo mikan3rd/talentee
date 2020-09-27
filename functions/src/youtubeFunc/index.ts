@@ -2,12 +2,7 @@ import dayjs from "dayjs";
 
 import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";
-import {
-  PopularVideoJsonType,
-  PopularVideoTopic,
-  UpsertYoutubeChannelJsonType,
-  UpsertYoutubeChannelTopic,
-} from "../firebase/topic";
+import { PopularVideoJsonType, Topic, UpsertYoutubeChannelJsonType } from "../firebase/topic";
 
 import { getVideoCategories } from "./common/getVideoCategories";
 import { savePopularChannel } from "./savePopularChannel";
@@ -39,7 +34,7 @@ export const getYoutubePopularChannelMonthly = scheduleFunctions()("0 2 * * *").
   }),
 );
 
-export const upsertChannelPubsub = functions.pubsub.topic(UpsertYoutubeChannelTopic).onPublish(
+export const upsertChannelPubsub = functions.pubsub.topic(Topic.UpsertYoutubeChannel).onPublish(
   sentryWrapper(async (message) => {
     const { accountId, channelId } = message.json as UpsertYoutubeChannelJsonType;
     return await upsertChannelData(accountId, channelId);
@@ -48,7 +43,7 @@ export const upsertChannelPubsub = functions.pubsub.topic(UpsertYoutubeChannelTo
 
 export const updateVideoPubSub = functions
   .runWith({ memory: "1GB", maxInstances: 10 })
-  .pubsub.topic(PopularVideoTopic)
+  .pubsub.topic(Topic.PopularVideo)
   .onPublish(
     sentryWrapper(async (message) => {
       return await updateVideo(message.json as PopularVideoJsonType);
@@ -123,12 +118,5 @@ export const getVideoCategoriesTest = functions.https.onRequest(
 //   sentryWrapper(async (req, res) => {
 //     const result = await saveAllChannelVideo();
 //     res.send({ result });
-//   }),
-// );
-
-// export const batchGetServiceAccountTmp = functions.https.onRequest(
-//   sentryWrapper(async (req, res) => {
-//     await batchGetServiceAccount();
-//     res.send();
 //   }),
 // );

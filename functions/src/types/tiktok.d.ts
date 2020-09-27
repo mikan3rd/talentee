@@ -10,7 +10,7 @@ type TiktokUserInfoType = {
   secUid: string;
   openFavorite: boolean;
   relation: number;
-  bioLink: { link: string };
+  bioLink?: { link: string };
 };
 
 type TiktokUserStatType = {

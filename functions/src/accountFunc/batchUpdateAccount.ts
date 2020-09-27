@@ -3,7 +3,7 @@ import { PubSub } from "@google-cloud/pubsub";
 import dayjs from "dayjs";
 
 import { toBufferJson } from "../common/utils";
-import { UpdateAccountJsonType, UpdateAccountTopic } from "../firebase/topic";
+import { Topic, UpdateAccountJsonType } from "../firebase/topic";
 import { AccountCollectionPath } from "../firebase/collectionPath";
 import { getVideoCategories } from "../youtubeFunc/common/getVideoCategories";
 
@@ -29,6 +29,6 @@ export const batchUpdateAccount = async () => {
   const pubSub = new PubSub();
   for (const accountId of accountIds) {
     const data: UpdateAccountJsonType = { accountId, videoCategories };
-    await pubSub.topic(UpdateAccountTopic).publish(toBufferJson(data));
+    await pubSub.topic(Topic.UpdateAccount).publish(toBufferJson(data));
   }
 };

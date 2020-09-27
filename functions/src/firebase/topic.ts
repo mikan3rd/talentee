@@ -1,13 +1,15 @@
 import { youtube_v3 } from "googleapis";
 
-export const UpdateAccountTopic = "UpdateAccountTopic" as const;
-export const UpsertYoutubeChannelTopic = "UpsertYoutubeChannelTopic" as const;
-export const UpsertTwitterUserTopic = "UpsertTwitterUserTopic" as const;
-export const UpsertInstagramUserTopic = "UpsertInstagramUserTopic" as const;
-export const UpsertTiktokUserTopic = "UpsertTiktokUserTopic" as const;
-export const PopularVideoTopic = "PopularVideoTopic" as const;
-export const PopularTweetTopic = "PopularTweetTopic" as const;
-export const ServiceAccountTopic = "ServiceAccountTopic" as const;
+export const Topic = {
+  UpdateAccount: "UpdateAccount" as const,
+  UpsertYoutubeChannel: "UpsertYoutubeChannel" as const,
+  UpsertTwitterUser: "UpsertTwitterUser" as const,
+  UpsertInstagramUser: "UpsertInstagramUser" as const,
+  UpsertTiktokUser: "UpsertTiktokUser" as const,
+  PopularVideo: "PopularVideo" as const,
+  PopularTweet: "PopularTweet" as const,
+  ServiceAccount: "ServiceAccount" as const,
+};
 
 export type UpdateAccountJsonType = {
   accountId: string;

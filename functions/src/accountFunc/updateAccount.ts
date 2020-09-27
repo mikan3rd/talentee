@@ -3,20 +3,14 @@ import { youtube_v3 } from "googleapis";
 
 import { toBufferJson } from "../common/utils";
 import {
-  PopularTweetTopic,
   PopularTweetsonType,
   PopularVideoJsonType,
-  PopularVideoTopic,
   ServiceAccountJsonType,
-  ServiceAccountTopic,
+  Topic,
   UpsertInstagramUserJsonType,
-  UpsertInstagramUserTopic,
   UpsertTiktokUserJsonType,
-  UpsertTiktokUserTopic,
   UpsertTwitterUserJsonType,
-  UpsertTwitterUserTopic,
   UpsertYoutubeChannelJsonType,
-  UpsertYoutubeChannelTopic,
 } from "../firebase/topic";
 import { AccountCollectionPath, db } from "../firebase/collectionPath";
 
@@ -35,31 +29,31 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
   const pubSub = new PubSub();
 
   const topicData: ServiceAccountJsonType = { accountId };
-  await pubSub.topic(ServiceAccountTopic).publish(toBufferJson(topicData));
+  await pubSub.topic(Topic.ServiceAccount).publish(toBufferJson(topicData));
 
   if (youtubeMainRef) {
     const { id } = (await youtubeMainRef.get()).data();
 
     const channelTopicdata: UpsertYoutubeChannelJsonType = { channelId: id, accountId };
-    await pubSub.topic(UpsertYoutubeChannelTopic).publish(toBufferJson(channelTopicdata));
+    await pubSub.topic(Topic.UpsertYoutubeChannel).publish(toBufferJson(channelTopicdata));
 
     const videoTopicdata: PopularVideoJsonType = { channelId: id, videoCategories };
-    await pubSub.topic(PopularVideoTopic).publish(toBufferJson(videoTopicdata));
+    await pubSub.topic(Topic.PopularVideo).publish(toBufferJson(videoTopicdata));
   }
 
   if (twitterMainRef) {
     const { id, username } = (await twitterMainRef.get()).data() as TwitterUserDataType;
     const twitterUserTopicData: UpsertTwitterUserJsonType = { accountId, username };
-    await pubSub.topic(UpsertTwitterUserTopic).publish(toBufferJson(twitterUserTopicData));
+    await pubSub.topic(Topic.UpsertTwitterUser).publish(toBufferJson(twitterUserTopicData));
 
     const tweetTopicdata: PopularTweetsonType = { username, userId: id };
-    await pubSub.topic(PopularTweetTopic).publish(toBufferJson(tweetTopicdata));
+    await pubSub.topic(Topic.PopularTweet).publish(toBufferJson(tweetTopicdata));
   }
 
   if (instagramMainRef) {
     const { username } = (await instagramMainRef.get()).data() as InstagramUserType;
     const instagramUserTopicData: UpsertInstagramUserJsonType = { accountId, username };
-    await pubSub.topic(UpsertInstagramUserTopic).publish(toBufferJson(instagramUserTopicData));
+    await pubSub.topic(Topic.UpsertInstagramUser).publish(toBufferJson(instagramUserTopicData));
   }
 
   if (tiktokMainRef) {
@@ -67,7 +61,7 @@ export const updateAccount = async (accountId: string, videoCategories: youtube_
       user: { uniqueId },
     } = (await tiktokMainRef.get()).data() as TiktokUserType;
     const tiktokUserTopicData: UpsertTiktokUserJsonType = { accountId, uniqueId };
-    await pubSub.topic(UpsertTiktokUserTopic).publish(toBufferJson(tiktokUserTopicData));
+    await pubSub.topic(Topic.UpsertTiktokUser).publish(toBufferJson(tiktokUserTopicData));
   }
 
   return true;

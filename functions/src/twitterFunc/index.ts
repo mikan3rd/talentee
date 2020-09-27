@@ -1,18 +1,13 @@
 import { sentryWrapper } from "../common/sentry";
 import { functions } from "../firebase/functions";
-import {
-  PopularTweetTopic,
-  PopularTweetsonType,
-  UpsertTwitterUserJsonType,
-  UpsertTwitterUserTopic,
-} from "../firebase/topic";
+import { PopularTweetsonType, Topic, UpsertTwitterUserJsonType } from "../firebase/topic";
 
 import { upsertUserData } from "./upsertUserData";
 import { getPopularTweet } from "./getPopularTweet";
 
 export const upsertTwitterUserDataPubSub = functions
   .runWith({ maxInstances: 10 })
-  .pubsub.topic(UpsertTwitterUserTopic)
+  .pubsub.topic(Topic.UpsertTwitterUser)
   .onPublish(
     sentryWrapper(async (message) => {
       const { accountId, username } = message.json as UpsertTwitterUserJsonType;
@@ -31,7 +26,7 @@ export const upsertTwitterUserDataTest = functions.https.onRequest(
 
 export const getPopularTweetPubSub = functions
   .runWith({ memory: "1GB", maxInstances: 10 })
-  .pubsub.topic(PopularTweetTopic)
+  .pubsub.topic(Topic.PopularTweet)
   .onPublish(
     sentryWrapper(async (message) => {
       const { username, userId } = message.json as PopularTweetsonType;
