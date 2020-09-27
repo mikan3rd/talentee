@@ -18,12 +18,13 @@ import {
 } from "../firebase/topic";
 import { toBufferJson } from "../common/utils";
 import { crawlOtherServiceLink } from "../youtubeFunc/common/crawlOtherServiceLink";
+import { getUserById } from "../twitterFunc/common/api";
 
 export const getServiceAccount = async (accountId: string) => {
   const accountCollection = db.collection(AccountCollectionPath);
   const accountRef = accountCollection.doc(accountId);
   const accountDoc = await accountRef.get();
-  const { youtubeMainRef } = accountDoc.data() as IAccountData;
+  const { youtubeMainRef, twitterMainRef } = accountDoc.data() as IAccountData;
 
   let linkUrls: string[] = [];
 
@@ -31,6 +32,14 @@ export const getServiceAccount = async (accountId: string) => {
     const { id } = (await youtubeMainRef.get()).data();
     const urls = await crawlOtherServiceLink(id);
     linkUrls = linkUrls.concat(urls);
+  }
+
+  if (twitterMainRef) {
+    const { id } = (await twitterMainRef.get()).data() as TwitterUserDataType;
+    const {
+      data: { url },
+    } = await getUserById(id);
+    linkUrls.push(url);
   }
 
   const serviceAccounts = bulkJudgeServiceAccount(linkUrls);
