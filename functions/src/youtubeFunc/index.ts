@@ -11,6 +11,7 @@ import { updateVideo } from "./updateVideo";
 import { saveTrendChannel } from "./saveTrendChannel";
 import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
+import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
 
 export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "1GB" })("0 0,12 * * *").onRun(
   sentryWrapper(async (context) => {
@@ -110,6 +111,14 @@ export const updateVideoTest = functions.https.onRequest(
     const channelId = "UCFOsYGDAw16cr57cCqdJdVQ";
     const videoCategories = [];
     const result = await updateVideo(channelId, videoCategories);
+    res.send({ result });
+  }),
+);
+
+export const crawlOtherServiceLinkTest = functions.https.onRequest(
+  sentryWrapper(async (req, res) => {
+    const channelId = "UCFOsYGDAw16cr57cCqdJdVQ";
+    const result = await crawlOtherServiceLink(channelId);
     res.send({ result });
   }),
 );

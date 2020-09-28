@@ -1,50 +1,64 @@
-import { puppeteerSetup } from "../../common/utils";
+import { axiosSetup } from "../../common/utils";
+
+type ytInitialDataType = {
+  contents: {
+    twoColumnBrowseResultsRenderer: {
+      tabs: {
+        tabRenderer: {
+          title: string;
+          selected: boolean;
+          content: {
+            sectionListRenderer: {
+              contents: {
+                itemSectionRenderer: {
+                  contents: {
+                    channelAboutFullMetadataRenderer: {
+                      primaryLinks: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
+                    };
+                  }[];
+                };
+              }[];
+            };
+          };
+        };
+      }[];
+    };
+  };
+};
 
 export const crawlOtherServiceLink = async (channelId: string) => {
-  const { browser, page } = await puppeteerSetup();
-
-  await page.setRequestInterception(true);
-  page.on("request", (request) => {
-    const resourceType = request.resourceType();
-    const resouceUrl = request.url();
-    const abortCondition =
-      ["image", "stylesheet", "font", "xhr", "manifest"].includes(resourceType) ||
-      (resourceType === "script" && !/youtube.com/.test(resouceUrl)) ||
-      (resourceType === "other" && !/ytimg.com/.test(resouceUrl));
-    if (abortCondition) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
+  const axios = axiosSetup();
 
   const targetUrl = `https://www.youtube.com/channel/${channelId}/about`;
   console.log(targetUrl);
-  await page.goto(targetUrl);
 
-  const LinkSelector = "#link-list-container a" as const;
-  try {
-    await page.waitForSelector(LinkSelector);
-  } catch (e) {
-    console.error(e);
-    await browser.close();
+  const { data } = await axios.get<string>(targetUrl);
+
+  const matchResults = data.match(/{"responseContext":(.*})(?=(;))/);
+  if (!matchResults) {
+    return null;
+  }
+
+  const ytInitialData: ytInitialDataType = JSON.parse(matchResults[0]);
+
+  const targetTab = ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.find((tab) => tab.tabRenderer.selected);
+  if (!targetTab) {
     return [];
   }
 
-  const elements = await page.$$(LinkSelector);
-
-  const linkUrls: string[] = [];
-  for (const ele of elements) {
-    const property = await ele.getProperty("href");
-    const value = (await property.jsonValue()) as string;
-    const decodeUrl = decodeURIComponent(value);
-    const url = new URL(decodeUrl).searchParams.get("q");
-    if (url) {
-      linkUrls.push(url);
+  const targetSection = targetTab.tabRenderer.content.sectionListRenderer.contents[0];
+  const targetItem = targetSection.itemSectionRenderer.contents[0];
+  const linkUrls = targetItem.channelAboutFullMetadataRenderer.primaryLinks.map((link) => {
+    const redirectUrl = link.navigationEndpoint.urlEndpoint.url;
+    console.log(redirectUrl);
+    const decodeUrl = decodeURIComponent(redirectUrl);
+    const UrlObj = new URL(decodeUrl);
+    const queryUrl = UrlObj.searchParams.get("q");
+    if (queryUrl) {
+      return queryUrl;
     }
-  }
-
-  await browser.close();
+    return `${UrlObj.origin}${UrlObj.pathname}`;
+  });
 
   return linkUrls;
 };

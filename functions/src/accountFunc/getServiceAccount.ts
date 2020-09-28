@@ -27,7 +27,7 @@ export const getServiceAccount = async (accountId: string) => {
   const accountCollection = db.collection(AccountCollectionPath);
   const accountRef = accountCollection.doc(accountId);
   const accountDoc = await accountRef.get();
-  const { youtubeMainRef, twitterMainRef, tiktokMainRef } = accountDoc.data() as IAccountData;
+  const { youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = accountDoc.data() as IAccountData;
 
   let linkUrls: string[] = [];
 
@@ -72,6 +72,10 @@ export const getServiceAccount = async (accountId: string) => {
     }
 
     if (serviceName == "youtube") {
+      if (youtubeMainRef) {
+        continue;
+      }
+
       const youtubeChannelDoc = await db
         .collection(YoutubeChannelCollectionPath)
         .where("id", "==", username)
@@ -87,6 +91,10 @@ export const getServiceAccount = async (accountId: string) => {
     }
 
     if (serviceName === "twitter") {
+      if (twitterMainRef) {
+        continue;
+      }
+
       const twitterUserDoc = await db
         .collection(TwitterUserCollectionPath)
         .where("username", "==", username)
@@ -102,6 +110,10 @@ export const getServiceAccount = async (accountId: string) => {
     }
 
     if (serviceName === "instagram") {
+      if (instagramMainRef) {
+        continue;
+      }
+
       const instagramUserDoc = await db
         .collection(InstagramUserCollectionPath)
         .where("username", "==", username)
@@ -117,6 +129,10 @@ export const getServiceAccount = async (accountId: string) => {
     }
 
     if (serviceName === "tiktok") {
+      if (tiktokMainRef) {
+        continue;
+      }
+
       const tiktokUserDoc = await db
         .collection(TiktokUserCollectionPath)
         .where("uniqueId", "==", username)
