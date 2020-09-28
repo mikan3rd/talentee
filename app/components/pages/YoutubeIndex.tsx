@@ -38,15 +38,23 @@ export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType
         css={css`
           display: flex;
           align-items: center;
+          @media (max-width: 600px) {
+            display: block;
+          }
         `}
       >
-        <Icon name="youtube" color="red" size="big" />
-        YouTubeランキング
+        <div>
+          <Icon name="youtube" color="red" size="big" />
+          YouTubeランキング
+        </div>
         <span
           css={css`
             color: black;
             font-size: 18px;
             margin-left: 10px;
+            @media (max-width: 600px) {
+              margin-left: 0;
+            }
           `}
         >
           {categoryOption.text}
@@ -67,7 +75,7 @@ export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType
             background-color: #f7f7f7;
             transition: all 0.5s ease;
             overflow-x: scroll;
-            padding-bottom: 2px;
+            padding: 4px 0;
             .item {
               transition: all 0.5s ease !important;
             }
@@ -76,7 +84,16 @@ export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType
       >
         {VideoCategorieOptions.map((option) => {
           return (
-            <Menu.Item key={option.value} id={`youtube_category_${option.value}`}>
+            <Menu.Item
+              key={option.value}
+              id={`youtube_category_${option.value}`}
+              css={css`
+                &&&& {
+                  padding: 0;
+                  height: 36px;
+                }
+              `}
+            >
               <Button
                 color="red"
                 basic={option.value !== categoryOption.value}
