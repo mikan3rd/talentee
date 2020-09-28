@@ -40,9 +40,14 @@ export const getServiceAccount = async (accountId: string) => {
   if (twitterMainRef) {
     const { id } = (await twitterMainRef.get()).data() as TwitterUserDataType;
     const {
-      data: { url },
+      data: {
+        entities: { url },
+      },
     } = await getUserById(id);
-    linkUrls.push(url);
+    if (url) {
+      const urls = url.urls.map((url) => url.expanded_url);
+      linkUrls = linkUrls.concat(urls);
+    }
   }
 
   if (tiktokMainRef) {
