@@ -8,7 +8,7 @@ import { TiktokSection, TopSection } from "../components/templates/BreadcrumbSec
 const InstagramIndexPage = React.memo(() => {
   return (
     <>
-      <Meta title="TikTok" description="人気のTikTokランキング" />
+      <Meta title="TikTokランキング" description="人気のTikTokランキング" />
 
       <Breadcrumb size="big">
         <TopSection />

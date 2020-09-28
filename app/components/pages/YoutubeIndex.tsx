@@ -2,7 +2,8 @@ import React from "react";
 import { Button, Divider, Dropdown, Header, Icon } from "semantic-ui-react";
 import { css } from "@emotion/core";
 
-import { VideoCategorieOptions, useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
+import { VideoCategorieOptions, VideoCategoryOptionType } from "../../common/youtubeVideoCategory";
+import { useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
 import { YoutubeCard } from "../organisms/YoutubeCard";
 import {
   IndexLinkButton,
@@ -11,14 +12,10 @@ import {
   TwitterIndexLinkButton,
 } from "../atoms/IndexLinkButton";
 
-export const YoutubeIndex = React.memo(() => {
-  const {
-    selectedCategory,
-    youtubeData,
-    hasNext,
-    getYoutubeNextPageData,
-    changeSelectedCategory,
-  } = useYoutubeIndexData();
+export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType }>(({ categoryOption }) => {
+  const { youtubeData, hasNext, getYoutubeNextPageData, changeSelectedCategory } = useYoutubeIndexData(
+    categoryOption.value,
+  );
 
   return (
     <>
@@ -31,7 +28,7 @@ export const YoutubeIndex = React.memo(() => {
         `}
       >
         <Icon name="youtube" color="red" size="big" />
-        YouTube ランキング
+        YouTubeランキング
       </Header>
 
       <Divider />
@@ -60,7 +57,7 @@ export const YoutubeIndex = React.memo(() => {
         <Dropdown
           selection
           options={VideoCategorieOptions}
-          value={selectedCategory}
+          value={categoryOption.value}
           onChange={(e, d) => changeSelectedCategory(d.value as string)}
           css={css`
             &&& {

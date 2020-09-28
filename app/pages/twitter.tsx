@@ -8,7 +8,7 @@ import { TopSection, TwitterSection } from "../components/templates/BreadcrumbSe
 const TwitterIndexPage = React.memo(() => {
   return (
     <>
-      <Meta title="Twitter" description="人気のTwitterランキング" />
+      <Meta title="Twitterランキング" description="人気のTwitterランキング" />
 
       <Breadcrumb size="big">
         <TopSection />

@@ -31,7 +31,7 @@ export const TiktokIndex = React.memo(() => {
             }
           `}
         />
-        TikTok ランキング
+        TikTokランキング
       </Header>
 
       <Divider />
