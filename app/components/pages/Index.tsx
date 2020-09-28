@@ -85,7 +85,7 @@ export const Index = React.memo(() => {
               </span>
             </div>
 
-            <Link href="/youtube" passHref>
+            <Link href="/youtube/all" passHref>
               <Button
                 color="red"
                 as="a"
@@ -117,7 +117,7 @@ export const Index = React.memo(() => {
               text-align: right;
             `}
           >
-            <Link href="/youtube" passHref>
+            <Link href="/youtube/all" passHref>
               <Button
                 color="red"
                 as="a"

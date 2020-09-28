@@ -29,6 +29,15 @@ export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType
       >
         <Icon name="youtube" color="red" size="big" />
         YouTubeランキング
+        <span
+          css={css`
+            color: black;
+            font-size: 18px;
+            margin-left: 10px;
+          `}
+        >
+          {categoryOption.text}
+        </span>
       </Header>
 
       <Divider />
