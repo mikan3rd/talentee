@@ -20,9 +20,29 @@ admin.initializeApp({
 const baseUrl = "https://talentee.jp";
 const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 
+const VideoCategorieOptions = [
+  { text: "すべてのカテゴリ", value: "all" },
+  { text: "映画とアニメ", value: "1" },
+  { text: "自動車と乗り物", value: "2" },
+  { text: "音楽", value: "10" },
+  { text: "ペットと動物", value: "15" },
+  { text: "スポーツ", value: "17" },
+  { text: "旅行とイベント", value: "19" },
+  { text: "ゲーム", value: "20" },
+  { text: "ブログ", value: "22" },
+  { text: "コメディー", value: "23" },
+  { text: "エンターテイメント", value: "24" },
+  { text: "ニュースと政治", value: "25" },
+  { text: "ハウツーとスタイル", value: "26" },
+  { text: "教育", value: "27" },
+  { text: "科学と技術", value: "28" },
+];
+
 (async () => {
   // Ignore Next.js specific files (e.g., _app.js) and API routes.
-  const pages = await globby(["pages/**/*.tsx", "!pages/_*.tsx", "!pages/account"]);
+  const pages = await globby(["pages/**/*.tsx", "!pages/_*.tsx", "!pages/account", "!pages/youtube"]);
+  const youtubePages = VideoCategorieOptions.map((option) => `/youtube/${option.value}`);
+  const accountPages = [];
 
   const db = admin.firestore();
   const youtubeDocs = await db
@@ -30,7 +50,6 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
     .orderBy("statistics.subscriberCount", "desc")
     .limit(100)
     .get();
-  const accountPages = [];
   youtubeDocs.forEach((doc) => {
     const { accountRef } = doc.data();
     const accountPath = `/account/${accountRef.id}`;
@@ -48,8 +67,15 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
     accountPages.push(accountPath);
   });
 
+  const instagramDocs = await db.collection("instagramUser").orderBy("edge_followed_by.count", "desc").limit(100).get();
+  instagramDocs.forEach((doc) => {
+    const { accountRef } = doc.data();
+    const accountPath = `/account/${accountRef.id}`;
+    accountPages.push(accountPath);
+  });
+
   // Combine them into the pages you care about
-  const allPages = [...pages, ...accountPages];
+  const allPages = [...pages, ...youtubePages, ...accountPages];
 
   const sitemap = `
 <?xml version="1.0" encoding="UTF-8"?>
