@@ -10,7 +10,7 @@ import { updateChannel } from "./updateChannel";
 
 const { FieldValue } = admin.firestore;
 
-export const saveChannel = async (channelIds: string[]) => {
+export const saveChannel = async (channelIds: string[], check = true) => {
   const uniqueChannelIds = Array.from(new Set(channelIds));
 
   let channelItems: youtube_v3.Schema$Channel[] = [];
@@ -36,13 +36,13 @@ export const saveChannel = async (channelIds: string[]) => {
       snippet: { country },
     } = item;
 
-    if (country !== "JP") {
+    if (check && country !== "JP") {
       skipNum += 1;
       continue;
     }
 
     const data = formatChannelData(item);
-    if (data.statistics.subscriberCount < 10000 && data.statistics.viewCount < 1000000) {
+    if (check && data.statistics.subscriberCount < 10000 && data.statistics.viewCount < 1000000) {
       skipNum += 1;
       continue;
     }

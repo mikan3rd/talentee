@@ -60,6 +60,7 @@ export const getServiceAccount = async (accountId: string) => {
   }
 
   const serviceAccounts = bulkJudgeServiceAccount(linkUrls);
+  console.log(JSON.stringify(serviceAccounts));
 
   const pubSub = new PubSub();
   for (const serviceAccount of serviceAccounts) {
