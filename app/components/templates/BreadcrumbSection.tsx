@@ -14,9 +14,9 @@ export const TopSection = React.memo<{ active?: boolean }>(({ active = false }) 
 
 export const YoutubeSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
-    <Link href="/youtube">
-      <Breadcrumb.Section href="/youtube" active={active}>
-        YouTube ランキング
+    <Link href="/youtube/all">
+      <Breadcrumb.Section href="/youtube/all" active={active}>
+        YouTubeランキング
       </Breadcrumb.Section>
     </Link>
   );
@@ -24,9 +24,9 @@ export const YoutubeSection = React.memo<{ active?: boolean }>(({ active = false
 
 export const TwitterSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
-    <Link href="/youtube">
+    <Link href="/twitter">
       <Breadcrumb.Section href="/twitter" active={active}>
-        Twitter ランキング
+        Twitterランキング
       </Breadcrumb.Section>
     </Link>
   );
@@ -36,7 +36,7 @@ export const InstagramSection = React.memo<{ active?: boolean }>(({ active = fal
   return (
     <Link href="/instagram">
       <Breadcrumb.Section href="/instagram" active={active}>
-        Instagram ランキング
+        Instagramランキング
       </Breadcrumb.Section>
     </Link>
   );
@@ -46,7 +46,7 @@ export const TiktokSection = React.memo<{ active?: boolean }>(({ active = false 
   return (
     <Link href="/tiktok">
       <Breadcrumb.Section href="/tiktok" active={active}>
-        Tiktok ランキング
+        Tiktokランキング
       </Breadcrumb.Section>
     </Link>
   );

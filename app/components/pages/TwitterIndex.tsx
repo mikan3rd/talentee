@@ -24,7 +24,7 @@ export const TwitterIndex = React.memo(() => {
         `}
       >
         <Icon name="twitter" color="blue" size="big" />
-        Twitter ランキング
+        Twitterランキング
       </Header>
 
       <Divider />

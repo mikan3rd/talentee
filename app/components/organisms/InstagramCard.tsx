@@ -16,7 +16,7 @@ export const InstagramCard = React.memo<{ data: InstagramUserObjectType; rankNum
         }
       `}
     >
-      <Link href={`/account/${accountRef.id}`} passHref>
+      <Link href="/account/[accountId]" as={`/account/${accountRef.id}`} passHref>
         <a
           target="_blank"
           css={css`

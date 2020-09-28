@@ -20,7 +20,7 @@ export const TiktokCard = React.memo<{ data: TiktokUserObjectType; rankNum: numb
         }
       `}
     >
-      <Link href={`/account/${accountRef.id}`} passHref>
+      <Link href="/account/[accountId]" as={`/account/${accountRef.id}`} passHref>
         <a
           target="_blank"
           css={css`

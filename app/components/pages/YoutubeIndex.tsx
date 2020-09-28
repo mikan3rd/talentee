@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, Divider, Dropdown, Header, Icon } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, Menu } from "semantic-ui-react";
 import { css } from "@emotion/core";
 
-import { VideoCategorieOptions, useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
+import { VideoCategorieOptions, VideoCategoryOptionType } from "../../common/youtubeVideoCategory";
+import { useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
 import { YoutubeCard } from "../organisms/YoutubeCard";
 import {
   IndexLinkButton,
@@ -10,15 +11,24 @@ import {
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
 } from "../atoms/IndexLinkButton";
+import { useScrollDirection } from "../../hooks/useScrollDirection";
 
-export const YoutubeIndex = React.memo(() => {
-  const {
-    selectedCategory,
-    youtubeData,
-    hasNext,
-    getYoutubeNextPageData,
-    changeSelectedCategory,
-  } = useYoutubeIndexData();
+export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType }>(({ categoryOption }) => {
+  const isUp = useScrollDirection();
+  const { youtubeData, hasNext, getYoutubeNextPageData, changeSelectedCategory } = useYoutubeIndexData(
+    categoryOption.value,
+  );
+
+  React.useEffect(() => {
+    const menuEle = document.getElementById("youtube_category_menu");
+    const targetEle = document.getElementById(`youtube_category_${categoryOption.value}`);
+    menuEle.scrollTo({ left: targetEle.offsetLeft, behavior: "smooth" });
+  }, []);
+
+  const handleOnClickCategory = (value: string) => {
+    changeSelectedCategory(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <>
@@ -31,51 +41,54 @@ export const YoutubeIndex = React.memo(() => {
         `}
       >
         <Icon name="youtube" color="red" size="big" />
-        YouTube ランキング
+        YouTubeランキング
+        <span
+          css={css`
+            color: black;
+            font-size: 18px;
+            margin-left: 10px;
+          `}
+        >
+          {categoryOption.text}
+        </span>
       </Header>
 
       <Divider />
 
-      <div
+      <Menu
+        id="youtube_category_menu"
+        secondary
         css={css`
-          display: flex;
-          align-items: center;
-          @media (max-width: 600px) {
-            display: block;
+          &&& {
+            position: sticky;
+            top: ${isUp ? `60px` : 0};
+            z-index: 1;
+            margin-top: 20px;
+            background-color: #f7f7f7;
+            transition: all 0.5s ease;
+            overflow-x: scroll;
+            padding-bottom: 2px;
+            .item {
+              transition: all 0.5s ease !important;
+            }
           }
         `}
       >
-        <Header
-          as="h2"
-          css={css`
-            &&& {
-              font-size: 18px;
-              margin: 0 0 0 5px;
-            }
-          `}
-        >
-          チャンネル登録者数ランキング
-        </Header>
-
-        <Dropdown
-          selection
-          options={VideoCategorieOptions}
-          value={selectedCategory}
-          onChange={(e, d) => changeSelectedCategory(d.value as string)}
-          css={css`
-            &&& {
-              margin-left: 20px;
-              .menu {
-                max-height: 50vh;
-              }
-              @media (max-width: 600px) {
-                margin: 10px 0 0 0;
-                width: 100%;
-              }
-            }
-          `}
-        />
-      </div>
+        {VideoCategorieOptions.map((option) => {
+          return (
+            <Menu.Item key={option.value} id={`youtube_category_${option.value}`}>
+              <Button
+                color="red"
+                basic={option.value !== categoryOption.value}
+                active={option.value === categoryOption.value}
+                onClick={() => handleOnClickCategory(option.value)}
+              >
+                {option.text}
+              </Button>
+            </Menu.Item>
+          );
+        })}
+      </Menu>
 
       <div
         css={css`

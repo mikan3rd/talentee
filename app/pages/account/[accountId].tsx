@@ -1,6 +1,5 @@
 import React from "react";
 import { GetServerSideProps, GetServerSidePropsResult } from "next";
-import Router from "next/router";
 import Link from "next/link";
 import Error from "next/error";
 import { Breadcrumb, Divider } from "semantic-ui-react";
@@ -38,11 +37,6 @@ const ProfilePage = React.memo<Props>(({ data: { accountId, jsonData }, statusCo
     tiktokUserData: TiktokUserDataType;
     tiktokPopularItem: TiktokItemType[];
   } = JSON.parse(jsonData);
-
-  if (!accountData) {
-    Router.push("/");
-    return null;
-  }
 
   const { tmpUsername } = accountData;
 

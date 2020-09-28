@@ -31,7 +31,7 @@ export const InstagramIndex = React.memo(() => {
             }
           `}
         />
-        Instagram ランキング
+        Instagramランキング
       </Header>
 
       <Divider />

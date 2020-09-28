@@ -8,7 +8,7 @@ import { InstagramSection, TopSection } from "../components/templates/Breadcrumb
 const InstagramIndexPage = React.memo(() => {
   return (
     <>
-      <Meta title="Instagram" description="人気のInstagramランキング" />
+      <Meta title="Instagramランキング" description="人気のInstagramランキング" />
 
       <Breadcrumb size="big">
         <TopSection />

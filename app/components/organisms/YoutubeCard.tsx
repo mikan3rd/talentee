@@ -28,7 +28,7 @@ export const YoutubeCard = React.memo<{ data: IYoutubeData; rankNum: number; sho
           }
         `}
       >
-        <Link href={`/account/${accountRef.id}`} passHref>
+        <Link href="/account/[accountId]" as={`/account/${accountRef.id}`} passHref>
           <a
             target="_blank"
             css={css`
