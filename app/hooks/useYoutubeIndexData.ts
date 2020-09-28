@@ -59,7 +59,7 @@ export const useYoutubeIndexData = (categoryValue: string) => {
 
   React.useEffect(() => {
     getYoutubePageData(categoryValue);
-  }, []);
+  }, [categoryValue]);
 
   return { youtubeData, hasNext, getYoutubeNextPageData, changeSelectedCategory };
 };
