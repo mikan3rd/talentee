@@ -75,7 +75,7 @@ export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType
             background-color: #f7f7f7;
             transition: all 0.5s ease;
             overflow-x: scroll;
-            padding: 4px 0;
+            padding: 5px 0;
             .item {
               transition: all 0.5s ease !important;
             }
