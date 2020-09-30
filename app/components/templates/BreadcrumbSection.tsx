@@ -54,5 +54,15 @@ export const TiktokSection = React.memo<{ active?: boolean }>(({ active = false 
 });
 
 export const AccountSection = React.memo<{ active?: boolean }>(({ active = false }) => {
-  return <Breadcrumb.Section active={active}>Account</Breadcrumb.Section>;
+  return <Breadcrumb.Section active={active}>アカウント</Breadcrumb.Section>;
+});
+
+export const SearchSection = React.memo<{ active?: boolean }>(({ active = false }) => {
+  return (
+    <Link href="/search">
+      <Breadcrumb.Section href="/search" active={active}>
+        アカウント検索
+      </Breadcrumb.Section>
+    </Link>
+  );
 });
