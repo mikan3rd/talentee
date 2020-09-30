@@ -1,7 +1,7 @@
 import React from "react";
 
 import { css } from "@emotion/core";
-import { Divider, Header, Icon, Input } from "semantic-ui-react";
+import { Divider, Header, Input } from "semantic-ui-react";
 
 import { useSearchIndex } from "../../hooks/useSearchIndex";
 import {
@@ -10,10 +10,11 @@ import {
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
+import { AccountCard } from "../organisms/AccountCard";
 
 export const SearchIndex = React.memo(() => {
   const [text, setText] = React.useState("");
-  const { searchAccount } = useSearchIndex();
+  const { accountData, searchAccount } = useSearchIndex();
 
   return (
     <>
@@ -29,18 +30,31 @@ export const SearchIndex = React.memo(() => {
 
       <Divider />
 
-      <Input
-        fluid
-        placeholder="アカウント名を入力"
-        action={{ icon: "search", onClick: () => searchAccount(text) }}
-        value={text}
-        onChange={(e, d) => setText(d.value)}
-        // onKeyDown={(e) => {
-        //   if (e.key === "Enter") {
-        //     searchAccount(text);
-        //   }
-        // }}
-      />
+      <form>
+        <Input
+          fluid
+          placeholder="アカウント名を入力"
+          action={{
+            icon: "search",
+            onClick: (e) => {
+              e.preventDefault();
+              searchAccount(text);
+            },
+          }}
+          value={text}
+          onChange={(e, d) => setText(d.value)}
+        />
+      </form>
+
+      <div
+        css={css`
+          margin-top: 20px;
+        `}
+      >
+        {accountData.map(({ id, data }) => (
+          <AccountCard key={id} id={id} data={data} />
+        ))}
+      </div>
 
       <Divider />
 

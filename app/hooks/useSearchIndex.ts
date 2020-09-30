@@ -5,8 +5,10 @@ import { AccountCollectionPath } from "../firebase/firestore";
 
 const PageLimit = 10;
 
+type AccoundDataType = { id: string; data: AccountObjectType };
+
 export const useSearchIndex = () => {
-  const [accountData, setAccountData] = React.useState<AccountObjectType[]>([]);
+  const [accountData, setAccountData] = React.useState<AccoundDataType[]>([]);
 
   const searchAccount = async (text: string) => {
     const db = firebase.firestore();
@@ -17,13 +19,12 @@ export const useSearchIndex = () => {
       .limit(PageLimit)
       .get();
 
-    const nextAccountData: AccountObjectType[] = [];
+    const nextAccountData: AccoundDataType[] = [];
     accountDocs.forEach((doc) => {
       const data = doc.data() as AccountObjectType;
-      nextAccountData.push(data);
+      nextAccountData.push({ data, id: doc.id });
     });
 
-    console.log(nextAccountData);
     setAccountData(nextAccountData);
   };
 
