@@ -1,7 +1,8 @@
 import React from "react";
+
 import { css } from "@emotion/core";
-import { Icon, Label } from "semantic-ui-react";
 import dayjs from "dayjs";
+import { Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "../../common/utils";
 

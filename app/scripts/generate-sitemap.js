@@ -3,10 +3,10 @@ const fs = require("fs");
 
 require("dotenv").config({ path: ".env.local" });
 
+const dayjs = require("dayjs");
 const admin = require("firebase-admin");
 const globby = require("globby");
 const prettier = require("prettier");
-const dayjs = require("dayjs");
 
 admin.initializeApp({
   credential: admin.credential.cert({

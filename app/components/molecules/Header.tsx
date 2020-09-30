@@ -1,4 +1,5 @@
 import React from "react";
+
 import { css } from "@emotion/core";
 import Link from "next/link";
 import { Image } from "semantic-ui-react";

@@ -1,6 +1,7 @@
 import React from "react";
-import { AppProps } from "next/app";
+
 import dayjs from "dayjs";
+import { AppProps } from "next/app";
 import smoothscroll from "smoothscroll-polyfill";
 
 import "dayjs/locale/ja";

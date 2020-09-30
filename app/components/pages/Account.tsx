@@ -1,18 +1,10 @@
 import React from "react";
-import { css } from "@emotion/core";
-import { Divider, Icon, Menu } from "semantic-ui-react";
-import dayjs from "dayjs";
 
-import {
-  InstagramSocialButton,
-  TiktokSocialButton,
-  TwitterSocialButton,
-  YoutubeSocialButton,
-} from "../atoms/SocialButton";
-import { YoutubeDetail } from "../organisms/YoutubeDetail";
-import { TwitterDetail } from "../organisms/TwitterDetail";
-import { TiktokDetail } from "../organisms/TiktokDetail";
-import { InstagramDetail } from "../organisms/InstagramDetail";
+import { css } from "@emotion/core";
+import dayjs from "dayjs";
+import { Divider, Icon, Menu } from "semantic-ui-react";
+
+import { useScrollDirection } from "../../hooks/useScrollDirection";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
@@ -20,7 +12,16 @@ import {
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
-import { useScrollDirection } from "../../hooks/useScrollDirection";
+import {
+  InstagramSocialButton,
+  TiktokSocialButton,
+  TwitterSocialButton,
+  YoutubeSocialButton,
+} from "../atoms/SocialButton";
+import { InstagramDetail } from "../organisms/InstagramDetail";
+import { TiktokDetail } from "../organisms/TiktokDetail";
+import { TwitterDetail } from "../organisms/TwitterDetail";
+import { YoutubeDetail } from "../organisms/YoutubeDetail";
 
 const ServiceList = ["youtube", "twitter", "instagram", "tiktok"] as const;
 type ServiceType = typeof ServiceList[number];

@@ -1,11 +1,12 @@
 import React from "react";
-import { css } from "@emotion/core";
-import { Header, Icon } from "semantic-ui-react";
-import dayjs from "dayjs";
 
-import { TwitterSocialButton } from "../atoms/SocialButton";
-import { Linkify } from "../atoms/Linkify";
+import { css } from "@emotion/core";
+import dayjs from "dayjs";
+import { Header, Icon } from "semantic-ui-react";
+
 import { toUnitString } from "../../common/utils";
+import { Linkify } from "../atoms/Linkify";
+import { TwitterSocialButton } from "../atoms/SocialButton";
 
 export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; popularTweets: TweetDataType[] }>(
   ({ twitterUserData, popularTweets }) => {

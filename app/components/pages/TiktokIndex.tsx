@@ -1,15 +1,16 @@
 import React from "react";
-import { Button, Divider, Header, Icon } from "semantic-ui-react";
+
 import { css } from "@emotion/core";
+import { Button, Divider, Header, Icon } from "semantic-ui-react";
 
 import { useTiktokIndexData } from "../../hooks/useTiktokIndexData";
-import { TiktokCard } from "../organisms/TiktokCard";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
+import { TiktokCard } from "../organisms/TiktokCard";
 
 export const TiktokIndex = React.memo(() => {
   const { tiktokData, hasNext, getTiktokNextPageData } = useTiktokIndexData();

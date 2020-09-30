@@ -1,15 +1,16 @@
 import React from "react";
-import { Button, Divider, Header, Icon } from "semantic-ui-react";
+
 import { css } from "@emotion/core";
+import { Button, Divider, Header, Icon } from "semantic-ui-react";
 
 import { useTwitterIndexData } from "../../hooks/useTwitterIndexData";
-import { TwitterCard } from "../organisms/TwitterCard";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TiktokIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
+import { TwitterCard } from "../organisms/TwitterCard";
 
 export const TwitterIndex = React.memo(() => {
   const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();

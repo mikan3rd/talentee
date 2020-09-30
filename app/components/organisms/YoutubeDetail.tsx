@@ -1,11 +1,12 @@
 import React from "react";
-import { css } from "@emotion/core";
-import { Header, Icon, Label } from "semantic-ui-react";
-import dayjs from "dayjs";
 
-import { YoutubeSocialButton } from "../atoms/SocialButton";
-import { Linkify } from "../atoms/Linkify";
+import { css } from "@emotion/core";
+import dayjs from "dayjs";
+import { Header, Icon, Label } from "semantic-ui-react";
+
 import { toUnitString } from "../../common/utils";
+import { Linkify } from "../atoms/Linkify";
+import { YoutubeSocialButton } from "../atoms/SocialButton";
 
 import { YoutubeVideoCard } from "./YoutubeVideoCard";
 

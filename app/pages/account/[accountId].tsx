@@ -1,13 +1,14 @@
 import React from "react";
+
 import { GetServerSideProps, GetServerSidePropsResult } from "next";
-import Link from "next/link";
 import Error from "next/error";
+import Link from "next/link";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { getAccountPageData } from "../../fetchData/accountPageData";
 import { Account } from "../../components/pages/Account";
-import { Meta } from "../../components/templates/Meta";
 import { AccountSection, TopSection } from "../../components/templates/BreadcrumbSection";
+import { Meta } from "../../components/templates/Meta";
+import { getAccountPageData } from "../../fetchData/accountPageData";
 
 type Props = { data: { accountId: string; jsonData: string }; statusCode: number };
 

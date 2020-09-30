@@ -1,6 +1,7 @@
 import React from "react";
-import Link from "next/link";
+
 import { css } from "@emotion/core";
+import Link from "next/link";
 import { Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "../../common/utils";

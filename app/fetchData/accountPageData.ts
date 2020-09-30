@@ -1,4 +1,3 @@
-import admin from "../firebase/nodeApp";
 import {
   AccountCollectionPath,
   InstagramMediaCollectionPath,
@@ -6,6 +5,7 @@ import {
   TwitterTweetCollectionPath,
   YoutubeVideoCollectionPath,
 } from "../firebase/firestore";
+import admin from "../firebase/nodeApp";
 
 export const getAccountPageData = async (accountId: string) => {
   const db = admin.firestore();

@@ -1,6 +1,7 @@
 import React from "react";
-import { Breadcrumb } from "semantic-ui-react";
+
 import Link from "next/link";
+import { Breadcrumb } from "semantic-ui-react";
 
 export const TopSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (

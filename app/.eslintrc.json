@@ -25,7 +25,21 @@
     "@typescript-eslint/explicit-function-return-type": ["off"],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "sort-imports": ["error", { "ignoreDeclarationSort": true }],
-    "import/order": ["error", { "newlines-between": "always" }],
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "alphabetize": { "order": "asc" },
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"]
+      }
+    ],
     "prettier/prettier": [
       "error",
       {
@@ -39,8 +53,7 @@
   "settings": {
     "react": {
       "version": "detect"
-    },
-    "import/ignore": ["node_modules"]
+    }
   },
   "ignorePatterns": ["node_modules", ".next"]
 }

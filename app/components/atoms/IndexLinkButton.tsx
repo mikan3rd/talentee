@@ -1,7 +1,8 @@
 import React from "react";
+
 import { css } from "@emotion/core";
-import { Button, Icon } from "semantic-ui-react";
 import Link from "next/link";
+import { Button, Icon } from "semantic-ui-react";
 
 export const IndexLinkButton = React.memo(() => {
   return (

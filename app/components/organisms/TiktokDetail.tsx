@@ -1,10 +1,11 @@
 import React from "react";
+
 import { css } from "@emotion/core";
 import { Header, Icon } from "semantic-ui-react";
 
-import { TiktokSocialButton } from "../atoms/SocialButton";
-import { Linkify } from "../atoms/Linkify";
 import { toUnitString } from "../../common/utils";
+import { Linkify } from "../atoms/Linkify";
+import { TiktokSocialButton } from "../atoms/SocialButton";
 
 export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tiktokPopularItem: TiktokItemType[] }>(
   ({ tiktokUserData, tiktokPopularItem }) => {

@@ -1,4 +1,5 @@
 import React from "react";
+
 import ReactLinkify from "react-linkify";
 
 const componentDecorator = (href: string, text: string, key: number) => (

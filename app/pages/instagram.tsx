@@ -1,9 +1,10 @@
 import React from "react";
+
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { InstagramIndex } from "../components/pages/InstagramIndex";
-import { Meta } from "../components/templates/Meta";
 import { InstagramSection, TopSection } from "../components/templates/BreadcrumbSection";
+import { Meta } from "../components/templates/Meta";
 
 const InstagramIndexPage = React.memo(() => {
   return (

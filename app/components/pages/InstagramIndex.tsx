@@ -1,15 +1,16 @@
 import React from "react";
-import { Button, Divider, Header, Icon } from "semantic-ui-react";
+
 import { css } from "@emotion/core";
+import { Button, Divider, Header, Icon } from "semantic-ui-react";
 
 import { useInstagramIndexData } from "../../hooks/useInstagramIndexData";
-import { InstagramCard } from "../organisms/InstagramCard";
 import {
   IndexLinkButton,
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "../atoms/IndexLinkButton";
+import { InstagramCard } from "../organisms/InstagramCard";
 
 export const InstagramIndex = React.memo(() => {
   const { instagramData, hasNext, getInstagramNextPageData } = useInstagramIndexData();

@@ -1,13 +1,14 @@
 import React from "react";
-import Link from "next/link";
+
 import { css } from "@emotion/core";
+import Link from "next/link";
 import { Button, Divider, Icon } from "semantic-ui-react";
 
 import { useIndexData } from "../../hooks/useIndexData";
-import { YoutubeCard } from "../organisms/YoutubeCard";
-import { TwitterCard } from "../organisms/TwitterCard";
 import { InstagramCard } from "../organisms/InstagramCard";
 import { TiktokCard } from "../organisms/TiktokCard";
+import { TwitterCard } from "../organisms/TwitterCard";
+import { YoutubeCard } from "../organisms/YoutubeCard";
 
 export const Index = React.memo(() => {
   const { youtubeData, twitterData, instagramData, tiktokData } = useIndexData();
