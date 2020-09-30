@@ -1,7 +1,7 @@
-import { getUserDetail } from "./common/getUserDetail";
-import { upsertUser } from "./common/upsertUser";
-import { upsertItem } from "./common/upsertItem";
 import { formatUserData } from "./common/formatUserData";
+import { getUserDetail } from "./common/getUserDetail";
+import { upsertItem } from "./common/upsertItem";
+import { upsertUser } from "./common/upsertUser";
 
 export const upsertUserData = async (accountId: string, uniqueId: string) => {
   console.log(`accountId: ${accountId}, uniqueId: ${uniqueId}`);

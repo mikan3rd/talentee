@@ -1,8 +1,8 @@
+import axios, { AxiosRequestConfig } from "axios";
+import { HttpsProxyAgent } from "https-proxy-agent";
 import puppeteer from "puppeteer";
 import puppeteerExtra from "puppeteer-extra";
 import StealthPlugin = require("puppeteer-extra-plugin-stealth");
-import axios, { AxiosRequestConfig } from "axios";
-import { HttpsProxyAgent } from "https-proxy-agent";
 
 import {
   PROXY_HOST,

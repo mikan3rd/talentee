@@ -1,5 +1,5 @@
-import { formatTwitterUserData } from "./common/formatUserData";
 import { TwitterError, TwitterForbidden, TwitterNotFound, getUserByUsername } from "./common/api";
+import { formatTwitterUserData } from "./common/formatUserData";
 import { updateTwitterUser } from "./common/updateTwitterUser";
 
 export const upsertUserData = async (accountId: string, username: string) => {

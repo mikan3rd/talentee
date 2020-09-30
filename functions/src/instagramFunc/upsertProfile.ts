@@ -1,6 +1,6 @@
 import { crawlProfile } from "./common/crawlProfile";
-import { upsertUser } from "./common/upsertUser";
 import { upsertMedia } from "./common/upsertMedia";
+import { upsertUser } from "./common/upsertUser";
 
 export const upsertProfile = async (accountId: string, username: string) => {
   console.log(`accountId: ${accountId}, username: ${username}`);

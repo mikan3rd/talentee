@@ -1,9 +1,9 @@
 import * as admin from "firebase-admin";
 import { youtube_v3 } from "googleapis";
 
-import { AccountCollectionPath, YoutubeChannelCollectionPath } from "../../firebase/collectionPath";
-import { chunk } from "../../common/utils";
 import { youtubeService } from "../../common/config";
+import { chunk } from "../../common/utils";
+import { AccountCollectionPath, YoutubeChannelCollectionPath } from "../../firebase/collectionPath";
 
 import { formatChannelData } from "./formatYoutubeData";
 import { updateChannel } from "./updateChannel";

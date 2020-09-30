@@ -1,11 +1,11 @@
 import * as admin from "firebase-admin";
 import { youtube_v3 } from "googleapis";
 
-import { YoutubeVideoCollectionPath } from "../../firebase/collectionPath";
 import { youtubeService } from "../../common/config";
+import { YoutubeVideoCollectionPath } from "../../firebase/collectionPath";
 
-import { getChannelPopularVideo } from "./getChannelPopularVideo";
 import { formatVideoData } from "./formatYoutubeData";
+import { getChannelPopularVideo } from "./getChannelPopularVideo";
 
 const { FieldValue } = admin.firestore;
 

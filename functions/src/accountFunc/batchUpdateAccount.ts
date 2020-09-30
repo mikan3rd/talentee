@@ -1,10 +1,10 @@
-import * as admin from "firebase-admin";
 import { PubSub } from "@google-cloud/pubsub";
 import dayjs from "dayjs";
+import * as admin from "firebase-admin";
 
 import { toBufferJson } from "../common/utils";
-import { Topic, UpdateAccountJsonType } from "../firebase/topic";
 import { AccountCollectionPath } from "../firebase/collectionPath";
+import { Topic, UpdateAccountJsonType } from "../firebase/topic";
 import { getVideoCategories } from "../youtubeFunc/common/getVideoCategories";
 
 export const batchUpdateAccount = async () => {

@@ -2,8 +2,8 @@ import { sentryWrapper } from "../common/sentry";
 import { functions } from "../firebase/functions";
 import { PopularTweetsonType, Topic, UpsertTwitterUserJsonType } from "../firebase/topic";
 
-import { upsertUserData } from "./upsertUserData";
 import { getPopularTweet } from "./getPopularTweet";
+import { upsertUserData } from "./upsertUserData";
 
 export const upsertTwitterUserDataPubSub = functions
   .runWith({ maxInstances: 10 })

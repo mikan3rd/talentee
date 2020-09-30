@@ -1,5 +1,7 @@
 import { PubSub } from "@google-cloud/pubsub";
 
+import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
+import { toBufferJson } from "../common/utils";
 import {
   AccountCollectionPath,
   InstagramUserCollectionPath,
@@ -8,7 +10,6 @@ import {
   YoutubeChannelCollectionPath,
   db,
 } from "../firebase/collectionPath";
-import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 import {
   Topic,
   UpsertInstagramUserJsonType,
@@ -16,10 +17,9 @@ import {
   UpsertTwitterUserJsonType,
   UpsertYoutubeChannelJsonType,
 } from "../firebase/topic";
-import { toBufferJson } from "../common/utils";
-import { crawlOtherServiceLink } from "../youtubeFunc/common/crawlOtherServiceLink";
-import { getUserById } from "../twitterFunc/common/api";
 import { getUserDetail } from "../tiktokFunc/common/getUserDetail";
+import { getUserById } from "../twitterFunc/common/api";
+import { crawlOtherServiceLink } from "../youtubeFunc/common/crawlOtherServiceLink";
 
 export const getServiceAccount = async (accountId: string) => {
   console.log(`accountId: ${accountId}`);

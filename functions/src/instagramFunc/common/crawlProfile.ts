@@ -1,5 +1,5 @@
-import { puppeteerSetup } from "../../common/utils";
 import { INSTAGRAM_PASSWORD, INSTAGRAM_USERNAME } from "../../common/config";
+import { puppeteerSetup } from "../../common/utils";
 
 type shareDataType = {
   entry_data: { ProfilePage?: { graphql: { user: InstagramUserRawType } }[] };

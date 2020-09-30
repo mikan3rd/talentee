@@ -1,7 +1,7 @@
 import { youtubeService } from "../common/config";
 
-import { updateChannel } from "./common/updateChannel";
 import { formatChannelData } from "./common/formatYoutubeData";
+import { updateChannel } from "./common/updateChannel";
 
 export const upsertChannelData = async (accountId: string, channelId: string) => {
   console.log(`accountId: ${accountId}, channelId: ${channelId}`);

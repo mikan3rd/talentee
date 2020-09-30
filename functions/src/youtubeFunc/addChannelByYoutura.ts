@@ -1,11 +1,11 @@
 import { bulkJudgeServiceAccount } from "../common/judgeServiceAccount";
 
-import { saveChannel } from "./common/saveChannel";
 import {
   crawlYouturaDailyRanking,
   crawlYouturaMonthlyRanking,
   crawlYouturaTotalRanking,
 } from "./common/crawlYouturaRanking";
+import { saveChannel } from "./common/saveChannel";
 
 export const addChannelByYouturaTotal = async () => {
   const channelUrls = await crawlYouturaTotalRanking();

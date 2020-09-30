@@ -4,13 +4,13 @@ import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";
 import { PopularVideoJsonType, Topic, UpsertYoutubeChannelJsonType } from "../firebase/topic";
 
-import { savePopularChannel } from "./savePopularChannel";
-import { upsertChannelData } from "./upsertChannelData";
-import { updateVideo } from "./updateVideo";
-import { saveTrendChannel } from "./saveTrendChannel";
-import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
-import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
 import { addChannelByYouturaDaily, addChannelByYouturaMonthly } from "./addChannelByYoutura";
+import { crawlOtherServiceLink } from "./common/crawlOtherServiceLink";
+import { getChannelPopularVideo } from "./common/getChannelPopularVideo";
+import { savePopularChannel } from "./savePopularChannel";
+import { saveTrendChannel } from "./saveTrendChannel";
+import { updateVideo } from "./updateVideo";
+import { upsertChannelData } from "./upsertChannelData";
 
 export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "1GB" })("0 0,12 * * *").onRun(
   sentryWrapper(async (context) => {

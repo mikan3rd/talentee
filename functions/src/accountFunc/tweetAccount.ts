@@ -1,6 +1,6 @@
-import { TwitterClient } from "../twitterFunc/common/TwitterClient";
-import { YoutubeChannelCollectionPath, db, tweetAccountRef } from "../firebase/collectionPath";
 import { toUnitString } from "../common/utils";
+import { YoutubeChannelCollectionPath, db, tweetAccountRef } from "../firebase/collectionPath";
+import { TwitterClient } from "../twitterFunc/common/TwitterClient";
 
 type TweetAccountDataType = {
   youtubeStartAfterId: string;

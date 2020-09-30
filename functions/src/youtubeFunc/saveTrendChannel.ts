@@ -1,8 +1,8 @@
-import { chunk } from "../common/utils";
 import { youtubeService } from "../common/config";
+import { chunk } from "../common/utils";
 
-import { saveChannel } from "./common/saveChannel";
 import { getTrendVideoIds } from "./common/getTrendVideoIds";
+import { saveChannel } from "./common/saveChannel";
 
 export const saveTrendChannel = async () => {
   const videoIds = await getTrendVideoIds();

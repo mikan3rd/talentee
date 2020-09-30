@@ -2,6 +2,7 @@ import { PubSub } from "@google-cloud/pubsub";
 import { youtube_v3 } from "googleapis";
 
 import { toBufferJson } from "../common/utils";
+import { AccountCollectionPath, db } from "../firebase/collectionPath";
 import {
   PopularTweetsonType,
   PopularVideoJsonType,
@@ -12,7 +13,6 @@ import {
   UpsertTwitterUserJsonType,
   UpsertYoutubeChannelJsonType,
 } from "../firebase/topic";
-import { AccountCollectionPath, db } from "../firebase/collectionPath";
 
 export const updateAccount = async (accountId: string, videoCategories: youtube_v3.Schema$VideoCategory[]) => {
   const accountCollection = db.collection(AccountCollectionPath);

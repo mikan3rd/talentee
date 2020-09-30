@@ -2,10 +2,10 @@ import { sentryWrapper } from "../common/sentry";
 import { functions, scheduleFunctions } from "../firebase/functions";
 import { ServiceAccountJsonType, Topic, UpdateAccountJsonType } from "../firebase/topic";
 
-import { getServiceAccount } from "./getServiceAccount";
 import { batchUpdateAccount } from "./batchUpdateAccount";
-import { updateAccount } from "./updateAccount";
+import { getServiceAccount } from "./getServiceAccount";
 import { tweetAccountByYoutube } from "./tweetAccount";
+import { updateAccount } from "./updateAccount";
 
 export const batchUpdateAccountScheduler = scheduleFunctions()("0 9,21 * * *").onRun(
   sentryWrapper(async (context) => {

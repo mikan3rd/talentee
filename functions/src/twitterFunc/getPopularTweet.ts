@@ -2,8 +2,8 @@ import * as admin from "firebase-admin";
 
 import { TwitterTweetCollectionPath, db } from "../firebase/collectionPath";
 
-import { crawlSearchTweet } from "./common/crawlSearchTweet";
 import { getTweets } from "./common/api";
+import { crawlSearchTweet } from "./common/crawlSearchTweet";
 import { formatTweetData } from "./common/formatUserData";
 
 const { FieldValue } = admin.firestore;
