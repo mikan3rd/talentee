@@ -8,7 +8,7 @@ import { toUnitString } from "../../common/utils";
 
 const ketwordNum = 10;
 
-export const YoutubeCard = React.memo<{ data: IYoutubeData; rankNum: number; showDetails?: boolean }>(
+export const YoutubeCard = React.memo<{ data: YoutubeData; rankNum: number; showDetails?: boolean }>(
   ({ data, rankNum, showDetails = true }) => {
     const {
       accountRef,
@@ -17,6 +17,7 @@ export const YoutubeCard = React.memo<{ data: IYoutubeData; rankNum: number; sho
         channel: { keywords },
       },
       statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
+      mainVideoCategoryId,
       videoCategories,
     } = data;
     return (
@@ -137,10 +138,11 @@ export const YoutubeCard = React.memo<{ data: IYoutubeData; rankNum: number; sho
               <div css={LabelWrapeerCss}>
                 {videoCategories.map((category, index) => {
                   const {
+                    id,
                     snippet: { title },
                   } = category;
                   return (
-                    <Label key={index} tag color="blue" css={LabelCss}>
+                    <Label key={index} tag color={mainVideoCategoryId == id ? "red" : "grey"} css={LabelCss}>
                       {title}
                     </Label>
                   );

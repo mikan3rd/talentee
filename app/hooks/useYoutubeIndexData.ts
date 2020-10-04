@@ -10,7 +10,7 @@ const PageLimit = 10;
 
 export const useYoutubeIndexData = (categoryValue: string) => {
   const router = useRouter();
-  const [youtubeData, setYoutubeData] = React.useState<IYoutubeData[]>([]);
+  const [youtubeData, setYoutubeData] = React.useState<YoutubeData[]>([]);
   const [lastDoc, setLastDoc] = React.useState<firebase.firestore.DocumentData | null>(null);
   const [hasNext, setHasNext] = React.useState(false);
 
@@ -20,7 +20,7 @@ export const useYoutubeIndexData = (categoryValue: string) => {
     let query = youtubeCollection.orderBy("statistics.subscriberCount", "desc");
 
     if (categoryValue !== AllOptionValue) {
-      query = query.where("videoCategoryIds", "array-contains", categoryValue);
+      query = query.where("mainVideoCategoryId", "==", categoryValue);
     }
 
     if (getNext) {
@@ -28,9 +28,9 @@ export const useYoutubeIndexData = (categoryValue: string) => {
     }
 
     const youtubeDocs = await query.limit(PageLimit).get();
-    const nextYoutubeData: IYoutubeData[] = [];
+    const nextYoutubeData: YoutubeData[] = [];
     youtubeDocs.forEach((doc) => {
-      const data = doc.data() as IYoutubeData;
+      const data = doc.data() as YoutubeData;
       nextYoutubeData.push(data);
     });
 

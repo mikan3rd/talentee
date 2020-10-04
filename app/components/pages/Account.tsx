@@ -41,7 +41,7 @@ const scrollToElement = (elementId: ServiceType) => {
 
 export const Account = React.memo<{
   accountData: AccountDataType;
-  youtubeData?: IYoutubeData;
+  youtubeData?: YoutubeData;
   youtubePopularVideos: IYoutubeVideoData[];
   twitterUserData?: TwitterUserDataType;
   popularTweets: TweetDataType[];

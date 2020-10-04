@@ -27,7 +27,7 @@ export const getAccountPageData = async (accountId: string) => {
     createdAt: Math.floor(accountRawData.createdAt.toDate().getTime() / 1000),
     updatedAt: Math.floor(accountRawData.updatedAt.toDate().getTime() / 1000),
   };
-  let youtubeData: IYoutubeData | null = null;
+  let youtubeData: YoutubeData | null = null;
   let twitterUserData: TwitterUserDataType | null = null;
   let instagramUserData: InstagramUserDataType | null = null;
   let tiktokUserData: TiktokUserDataType | null = null;
@@ -41,7 +41,7 @@ export const getAccountPageData = async (accountId: string) => {
     const youtubeDoc = await youtubeMainRef.get();
     if (youtubeDoc.exists) {
       const data = youtubeDoc.data();
-      youtubeData = { ...data, updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000) } as IYoutubeData;
+      youtubeData = { ...data, updatedAt: Math.floor(data.updatedAt.toDate().getTime() / 1000) } as YoutubeData;
 
       const channelId = data.id;
       const popularVideoDocs = await youtubeVideoCollection

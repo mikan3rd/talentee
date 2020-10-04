@@ -10,7 +10,7 @@ import { YoutubeSocialButton } from "../atoms/SocialButton";
 
 import { YoutubeVideoCard } from "./YoutubeVideoCard";
 
-export const YoutubeDetail = React.memo<{ youtubeData: IYoutubeData; youtubePopularVideos: IYoutubeVideoData[] }>(
+export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopularVideos: IYoutubeVideoData[] }>(
   ({ youtubeData, youtubePopularVideos }) => {
     const {
       snippet: { title, thumbnails, description, publishedAt },

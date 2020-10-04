@@ -1,4 +1,5 @@
-declare interface IYoutubeData {
+declare type YoutubeData = {
+  accountRef: firebase.firestore.DocumentReference;
   id: string;
   snippet: {
     title: string;
@@ -9,15 +10,15 @@ declare interface IYoutubeData {
   };
   statistics: { subscriberCount: number; videoCount: number; viewCount: number; hiddenSubscriberCount: boolean };
   brandingSettings: { channel: { keywords: string[] } };
-  accountRef: firebase.firestore.DocumentReference;
-  videoCategories: { snippet: { title: string } }[];
+  mainVideoCategoryId: string;
+  videoCategories: { id: string; snippet: { title: string } }[];
   updatedAt: number;
-}
+};
 
-declare interface IYoutubeVideoData {
+declare type IYoutubeVideoData = {
   id: string;
   snippet: { title: string; description: string; publishedAt: string; tags?: string[] };
   statistics: { viewCount: number; likeCount?: number; dislikeCount?: number; commentCount: number };
   player: { embedHtml: string };
   videoCategory: { snippet: { title: string } };
-}
+};

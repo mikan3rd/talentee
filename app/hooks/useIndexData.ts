@@ -9,7 +9,7 @@ import {
 } from "../firebase/firestore";
 
 export const useIndexData = () => {
-  const [youtubeData, setYoutubeData] = React.useState<IYoutubeData[]>([]);
+  const [youtubeData, setYoutubeData] = React.useState<YoutubeData[]>([]);
   const [twitterData, setTwitterData] = React.useState<TwitterUserObjectType[]>([]);
   const [instagramData, setInstagramData] = React.useState<InstagramUserObjectType[]>([]);
   const [tiktokData, setTiktokData] = React.useState<TiktokUserObjectType[]>([]);
@@ -18,9 +18,9 @@ export const useIndexData = () => {
     const db = firebase.firestore();
     const youtubeCollection = db.collection(YoutubeChannelCollectionPath);
     const youtubeDocs = await youtubeCollection.orderBy("statistics.subscriberCount", "desc").limit(3).get();
-    const youtubeData: IYoutubeData[] = [];
+    const youtubeData: YoutubeData[] = [];
     youtubeDocs.forEach((doc) => {
-      const data = doc.data() as IYoutubeData;
+      const data = doc.data() as YoutubeData;
       youtubeData.push(data);
     });
     setYoutubeData(youtubeData);
