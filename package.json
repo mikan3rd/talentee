@@ -1,7 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/app"
   ],
   "engines": {
     "node": "12"
@@ -28,7 +28,7 @@
     "@typescript-eslint/parser": "4.7.0",
     "dotenv": "8.2.0",
     "eslint": "7.13.0",
-    "eslint-config-prettier": "6.15.0",
+    "eslint-config-prettier": "7.1.0",
     "eslint-import-resolver-webpack": "0.13.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-import": "2.22.1",
