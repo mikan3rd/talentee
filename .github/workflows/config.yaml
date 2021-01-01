@@ -87,6 +87,44 @@ jobs:
           name: functions-build-files
           path: packages/functions/lib
 
+  backend-build:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-backend-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache-backend
+        with:
+          path: ${{ steps.yarn-cache-backend-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+
+      - run: yarn backend install
+
+      - run: yarn backend type-check
+
+      - run: yarn lint:backend
+
+      - run: yarn backend build
+
+      - name: Archive Build Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: backend-build-files
+          path: packages/backend/dist
+
   functions-deploy:
     if: github.ref == 'refs/heads/master'
     needs: functions-build
