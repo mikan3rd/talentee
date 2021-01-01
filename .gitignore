@@ -34,4 +34,4 @@ robots.txt
 # vercel
 .vercel
 
-functions/lib
+lib

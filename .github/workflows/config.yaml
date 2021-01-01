@@ -27,17 +27,13 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
-      - run: yarn install
-        working-directory: ./app
+      - run: yarn app install
 
-      - run: yarn type-check
-        working-directory: ./app
+      - run: yarn app type-check
 
-      - run: yarn lint
-        working-directory: ./app
+      - run: yarn lint:app
 
-      - run: yarn next build
-        working-directory: ./app
+      - run: yarn app next build
         env:
           CONFIG_ENV: "dev"
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
@@ -75,20 +71,17 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
-      - run: yarn install
-        working-directory: ./functions
+      - run: yarn functions install
 
-      - run: yarn lint
-        working-directory: ./functions
+      - run: yarn lint:functions
 
-      - run: yarn build
-        working-directory: ./functions
+      - run: yarn functions build
 
       - name: Archive Production Artifact
         uses: actions/upload-artifact@main
         with:
           name: functions-build-files
-          path: functions/lib
+          path: packages/functions/lib
 
   functions-deploy:
     if: github.ref == 'refs/heads/master'
@@ -104,7 +97,7 @@ jobs:
         uses: actions/download-artifact@main
         with:
           name: functions-build-files
-          path: functions/lib
+          path: packages/functions/lib
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -122,11 +115,9 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
-      - run: yarn install
-        working-directory: ./functions
+      - run: yarn funuctions install
 
       - name: deploy to Firebase Functions
-        working-directory: ./functions
-        run: yarn deploy:prod --token=${{ secrets.FIREBASE_TOKEN }}
+        run: yarn functions deploy:prod --token=${{ secrets.FIREBASE_TOKEN }}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
