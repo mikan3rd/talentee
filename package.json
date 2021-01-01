@@ -3,6 +3,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "engines": {
+    "node": "12"
+  },
   "scripts": {
     "app": "yarn workspace app",
     "functions": "yarn workspace functions",
@@ -32,8 +35,5 @@
     "globby": "11.0.1",
     "prettier": "2.1.2",
     "typescript": "4.0.5"
-  },
-  "engines": {
-    "node": "12"
   }
 }
