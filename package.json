@@ -13,6 +13,9 @@
     "lint:app": "eslint ./packages/app",
     "lint:functions": "eslint ./packages/functions"
   },
+  "resolutions": {
+    "node-forge": "0.10.0"
+  },
   "dependencies": {
     "dayjs": "1.9.6",
     "firebase": "7.24.0",
