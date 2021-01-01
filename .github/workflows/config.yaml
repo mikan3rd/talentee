@@ -71,11 +71,15 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
-      - run: yarn functions install
+      - run: yarn install
+
+      - run: yarn install
+        working-directory: ./packages/functions
 
       - run: yarn lint:functions
 
-      - run: yarn functions build
+      - run: yarn build
+        working-directory: ./packages/functions
 
       - name: Archive Production Artifact
         uses: actions/upload-artifact@main
@@ -115,9 +119,11 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
-      - run: yarn functions install
+      - run: yarn install
+        working-directory: ./packages/functions
 
       - name: deploy to Firebase Functions
+        working-directory: ./packages/functions
         run: yarn functions deploy:prod --token=${{ secrets.FIREBASE_TOKEN }}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
