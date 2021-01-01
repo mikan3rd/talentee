@@ -72,9 +72,10 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-
 
       - run: yarn install
-        working-directory: ./packages/functions
 
-      - run: yarn lint
+      - run: yarn lint:functions
+
+      - run: yarn install
         working-directory: ./packages/functions
 
       - run: yarn build
