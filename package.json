@@ -4,8 +4,8 @@
     "packages/*"
   ],
   "scripts": {
-    "backend": "yarn workspace app",
-    "frontend": "yarn workspace functions",
+    "app": "yarn workspace app",
+    "functions": "yarn workspace functions",
     "lint": "eslint .",
     "lint:app": "eslint ./packages/app",
     "lint:functions": "eslint ./packages/functions"
