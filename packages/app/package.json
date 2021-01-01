@@ -22,7 +22,7 @@
     "smoothscroll-polyfill": "0.4.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
+    "@babel/core": "7.12.10",
     "@types/react": "17.0.0"
   }
 }
