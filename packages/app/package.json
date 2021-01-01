@@ -1,0 +1,27 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build && node scripts/generate-sitemap.js",
+    "start": "next start",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix"
+  },
+  "dependencies": {
+    "@emotion/babel-preset-css-prop": "10.2.1",
+    "@emotion/core": "10.1.1",
+    "next": "10.0.1",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-linkify": "1.0.0-alpha",
+    "react-semantic-toasts": "0.6.5",
+    "semantic-ui-css": "2.4.1",
+    "semantic-ui-react": "2.0.1",
+    "smoothscroll-polyfill": "0.4.4"
+  },
+  "devDependencies": {
+    "@types/react": "16.9.56"
+  }
+}
