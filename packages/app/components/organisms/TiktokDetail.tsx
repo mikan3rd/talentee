@@ -1,6 +1,6 @@
 import React from "react";
 
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { Header, Icon } from "semantic-ui-react";
 
 import { toUnitString } from "../../common/utils";

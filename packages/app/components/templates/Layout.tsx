@@ -1,6 +1,6 @@
 import React from "react";
 
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { SemanticToastContainer } from "react-semantic-toasts";
 import { Container } from "semantic-ui-react";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { Button, Divider, Header, Icon, Menu } from "semantic-ui-react";
 
 import { VideoCategorieOptions, VideoCategoryOptionType } from "../../common/youtubeVideoCategory";

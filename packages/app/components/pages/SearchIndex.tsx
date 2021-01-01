@@ -1,6 +1,6 @@
 import React from "react";
 
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { Divider, Header, Input } from "semantic-ui-react";
 
 import { useSearchIndex } from "../../hooks/useSearchIndex";

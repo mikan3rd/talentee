@@ -1,6 +1,6 @@
 import React from "react";
 
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import dayjs from "dayjs";
 import { Divider, Icon, Menu } from "semantic-ui-react";
 

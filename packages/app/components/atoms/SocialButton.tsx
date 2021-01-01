@@ -1,6 +1,6 @@
 import React from "react";
 
-import { css } from "@emotion/core";
+import { css } from "@emotion/react";
 import { Button } from "semantic-ui-react";
 
 export const YoutubeSocialButton = React.memo<{ className?: string; channelId?: string }>(
