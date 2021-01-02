@@ -1,5 +1,11 @@
+/* eslint-disable import/no-duplicates */
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
+import "firebase/functions";
+import "firebase/storage";
+import "firebase/analytics";
+import "firebase/performance";
 
 const clientCredentials = {
   apiKey: process.env.FIREBASE_API_KEY,

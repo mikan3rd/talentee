@@ -5,12 +5,12 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 @Entity("accounts")
 export class AccountModel {
   @Field((type) => ID)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  uuid: string;
 
   @Field()
   @Column()
-  profileName: string; // 表示用の名前
+  displayName: string; // 表示用の名前
 
   @Field()
   @Column({ unique: true })
