@@ -12,6 +12,10 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "migrate": "yarn ts-node $(yarn bin)/typeorm",
+    "migrate:g": "yarn migrate migration:generate -n",
+    "migrate:run": "yarn migrate migration:run",
+    "migrate:revert": "yarn migrate migration:revert",
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -21,11 +25,16 @@
   },
   "dependencies": {
     "@nestjs/common": "7.6.5",
+    "@nestjs/config": "^0.6.1",
     "@nestjs/core": "7.6.5",
+    "@nestjs/graphql": "^7.9.4",
     "@nestjs/platform-express": "7.6.5",
+    "@nestjs/typeorm": "7.1.5",
+    "mysql": "2.18.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "6.6.3"
+    "rxjs": "6.6.3",
+    "typeorm": "0.2.29"
   },
   "devDependencies": {
     "@nestjs/cli": "7.5.4",
