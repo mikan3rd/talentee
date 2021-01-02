@@ -1,6 +1,6 @@
 import { PubSub } from "@google-cloud/pubsub";
 import dayjs from "dayjs";
-import * as admin from "firebase-admin";
+import admin from "firebase-admin";
 
 import { toBufferJson } from "../common/utils";
 import { AccountCollectionPath } from "../firebase/collectionPath";
