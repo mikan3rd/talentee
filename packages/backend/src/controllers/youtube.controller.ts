@@ -6,9 +6,15 @@ import { YoutubeService } from "@/services/youtube.service";
 export class YoutubeController {
   constructor(private readonly youtubeService: YoutubeService) {}
 
-  @Get()
-  async getHello() {
+  @Get("saveTrendChannel")
+  async saveTrendChannel() {
     await this.youtubeService.saveTrendChannel();
+    return "SUCCESS!!";
+  }
+
+  @Get("saveVideoCategories")
+  async saveVideoCategories() {
+    await this.youtubeService.saveVideoCategories();
     return "SUCCESS!!";
   }
 }
