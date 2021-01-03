@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "ts-node": "ts-node -r tsconfig-paths/register",
     "migrate": "yarn ts-node $(yarn bin)/typeorm",
     "migrate:g": "yarn migrate migration:generate -n",
     "migrate:run": "yarn migrate migration:run",
