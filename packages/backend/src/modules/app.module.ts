@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AppController } from "@/controllers/app.controller";
+import { AccountModule } from "@/modules/account.module";
 import { YoutubeModule } from "@/modules/youtube.module";
 import { DateScalar } from "@/scalars/date.scalar";
 import { AppService } from "@/services/app.service";
@@ -25,6 +26,7 @@ import { AppService } from "@/services/app.service";
         synchronize: false,
       }),
     }),
+    AccountModule,
     YoutubeModule,
   ],
   controllers: [AppController],

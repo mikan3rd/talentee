@@ -9,12 +9,12 @@ export class YoutubeController {
   @Get("saveTrendChannel")
   async saveTrendChannel() {
     await this.youtubeService.saveTrendChannel();
-    return "SUCCESS!!";
+    return "SUCCESS: saveTrendChannel";
   }
 
   @Get("saveVideoCategories")
   async saveVideoCategories() {
     await this.youtubeService.saveVideoCategories();
-    return "SUCCESS!!";
+    return "SUCCESS: saveVideoCategories";
   }
 }

@@ -1,6 +1,17 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
+import { AccountModel } from "@/models/account.model";
 import { YoutubeKeywordModel } from "@/models/youtubeKeyword.model";
 
 @ObjectType()
@@ -31,16 +42,16 @@ export class YoutubeChannelModel {
   publishedAt: Date;
 
   @Field()
-  @Column()
-  subscriberCount: number;
+  @Column({ type: "bigint", unsigned: true })
+  subscriberCount: string;
 
   @Field()
-  @Column()
+  @Column({ type: "bigint", unsigned: true })
+  viewCount: string;
+
+  @Field()
+  @Column({ type: "int", unsigned: true })
   videoCount: number;
-
-  @Field()
-  @Column()
-  viewCount: number;
 
   @Field()
   @Column()
@@ -68,4 +79,12 @@ export class YoutubeChannelModel {
     },
   })
   keywords: YoutubeKeywordModel[];
+
+  @Field((type) => AccountModel)
+  @ManyToOne((type) => AccountModel, (account) => account.youtubeChannels, {
+    nullable: false,
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn({ name: "accountId" })
+  account: AccountModel;
 }

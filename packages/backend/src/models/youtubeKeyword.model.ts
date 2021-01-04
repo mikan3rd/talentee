@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, CreateDateColumn, Entity, Index, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { YoutubeChannelModel } from "@/models/youtubeChannel.model";
 
@@ -15,7 +15,7 @@ export class YoutubeKeywordModel {
   title: string;
 
   @Field()
-  @Column({ default: 0 })
+  @Column({ type: "int", default: 0, unsigned: true })
   num: number;
 
   @Field()

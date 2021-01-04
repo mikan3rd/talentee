@@ -1,5 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
+import { YoutubeChannelModel } from "@/models/youtubeChannel.model";
 
 @ObjectType()
 @Entity("accounts")
@@ -27,4 +29,8 @@ export class AccountModel {
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field((type) => [YoutubeChannelModel], { defaultValue: [] })
+  @OneToMany((type) => YoutubeChannelModel, (channel) => channel.account)
+  youtubeChannels: YoutubeChannelModel[];
 }
