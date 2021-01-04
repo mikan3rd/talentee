@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { google, youtube_v3 } from "googleapis";
-import { DeepPartial, Repository } from "typeorm";
+import { Connection, DeepPartial, In, Repository } from "typeorm";
 
 import { AccountModel } from "@/models/account.model";
 import { YoutubeChannelModel } from "@/models/youtubeChannel.model";
@@ -15,6 +15,7 @@ import { UtilsService } from "@/services/utils.service";
 @Injectable()
 export class YoutubeService {
   constructor(
+    private connection: Connection,
     @InjectRepository(YoutubeChannelModel)
     private youtubeChannelModelRepository: Repository<YoutubeChannelModel>,
     @InjectRepository(YoutubeKeywordModel)
@@ -36,7 +37,20 @@ export class YoutubeService {
   }
 
   async saveKeywords(payloads: DeepPartial<YoutubeKeywordModel>[]) {
-    return this.youtubeKeywordRepository.save(payloads);
+    const keywordTitles = payloads.map((payload) => payload.title);
+    const existKeywords = await this.getKeywordsByTitle(keywordTitles);
+    const existKeywordTitles = existKeywords.map((keyword) => keyword.title);
+    const notExistKeywords = keywordTitles
+      .filter((title) => !existKeywordTitles.includes(title))
+      .map((title) => ({ title }));
+    await this.youtubeKeywordRepository.insert(notExistKeywords);
+    return await this.getKeywordsByTitle(keywordTitles);
+  }
+
+  async getKeywordsByTitle(keywordTitles: string[]) {
+    return this.youtubeKeywordRepository.find({
+      where: { title: In(keywordTitles) },
+    });
   }
 
   async getVideoCategories() {
@@ -101,9 +115,10 @@ export class YoutubeService {
         }
       }
 
+      console.log(data);
+
       data.keywords = await this.saveKeywords(data.keywords);
 
-      console.log(data);
       let account = await this.accountService.findByYoutubeChannelId(data.id);
       if (!account) {
         const accountData: DeepPartial<AccountModel> = {
@@ -111,7 +126,6 @@ export class YoutubeService {
           username: data.id,
           thumbnailUrl: data.thumbnailUrl,
         };
-
         account = await this.accountService.save(accountData);
       }
 
@@ -154,6 +168,8 @@ export class YoutubeService {
       }
     }
 
+    const uniqueKeywords = Array.from(new Set(keywordArray));
+
     const data: DeepPartial<YoutubeChannelModel> = {
       id,
       title,
@@ -165,7 +181,7 @@ export class YoutubeService {
       viewCount: viewCount,
       videoCount: Number(videoCount),
       hiddenSubscriberCount,
-      keywords: keywordArray.map((keyword) => ({ title: keyword })),
+      keywords: uniqueKeywords.map((keyword) => ({ title: keyword })),
     };
     return data;
   }
