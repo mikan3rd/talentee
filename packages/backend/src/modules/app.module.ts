@@ -3,17 +3,10 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AppController } from "@/controllers/app.controller";
+import { AccountModule } from "@/modules/account.module";
+import { YoutubeModule } from "@/modules/youtube.module";
 import { DateScalar } from "@/scalars/date.scalar";
 import { AppService } from "@/services/app.service";
-
-type EnvironmentVariables = {
-  DB_HOST: string;
-  DB_PORT: number;
-  DB_USERNAME: string;
-  DB_PASSWORD: string;
-  DB_NAME: string;
-  DB_SOCKET_PATH?: string;
-};
 
 @Module({
   imports: [
@@ -28,11 +21,16 @@ type EnvironmentVariables = {
         username: configService.get("DB_USERNAME"),
         password: configService.get("DB_PASSWORD"),
         database: configService.get("DB_NAME"),
-        extra: { socketPath: configService.get("DB_SOCKET_PATH") },
+        extra: {
+          socketPath: configService.get("DB_SOCKET_PATH"),
+          charset: "utf8mb4_bin",
+        },
         autoLoadEntities: true,
         synchronize: false,
       }),
     }),
+    AccountModule,
+    YoutubeModule,
   ],
   controllers: [AppController],
   providers: [AppService, DateScalar],
