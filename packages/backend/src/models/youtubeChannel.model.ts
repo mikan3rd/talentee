@@ -7,12 +7,14 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 import { AccountModel } from "@/models/account.model";
 import { YoutubeKeywordModel } from "@/models/youtubeKeyword.model";
+import { YoutubeVideoModel } from "@/models/youtubeVideo.model";
 
 @ObjectType()
 @Entity("youtubeChannels")
@@ -79,6 +81,10 @@ export class YoutubeChannelModel {
     },
   })
   keywords: YoutubeKeywordModel[];
+
+  @Field((type) => [YoutubeVideoModel], { defaultValue: [] })
+  @OneToMany((type) => YoutubeVideoModel, (video) => video.channel)
+  videos: YoutubeVideoModel[];
 
   @Field((type) => AccountModel)
   @ManyToOne((type) => AccountModel, (account) => account.youtubeChannels, {
