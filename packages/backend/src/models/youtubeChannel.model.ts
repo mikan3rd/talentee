@@ -50,8 +50,8 @@ export class YoutubeChannelModel {
   viewCount: string;
 
   @Field()
-  @Column({ type: "int", unsigned: true })
-  videoCount: number;
+  @Column({ type: "bigint", unsigned: true })
+  videoCount: string;
 
   @Field()
   @Column()

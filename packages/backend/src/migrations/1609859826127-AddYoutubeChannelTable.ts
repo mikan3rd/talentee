@@ -1,14 +1,14 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddYoutubeChannelTable1609853417849 implements MigrationInterface {
-  name = "AddYoutubeChannelTable1609853417849";
+export class AddYoutubeChannelTable1609859826127 implements MigrationInterface {
+  name = "AddYoutubeChannelTable1609859826127";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       "CREATE TABLE `youtubeKeywords` (`id` int NOT NULL AUTO_INCREMENT, `title` varchar(255) NOT NULL, `num` int UNSIGNED NOT NULL DEFAULT '0', `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), UNIQUE INDEX `IDX_22bd0967b44be9bfc2d0bfb9ac` (`title`), PRIMARY KEY (`id`)) ENGINE=InnoDB",
     );
     await queryRunner.query(
-      "CREATE TABLE `youtubeChannels` (`id` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` text NOT NULL, `thumbnailUrl` text NOT NULL, `country` varchar(255) NOT NULL, `publishedAt` datetime NOT NULL, `subscriberCount` bigint UNSIGNED NULL DEFAULT NULL, `viewCount` bigint UNSIGNED NOT NULL, `videoCount` int UNSIGNED NOT NULL, `hiddenSubscriberCount` tinyint NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `accountId` varchar(36) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB",
+      "CREATE TABLE `youtubeChannels` (`id` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` text NOT NULL, `thumbnailUrl` text NOT NULL, `country` varchar(255) NOT NULL, `publishedAt` datetime NOT NULL, `subscriberCount` bigint UNSIGNED NULL DEFAULT NULL, `viewCount` bigint UNSIGNED NOT NULL, `videoCount` bigint UNSIGNED NOT NULL, `hiddenSubscriberCount` tinyint NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `accountId` varchar(36) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB",
     );
     await queryRunner.query(
       "CREATE TABLE `youtube_channels_keywords` (`channel_id` varchar(255) NOT NULL, `keyword_id` int NOT NULL, INDEX `IDX_4ace088512d4393091961ddbc8` (`channel_id`), INDEX `IDX_a3367a144a2ab2c9a0c4595261` (`keyword_id`), PRIMARY KEY (`channel_id`, `keyword_id`)) ENGINE=InnoDB",

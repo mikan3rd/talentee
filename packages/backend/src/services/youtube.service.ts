@@ -181,7 +181,7 @@ export class YoutubeService {
       thumbnailUrl: thumbnails.medium.url,
       subscriberCount: subscriberCount,
       viewCount: viewCount,
-      videoCount: Number(videoCount),
+      videoCount: videoCount,
       hiddenSubscriberCount,
       keywords: uniqueKeywords.map((keyword) => ({ title: keyword })),
     };
