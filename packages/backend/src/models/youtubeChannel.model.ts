@@ -42,7 +42,7 @@ export class YoutubeChannelModel {
   publishedAt: Date;
 
   @Field()
-  @Column({ type: "bigint", unsigned: true })
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
   subscriberCount: string;
 
   @Field()

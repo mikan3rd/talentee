@@ -21,7 +21,10 @@ import { AppService } from "@/services/app.service";
         username: configService.get("DB_USERNAME"),
         password: configService.get("DB_PASSWORD"),
         database: configService.get("DB_NAME"),
-        extra: { socketPath: configService.get("DB_SOCKET_PATH") },
+        extra: {
+          socketPath: configService.get("DB_SOCKET_PATH"),
+          charset: "utf8mb4_bin",
+        },
         autoLoadEntities: true,
         synchronize: false,
       }),

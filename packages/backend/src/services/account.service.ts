@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, Repository } from "typeorm";
+import { DeepPartial, EntityManager, Repository } from "typeorm";
 
 import { AccountModel } from "@/models/account.model";
 
@@ -28,7 +28,7 @@ export class AccountService {
     return this.accountRepository.find({ relations: ["youtubeChannels"] });
   }
 
-  async save(payload: DeepPartial<AccountModel>) {
-    return this.accountRepository.save(payload);
+  async save(payload: DeepPartial<AccountModel>, manager: EntityManager) {
+    return manager.getRepository(AccountModel).save(payload);
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { google, youtube_v3 } from "googleapis";
-import { Connection, DeepPartial, In, Repository } from "typeorm";
+import { Connection, DeepPartial, EntityManager, In, Repository } from "typeorm";
 
 import { AccountModel } from "@/models/account.model";
 import { YoutubeChannelModel } from "@/models/youtubeChannel.model";
@@ -32,23 +32,23 @@ export class YoutubeService {
     return google.youtube({ version: "v3", auth: this.configService.get("YOUTUBE_API_KEY") });
   }
 
-  async saveChannel(payload: DeepPartial<YoutubeChannelModel>) {
-    return this.youtubeChannelModelRepository.save(payload);
+  async saveChannel(payload: DeepPartial<YoutubeChannelModel>, manager: EntityManager) {
+    return manager.getRepository(YoutubeChannelModel).save(payload);
   }
 
-  async saveKeywords(payloads: DeepPartial<YoutubeKeywordModel>[]) {
+  async saveKeywords(payloads: DeepPartial<YoutubeKeywordModel>[], manager: EntityManager) {
     const keywordTitles = payloads.map((payload) => payload.title);
-    const existKeywords = await this.getKeywordsByTitle(keywordTitles);
+    const existKeywords = await this.getKeywordsByTitle(keywordTitles, manager);
     const existKeywordTitles = existKeywords.map((keyword) => keyword.title);
     const notExistKeywords = keywordTitles
       .filter((title) => !existKeywordTitles.includes(title))
       .map((title) => ({ title }));
-    await this.youtubeKeywordRepository.insert(notExistKeywords);
-    return await this.getKeywordsByTitle(keywordTitles);
+    await manager.getRepository(YoutubeKeywordModel).insert(notExistKeywords);
+    return await this.getKeywordsByTitle(keywordTitles, manager);
   }
 
-  async getKeywordsByTitle(keywordTitles: string[]) {
-    return this.youtubeKeywordRepository.find({
+  async getKeywordsByTitle(keywordTitles: string[], manager: EntityManager) {
+    return manager.getRepository(YoutubeKeywordModel).find({
       where: { title: In(keywordTitles) },
     });
   }
@@ -115,22 +115,24 @@ export class YoutubeService {
         }
       }
 
-      console.log(data);
+      console.log(data.id, data.title);
 
-      data.keywords = await this.saveKeywords(data.keywords);
+      await this.connection.transaction(async (manager) => {
+        data.keywords = await this.saveKeywords(data.keywords, manager);
 
-      let account = await this.accountService.findByYoutubeChannelId(data.id);
-      if (!account) {
-        const accountData: DeepPartial<AccountModel> = {
-          displayName: data.title,
-          username: data.id,
-          thumbnailUrl: data.thumbnailUrl,
-        };
-        account = await this.accountService.save(accountData);
-      }
+        let account = await this.accountService.findByYoutubeChannelId(data.id);
+        if (!account) {
+          const accountData: DeepPartial<AccountModel> = {
+            displayName: data.title,
+            username: data.id,
+            thumbnailUrl: data.thumbnailUrl,
+          };
+          account = await this.accountService.save(accountData, manager);
+        }
 
-      data.account = account;
-      await this.saveChannel(data);
+        data.account = account;
+        await this.saveChannel(data, manager);
+      });
     }
   }
 
