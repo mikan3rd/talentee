@@ -38,7 +38,7 @@ export class YoutubeChannelModel {
   country: string;
 
   @Field()
-  @Column({ type: "date" })
+  @Column({ type: "datetime" })
   publishedAt: Date;
 
   @Field()
