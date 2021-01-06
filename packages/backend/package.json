@@ -34,7 +34,7 @@
     "apollo-server-express": "2.19.1",
     "axios": "0.21.1",
     "cheerio": "1.0.0-rc.5",
-    "googleapis": "60.0.1",
+    "googleapis": "66.0.0",
     "graphql": "15.4.0",
     "graphql-tools": "7.0.2",
     "https-proxy-agent": "5.0.0",

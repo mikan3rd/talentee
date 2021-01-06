@@ -176,7 +176,6 @@ export class YoutubeService {
 
     for (const item of videoResponse.data.items) {
       const data = this.formatVideoData(item);
-      console.log(data);
 
       await this.connection.transaction(async (manager) => {
         data.tags = await this.saveTags(data.tags, manager);
