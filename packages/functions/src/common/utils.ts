@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import puppeteer from "puppeteer";
+import { LaunchOptions } from "puppeteer";
 import puppeteerExtra from "puppeteer-extra";
 import StealthPlugin = require("puppeteer-extra-plugin-stealth");
 
@@ -61,7 +61,7 @@ export const puppeteerSetup = async (proxyType: ProxyType = "none") => {
     args.push(`--proxy-server=${proxy}`);
   }
 
-  const options: puppeteer.LaunchOptions = {
+  const options: LaunchOptions = {
     // ignoreHTTPSErrors: true,
     headless: true,
     devtools: false,
