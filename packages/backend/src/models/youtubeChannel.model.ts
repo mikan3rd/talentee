@@ -7,12 +7,14 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 import { AccountModel } from "@/models/account.model";
 import { YoutubeKeywordModel } from "@/models/youtubeKeyword.model";
+import { YoutubeVideoModel } from "@/models/youtubeVideo.model";
 
 @ObjectType()
 @Entity("youtubeChannels")
@@ -38,20 +40,20 @@ export class YoutubeChannelModel {
   country: string;
 
   @Field()
-  @Column({ type: "date" })
+  @Column({ type: "datetime" })
   publishedAt: Date;
 
   @Field()
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  subscriberCount: string;
+  subscriberCount: string | null;
 
   @Field()
   @Column({ type: "bigint", unsigned: true })
   viewCount: string;
 
   @Field()
-  @Column({ type: "int", unsigned: true })
-  videoCount: number;
+  @Column({ type: "bigint", unsigned: true })
+  videoCount: string;
 
   @Field()
   @Column()
@@ -79,6 +81,10 @@ export class YoutubeChannelModel {
     },
   })
   keywords: YoutubeKeywordModel[];
+
+  @Field((type) => [YoutubeVideoModel], { defaultValue: [] })
+  @OneToMany((type) => YoutubeVideoModel, (video) => video.channel)
+  videos: YoutubeVideoModel[];
 
   @Field((type) => AccountModel)
   @ManyToOne((type) => AccountModel, (account) => account.youtubeChannels, {

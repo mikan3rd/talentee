@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios, { AxiosRequestConfig } from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import * as puppeteer from "puppeteer";
+import { LaunchOptions } from "puppeteer";
 import puppeteerExtra from "puppeteer-extra";
 import StealthPlugin = require("puppeteer-extra-plugin-stealth");
 
@@ -42,6 +42,57 @@ export class CrawlService {
     return axios.create(config);
   }
 
+  async puppeteerSetup(proxyType: ProxyType = "none") {
+    const args = [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "-–disable-dev-shm-usage",
+      "--disable-gpu",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--lang=ja",
+    ];
+
+    // -w "%{time_starttransfer}\n"
+    if (proxyType === "normal") {
+      const proxy = `${this.configService.get("PROXY_HOST_2")}:${this.configService.get("PROXY_PORT_2")}`;
+      args.push(`--proxy-server=${proxy}`);
+    }
+    if (proxyType === "exclusive") {
+      const proxy = `${this.configService.get("PROXY_HOST")}:${this.configService.get("PROXY_PORT")}`;
+      args.push(`--proxy-server=${proxy}`);
+    }
+
+    const options: LaunchOptions = {
+      // ignoreHTTPSErrors: true,
+      headless: true,
+      devtools: false,
+      args,
+    };
+
+    const browser = await puppeteerExtra.use(StealthPlugin()).launch(options);
+    const page = await browser.newPage();
+
+    if (proxyType === "normal") {
+      await page.authenticate({
+        username: this.configService.get("PROXY_USERNAME_2"),
+        password: this.configService.get("PROXY_PASSWORD_2"),
+      });
+    }
+    if (proxyType === "exclusive") {
+      await page.authenticate({
+        username: this.configService.get("PROXY_USERNAME"),
+        password: this.configService.get("PROXY_PASSWORD"),
+      });
+    }
+
+    await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
+    await page.setUserAgent(UserAgent);
+
+    return { browser, page };
+  }
+
   async getTrendVideoIds() {
     const baseUrl = `https://www.youtube.com`;
     const trendUrl = `${baseUrl}/feed/trending`;
@@ -68,6 +119,34 @@ export class CrawlService {
         videoIds = videoIds.concat(videoMatchResults);
       }
     }
+
+    const uniqueVideoIds = Array.from(new Set(videoIds));
+    console.log({ uniqueVideoIds });
+    return uniqueVideoIds;
+  }
+
+  async getChannelPopularVideo(channelId: string) {
+    const { browser, page } = await this.puppeteerSetup();
+
+    const targetChannelUrl = `https://www.youtube.com/channel/${channelId}/videos?sort=p`;
+    await page.goto(targetChannelUrl);
+
+    const LinkSelector = "a#thumbnail" as const;
+    await page.waitForSelector(LinkSelector);
+    const elements = await page.$$(LinkSelector);
+
+    const videoIds: string[] = [];
+
+    for (const ele of elements) {
+      const property = await ele.getProperty("href");
+      const value = (await property.jsonValue()) as string;
+      const videoId = value.replace("https://www.youtube.com/watch?v=", "");
+      if (videoId) {
+        videoIds.push(videoId);
+      }
+    }
+
+    await browser.close();
 
     const uniqueVideoIds = Array.from(new Set(videoIds));
     console.log({ uniqueVideoIds });
