@@ -43,16 +43,16 @@ export class YoutubeVideoModel {
   viewCount: string;
 
   @Field()
-  @Column({ type: "bigint", unsigned: true })
-  likeCount: string;
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  likeCount: string | null;
 
   @Field()
-  @Column({ type: "bigint", unsigned: true })
-  dislikeCount: string;
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  dislikeCount: string | null;
 
   @Field()
-  @Column({ type: "bigint", unsigned: true })
-  commentCount: string;
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  commentCount: string | null;
 
   @Field()
   @CreateDateColumn()

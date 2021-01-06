@@ -7,6 +7,8 @@ import { Connection, DeepPartial, EntityManager, In, Repository } from "typeorm"
 import { AccountModel } from "@/models/account.model";
 import { YoutubeChannelModel } from "@/models/youtubeChannel.model";
 import { YoutubeKeywordModel } from "@/models/youtubeKeyword.model";
+import { YoutubeTagModel } from "@/models/youtubeTag.model";
+import { YoutubeVideoModel } from "@/models/youtubeVideo.model";
 import { YoutubeVideoCategoryModel } from "@/models/youtubeVideoCategoriy.model";
 import { AccountService } from "@/services/account.service";
 import { CrawlService } from "@/services/crawl.service";
@@ -18,8 +20,6 @@ export class YoutubeService {
     private connection: Connection,
     @InjectRepository(YoutubeChannelModel)
     private youtubeChannelModelRepository: Repository<YoutubeChannelModel>,
-    @InjectRepository(YoutubeKeywordModel)
-    private youtubeKeywordRepository: Repository<YoutubeKeywordModel>,
     @InjectRepository(YoutubeVideoCategoryModel)
     private youtubeVideoCategoryRepository: Repository<YoutubeVideoCategoryModel>,
     private accountService: AccountService,
@@ -36,6 +36,10 @@ export class YoutubeService {
     return manager.getRepository(YoutubeChannelModel).save(payload);
   }
 
+  async saveVideo(payload: DeepPartial<YoutubeVideoModel>, manager: EntityManager) {
+    return manager.getRepository(YoutubeVideoModel).save(payload);
+  }
+
   async saveKeywords(payloads: DeepPartial<YoutubeKeywordModel>[], manager: EntityManager) {
     const keywordTitles = payloads.map((payload) => payload.title);
     const existKeywords = await this.getKeywordsByTitle(keywordTitles, manager);
@@ -50,6 +54,21 @@ export class YoutubeService {
   async getKeywordsByTitle(keywordTitles: string[], manager: EntityManager) {
     return manager.getRepository(YoutubeKeywordModel).find({
       where: { title: In(keywordTitles) },
+    });
+  }
+
+  async saveTags(payloads: DeepPartial<YoutubeTagModel>[], manager: EntityManager) {
+    const titles = payloads.map((payload) => payload.title);
+    const existTags = await this.getTagsByTitle(titles, manager);
+    const existTagTitles = existTags.map((tag) => tag.title);
+    const notExistKeywords = titles.filter((title) => !existTagTitles.includes(title)).map((title) => ({ title }));
+    await manager.getRepository(YoutubeTagModel).insert(notExistKeywords);
+    return await this.getTagsByTitle(titles, manager);
+  }
+
+  async getTagsByTitle(titles: string[], manager: EntityManager) {
+    return manager.getRepository(YoutubeTagModel).find({
+      where: { title: In(titles) },
     });
   }
 
@@ -70,6 +89,13 @@ export class YoutubeService {
       assignable,
     }));
     await this.youtubeVideoCategoryRepository.save(videoCategoryEntities);
+  }
+
+  async saveAllChannelVideo() {
+    const channels = await this.youtubeChannelModelRepository.find();
+    for (const channel of channels) {
+      await this.saveChannelPopularVideo(channel.id);
+    }
   }
 
   async saveTrendChannel() {
@@ -136,7 +162,43 @@ export class YoutubeService {
     }
   }
 
-  async formatChannelData(item: youtube_v3.Schema$Channel): Promise<DeepPartial<YoutubeChannelModel>> {
+  async saveChannelPopularVideo(channelId: string) {
+    const videoIds = await this.crawlService.getChannelPopularVideo(channelId);
+
+    const videoResponse = await this.youtubeApi.videos.list({
+      part: ["id", "snippet", "contentDetails", "statistics", "player"],
+      hl: "ja",
+      regionCode: "JP",
+      id: videoIds.slice(0, 49),
+    });
+
+    const videoCategoryIdsObject: { [key: string]: number } = {};
+
+    for (const item of videoResponse.data.items) {
+      const data = this.formatVideoData(item);
+      console.log(data);
+
+      await this.connection.transaction(async (manager) => {
+        data.tags = await this.saveTags(data.tags, manager);
+        await this.saveVideo(data, manager);
+      });
+
+      const categoryId = data.videoCategory.id;
+      if (!videoCategoryIdsObject[categoryId]) {
+        videoCategoryIdsObject[categoryId] = 0;
+      }
+      videoCategoryIdsObject[categoryId] += 1;
+    }
+
+    const videoCategoryIds = Object.entries(videoCategoryIdsObject)
+      .map(([key, value]) => ({ key, value }))
+      .sort((a, b) => (a.value > b.value ? -1 : 1))
+      .map(({ key, value }) => key);
+
+    const mainVideoCategoryId = videoCategoryIds[0];
+  }
+
+  async formatChannelData(item: youtube_v3.Schema$Channel) {
     const {
       id,
       snippet: { title, description, country, thumbnails, publishedAt },
@@ -184,6 +246,30 @@ export class YoutubeService {
       videoCount: videoCount,
       hiddenSubscriberCount,
       keywords: uniqueKeywords.map((keyword) => ({ title: keyword })),
+    };
+    return data;
+  }
+
+  formatVideoData(item: youtube_v3.Schema$Video) {
+    const {
+      id,
+      snippet: { title, description, publishedAt, thumbnails, tags, channelId, categoryId },
+      statistics: { viewCount, likeCount, dislikeCount, commentCount },
+    } = item;
+    const uniqueTags = Array.from(new Set(tags ?? []));
+    const data: DeepPartial<YoutubeVideoModel> = {
+      id,
+      title,
+      description,
+      thumbnailUrl: thumbnails.medium.url,
+      viewCount,
+      likeCount,
+      dislikeCount,
+      commentCount,
+      publishedAt: new Date(publishedAt),
+      videoCategory: { id: Number(categoryId) },
+      tags: uniqueTags.map((tag) => ({ title: tag })) ?? [],
+      channel: { id: channelId },
     };
     return data;
   }

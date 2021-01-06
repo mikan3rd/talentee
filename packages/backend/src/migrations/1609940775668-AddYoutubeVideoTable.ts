@@ -1,14 +1,14 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddYoutubeVideoTable1609860233571 implements MigrationInterface {
-  name = "AddYoutubeVideoTable1609860233571";
+export class AddYoutubeVideoTable1609940775668 implements MigrationInterface {
+  name = "AddYoutubeVideoTable1609940775668";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       "CREATE TABLE `youtubeTags` (`id` int NOT NULL AUTO_INCREMENT, `title` varchar(255) NOT NULL, `num` int UNSIGNED NOT NULL DEFAULT '0', `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), UNIQUE INDEX `IDX_159806b25391307f5165cce5d6` (`title`), PRIMARY KEY (`id`)) ENGINE=InnoDB",
     );
     await queryRunner.query(
-      "CREATE TABLE `youtubeVideos` (`id` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` text NOT NULL, `thumbnailUrl` text NOT NULL, `publishedAt` datetime NOT NULL, `viewCount` bigint UNSIGNED NOT NULL, `likeCount` bigint UNSIGNED NOT NULL, `dislikeCount` bigint UNSIGNED NOT NULL, `commentCount` bigint UNSIGNED NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `videoCategoryId` int NOT NULL, `channelId` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB",
+      "CREATE TABLE `youtubeVideos` (`id` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` text NOT NULL, `thumbnailUrl` text NOT NULL, `publishedAt` datetime NOT NULL, `viewCount` bigint UNSIGNED NOT NULL, `likeCount` bigint UNSIGNED NULL DEFAULT NULL, `dislikeCount` bigint UNSIGNED NULL DEFAULT NULL, `commentCount` bigint UNSIGNED NULL DEFAULT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `videoCategoryId` int NOT NULL, `channelId` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB",
     );
     await queryRunner.query(
       "CREATE TABLE `youtube_videos_tags` (`video_id` varchar(255) NOT NULL, `tag_id` int NOT NULL, INDEX `IDX_beaad95f284f426e23c4f2a457` (`video_id`), INDEX `IDX_69e4109d8b91ace4984014783d` (`tag_id`), PRIMARY KEY (`video_id`, `tag_id`)) ENGINE=InnoDB",

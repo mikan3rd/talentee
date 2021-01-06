@@ -149,7 +149,7 @@ export class CrawlService {
     await browser.close();
 
     const uniqueVideoIds = Array.from(new Set(videoIds));
-    console.log(JSON.stringify({ uniqueVideoIds }));
+    console.log({ uniqueVideoIds });
     return uniqueVideoIds;
   }
 }
