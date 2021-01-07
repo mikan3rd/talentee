@@ -19,19 +19,21 @@
     "node-forge": "0.10.0"
   },
   "dependencies": {
+    "@prisma/client": "2.14.0",
     "dayjs": "1.9.8",
     "firebase": "8.2.1",
     "firebase-admin": "9.4.2"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "11.0.0",
+    "@prisma/cli": "2.14.0",
     "@types/node": "12.19.11",
     "@typescript-eslint/eslint-plugin": "4.11.1",
     "@typescript-eslint/parser": "4.11.1",
     "dotenv": "8.2.0",
     "eslint": "7.17.0",
     "eslint-config-prettier": "7.1.0",
-    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-import-resolver-typescript": "2.3.0",
     "eslint-import-resolver-webpack": "0.13.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-import": "2.22.1",
