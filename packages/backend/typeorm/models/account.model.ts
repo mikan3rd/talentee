@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 
 import { YoutubeChannel } from "typeorm/models/youtubeChannel.model";
 
-@Entity()
+@Entity("Account")
 export class Account {
   @PrimaryGeneratedColumn("uuid")
   uuid: string;

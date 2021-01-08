@@ -14,7 +14,7 @@ import { YoutubeChannel } from "typeorm/models/youtubeChannel.model";
 import { YoutubeTag } from "typeorm/models/youtubeTag.model";
 import { YoutubeVideoCategory } from "typeorm/models/youtubeVideoCategoriy.model";
 
-@Entity()
+@Entity("YoutubeVideo")
 export class YoutubeVideo {
   @PrimaryColumn()
   id: string;
@@ -51,13 +51,13 @@ export class YoutubeVideo {
 
   @ManyToMany((type) => YoutubeTag, (tag) => tag.videos)
   @JoinTable({
-    name: "youtube_videos_tags",
+    name: "YoutubeVideoTagRelation",
     joinColumn: {
-      name: "video_id",
+      name: "videoId",
       referencedColumnName: "id",
     },
     inverseJoinColumn: {
-      name: "tag_id",
+      name: "tagId",
       referencedColumnName: "id",
     },
   })

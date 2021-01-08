@@ -2,8 +2,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateC
 
 import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 
-@ObjectType()
-@Entity()
+@Entity("YoutubeVideoCategory")
 export class YoutubeVideoCategory {
   @PrimaryColumn()
   id: number;

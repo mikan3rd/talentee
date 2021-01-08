@@ -15,7 +15,7 @@ import { Account } from "typeorm/models/account.model";
 import { YoutubeKeyword } from "typeorm/models/youtubeKeyword.model";
 import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 
-@Entity()
+@Entity("YoutubeChannel")
 export class YoutubeChannel {
   @PrimaryColumn()
   id: string;
@@ -55,13 +55,13 @@ export class YoutubeChannel {
 
   @ManyToMany((type) => YoutubeKeyword, (keyword) => keyword.channels)
   @JoinTable({
-    name: "youtube_channels_keywords",
+    name: "YoutubeChannelKeywordRelation",
     joinColumn: {
-      name: "channel_id",
+      name: "channelId",
       referencedColumnName: "id",
     },
     inverseJoinColumn: {
-      name: "keyword_id",
+      name: "keywordId",
       referencedColumnName: "id",
     },
   })

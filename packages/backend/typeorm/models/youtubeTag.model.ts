@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, U
 
 import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 
-@Entity()
+@Entity("YoutubeTag")
 export class YoutubeTag {
   @PrimaryGeneratedColumn()
   id: number;
