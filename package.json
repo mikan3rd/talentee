@@ -31,7 +31,7 @@
     "dotenv": "8.2.0",
     "eslint": "7.17.0",
     "eslint-config-prettier": "7.1.0",
-    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-import-resolver-typescript": "2.3.0",
     "eslint-import-resolver-webpack": "0.13.0",
     "eslint-loader": "4.0.2",
     "eslint-plugin-import": "2.22.1",
