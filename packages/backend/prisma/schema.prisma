@@ -14,7 +14,7 @@ model Account {
   username        String            @unique @db.VarChar(255)
   thumbnailUrl    String            @db.Text
   createdAt       DateTime          @default(now()) @db.Datetime(6)
-  updatedAt       DateTime          @default(now()) @db.Datetime(6)
+  updatedAt       DateTime          @updatedAt @db.Datetime(6)
   youtubeChannels YoutubeChannel[]
 }
 
@@ -52,7 +52,7 @@ model YoutubeChannel {
   videoCount                BigInt                      @db.BigInt
   hiddenSubscriberCount     Boolean                     @db.TinyInt
   createdAt                 DateTime                    @default(now()) @db.Datetime(6)
-  updatedAt                 DateTime                    @default(now()) @db.Datetime(6)
+  updatedAt                 DateTime                    @updatedAt @db.Datetime(6)
   accountId                 String                      @db.VarChar(36)
   account                  Account                      @relation(fields: [accountId], references: [uuid])
   keywords                 YoutubeChannelKeywordRelation[]
@@ -66,7 +66,7 @@ model YoutubeKeyword {
   title                     String                      @unique @db.VarChar(255)
   num                       Int                         @default(0) @db.Int
   createdAt                 DateTime                    @default(now()) @db.Datetime(6)
-  updatedAt                 DateTime                    @default(now()) @db.Datetime(6)
+  updatedAt                 DateTime                    @updatedAt @db.Datetime(6)
   channels                  YoutubeChannelKeywordRelation[]
 }
 
@@ -75,7 +75,7 @@ model YoutubeTag {
   title               String                @unique @db.VarChar(255)
   num                 Int                   @default(0) @db.Int
   createdAt           DateTime              @default(now()) @db.Datetime(6)
-  updatedAt           DateTime              @default(now()) @db.Datetime(6)
+  updatedAt           DateTime              @updatedAt @db.Datetime(6)
   videos YoutubeVideoTagRelation[]
 }
 
@@ -84,7 +84,7 @@ model YoutubeVideoCategory {
   title         String          @db.VarChar(255)
   assignable    Boolean         @db.TinyInt
   createdAt     DateTime        @default(now()) @db.Datetime(6)
-  updatedAt     DateTime        @default(now()) @db.Datetime(6)
+  updatedAt     DateTime        @updatedAt @db.Datetime(6)
   videos YoutubeVideo[]
 }
 
@@ -99,7 +99,7 @@ model YoutubeVideo {
   dislikeCount           BigInt?                @db.BigInt
   commentCount           BigInt?                @db.BigInt
   createdAt              DateTime               @default(now()) @db.Datetime(6)
-  updatedAt              DateTime               @default(now()) @db.Datetime(6)
+  updatedAt              DateTime               @updatedAt @db.Datetime(6)
   videoCategoryId        Int                    @db.Int
   channelId              String                 @db.VarChar(255)
   channels        YoutubeChannel        @relation(fields: [channelId], references: [id])

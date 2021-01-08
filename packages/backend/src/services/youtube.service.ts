@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Prisma } from "@prisma/client";
 import { google, youtube_v3 } from "googleapis";
 import { Connection, DeepPartial, EntityManager, In, Repository } from "typeorm";
 
@@ -14,16 +13,10 @@ import { YoutubeChannel } from "typeorm/models/youtubeChannel.model";
 import { YoutubeKeyword } from "typeorm/models/youtubeKeyword.model";
 import { YoutubeTag } from "typeorm/models/youtubeTag.model";
 import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
-import { YoutubeVideoCategory } from "typeorm/models/youtubeVideoCategoriy.model";
 
 @Injectable()
 export class YoutubeService {
   constructor(
-    private connection: Connection,
-    @InjectRepository(YoutubeChannel)
-    private youtubeChannelModelRepository: Repository<YoutubeChannel>,
-    @InjectRepository(YoutubeVideoCategory)
-    private youtubeVideoCategoryRepository: Repository<YoutubeVideoCategory>,
     private accountService: AccountService,
     private crawlService: CrawlService,
     private utilsService: UtilsService,
@@ -86,120 +79,130 @@ export class YoutubeService {
 
   async saveVideoCategories() {
     const videoCategories = await this.getVideoCategories();
-    const videoCategoryEntities = videoCategories.map(({ id, snippet: { title, assignable } }) => ({
-      id: Number(id),
-      title,
-      assignable,
-    }));
-    // await this.prisma.youtubeVideo.updateMany({})
-    await this.youtubeVideoCategoryRepository.save(videoCategoryEntities);
-  }
 
-  async saveAllChannelVideo() {
-    const channels = await this.youtubeChannelModelRepository.find();
-    for (const channel of channels) {
-      await this.saveChannelPopularVideo(channel.id);
-    }
-  }
+    const values = videoCategories.map((category) => {
+      const {
+        snippet: { title, assignable },
+      } = category;
 
-  async saveTrendChannel() {
-    const videoIds = await this.crawlService.getTrendVideoIds();
-    console.log({ "videoIds.length": videoIds.length });
+      const id = Number(category.id);
+      const data = { id, title, assignable };
 
-    let channnelIds: string[] = [];
-    for (const chunkVideoIds of this.utilsService.chunk(videoIds, 50)) {
-      const videoResponse = await this.youtubeApi.videos.list({
-        part: ["id", "snippet", "contentDetails", "statistics", "player"],
-        hl: "ja",
-        regionCode: "JP",
-        id: chunkVideoIds,
+      return this.prisma.youtubeVideoCategory.upsert({
+        where: { id },
+        create: data,
+        update: data,
       });
-      channnelIds = channnelIds.concat(videoResponse.data.items.map((item) => item.snippet.channelId));
-    }
-
-    console.log({ "channnelIds.length": channnelIds.length });
-    await this.saveChannelByChannelIds(channnelIds);
-  }
-
-  async saveChannelByChannelIds(channelIds: string[], check = true) {
-    const uniqueChannelIds = Array.from(new Set(channelIds));
-
-    let channelItems: youtube_v3.Schema$Channel[] = [];
-    for (const chunkChannelIds of this.utilsService.chunk(uniqueChannelIds, 50)) {
-      const channelResponse = await this.youtubeApi.channels.list({
-        part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
-        id: chunkChannelIds,
-      });
-      channelItems = channelItems.concat(channelResponse.data.items);
-    }
-
-    for (const item of channelItems) {
-      const data = await this.formatChannelData(item);
-
-      if (check) {
-        if (data.country !== "JP") {
-          continue;
-        }
-        if (Number(data.subscriberCount) < 10000 && Number(data.viewCount) < 1000000) {
-          continue;
-        }
-      }
-
-      console.log(data.id, data.title);
-
-      await this.connection.transaction(async (manager) => {
-        data.keywords = await this.saveKeywords(data.keywords, manager);
-
-        let account = await this.accountService.findByYoutubeChannelId(data.id);
-        if (!account) {
-          const accountData: DeepPartial<Account> = {
-            displayName: data.title,
-            username: data.id,
-            thumbnailUrl: data.thumbnailUrl,
-          };
-          account = await this.accountService.save(accountData, manager);
-        }
-
-        data.account = account;
-        await this.saveChannel(data, manager);
-      });
-    }
-  }
-
-  async saveChannelPopularVideo(channelId: string) {
-    const videoIds = await this.crawlService.getChannelPopularVideo(channelId);
-
-    const videoResponse = await this.youtubeApi.videos.list({
-      part: ["id", "snippet", "contentDetails", "statistics", "player"],
-      hl: "ja",
-      regionCode: "JP",
-      id: videoIds.slice(0, 49),
     });
 
-    const videoCategoryIdsObject: { [key: string]: number } = {};
-
-    for (const item of videoResponse.data.items) {
-      const data = this.formatVideoData(item);
-
-      await this.connection.transaction(async (manager) => {
-        data.tags = await this.saveTags(data.tags, manager);
-        await this.saveVideo(data, manager);
-      });
-
-      const categoryId = data.videoCategory.id;
-      if (!videoCategoryIdsObject[categoryId]) {
-        videoCategoryIdsObject[categoryId] = 0;
-      }
-      videoCategoryIdsObject[categoryId] += 1;
-    }
-
-    const videoCategoryIds = Object.entries(videoCategoryIdsObject)
-      .map(([key, value]) => ({ key, value }))
-      .sort((a, b) => (a.value > b.value ? -1 : 1))
-      .map(({ key, value }) => key);
-
-    const mainVideoCategoryId = videoCategoryIds[0];
+    await this.prisma.$transaction(values);
   }
+
+  // async saveAllChannelVideo() {
+  //   const channels = await this.youtubeChannelModelRepository.find();
+  //   for (const channel of channels) {
+  //     await this.saveChannelPopularVideo(channel.id);
+  //   }
+  // }
+
+  // async saveTrendChannel() {
+  //   const videoIds = await this.crawlService.getTrendVideoIds();
+  //   console.log({ "videoIds.length": videoIds.length });
+
+  //   let channnelIds: string[] = [];
+  //   for (const chunkVideoIds of this.utilsService.chunk(videoIds, 50)) {
+  //     const videoResponse = await this.youtubeApi.videos.list({
+  //       part: ["id", "snippet", "contentDetails", "statistics", "player"],
+  //       hl: "ja",
+  //       regionCode: "JP",
+  //       id: chunkVideoIds,
+  //     });
+  //     channnelIds = channnelIds.concat(videoResponse.data.items.map((item) => item.snippet.channelId));
+  //   }
+
+  //   console.log({ "channnelIds.length": channnelIds.length });
+  //   await this.saveChannelByChannelIds(channnelIds);
+  // }
+
+  // async saveChannelByChannelIds(channelIds: string[], check = true) {
+  //   const uniqueChannelIds = Array.from(new Set(channelIds));
+
+  //   let channelItems: youtube_v3.Schema$Channel[] = [];
+  //   for (const chunkChannelIds of this.utilsService.chunk(uniqueChannelIds, 50)) {
+  //     const channelResponse = await this.youtubeApi.channels.list({
+  //       part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
+  //       id: chunkChannelIds,
+  //     });
+  //     channelItems = channelItems.concat(channelResponse.data.items);
+  //   }
+
+  //   for (const item of channelItems) {
+  //     const data = await this.formatChannelData(item);
+
+  //     if (check) {
+  //       if (data.country !== "JP") {
+  //         continue;
+  //       }
+  //       if (Number(data.subscriberCount) < 10000 && Number(data.viewCount) < 1000000) {
+  //         continue;
+  //       }
+  //     }
+
+  //     console.log(data.id, data.title);
+
+  //     await this.connection.transaction(async (manager) => {
+  //       data.keywords = await this.saveKeywords(data.keywords, manager);
+
+  //       let account = await this.accountService.findByYoutubeChannelId(data.id);
+  //       if (!account) {
+  //         const accountData: DeepPartial<Account> = {
+  //           displayName: data.title,
+  //           username: data.id,
+  //           thumbnailUrl: data.thumbnailUrl,
+  //         };
+  //         account = await this.accountService.save(accountData, manager);
+  //       }
+
+  //       data.account = account;
+  //       await this.saveChannel(data, manager);
+  //     });
+  //   }
+  // }
+
+  // async saveChannelPopularVideo(channelId: string) {
+  //   const videoIds = await this.crawlService.getChannelPopularVideo(channelId);
+
+  //   const videoResponse = await this.youtubeApi.videos.list({
+  //     part: ["id", "snippet", "contentDetails", "statistics", "player"],
+  //     hl: "ja",
+  //     regionCode: "JP",
+  //     id: videoIds.slice(0, 49),
+  //   });
+
+  //   const videoCategoryIdsObject: { [key: string]: number } = {};
+
+  //   for (const item of videoResponse.data.items) {
+  //     const data = this.formatVideoData(item);
+
+  //     await this.connection.transaction(async (manager) => {
+  //       data.tags = await this.saveTags(data.tags, manager);
+  //       await this.saveVideo(data, manager);
+  //     });
+
+  //     const categoryId = data.videoCategory.id;
+  //     if (!videoCategoryIdsObject[categoryId]) {
+  //       videoCategoryIdsObject[categoryId] = 0;
+  //     }
+  //     videoCategoryIdsObject[categoryId] += 1;
+  //   }
+
+  //   const videoCategoryIds = Object.entries(videoCategoryIdsObject)
+  //     .map(([key, value]) => ({ key, value }))
+  //     .sort((a, b) => (a.value > b.value ? -1 : 1))
+  //     .map(({ key, value }) => key);
+
+  //   const mainVideoCategoryId = videoCategoryIds[0];
+  // }
 
   async formatChannelData(item: youtube_v3.Schema$Channel) {
     const {
