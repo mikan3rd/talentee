@@ -2,13 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeepPartial, EntityManager, Repository } from "typeorm";
 
-import { AccountModel } from "@/models/account.model";
+import { Account } from "typeorm/models/account.model";
 
 @Injectable()
 export class AccountService {
   constructor(
-    @InjectRepository(AccountModel)
-    private accountRepository: Repository<AccountModel>,
+    @InjectRepository(Account)
+    private accountRepository: Repository<Account>,
   ) {}
 
   async findOne(id: number) {
@@ -28,7 +28,7 @@ export class AccountService {
     return this.accountRepository.find({ relations: ["youtubeChannels"] });
   }
 
-  async save(payload: DeepPartial<AccountModel>, manager: EntityManager) {
-    return manager.getRepository(AccountModel).save(payload);
+  async save(payload: DeepPartial<Account>, manager: EntityManager) {
+    return manager.getRepository(Account).save(payload);
   }
 }

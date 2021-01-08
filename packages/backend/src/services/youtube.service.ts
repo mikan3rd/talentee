@@ -1,73 +1,76 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Prisma } from "@prisma/client";
 import { google, youtube_v3 } from "googleapis";
 import { Connection, DeepPartial, EntityManager, In, Repository } from "typeorm";
 
-import { AccountModel } from "@/models/account.model";
-import { YoutubeChannelModel } from "@/models/youtubeChannel.model";
-import { YoutubeKeywordModel } from "@/models/youtubeKeyword.model";
-import { YoutubeTagModel } from "@/models/youtubeTag.model";
-import { YoutubeVideoModel } from "@/models/youtubeVideo.model";
-import { YoutubeVideoCategoryModel } from "@/models/youtubeVideoCategoriy.model";
 import { AccountService } from "@/services/account.service";
 import { CrawlService } from "@/services/crawl.service";
+import { PrismaService } from "@/services/prisma.service";
 import { UtilsService } from "@/services/utils.service";
+import { Account } from "typeorm/models/account.model";
+import { YoutubeChannel } from "typeorm/models/youtubeChannel.model";
+import { YoutubeKeyword } from "typeorm/models/youtubeKeyword.model";
+import { YoutubeTag } from "typeorm/models/youtubeTag.model";
+import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
+import { YoutubeVideoCategory } from "typeorm/models/youtubeVideoCategoriy.model";
 
 @Injectable()
 export class YoutubeService {
   constructor(
     private connection: Connection,
-    @InjectRepository(YoutubeChannelModel)
-    private youtubeChannelModelRepository: Repository<YoutubeChannelModel>,
-    @InjectRepository(YoutubeVideoCategoryModel)
-    private youtubeVideoCategoryRepository: Repository<YoutubeVideoCategoryModel>,
+    @InjectRepository(YoutubeChannel)
+    private youtubeChannelModelRepository: Repository<YoutubeChannel>,
+    @InjectRepository(YoutubeVideoCategory)
+    private youtubeVideoCategoryRepository: Repository<YoutubeVideoCategory>,
     private accountService: AccountService,
     private crawlService: CrawlService,
     private utilsService: UtilsService,
     private configService: ConfigService<EnvironmentVariables>,
+    private prisma: PrismaService,
   ) {}
 
   get youtubeApi() {
     return google.youtube({ version: "v3", auth: this.configService.get("YOUTUBE_API_KEY") });
   }
 
-  async saveChannel(payload: DeepPartial<YoutubeChannelModel>, manager: EntityManager) {
-    return manager.getRepository(YoutubeChannelModel).save(payload);
+  async saveChannel(payload: DeepPartial<YoutubeChannel>, manager: EntityManager) {
+    return manager.getRepository(YoutubeChannel).save(payload);
   }
 
-  async saveVideo(payload: DeepPartial<YoutubeVideoModel>, manager: EntityManager) {
-    return manager.getRepository(YoutubeVideoModel).save(payload);
+  async saveVideo(payload: DeepPartial<YoutubeVideo>, manager: EntityManager) {
+    return manager.getRepository(YoutubeVideo).save(payload);
   }
 
-  async saveKeywords(payloads: DeepPartial<YoutubeKeywordModel>[], manager: EntityManager) {
+  async saveKeywords(payloads: DeepPartial<YoutubeKeyword>[], manager: EntityManager) {
     const keywordTitles = payloads.map((payload) => payload.title);
     const existKeywords = await this.getKeywordsByTitle(keywordTitles, manager);
     const existKeywordTitles = existKeywords.map((keyword) => keyword.title);
     const notExistKeywords = keywordTitles
       .filter((title) => !existKeywordTitles.includes(title))
       .map((title) => ({ title }));
-    await manager.getRepository(YoutubeKeywordModel).insert(notExistKeywords);
+    await manager.getRepository(YoutubeKeyword).insert(notExistKeywords);
     return await this.getKeywordsByTitle(keywordTitles, manager);
   }
 
   async getKeywordsByTitle(keywordTitles: string[], manager: EntityManager) {
-    return manager.getRepository(YoutubeKeywordModel).find({
+    return manager.getRepository(YoutubeKeyword).find({
       where: { title: In(keywordTitles) },
     });
   }
 
-  async saveTags(payloads: DeepPartial<YoutubeTagModel>[], manager: EntityManager) {
+  async saveTags(payloads: DeepPartial<YoutubeTag>[], manager: EntityManager) {
     const titles = payloads.map((payload) => payload.title);
     const existTags = await this.getTagsByTitle(titles, manager);
     const existTagTitles = existTags.map((tag) => tag.title);
     const notExistKeywords = titles.filter((title) => !existTagTitles.includes(title)).map((title) => ({ title }));
-    await manager.getRepository(YoutubeTagModel).insert(notExistKeywords);
+    await manager.getRepository(YoutubeTag).insert(notExistKeywords);
     return await this.getTagsByTitle(titles, manager);
   }
 
   async getTagsByTitle(titles: string[], manager: EntityManager) {
-    return manager.getRepository(YoutubeTagModel).find({
+    return manager.getRepository(YoutubeTag).find({
       where: { title: In(titles) },
     });
   }
@@ -88,6 +91,7 @@ export class YoutubeService {
       title,
       assignable,
     }));
+    // await this.prisma.youtubeVideo.updateMany({})
     await this.youtubeVideoCategoryRepository.save(videoCategoryEntities);
   }
 
@@ -148,7 +152,7 @@ export class YoutubeService {
 
         let account = await this.accountService.findByYoutubeChannelId(data.id);
         if (!account) {
-          const accountData: DeepPartial<AccountModel> = {
+          const accountData: DeepPartial<Account> = {
             displayName: data.title,
             username: data.id,
             thumbnailUrl: data.thumbnailUrl,
@@ -233,7 +237,7 @@ export class YoutubeService {
 
     const uniqueKeywords = Array.from(new Set(keywordArray));
 
-    const data: DeepPartial<YoutubeChannelModel> = {
+    const data: DeepPartial<YoutubeChannel> = {
       id,
       title,
       description,
@@ -256,7 +260,7 @@ export class YoutubeService {
       statistics: { viewCount, likeCount, dislikeCount, commentCount },
     } = item;
     const uniqueTags = Array.from(new Set(tags ?? []));
-    const data: DeepPartial<YoutubeVideoModel> = {
+    const data: DeepPartial<YoutubeVideo> = {
       id,
       title,
       description,
