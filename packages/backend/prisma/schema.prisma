@@ -102,8 +102,8 @@ model YoutubeVideo {
   updatedAt              DateTime               @updatedAt @db.Datetime(6)
   videoCategoryId        Int                    @db.Int
   channelId              String                 @db.VarChar(255)
-  channels        YoutubeChannel        @relation(fields: [channelId], references: [id])
-  videoCategories YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
+  channel        YoutubeChannel        @relation(fields: [channelId], references: [id])
+  videoCategory YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
   tags    YoutubeVideoTagRelation[]
 
   @@index([channelId])

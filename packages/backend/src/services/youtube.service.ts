@@ -106,12 +106,12 @@ export class YoutubeService {
     await this.prisma.$transaction(values ?? []);
   }
 
-  // async saveAllChannelVideo() {
-  //   const channels = await this.youtubeChannelModelRepository.find();
-  //   for (const channel of channels) {
-  //     await this.saveChannelPopularVideo(channel.id);
-  //   }
-  // }
+  async saveAllChannelVideo() {
+    const channels = await this.prisma.youtubeChannel.findMany();
+    for (const channel of channels) {
+      await this.saveChannelPopularVideo(channel.id);
+    }
+  }
 
   async saveTrendChannel() {
     const videoIds = await this.crawlService.getTrendVideoIds();
@@ -170,21 +170,21 @@ export class YoutubeService {
 
       console.log(youtubeChannel.id, youtubeChannel.title);
 
-      const existKeywords = await this.findKeywords(youtubeKeywords.map((keyword) => keyword.title));
+      const existKeywords = await this.findKeywords(youtubeKeywords);
 
       const keywords: Prisma.YoutubeChannelKeywordRelationCreateManyWithoutChannelsInput = {
-        connectOrCreate: youtubeKeywords.map((keyword) => ({
+        connectOrCreate: youtubeKeywords.map((title) => ({
           where: {
             channelId_keywordId: {
               channelId: youtubeChannel.id,
-              keywordId: existKeywords.find((exist) => exist.title === keyword.title)?.id ?? 0,
+              keywordId: existKeywords.find((exist) => exist.title === title)?.id ?? 0,
             },
           },
           create: {
             keywords: {
               connectOrCreate: {
-                where: { title: keyword.title },
-                create: { title: keyword.title },
+                where: { title },
+                create: { title },
               },
             },
           },
@@ -210,40 +210,64 @@ export class YoutubeService {
     }
   }
 
-  // async saveChannelPopularVideo(channelId: string) {
-  //   const videoIds = await this.crawlService.getChannelPopularVideo(channelId);
+  async saveChannelPopularVideo(channelId: string) {
+    const videoIds = await this.crawlService.getChannelPopularVideo(channelId);
 
-  //   const videoResponse = await this.youtubeApi.videos.list({
-  //     part: ["id", "snippet", "contentDetails", "statistics", "player"],
-  //     hl: "ja",
-  //     regionCode: "JP",
-  //     id: videoIds.slice(0, 49),
-  //   });
+    const videoResponse = await this.youtubeApi.videos.list({
+      part: ["id", "snippet", "contentDetails", "statistics", "player"],
+      hl: "ja",
+      regionCode: "JP",
+      id: videoIds.slice(0, 49),
+    });
 
-  //   const videoCategoryIdsObject: { [key: string]: number } = {};
+    const videoCategoryIdsObject: { [key: string]: number } = {};
 
-  //   for (const item of videoResponse.data.items) {
-  //     const data = this.formatVideoData(item);
+    for (const item of videoResponse.data.items ?? []) {
+      const { youtubeVideo, youtubeVideoCategoryId, youtubeTags, youtubeChannelId } = this.formatVideoData(item);
 
-  //     await this.connection.transaction(async (manager) => {
-  //       data.tags = await this.saveTags(data.tags, manager);
-  //       await this.saveVideo(data, manager);
-  //     });
+      console.log(youtubeVideo.id, youtubeVideo.title);
 
-  //     const categoryId = data.videoCategory.id;
-  //     if (!videoCategoryIdsObject[categoryId]) {
-  //       videoCategoryIdsObject[categoryId] = 0;
-  //     }
-  //     videoCategoryIdsObject[categoryId] += 1;
-  //   }
+      const existTags = await this.findTags(youtubeTags);
+      const tags: Prisma.YoutubeVideoTagRelationCreateManyWithoutVideosInput = {
+        connectOrCreate: youtubeTags.map((title) => ({
+          where: {
+            videoId_tagId: {
+              videoId: youtubeVideo.id,
+              tagId: existTags.find((exist) => exist.title === title)?.id ?? 0,
+            },
+          },
+          create: {
+            tags: {
+              connectOrCreate: {
+                where: { title },
+                create: { title },
+              },
+            },
+          },
+        })),
+      };
 
-  //   const videoCategoryIds = Object.entries(videoCategoryIdsObject)
-  //     .map(([key, value]) => ({ key, value }))
-  //     .sort((a, b) => (a.value > b.value ? -1 : 1))
-  //     .map(({ key, value }) => key);
+      const data: Prisma.YoutubeVideoCreateInput = {
+        ...youtubeVideo,
+        channel: { connect: { id: youtubeChannelId } },
+        videoCategory: { connect: { id: youtubeVideoCategoryId } },
+        tags,
+      };
+      await this.saveVideo(data);
 
-  //   const mainVideoCategoryId = videoCategoryIds[0];
-  // }
+      if (!videoCategoryIdsObject[youtubeVideoCategoryId]) {
+        videoCategoryIdsObject[youtubeVideoCategoryId] = 0;
+      }
+      videoCategoryIdsObject[youtubeVideoCategoryId] += 1;
+    }
+
+    const videoCategoryIds = Object.entries(videoCategoryIdsObject)
+      .map(([key, value]) => ({ key, value }))
+      .sort((a, b) => (a.value > b.value ? -1 : 1))
+      .map(({ key, value }) => key);
+
+    const mainVideoCategoryId = videoCategoryIds[0];
+  }
 
   formatChannelData(item: youtube_v3.Schema$Channel) {
     const { id, snippet, statistics, brandingSettings } = item;
@@ -262,7 +286,6 @@ export class YoutubeService {
       typeof publishedAt !== "string" ||
       typeof hiddenSubscriberCount !== "boolean"
     ) {
-      console.log({ title, description, publishedAt, hiddenSubscriberCount });
       throw Error("formatChannelData: title,description,publishedAt,hiddenSubscriberCount is required");
     }
 
@@ -304,35 +327,51 @@ export class YoutubeService {
       videoCount: Number(videoCount),
       hiddenSubscriberCount,
     };
-    const youtubeKeywords: Prisma.YoutubeKeywordCreateInput[] = uniqueKeywords.map((keyword) => ({ title: keyword }));
-    return { youtubeChannel, youtubeKeywords };
+
+    return {
+      youtubeChannel,
+      youtubeKeywords: uniqueKeywords,
+    };
   }
 
-  // formatVideoData(item: youtube_v3.Schema$Video) {
-  //   const { id, snippet, statistics } = item;
+  formatVideoData(item: youtube_v3.Schema$Video) {
+    const { id, snippet, statistics } = item;
 
-  //   if (!id || !snippet || !statistics) {
-  //     return;
-  //   }
+    if (typeof id !== "string" || snippet === undefined || statistics === undefined) {
+      throw Error("formatVideoData: id,snippet,statistics is required");
+    }
 
-  //   const { title, description, publishedAt, thumbnails, tags, channelId, categoryId } = snippet;
-  //   const { viewCount, likeCount, dislikeCount, commentCount } = statistics;
+    const { title, description, publishedAt, thumbnails, tags, channelId, categoryId } = snippet;
+    const { viewCount, likeCount, dislikeCount, commentCount } = statistics;
 
-  //   const uniqueTags = Array.from(new Set(tags ?? []));
-  //   const data = {
-  //     id,
-  //     title,
-  //     description,
-  //     thumbnailUrl: thumbnails?.medium?.url,
-  //     viewCount,
-  //     likeCount,
-  //     dislikeCount,
-  //     commentCount,
-  //     publishedAt: new Date(publishedAt),
-  //     videoCategory: { id: Number(categoryId) },
-  //     tags: uniqueTags.map((tag) => ({ title: tag })) ?? [],
-  //     channel: { id: channelId },
-  //   };
-  //   return data;
-  // }
+    if (
+      typeof title !== "string" ||
+      typeof description !== "string" ||
+      typeof publishedAt !== "string" ||
+      typeof categoryId !== "string" ||
+      typeof channelId !== "string"
+    ) {
+      throw Error("formatChannelData: title,description,publishedAt,hiddenSubscriberCount is required");
+    }
+
+    const uniqueTags = Array.from(new Set(tags ?? []));
+    const youtubeVideo: Omit<Prisma.YoutubeVideoCreateInput, "channel" | "videoCategory"> = {
+      id,
+      title,
+      description,
+      thumbnailUrl: thumbnails?.medium?.url ?? "",
+      viewCount: Number(viewCount),
+      likeCount: typeof likeCount === "string" ? Number(likeCount) : null,
+      dislikeCount: typeof dislikeCount === "string" ? Number(dislikeCount) : null,
+      commentCount: typeof commentCount === "string" ? Number(commentCount) : null,
+      publishedAt: new Date(publishedAt),
+    };
+
+    return {
+      youtubeVideo,
+      youtubeTags: uniqueTags,
+      youtubeVideoCategoryId: Number(categoryId),
+      youtubeChannelId: channelId,
+    };
+  }
 }
