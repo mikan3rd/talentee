@@ -5,20 +5,20 @@ import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 @Entity("YoutubeTag")
 export class YoutubeTag {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ unique: true })
-  title: string;
+  title!: string;
 
   @Column({ type: "int", default: 0, unsigned: true })
-  num: number;
+  num!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToMany((type) => YoutubeVideo, (video) => video.tags)
-  videos: YoutubeVideo[];
+  videos!: YoutubeVideo[];
 }

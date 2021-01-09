@@ -5,20 +5,20 @@ import { YoutubeChannel } from "typeorm/models/youtubeChannel.model";
 @Entity("YoutubeKeyword")
 export class YoutubeKeyword {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ unique: true })
-  title: string;
+  title!: string;
 
   @Column({ type: "int", default: 0, unsigned: true })
-  num: number;
+  num!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToMany((type) => YoutubeChannel, (channel) => channel.keywords)
-  channels: YoutubeChannel[];
+  channels!: YoutubeChannel[];
 }

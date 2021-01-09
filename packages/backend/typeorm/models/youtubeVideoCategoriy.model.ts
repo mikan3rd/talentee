@@ -5,20 +5,20 @@ import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 @Entity("YoutubeVideoCategory")
 export class YoutubeVideoCategory {
   @PrimaryColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column()
-  assignable: boolean;
+  assignable!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @OneToMany((type) => YoutubeVideo, (video) => video.channel)
-  videos: YoutubeVideo[];
+  videos!: YoutubeVideo[];
 }

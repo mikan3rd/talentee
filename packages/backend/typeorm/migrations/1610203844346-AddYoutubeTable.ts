@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddYoutubeTable1610202877073 implements MigrationInterface {
-  name = "AddYoutubeTable1610202877073";
+export class AddYoutubeTable1610203844346 implements MigrationInterface {
+  name = "AddYoutubeTable1610203844346";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(

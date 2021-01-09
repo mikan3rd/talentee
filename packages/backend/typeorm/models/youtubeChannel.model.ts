@@ -18,40 +18,40 @@ import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 @Entity("YoutubeChannel")
 export class YoutubeChannel {
   @PrimaryColumn()
-  id: string;
+  id!: string;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column({ type: "text" })
-  description: string;
+  description!: string;
 
   @Column({ type: "text" })
-  thumbnailUrl: string;
+  thumbnailUrl!: string;
 
   @Column({ nullable: true, default: null })
-  country: string;
+  country!: string | null;
 
   @Column({ type: "datetime" })
-  publishedAt: Date;
+  publishedAt!: Date;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  subscriberCount: string | null;
+  subscriberCount!: string | null;
 
   @Column({ type: "bigint", unsigned: true })
-  viewCount: string;
+  viewCount!: string;
 
   @Column({ type: "bigint", unsigned: true })
-  videoCount: string;
+  videoCount!: string;
 
   @Column()
-  hiddenSubscriberCount: boolean;
+  hiddenSubscriberCount!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToMany((type) => YoutubeKeyword, (keyword) => keyword.channels)
   @JoinTable({
@@ -65,15 +65,15 @@ export class YoutubeChannel {
       referencedColumnName: "id",
     },
   })
-  keywords: YoutubeKeyword[];
+  keywords!: YoutubeKeyword[];
 
   @OneToMany((type) => YoutubeVideo, (video) => video.channel)
-  videos: YoutubeVideo[];
+  videos!: YoutubeVideo[];
 
   @ManyToOne((type) => Account, (account) => account.youtubeChannels, {
     nullable: false,
     onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "accountId" })
-  account: Account;
+  account!: Account;
 }

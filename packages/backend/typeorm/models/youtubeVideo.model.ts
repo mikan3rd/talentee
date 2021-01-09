@@ -17,37 +17,37 @@ import { YoutubeVideoCategory } from "typeorm/models/youtubeVideoCategoriy.model
 @Entity("YoutubeVideo")
 export class YoutubeVideo {
   @PrimaryColumn()
-  id: string;
+  id!: string;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column({ type: "text" })
-  description: string;
+  description!: string;
 
   @Column({ type: "text" })
-  thumbnailUrl: string;
+  thumbnailUrl!: string;
 
   @Column({ type: "datetime" })
-  publishedAt: Date;
+  publishedAt!: Date;
 
   @Column({ type: "bigint", unsigned: true })
-  viewCount: string;
+  viewCount!: string;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  likeCount: string | null;
+  likeCount!: string | null;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  dislikeCount: string | null;
+  dislikeCount!: string | null;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  commentCount: string | null;
+  commentCount!: string | null;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToMany((type) => YoutubeTag, (tag) => tag.videos)
   @JoinTable({
@@ -61,19 +61,19 @@ export class YoutubeVideo {
       referencedColumnName: "id",
     },
   })
-  tags: YoutubeTag[];
+  tags!: YoutubeTag[];
 
   @ManyToOne((type) => YoutubeVideoCategory, (category) => category.videos, {
     nullable: false,
     onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "videoCategoryId" })
-  videoCategory: YoutubeVideoCategory;
+  videoCategory!: YoutubeVideoCategory;
 
   @ManyToOne((type) => YoutubeChannel, (channel) => channel.videos, {
     nullable: false,
     onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "channelId" })
-  channel: YoutubeChannel;
+  channel!: YoutubeChannel;
 }

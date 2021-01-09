@@ -5,23 +5,23 @@ import { YoutubeChannel } from "typeorm/models/youtubeChannel.model";
 @Entity("Account")
 export class Account {
   @PrimaryGeneratedColumn("uuid")
-  uuid: string;
+  uuid!: string;
 
   @Column()
-  displayName: string; // 表示用の名前
+  displayName!: string; // 表示用の名前
 
   @Column({ unique: true })
-  username: string; // URLなどに使用する半角英数字
+  username!: string; // URLなどに使用する半角英数字
 
   @Column({ type: "text" })
-  thumbnailUrl: string;
+  thumbnailUrl!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @OneToMany((type) => YoutubeChannel, (channel) => channel.account)
-  youtubeChannels: YoutubeChannel[];
+  youtubeChannels!: YoutubeChannel[];
 }
