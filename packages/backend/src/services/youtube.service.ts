@@ -80,7 +80,6 @@ export class YoutubeService {
     const videoCategories = await this.getVideoCategories();
 
     const values = videoCategories?.map((category) => {
-      const { snippet } = category;
       const title = category.snippet?.title;
       const assignable = category.snippet?.assignable;
       if (!title || !assignable) {
