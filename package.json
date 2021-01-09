@@ -19,7 +19,7 @@
     "node-forge": "0.10.0"
   },
   "dependencies": {
-    "dayjs": "1.10.2",
+    "dayjs": "1.10.3",
     "firebase": "8.2.2",
     "firebase-admin": "9.4.2"
   },
