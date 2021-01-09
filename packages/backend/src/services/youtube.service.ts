@@ -57,15 +57,21 @@ export class YoutubeService {
     });
   }
 
-  async saveTags(payloads: Prisma.YoutubeTagCreateInput[]) {
-    return payloads.map((payload) =>
-      this.prisma.youtubeTag.upsert({
-        where: { title: payload.title },
-        create: payload,
-        update: payload,
-      }),
-    );
+  async findTags(titles: string[]) {
+    return this.prisma.youtubeTag.findMany({
+      where: { title: { in: titles } },
+    });
   }
+
+  // async saveTags(payloads: Prisma.YoutubeTagCreateInput[]) {
+  //   return payloads.map((payload) =>
+  //     this.prisma.youtubeTag.upsert({
+  //       where: { title: payload.title },
+  //       create: payload,
+  //       update: payload,
+  //     }),
+  //   );
+  // }
 
   async getVideoCategories() {
     const videoResponse = await this.youtubeApi.videoCategories.list({
@@ -80,13 +86,14 @@ export class YoutubeService {
     const videoCategories = await this.getVideoCategories();
 
     const values = videoCategories?.map((category) => {
-      const title = category.snippet?.title;
-      const assignable = category.snippet?.assignable;
-      if (!title || !assignable) {
-        throw Error();
+      const { id: idString, snippet } = category;
+      const title = snippet?.title;
+      const assignable = snippet?.assignable;
+      if (typeof idString !== "string" || typeof title !== "string" || typeof assignable !== "boolean") {
+        throw Error("title or assignable is required");
       }
 
-      const id = Number(category.id);
+      const id = Number(idString);
       const data = { id, title, assignable };
 
       return this.prisma.youtubeVideoCategory.upsert({
@@ -126,7 +133,7 @@ export class YoutubeService {
       const additionalChannelIds = videoResponse?.data?.items?.map((item) => {
         const channelId = item?.snippet?.channelId;
         if (typeof channelId !== "string") {
-          throw Error("");
+          throw Error("channelId is required");
         }
         return channelId;
       });
@@ -242,8 +249,8 @@ export class YoutubeService {
     const { id, snippet, statistics, brandingSettings } = item;
     const keywords = brandingSettings?.channel?.keywords;
 
-    if (!id || !snippet || !statistics) {
-      throw Error("formatChannelData: id,snippet,statistics");
+    if (typeof id !== "string" || snippet === undefined || statistics === undefined) {
+      throw Error("formatChannelData: id,snippet,statistics is required");
     }
 
     const { title, description, country, thumbnails, publishedAt } = snippet;
@@ -256,7 +263,7 @@ export class YoutubeService {
       typeof hiddenSubscriberCount !== "boolean"
     ) {
       console.log({ title, description, publishedAt, hiddenSubscriberCount });
-      throw Error("formatChannelData: some data not found");
+      throw Error("formatChannelData: title,description,publishedAt,hiddenSubscriberCount is required");
     }
 
     const keywordArray: string[] = [];
