@@ -29,7 +29,7 @@ export class YoutubeChannel {
   @Column({ type: "text" })
   thumbnailUrl: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   country: string;
 
   @Column({ type: "datetime" })

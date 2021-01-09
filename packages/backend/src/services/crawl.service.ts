@@ -76,14 +76,14 @@ export class CrawlService {
 
     if (proxyType === "normal") {
       await page.authenticate({
-        username: this.configService.get("PROXY_USERNAME_2"),
-        password: this.configService.get("PROXY_PASSWORD_2"),
+        username: this.configService.get("PROXY_USERNAME_2") ?? "",
+        password: this.configService.get("PROXY_PASSWORD_2") ?? "",
       });
     }
     if (proxyType === "exclusive") {
       await page.authenticate({
-        username: this.configService.get("PROXY_USERNAME"),
-        password: this.configService.get("PROXY_PASSWORD"),
+        username: this.configService.get("PROXY_USERNAME") ?? "",
+        password: this.configService.get("PROXY_PASSWORD") ?? "",
       });
     }
 

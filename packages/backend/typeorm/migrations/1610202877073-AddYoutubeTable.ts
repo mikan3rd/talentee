@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AddYoutubeTable1610113523805 implements MigrationInterface {
-  name = "AddYoutubeTable1610113523805";
+export class AddYoutubeTable1610202877073 implements MigrationInterface {
+  name = "AddYoutubeTable1610202877073";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -17,7 +17,7 @@ export class AddYoutubeTable1610113523805 implements MigrationInterface {
       "CREATE TABLE `YoutubeVideo` (`id` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` text NOT NULL, `thumbnailUrl` text NOT NULL, `publishedAt` datetime NOT NULL, `viewCount` bigint UNSIGNED NOT NULL, `likeCount` bigint UNSIGNED NULL DEFAULT NULL, `dislikeCount` bigint UNSIGNED NULL DEFAULT NULL, `commentCount` bigint UNSIGNED NULL DEFAULT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `videoCategoryId` int NOT NULL, `channelId` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB",
     );
     await queryRunner.query(
-      "CREATE TABLE `YoutubeChannel` (`id` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` text NOT NULL, `thumbnailUrl` text NOT NULL, `country` varchar(255) NOT NULL, `publishedAt` datetime NOT NULL, `subscriberCount` bigint UNSIGNED NULL DEFAULT NULL, `viewCount` bigint UNSIGNED NOT NULL, `videoCount` bigint UNSIGNED NOT NULL, `hiddenSubscriberCount` tinyint NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `accountId` varchar(36) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB",
+      "CREATE TABLE `YoutubeChannel` (`id` varchar(255) NOT NULL, `title` varchar(255) NOT NULL, `description` text NOT NULL, `thumbnailUrl` text NOT NULL, `country` varchar(255) NULL DEFAULT NULL, `publishedAt` datetime NOT NULL, `subscriberCount` bigint UNSIGNED NULL DEFAULT NULL, `viewCount` bigint UNSIGNED NOT NULL, `videoCount` bigint UNSIGNED NOT NULL, `hiddenSubscriberCount` tinyint NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `accountId` varchar(36) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB",
     );
     await queryRunner.query(
       "CREATE TABLE `Account` (`uuid` varchar(36) NOT NULL, `displayName` varchar(255) NOT NULL, `username` varchar(255) NOT NULL, `thumbnailUrl` text NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), UNIQUE INDEX `IDX_c8782447aa50983c50fa634d9c` (`username`), PRIMARY KEY (`uuid`)) ENGINE=InnoDB",

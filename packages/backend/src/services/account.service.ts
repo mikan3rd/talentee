@@ -1,17 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, EntityManager, Repository } from "typeorm";
+import { Prisma } from "@prisma/client";
 
 import { PrismaService } from "@/services/prisma.service";
-import { Account } from "typeorm/models/account.model";
 
 @Injectable()
 export class AccountService {
-  constructor(
-    // @InjectRepository(Account)
-    // private accountRepository: Repository<Account>,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   // async findOne(id: number) {
   //   return this.accountRepository.findOne(id, { relations: ["youtubeChannels"] });
@@ -30,7 +24,17 @@ export class AccountService {
   //   return this.accountRepository.find({ relations: ["youtubeChannels"] });
   // }
 
-  async save(payload: DeepPartial<Account>, manager: EntityManager) {
-    return manager.getRepository(Account).save(payload);
+  async findByYoutubeChannel(id: string) {
+    return this.prisma.youtubeChannel
+      .findUnique({
+        where: { id },
+      })
+      .account();
+  }
+
+  async create(payload: Prisma.AccountCreateInput) {
+    return this.prisma.account.create({
+      data: payload,
+    });
   }
 }

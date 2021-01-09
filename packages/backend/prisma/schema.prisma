@@ -45,7 +45,7 @@ model YoutubeChannel {
   title                     String                      @db.VarChar(255)
   description               String                      @db.Text
   thumbnailUrl              String                      @db.Text
-  country                   String                      @db.VarChar(255)
+  country                   String?                     @db.VarChar(255)
   publishedAt               DateTime                    @db.Datetime(0)
   subscriberCount           BigInt?                     @db.BigInt
   viewCount                 BigInt                      @db.BigInt
