@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Prisma, YoutubeChannelVideoCategory, YoutubeVideo } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { google, youtube_v3 } from "googleapis";
 
 import { AccountService } from "@/services/account.service";
@@ -294,6 +294,25 @@ export class YoutubeService {
     }
 
     await this.prisma.$transaction(transactionValues);
+  }
+
+  async getChannelByMainCategory(videoCategoryId: number) {
+    const channels = await this.prisma.youtubeChannel.findMany({
+      where: {
+        channelVideoCategories: {
+          some: {
+            videoCategoryId,
+          },
+        },
+      },
+      include: {
+        channelVideoCategories: {
+          orderBy: { num: "desc" },
+          take: 1,
+        },
+      },
+    });
+    return channels.filter((channel) => channel.channelVideoCategories[0].videoCategoryId === videoCategoryId);
   }
 
   formatChannelData(item: youtube_v3.Schema$Channel) {

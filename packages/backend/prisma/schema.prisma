@@ -56,7 +56,8 @@ model YoutubeChannel {
   accountId                 String                      @db.VarChar(36)
   account                  Account                      @relation(fields: [accountId], references: [uuid])
   keywords                 YoutubeChannelKeywordRelation[]
-  videos             YoutubeVideo[]
+  channelVideoCategories   YoutubeChannelVideoCategory[]
+  videos                   YoutubeVideo[]
 
   @@index([accountId])
 }
@@ -86,6 +87,7 @@ model YoutubeVideoCategory {
   createdAt     DateTime        @default(now()) @db.Datetime(6)
   updatedAt     DateTime        @updatedAt @db.Datetime(6)
   videos YoutubeVideo[]
+  channelVideoCategories YoutubeChannelVideoCategory[]
 }
 
 model YoutubeVideo {
