@@ -25,11 +25,15 @@ export class YoutubeService {
     });
   }
 
-  async saveChannel(data: Prisma.YoutubeChannelCreateInput) {
-    return this.prisma.youtubeChannel.upsert({
-      where: { id: data.id },
-      create: data,
-      update: data,
+  async findKeywordsByTitle(titles: string[]) {
+    return this.prisma.youtubeKeyword.findMany({
+      where: { title: { in: titles } },
+    });
+  }
+
+  async findTagsByTitle(titles: string[]) {
+    return this.prisma.youtubeTag.findMany({
+      where: { title: { in: titles } },
     });
   }
 
@@ -42,18 +46,6 @@ export class YoutubeService {
   //     }),
   //   );
   // }
-
-  async findKeywords(titles: string[]) {
-    return this.prisma.youtubeKeyword.findMany({
-      where: { title: { in: titles } },
-    });
-  }
-
-  async findTags(titles: string[]) {
-    return this.prisma.youtubeTag.findMany({
-      where: { title: { in: titles } },
-    });
-  }
 
   // async saveTags(payloads: Prisma.YoutubeTagCreateInput[]) {
   //   return payloads.map((payload) =>
@@ -164,7 +156,7 @@ export class YoutubeService {
 
       console.log(youtubeChannel.id, youtubeChannel.title);
 
-      const existKeywords = await this.findKeywords(youtubeKeywords);
+      const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
 
       const keywords: Prisma.YoutubeChannelKeywordRelationCreateManyWithoutChannelsInput = {
         connectOrCreate: youtubeKeywords.map((title) => ({
@@ -200,7 +192,12 @@ export class YoutubeService {
         },
         keywords,
       };
-      await this.saveChannel(data);
+
+      await this.prisma.youtubeChannel.upsert({
+        where: { id: data.id },
+        create: data,
+        update: data,
+      });
     }
   }
 
@@ -219,7 +216,7 @@ export class YoutubeService {
     const transactionValues = [];
     for (const item of videoResponse.data.items ?? []) {
       const { youtubeVideo, youtubeVideoCategoryId, youtubeTags, youtubeChannelId } = this.formatVideoData(item);
-      const existTags = await this.findTags(youtubeTags);
+      const existTags = await this.findTagsByTitle(youtubeTags);
 
       const tags: Prisma.YoutubeVideoTagRelationCreateManyWithoutVideosInput = {
         connectOrCreate: youtubeTags.map((title) => ({
