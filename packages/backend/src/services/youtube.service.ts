@@ -33,14 +33,6 @@ export class YoutubeService {
     });
   }
 
-  async saveVideo(data: Prisma.YoutubeVideoCreateInput) {
-    return this.prisma.youtubeVideo.upsert({
-      where: { id: data.id },
-      create: data,
-      update: data,
-    });
-  }
-
   // async saveKeywords(payloads: Prisma.YoutubeKeywordCreateInput[]) {
   //   return payloads.map((payload) =>
   //     this.prisma.youtubeKeyword.upsert({
@@ -85,30 +77,32 @@ export class YoutubeService {
   async saveVideoCategories() {
     const videoCategories = await this.getVideoCategories();
 
-    const values = videoCategories?.map((category) => {
-      const { id: idString, snippet } = category;
-      const title = snippet?.title;
-      const assignable = snippet?.assignable;
-      if (typeof idString !== "string" || typeof title !== "string" || typeof assignable !== "boolean") {
-        throw Error("title or assignable is required");
-      }
+    const values =
+      videoCategories?.map((category) => {
+        const { id: idString, snippet } = category;
+        const title = snippet?.title;
+        const assignable = snippet?.assignable;
+        if (typeof idString !== "string" || typeof title !== "string" || typeof assignable !== "boolean") {
+          throw Error("title or assignable is required");
+        }
 
-      const id = Number(idString);
-      const data = { id, title, assignable };
+        const id = Number(idString);
+        const data = { id, title, assignable };
 
-      return this.prisma.youtubeVideoCategory.upsert({
-        where: { id },
-        create: data,
-        update: data,
-      });
-    });
+        return this.prisma.youtubeVideoCategory.upsert({
+          where: { id },
+          create: data,
+          update: data,
+        });
+      }) ?? [];
 
-    await this.prisma.$transaction(values ?? []);
+    await this.prisma.$transaction(values);
   }
 
   async saveAllChannelVideo() {
     const channels = await this.prisma.youtubeChannel.findMany();
-    for (const channel of channels) {
+    for (const [index, channel] of channels.entries()) {
+      console.log(index, channel.id);
       await this.saveChannelPopularVideo(channel.id);
     }
   }
@@ -222,12 +216,11 @@ export class YoutubeService {
 
     const videoCategoryIdsObject: { [key: string]: number } = {};
 
+    const transactionValues = [];
     for (const item of videoResponse.data.items ?? []) {
       const { youtubeVideo, youtubeVideoCategoryId, youtubeTags, youtubeChannelId } = this.formatVideoData(item);
-
-      console.log(youtubeVideo.id, youtubeVideo.title);
-
       const existTags = await this.findTags(youtubeTags);
+
       const tags: Prisma.YoutubeVideoTagRelationCreateManyWithoutVideosInput = {
         connectOrCreate: youtubeTags.map((title) => ({
           where: {
@@ -253,13 +246,21 @@ export class YoutubeService {
         videoCategory: { connect: { id: youtubeVideoCategoryId } },
         tags,
       };
-      await this.saveVideo(data);
 
       if (!videoCategoryIdsObject[youtubeVideoCategoryId]) {
         videoCategoryIdsObject[youtubeVideoCategoryId] = 0;
       }
       videoCategoryIdsObject[youtubeVideoCategoryId] += 1;
+
+      const transaction = this.prisma.youtubeVideo.upsert({
+        where: { id: data.id },
+        create: data,
+        update: data,
+      });
+      transactionValues.push(transaction);
     }
+
+    await this.prisma.$transaction(transactionValues);
 
     const videoCategoryIds = Object.entries(videoCategoryIdsObject)
       .map(([key, value]) => ({ key, value }))
