@@ -1,76 +1,61 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Prisma } from "@prisma/client";
 import { google, youtube_v3 } from "googleapis";
-import { Connection, DeepPartial, EntityManager, In, Repository } from "typeorm";
 
-import { AccountModel } from "@/models/account.model";
-import { YoutubeChannelModel } from "@/models/youtubeChannel.model";
-import { YoutubeKeywordModel } from "@/models/youtubeKeyword.model";
-import { YoutubeTagModel } from "@/models/youtubeTag.model";
-import { YoutubeVideoModel } from "@/models/youtubeVideo.model";
-import { YoutubeVideoCategoryModel } from "@/models/youtubeVideoCategoriy.model";
 import { AccountService } from "@/services/account.service";
 import { CrawlService } from "@/services/crawl.service";
+import { PrismaService } from "@/services/prisma.service";
 import { UtilsService } from "@/services/utils.service";
 
 @Injectable()
 export class YoutubeService {
   constructor(
-    private connection: Connection,
-    @InjectRepository(YoutubeChannelModel)
-    private youtubeChannelModelRepository: Repository<YoutubeChannelModel>,
-    @InjectRepository(YoutubeVideoCategoryModel)
-    private youtubeVideoCategoryRepository: Repository<YoutubeVideoCategoryModel>,
     private accountService: AccountService,
     private crawlService: CrawlService,
     private utilsService: UtilsService,
     private configService: ConfigService<EnvironmentVariables>,
+    private prisma: PrismaService,
   ) {}
 
   get youtubeApi() {
-    return google.youtube({ version: "v3", auth: this.configService.get("YOUTUBE_API_KEY") });
-  }
-
-  async saveChannel(payload: DeepPartial<YoutubeChannelModel>, manager: EntityManager) {
-    return manager.getRepository(YoutubeChannelModel).save(payload);
-  }
-
-  async saveVideo(payload: DeepPartial<YoutubeVideoModel>, manager: EntityManager) {
-    return manager.getRepository(YoutubeVideoModel).save(payload);
-  }
-
-  async saveKeywords(payloads: DeepPartial<YoutubeKeywordModel>[], manager: EntityManager) {
-    const keywordTitles = payloads.map((payload) => payload.title);
-    const existKeywords = await this.getKeywordsByTitle(keywordTitles, manager);
-    const existKeywordTitles = existKeywords.map((keyword) => keyword.title);
-    const notExistKeywords = keywordTitles
-      .filter((title) => !existKeywordTitles.includes(title))
-      .map((title) => ({ title }));
-    await manager.getRepository(YoutubeKeywordModel).insert(notExistKeywords);
-    return await this.getKeywordsByTitle(keywordTitles, manager);
-  }
-
-  async getKeywordsByTitle(keywordTitles: string[], manager: EntityManager) {
-    return manager.getRepository(YoutubeKeywordModel).find({
-      where: { title: In(keywordTitles) },
+    return google.youtube({
+      version: "v3",
+      auth: this.configService.get("YOUTUBE_API_KEY"),
     });
   }
 
-  async saveTags(payloads: DeepPartial<YoutubeTagModel>[], manager: EntityManager) {
-    const titles = payloads.map((payload) => payload.title);
-    const existTags = await this.getTagsByTitle(titles, manager);
-    const existTagTitles = existTags.map((tag) => tag.title);
-    const notExistKeywords = titles.filter((title) => !existTagTitles.includes(title)).map((title) => ({ title }));
-    await manager.getRepository(YoutubeTagModel).insert(notExistKeywords);
-    return await this.getTagsByTitle(titles, manager);
-  }
-
-  async getTagsByTitle(titles: string[], manager: EntityManager) {
-    return manager.getRepository(YoutubeTagModel).find({
-      where: { title: In(titles) },
+  async findKeywordsByTitle(titles: string[]) {
+    return this.prisma.youtubeKeyword.findMany({
+      where: { title: { in: titles } },
     });
   }
+
+  async findTagsByTitle(titles: string[]) {
+    return this.prisma.youtubeTag.findMany({
+      where: { title: { in: titles } },
+    });
+  }
+
+  // async saveKeywords(payloads: Prisma.YoutubeKeywordCreateInput[]) {
+  //   return payloads.map((payload) =>
+  //     this.prisma.youtubeKeyword.upsert({
+  //       where: { title: payload.title },
+  //       create: payload,
+  //       update: payload,
+  //     }),
+  //   );
+  // }
+
+  // async saveTags(payloads: Prisma.YoutubeTagCreateInput[]) {
+  //   return payloads.map((payload) =>
+  //     this.prisma.youtubeTag.upsert({
+  //       where: { title: payload.title },
+  //       create: payload,
+  //       update: payload,
+  //     }),
+  //   );
+  // }
 
   async getVideoCategories() {
     const videoResponse = await this.youtubeApi.videoCategories.list({
@@ -83,23 +68,44 @@ export class YoutubeService {
 
   async saveVideoCategories() {
     const videoCategories = await this.getVideoCategories();
-    const videoCategoryEntities = videoCategories.map(({ id, snippet: { title, assignable } }) => ({
-      id: Number(id),
-      title,
-      assignable,
-    }));
-    await this.youtubeVideoCategoryRepository.save(videoCategoryEntities);
+
+    const values =
+      videoCategories?.map((category) => {
+        const { id: idString, snippet } = category;
+        const title = snippet?.title;
+        const assignable = snippet?.assignable;
+        if (typeof idString !== "string" || typeof title !== "string" || typeof assignable !== "boolean") {
+          throw Error("title or assignable is required");
+        }
+
+        const id = Number(idString);
+        const data = { id, title, assignable };
+
+        return this.prisma.youtubeVideoCategory.upsert({
+          where: { id },
+          create: data,
+          update: data,
+        });
+      }) ?? [];
+
+    await this.prisma.$transaction(values);
   }
 
   async saveAllChannelVideo() {
-    const channels = await this.youtubeChannelModelRepository.find();
-    for (const channel of channels) {
+    const channels = await this.prisma.youtubeChannel.findMany();
+    for (const [index, channel] of channels.entries()) {
+      console.log(index, channel.id);
       await this.saveChannelPopularVideo(channel.id);
     }
   }
 
   async saveTrendChannel() {
     const videoIds = await this.crawlService.getTrendVideoIds();
+
+    if (!videoIds) {
+      return;
+    }
+
     console.log({ "videoIds.length": videoIds.length });
 
     let channnelIds: string[] = [];
@@ -110,7 +116,14 @@ export class YoutubeService {
         regionCode: "JP",
         id: chunkVideoIds,
       });
-      channnelIds = channnelIds.concat(videoResponse.data.items.map((item) => item.snippet.channelId));
+      const additionalChannelIds = videoResponse?.data?.items?.map((item) => {
+        const channelId = item?.snippet?.channelId;
+        if (typeof channelId !== "string") {
+          throw Error("channelId is required");
+        }
+        return channelId;
+      });
+      channnelIds = channnelIds.concat(additionalChannelIds ?? []);
     }
 
     console.log({ "channnelIds.length": channnelIds.length });
@@ -126,38 +139,64 @@ export class YoutubeService {
         part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
         id: chunkChannelIds,
       });
-      channelItems = channelItems.concat(channelResponse.data.items);
+      channelItems = channelItems.concat(channelResponse.data.items ?? []);
     }
 
     for (const item of channelItems) {
-      const data = await this.formatChannelData(item);
+      const { youtubeChannel, youtubeKeywords } = this.formatChannelData(item);
 
       if (check) {
-        if (data.country !== "JP") {
+        if (youtubeChannel.country !== "JP") {
           continue;
         }
-        if (Number(data.subscriberCount) < 10000 && Number(data.viewCount) < 1000000) {
+        if ((youtubeChannel.subscriberCount ?? 0) < 10000 && youtubeChannel.viewCount < 1000000) {
           continue;
         }
       }
 
-      console.log(data.id, data.title);
+      console.log(youtubeChannel.id, youtubeChannel.title);
 
-      await this.connection.transaction(async (manager) => {
-        data.keywords = await this.saveKeywords(data.keywords, manager);
+      const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
 
-        let account = await this.accountService.findByYoutubeChannelId(data.id);
-        if (!account) {
-          const accountData: DeepPartial<AccountModel> = {
-            displayName: data.title,
-            username: data.id,
-            thumbnailUrl: data.thumbnailUrl,
-          };
-          account = await this.accountService.save(accountData, manager);
-        }
+      const keywords: Prisma.YoutubeChannelKeywordRelationCreateManyWithoutChannelsInput = {
+        connectOrCreate: youtubeKeywords.map((title) => ({
+          where: {
+            channelId_keywordId: {
+              channelId: youtubeChannel.id,
+              keywordId: existKeywords.find((exist) => exist.title === title)?.id ?? 0,
+            },
+          },
+          create: {
+            keywords: {
+              connectOrCreate: {
+                where: { title },
+                create: { title },
+              },
+            },
+          },
+        })),
+      };
 
-        data.account = account;
-        await this.saveChannel(data, manager);
+      const account = await this.accountService.findByYoutubeChannel(youtubeChannel.id);
+      const data: Prisma.YoutubeChannelCreateInput = {
+        ...youtubeChannel,
+        account: {
+          connectOrCreate: {
+            where: { uuid: account?.uuid ?? "" },
+            create: {
+              displayName: youtubeChannel.title,
+              username: youtubeChannel.id,
+              thumbnailUrl: youtubeChannel.thumbnailUrl,
+            },
+          },
+        },
+        keywords,
+      };
+
+      await this.prisma.youtubeChannel.upsert({
+        where: { id: data.id },
+        create: data,
+        update: data,
       });
     }
   }
@@ -174,20 +213,51 @@ export class YoutubeService {
 
     const videoCategoryIdsObject: { [key: string]: number } = {};
 
-    for (const item of videoResponse.data.items) {
-      const data = this.formatVideoData(item);
+    const transactionValues = [];
+    for (const item of videoResponse.data.items ?? []) {
+      const { youtubeVideo, youtubeVideoCategoryId, youtubeTags, youtubeChannelId } = this.formatVideoData(item);
+      const existTags = await this.findTagsByTitle(youtubeTags);
 
-      await this.connection.transaction(async (manager) => {
-        data.tags = await this.saveTags(data.tags, manager);
-        await this.saveVideo(data, manager);
-      });
+      const tags: Prisma.YoutubeVideoTagRelationCreateManyWithoutVideosInput = {
+        connectOrCreate: youtubeTags.map((title) => ({
+          where: {
+            videoId_tagId: {
+              videoId: youtubeVideo.id,
+              tagId: existTags.find((exist) => exist.title === title)?.id ?? 0,
+            },
+          },
+          create: {
+            tags: {
+              connectOrCreate: {
+                where: { title },
+                create: { title },
+              },
+            },
+          },
+        })),
+      };
 
-      const categoryId = data.videoCategory.id;
-      if (!videoCategoryIdsObject[categoryId]) {
-        videoCategoryIdsObject[categoryId] = 0;
+      const data: Prisma.YoutubeVideoCreateInput = {
+        ...youtubeVideo,
+        channel: { connect: { id: youtubeChannelId } },
+        videoCategory: { connect: { id: youtubeVideoCategoryId } },
+        tags,
+      };
+
+      if (!videoCategoryIdsObject[youtubeVideoCategoryId]) {
+        videoCategoryIdsObject[youtubeVideoCategoryId] = 0;
       }
-      videoCategoryIdsObject[categoryId] += 1;
+      videoCategoryIdsObject[youtubeVideoCategoryId] += 1;
+
+      const transaction = this.prisma.youtubeVideo.upsert({
+        where: { id: data.id },
+        create: data,
+        update: data,
+      });
+      transactionValues.push(transaction);
     }
+
+    await this.prisma.$transaction(transactionValues);
 
     const videoCategoryIds = Object.entries(videoCategoryIdsObject)
       .map(([key, value]) => ({ key, value }))
@@ -197,15 +267,25 @@ export class YoutubeService {
     const mainVideoCategoryId = videoCategoryIds[0];
   }
 
-  async formatChannelData(item: youtube_v3.Schema$Channel) {
-    const {
-      id,
-      snippet: { title, description, country, thumbnails, publishedAt },
-      statistics: { videoCount, subscriberCount, viewCount, hiddenSubscriberCount },
-      brandingSettings: {
-        channel: { keywords },
-      },
-    } = item;
+  formatChannelData(item: youtube_v3.Schema$Channel) {
+    const { id, snippet, statistics, brandingSettings } = item;
+    const keywords = brandingSettings?.channel?.keywords;
+
+    if (typeof id !== "string" || snippet === undefined || statistics === undefined) {
+      throw Error("formatChannelData: id,snippet,statistics is required");
+    }
+
+    const { title, description, country, thumbnails, publishedAt } = snippet;
+    const { videoCount, subscriberCount, viewCount, hiddenSubscriberCount } = statistics;
+
+    if (
+      typeof title !== "string" ||
+      typeof description !== "string" ||
+      typeof publishedAt !== "string" ||
+      typeof hiddenSubscriberCount !== "boolean"
+    ) {
+      throw Error("formatChannelData: title,description,publishedAt,hiddenSubscriberCount is required");
+    }
 
     const keywordArray: string[] = [];
     if (keywords) {
@@ -233,43 +313,63 @@ export class YoutubeService {
 
     const uniqueKeywords = Array.from(new Set(keywordArray));
 
-    const data: DeepPartial<YoutubeChannelModel> = {
+    const youtubeChannel: Omit<Prisma.YoutubeChannelCreateInput, "account"> = {
       id,
       title,
       description,
       country,
       publishedAt: new Date(publishedAt),
-      thumbnailUrl: thumbnails.medium.url,
-      subscriberCount: subscriberCount,
-      viewCount: viewCount,
-      videoCount: videoCount,
+      thumbnailUrl: thumbnails?.medium?.url ?? "",
+      subscriberCount: typeof subscriberCount === "string" ? Number(subscriberCount) : null,
+      viewCount: Number(viewCount),
+      videoCount: Number(videoCount),
       hiddenSubscriberCount,
-      keywords: uniqueKeywords.map((keyword) => ({ title: keyword })),
     };
-    return data;
+
+    return {
+      youtubeChannel,
+      youtubeKeywords: uniqueKeywords,
+    };
   }
 
   formatVideoData(item: youtube_v3.Schema$Video) {
-    const {
-      id,
-      snippet: { title, description, publishedAt, thumbnails, tags, channelId, categoryId },
-      statistics: { viewCount, likeCount, dislikeCount, commentCount },
-    } = item;
+    const { id, snippet, statistics } = item;
+
+    if (typeof id !== "string" || snippet === undefined || statistics === undefined) {
+      throw Error("formatVideoData: id,snippet,statistics is required");
+    }
+
+    const { title, description, publishedAt, thumbnails, tags, channelId, categoryId } = snippet;
+    const { viewCount, likeCount, dislikeCount, commentCount } = statistics;
+
+    if (
+      typeof title !== "string" ||
+      typeof description !== "string" ||
+      typeof publishedAt !== "string" ||
+      typeof categoryId !== "string" ||
+      typeof channelId !== "string"
+    ) {
+      throw Error("formatChannelData: title,description,publishedAt,hiddenSubscriberCount is required");
+    }
+
     const uniqueTags = Array.from(new Set(tags ?? []));
-    const data: DeepPartial<YoutubeVideoModel> = {
+    const youtubeVideo: Omit<Prisma.YoutubeVideoCreateInput, "channel" | "videoCategory"> = {
       id,
       title,
       description,
-      thumbnailUrl: thumbnails.medium.url,
-      viewCount,
-      likeCount,
-      dislikeCount,
-      commentCount,
+      thumbnailUrl: thumbnails?.medium?.url ?? "",
+      viewCount: Number(viewCount),
+      likeCount: typeof likeCount === "string" ? Number(likeCount) : null,
+      dislikeCount: typeof dislikeCount === "string" ? Number(dislikeCount) : null,
+      commentCount: typeof commentCount === "string" ? Number(commentCount) : null,
       publishedAt: new Date(publishedAt),
-      videoCategory: { id: Number(categoryId) },
-      tags: uniqueTags.map((tag) => ({ title: tag })) ?? [],
-      channel: { id: channelId },
     };
-    return data;
+
+    return {
+      youtubeVideo,
+      youtubeTags: uniqueTags,
+      youtubeVideoCategoryId: Number(categoryId),
+      youtubeChannelId: channelId,
+    };
   }
 }

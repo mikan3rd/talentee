@@ -1,0 +1,111 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["nativeTypes"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  uuid            String            @id @default(uuid()) @db.VarChar(36)
+  displayName     String            @db.VarChar(255)
+  username        String            @unique @db.VarChar(255)
+  thumbnailUrl    String            @db.Text
+  createdAt       DateTime          @default(now()) @db.Datetime(6)
+  updatedAt       DateTime          @updatedAt @db.Datetime(6)
+  youtubeChannels YoutubeChannel[]
+}
+
+model YoutubeChannelKeywordRelation {
+  channelId      String          @db.VarChar(255)
+  keywordId      Int             @db.Int
+  channels YoutubeChannel @relation(fields: [channelId], references: [id])
+  keywords YoutubeKeyword @relation(fields: [keywordId], references: [id])
+
+  @@id([channelId, keywordId])
+  @@index([channelId])
+  @@index([keywordId])
+}
+
+model YoutubeVideoTagRelation {
+  videoId      String        @db.VarChar(255)
+  tagId        Int           @db.Int
+  tags   YoutubeTag   @relation(fields: [tagId], references: [id])
+  videos YoutubeVideo @relation(fields: [videoId], references: [id])
+
+  @@id([videoId, tagId])
+  @@index([tagId])
+  @@index([videoId])
+}
+
+model YoutubeChannel {
+  id                        String                      @id @db.VarChar(255)
+  title                     String                      @db.VarChar(255)
+  description               String                      @db.Text
+  thumbnailUrl              String                      @db.Text
+  country                   String?                     @db.VarChar(255)
+  publishedAt               DateTime                    @db.Datetime(0)
+  subscriberCount           BigInt?                     @db.BigInt
+  viewCount                 BigInt                      @db.BigInt
+  videoCount                BigInt                      @db.BigInt
+  hiddenSubscriberCount     Boolean                     @db.TinyInt
+  createdAt                 DateTime                    @default(now()) @db.Datetime(6)
+  updatedAt                 DateTime                    @updatedAt @db.Datetime(6)
+  accountId                 String                      @db.VarChar(36)
+  account                  Account                      @relation(fields: [accountId], references: [uuid])
+  keywords                 YoutubeChannelKeywordRelation[]
+  videos             YoutubeVideo[]
+
+  @@index([accountId])
+}
+
+model YoutubeKeyword {
+  id                        Int                         @id @default(autoincrement()) @db.Int
+  title                     String                      @unique @db.VarChar(255)
+  num                       Int                         @default(0) @db.Int
+  createdAt                 DateTime                    @default(now()) @db.Datetime(6)
+  updatedAt                 DateTime                    @updatedAt @db.Datetime(6)
+  channels                  YoutubeChannelKeywordRelation[]
+}
+
+model YoutubeTag {
+  id                  Int                   @id @default(autoincrement()) @db.Int
+  title               String                @unique @db.VarChar(255)
+  num                 Int                   @default(0) @db.Int
+  createdAt           DateTime              @default(now()) @db.Datetime(6)
+  updatedAt           DateTime              @updatedAt @db.Datetime(6)
+  videos YoutubeVideoTagRelation[]
+}
+
+model YoutubeVideoCategory {
+  id            Int             @id @db.Int
+  title         String          @db.VarChar(255)
+  assignable    Boolean         @db.TinyInt
+  createdAt     DateTime        @default(now()) @db.Datetime(6)
+  updatedAt     DateTime        @updatedAt @db.Datetime(6)
+  videos YoutubeVideo[]
+}
+
+model YoutubeVideo {
+  id                     String                 @id @db.VarChar(255)
+  title                  String                 @db.VarChar(255)
+  description            String                 @db.Text
+  thumbnailUrl           String                 @db.Text
+  publishedAt            DateTime               @db.Datetime(0)
+  viewCount              BigInt                 @db.BigInt
+  likeCount              BigInt?                @db.BigInt
+  dislikeCount           BigInt?                @db.BigInt
+  commentCount           BigInt?                @db.BigInt
+  createdAt              DateTime               @default(now()) @db.Datetime(6)
+  updatedAt              DateTime               @updatedAt @db.Datetime(6)
+  videoCategoryId        Int                    @db.Int
+  channelId              String                 @db.VarChar(255)
+  channel        YoutubeChannel        @relation(fields: [channelId], references: [id])
+  videoCategory YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
+  tags    YoutubeVideoTagRelation[]
+
+  @@index([channelId])
+  @@index([videoCategoryId])
+}

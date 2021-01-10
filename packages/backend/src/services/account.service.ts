@@ -1,34 +1,40 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, EntityManager, Repository } from "typeorm";
+import { Prisma } from "@prisma/client";
 
-import { AccountModel } from "@/models/account.model";
+import { PrismaService } from "@/services/prisma.service";
 
 @Injectable()
 export class AccountService {
-  constructor(
-    @InjectRepository(AccountModel)
-    private accountRepository: Repository<AccountModel>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async findOne(id: number) {
-    return this.accountRepository.findOne(id, { relations: ["youtubeChannels"] });
+  // async findOne(id: number) {
+  //   return this.accountRepository.findOne(id, { relations: ["youtubeChannels"] });
+  // }
+
+  // async findByYoutubeChannelId(id: string) {
+  //   return this.accountRepository.findOne({
+  //     join: { alias: "account", leftJoinAndSelect: { youtubeChannels: "account.youtubeChannels" } },
+  //     where: (qb) => {
+  //       qb.where("youtubeChannels.id = :id", { id });
+  //     },
+  //   });
+  // }
+
+  // async findAll() {
+  //   return this.accountRepository.find({ relations: ["youtubeChannels"] });
+  // }
+
+  async findByYoutubeChannel(id: string) {
+    return this.prisma.youtubeChannel
+      .findUnique({
+        where: { id },
+      })
+      .account();
   }
 
-  async findByYoutubeChannelId(id: string) {
-    return this.accountRepository.findOne({
-      join: { alias: "account", leftJoinAndSelect: { youtubeChannels: "account.youtubeChannels" } },
-      where: (qb) => {
-        qb.where("youtubeChannels.id = :id", { id });
-      },
+  async create(payload: Prisma.AccountCreateInput) {
+    return this.prisma.account.create({
+      data: payload,
     });
-  }
-
-  async findAll() {
-    return this.accountRepository.find({ relations: ["youtubeChannels"] });
-  }
-
-  async save(payload: DeepPartial<AccountModel>, manager: EntityManager) {
-    return manager.getRepository(AccountModel).save(payload);
   }
 }
