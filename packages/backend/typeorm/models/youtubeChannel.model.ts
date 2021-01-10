@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 
 import { Account } from "typeorm/models/account.model";
+import { YoutubeChannelVideoCategory } from "typeorm/models/youtubeChannelVideoCategory.model";
 import { YoutubeKeyword } from "typeorm/models/youtubeKeyword.model";
 import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 
@@ -76,4 +77,7 @@ export class YoutubeChannel {
   })
   @JoinColumn({ name: "accountId" })
   account!: Account;
+
+  @OneToMany((type) => YoutubeChannelVideoCategory, (channelVideoCategory) => channelVideoCategory.channel)
+  channelVideoCategories!: YoutubeChannelVideoCategory[];
 }

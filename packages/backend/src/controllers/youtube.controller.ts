@@ -23,4 +23,10 @@ export class YoutubeController {
     await this.youtubeService.saveVideoCategories();
     return "SUCCESS: saveVideoCategories";
   }
+
+  @Get("saveChannelVideoCategory")
+  async saveChannelVideoCategory() {
+    await this.youtubeService.saveChannelVideoCategory();
+    return "SUCCESS: saveChannelVideoCategory";
+  }
 }

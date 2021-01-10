@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
+import { YoutubeChannelVideoCategory } from "typeorm/models/youtubeChannelVideoCategory.model";
 import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
 
 @Entity("YoutubeVideoCategory")
@@ -21,4 +22,7 @@ export class YoutubeVideoCategory {
 
   @OneToMany((type) => YoutubeVideo, (video) => video.channel)
   videos!: YoutubeVideo[];
+
+  @OneToMany((type) => YoutubeChannelVideoCategory, (channelVideoCategory) => channelVideoCategory.videoCategory)
+  channelVideoCategories!: YoutubeChannelVideoCategory[];
 }

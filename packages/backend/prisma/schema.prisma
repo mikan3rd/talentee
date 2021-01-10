@@ -109,3 +109,17 @@ model YoutubeVideo {
   @@index([channelId])
   @@index([videoCategoryId])
 }
+
+model YoutubeChannelVideoCategory {
+  channelId            String               @db.VarChar(255)
+  videoCategoryId      Int                  @db.Int
+  num                  Int                  @default(0) @db.Int
+  createdAt            DateTime             @default(now()) @db.Datetime(6)
+  updatedAt            DateTime             @updatedAt @db.Datetime(6)
+  channel              YoutubeChannel       @relation(fields: [channelId], references: [id])
+  videoCategory        YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
+
+  @@id([channelId, videoCategoryId])
+  @@index([channelId])
+  @@index([videoCategoryId])
+}
