@@ -14,6 +14,7 @@ import {
 import { YoutubeChannel } from "@/models/youtubeChannel.model";
 import { YoutubeTag } from "@/models/youtubeTag.model";
 import { YoutubeVideoCategory } from "@/models/youtubeVideoCategoriy.model";
+import { BigIntScalar } from "@/scalars/bigint.scalar";
 
 @Entity("YoutubeVideo")
 @ObjectType()
@@ -39,19 +40,19 @@ export class YoutubeVideo {
   publishedAt!: Date;
 
   @Column({ type: "bigint", unsigned: true })
-  @Field()
+  @Field((type) => BigIntScalar)
   viewCount!: string;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  @Field()
+  @Field((type) => BigIntScalar)
   likeCount!: number;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  @Field()
+  @Field((type) => BigIntScalar)
   dislikeCount!: number;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  @Field()
+  @Field((type) => BigIntScalar)
   commentCount!: number;
 
   @CreateDateColumn()

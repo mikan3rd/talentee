@@ -20,16 +20,19 @@ type YoutubeVideo {
   description: String!
   thumbnailUrl: String!
   publishedAt: Date!
-  viewCount: String!
-  likeCount: Float!
-  dislikeCount: Float!
-  commentCount: Float!
+  viewCount: BigInt!
+  likeCount: BigInt!
+  dislikeCount: BigInt!
+  commentCount: BigInt!
   createdAt: Date!
   updatedAt: Date!
   tags: [YoutubeTag!]!
   videoCategory: YoutubeVideoCategory!
   channel: YoutubeChannel!
 }
+
+"""BigInt custom scalar type"""
+scalar BigInt
 
 type YoutubeVideoCategory {
   id: Float!
@@ -42,7 +45,7 @@ type YoutubeVideoCategory {
 }
 
 type YoutubeChannelVideoCategory {
-  channelId: String!
+  channelId: ID!
   videoCategoryId: Float!
   num: Float!
   createdAt: Date!
@@ -61,15 +64,15 @@ type YoutubeKeyword {
 }
 
 type YoutubeChannel {
-  id: String!
+  id: ID!
   title: String!
   description: String!
   thumbnailUrl: String!
   country: String!
   publishedAt: Date!
-  subscriberCount: Float!
-  viewCount: Float!
-  videoCount: Float!
+  subscriberCount: BigInt!
+  viewCount: BigInt!
+  videoCount: BigInt!
   hiddenSubscriberCount: Boolean!
   createdAt: Date!
   updatedAt: Date!
@@ -80,7 +83,7 @@ type YoutubeChannel {
 }
 
 type Account {
-  uuid: String!
+  uuid: ID!
   displayName: String!
   username: String!
   thumbnailUrl: String!

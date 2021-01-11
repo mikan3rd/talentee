@@ -1,7 +1,8 @@
 import { CustomScalar, Scalar } from "@nestjs/graphql";
 import { Kind, ValueNode } from "graphql";
 
-@Scalar("BigInt", (type) => BigInt)
+export type CustomBigInt = BigInt;
+@Scalar("BigInt")
 export class BigIntScalar implements CustomScalar<number, BigInt> {
   description = "BigInt custom scalar type";
 

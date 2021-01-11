@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   CreateDateColumn,
@@ -16,12 +16,13 @@ import { Account } from "@/models/account.model";
 import { YoutubeChannelVideoCategory } from "@/models/youtubeChannelVideoCategory.model";
 import { YoutubeKeyword } from "@/models/youtubeKeyword.model";
 import { YoutubeVideo } from "@/models/youtubeVideo.model";
+import { BigIntScalar } from "@/scalars/bigint.scalar";
 
 @Entity("YoutubeChannel")
 @ObjectType()
 export class YoutubeChannel {
   @PrimaryColumn()
-  @Field()
+  @Field((type) => ID)
   id!: string;
 
   @Column()
@@ -45,15 +46,15 @@ export class YoutubeChannel {
   publishedAt!: Date;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  @Field()
+  @Field((type) => BigIntScalar)
   subscriberCount!: number;
 
   @Column({ type: "bigint", unsigned: true })
-  @Field()
+  @Field((type) => BigIntScalar)
   viewCount!: number;
 
   @Column({ type: "bigint", unsigned: true })
-  @Field()
+  @Field((type) => BigIntScalar)
   videoCount!: number;
 
   @Column()

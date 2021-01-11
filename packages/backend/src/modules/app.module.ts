@@ -17,10 +17,6 @@ import { AppService } from "@/services/app.service";
     YoutubeModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    DateScalar,
-    // BigIntScalar
-  ],
+  providers: [AppService, DateScalar, BigIntScalar],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 import { YoutubeChannel } from "@/models/youtubeChannel.model";
@@ -8,7 +8,7 @@ import { YoutubeVideoCategory } from "@/models/youtubeVideoCategoriy.model";
 @ObjectType()
 export class YoutubeChannelVideoCategory {
   @PrimaryColumn()
-  @Field()
+  @Field((type) => ID)
   channelId!: string;
 
   @PrimaryColumn()

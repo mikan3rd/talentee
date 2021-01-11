@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { YoutubeChannel } from "@/models/youtubeChannel.model";
@@ -7,7 +7,7 @@ import { YoutubeChannel } from "@/models/youtubeChannel.model";
 @ObjectType()
 export class Account {
   @PrimaryGeneratedColumn("uuid")
-  @Field()
+  @Field((type) => ID)
   uuid!: string;
 
   @Column()
