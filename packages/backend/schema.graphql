@@ -1,0 +1,88 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type YoutubeTag {
+  id: Float!
+  title: String!
+  num: Float!
+  createdAt: Date!
+  updatedAt: Date!
+  videos: [YoutubeVideo!]!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type YoutubeVideo {
+  id: String!
+  title: String!
+  description: String!
+  thumbnailUrl: String!
+  publishedAt: Date!
+  viewCount: String!
+  createdAt: Date!
+  updatedAt: Date!
+  tags: [YoutubeTag!]!
+  videoCategory: YoutubeVideoCategory!
+  channel: YoutubeChannel!
+}
+
+type YoutubeVideoCategory {
+  id: Float!
+  title: String!
+  assignable: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  videos: [YoutubeVideo!]!
+  channelVideoCategories: [YoutubeChannelVideoCategory!]!
+}
+
+type YoutubeChannelVideoCategory {
+  channelId: String!
+  videoCategoryId: Float!
+  num: Float!
+  createdAt: Date!
+  updatedAt: Date!
+  channel: YoutubeChannel!
+  videoCategory: YoutubeVideoCategory!
+}
+
+type YoutubeKeyword {
+  id: Float!
+  title: String!
+  num: Float!
+  createdAt: Date!
+  updatedAt: Date!
+  channels: [YoutubeChannel!]!
+}
+
+type YoutubeChannel {
+  id: String!
+  title: String!
+  description: String!
+  thumbnailUrl: String!
+  country: String!
+  publishedAt: Date!
+  hiddenSubscriberCount: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  keywords: [YoutubeKeyword!]!
+  videos: [YoutubeVideo!]!
+  account: Account!
+  channelVideoCategories: [YoutubeChannelVideoCategory!]!
+}
+
+type Account {
+  uuid: String!
+  displayName: String!
+  username: String!
+  thumbnailUrl: String!
+  createdAt: Date!
+  updatedAt: Date!
+  youtubeChannels: [YoutubeChannel!]!
+}
+
+type Query {
+  account(uuid: ID!): Account
+}

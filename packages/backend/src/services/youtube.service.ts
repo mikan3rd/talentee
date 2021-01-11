@@ -300,9 +300,7 @@ export class YoutubeService {
     const channels = await this.prisma.youtubeChannel.findMany({
       where: {
         channelVideoCategories: {
-          some: {
-            videoCategoryId,
-          },
+          some: { videoCategoryId },
         },
       },
       include: {
