@@ -41,19 +41,19 @@ export class YoutubeVideo {
 
   @Column({ type: "bigint", unsigned: true })
   @Field((type) => BigIntScalar)
-  viewCount!: string;
+  viewCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
   @Field((type) => BigIntScalar)
-  likeCount!: number;
+  likeCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
   @Field((type) => BigIntScalar)
-  dislikeCount!: number;
+  dislikeCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
   @Field((type) => BigIntScalar)
-  commentCount!: number;
+  commentCount!: BigInt;
 
   @CreateDateColumn()
   @Field()

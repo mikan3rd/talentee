@@ -47,15 +47,15 @@ export class YoutubeChannel {
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
   @Field((type) => BigIntScalar)
-  subscriberCount!: number;
+  subscriberCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true })
   @Field((type) => BigIntScalar)
-  viewCount!: number;
+  viewCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true })
   @Field((type) => BigIntScalar)
-  videoCount!: number;
+  videoCount!: BigInt;
 
   @Column()
   @Field()
