@@ -42,17 +42,17 @@ export class YoutubeVideo {
   @Field()
   viewCount!: string;
 
-  // @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  // @Field()
-  // likeCount!: BigInt | null;
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  @Field()
+  likeCount!: number;
 
-  // @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  // @Field()
-  // dislikeCount!: BigInt | null;
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  @Field()
+  dislikeCount!: number;
 
-  // @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  // @Field()
-  // commentCount!: BigInt | null;
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  @Field()
+  commentCount!: number;
 
   @CreateDateColumn()
   @Field()

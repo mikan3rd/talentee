@@ -21,6 +21,9 @@ type YoutubeVideo {
   thumbnailUrl: String!
   publishedAt: Date!
   viewCount: String!
+  likeCount: Float!
+  dislikeCount: Float!
+  commentCount: Float!
   createdAt: Date!
   updatedAt: Date!
   tags: [YoutubeTag!]!
@@ -64,6 +67,9 @@ type YoutubeChannel {
   thumbnailUrl: String!
   country: String!
   publishedAt: Date!
+  subscriberCount: Float!
+  viewCount: Float!
+  videoCount: Float!
   hiddenSubscriberCount: Boolean!
   createdAt: Date!
   updatedAt: Date!

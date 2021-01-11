@@ -44,17 +44,17 @@ export class YoutubeChannel {
   @Field()
   publishedAt!: Date;
 
-  // @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  // @Field()
-  // subscriberCount!: BigInt | null;
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  @Field()
+  subscriberCount!: number;
 
-  // @Column({ type: "bigint", unsigned: true })
-  // @Field()
-  // viewCount!: BigInt;
+  @Column({ type: "bigint", unsigned: true })
+  @Field()
+  viewCount!: number;
 
-  // @Column({ type: "bigint", unsigned: true })
-  // @Field()
-  // videoCount!: BigInt;
+  @Column({ type: "bigint", unsigned: true })
+  @Field()
+  videoCount!: number;
 
   @Column()
   @Field()
