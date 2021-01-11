@@ -303,7 +303,9 @@ export class YoutubeService {
           some: { videoCategoryId },
         },
       },
+      orderBy: { subscriberCount: "desc" },
       include: {
+        account: true,
         channelVideoCategories: {
           orderBy: { num: "desc" },
           take: 1,

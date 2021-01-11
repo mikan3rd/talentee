@@ -38,7 +38,7 @@ export class YoutubeChannel {
   thumbnailUrl!: string;
 
   @Column({ nullable: true, default: null })
-  @Field()
+  @Field({ nullable: true })
   country!: string;
 
   @Column({ type: "datetime" })
@@ -46,7 +46,7 @@ export class YoutubeChannel {
   publishedAt!: Date;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  @Field((type) => BigIntScalar)
+  @Field((type) => BigIntScalar, { nullable: true })
   subscriberCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true })

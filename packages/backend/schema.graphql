@@ -21,9 +21,9 @@ type YoutubeVideo {
   thumbnailUrl: String!
   publishedAt: Date!
   viewCount: BigInt!
-  likeCount: BigInt!
-  dislikeCount: BigInt!
-  commentCount: BigInt!
+  likeCount: BigInt
+  dislikeCount: BigInt
+  commentCount: BigInt
   createdAt: Date!
   updatedAt: Date!
   tags: [YoutubeTag!]!
@@ -68,9 +68,9 @@ type YoutubeChannel {
   title: String!
   description: String!
   thumbnailUrl: String!
-  country: String!
+  country: String
   publishedAt: Date!
-  subscriberCount: BigInt!
+  subscriberCount: BigInt
   viewCount: BigInt!
   videoCount: BigInt!
   hiddenSubscriberCount: Boolean!
@@ -94,4 +94,5 @@ type Account {
 
 type Query {
   account(uuid: ID!): Account
+  youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
 }

@@ -29,11 +29,4 @@ export class YoutubeController {
     await this.youtubeService.saveChannelVideoCategory();
     return "SUCCESS: saveChannelVideoCategory";
   }
-
-  @Get("getChannelByMainCategory")
-  async getChannelByMainCategory() {
-    const channels = await this.youtubeService.getChannelByMainCategory(20);
-    console.log(channels);
-    return { test: channels.length };
-  }
 }
