@@ -211,8 +211,6 @@ export class YoutubeService {
       id: videoIds.slice(0, 49),
     });
 
-    const videoCategoryIdsObject: { [key: string]: number } = {};
-
     const transactionValues = [];
     for (const item of videoResponse.data.items ?? []) {
       const { youtubeVideo, youtubeVideoCategoryId, youtubeTags, youtubeChannelId } = this.formatVideoData(item);
@@ -244,11 +242,6 @@ export class YoutubeService {
         tags,
       };
 
-      if (!videoCategoryIdsObject[youtubeVideoCategoryId]) {
-        videoCategoryIdsObject[youtubeVideoCategoryId] = 0;
-      }
-      videoCategoryIdsObject[youtubeVideoCategoryId] += 1;
-
       const transaction = this.prisma.youtubeVideo.upsert({
         where: { id: data.id },
         create: data,
@@ -258,13 +251,68 @@ export class YoutubeService {
     }
 
     await this.prisma.$transaction(transactionValues);
+  }
 
-    const videoCategoryIds = Object.entries(videoCategoryIdsObject)
-      .map(([key, value]) => ({ key, value }))
-      .sort((a, b) => (a.value > b.value ? -1 : 1))
-      .map(({ key, value }) => key);
+  async saveChannelVideoCategory() {
+    const channels = await this.prisma.youtubeChannel.findMany({
+      include: { videos: { select: { videoCategoryId: true } } },
+    });
 
-    const mainVideoCategoryId = videoCategoryIds[0];
+    const transactionValues = [];
+    for (const channel of channels) {
+      const { id, videos } = channel;
+
+      const videoCategoryIdsObject = videos.reduce((prev, current) => {
+        const key = current.videoCategoryId;
+        if (!prev[key]) {
+          prev[key] = 0;
+        }
+        prev[key] += 1;
+        return prev;
+      }, {} as { [key: number]: number });
+
+      for (const [videoCategoryIdString, num] of Object.entries(videoCategoryIdsObject)) {
+        const videoCategoryId = Number(videoCategoryIdString);
+        const transaction = this.prisma.youtubeChannelVideoCategory.upsert({
+          where: {
+            channelId_videoCategoryId: {
+              channelId: id,
+              videoCategoryId,
+            },
+          },
+          create: {
+            num,
+            channel: { connect: { id } },
+            videoCategory: { connect: { id: videoCategoryId } },
+          },
+          update: {
+            num,
+          },
+        });
+        transactionValues.push(transaction);
+      }
+    }
+
+    await this.prisma.$transaction(transactionValues);
+  }
+
+  async getChannelByMainCategory(videoCategoryId: number) {
+    const channels = await this.prisma.youtubeChannel.findMany({
+      where: {
+        channelVideoCategories: {
+          some: { videoCategoryId },
+        },
+      },
+      orderBy: { subscriberCount: "desc" },
+      include: {
+        account: true,
+        channelVideoCategories: {
+          orderBy: { num: "desc" },
+          take: 1,
+        },
+      },
+    });
+    return channels.filter((channel) => channel.channelVideoCategories[0].videoCategoryId === videoCategoryId);
   }
 
   formatChannelData(item: youtube_v3.Schema$Channel) {

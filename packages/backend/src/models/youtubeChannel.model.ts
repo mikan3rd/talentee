@@ -1,3 +1,4 @@
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import {
   Column,
   CreateDateColumn,
@@ -11,46 +12,61 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { Account } from "typeorm/models/account.model";
-import { YoutubeKeyword } from "typeorm/models/youtubeKeyword.model";
-import { YoutubeVideo } from "typeorm/models/youtubeVideo.model";
+import { Account } from "@/models/account.model";
+import { YoutubeChannelVideoCategory } from "@/models/youtubeChannelVideoCategory.model";
+import { YoutubeKeyword } from "@/models/youtubeKeyword.model";
+import { YoutubeVideo } from "@/models/youtubeVideo.model";
+import { BigIntScalar } from "@/scalars/bigint.scalar";
 
 @Entity("YoutubeChannel")
+@ObjectType()
 export class YoutubeChannel {
   @PrimaryColumn()
+  @Field((type) => ID)
   id!: string;
 
   @Column()
+  @Field()
   title!: string;
 
   @Column({ type: "text" })
+  @Field()
   description!: string;
 
   @Column({ type: "text" })
+  @Field()
   thumbnailUrl!: string;
 
   @Column({ nullable: true, default: null })
+  @Field({ nullable: true })
   country!: string;
 
   @Column({ type: "datetime" })
+  @Field()
   publishedAt!: Date;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
-  subscriberCount!: string | null;
+  @Field((type) => BigIntScalar, { nullable: true })
+  subscriberCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true })
-  viewCount!: string;
+  @Field((type) => BigIntScalar)
+  viewCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true })
-  videoCount!: string;
+  @Field((type) => BigIntScalar)
+  videoCount!: BigInt;
 
   @Column()
+  @Field()
   hiddenSubscriberCount!: boolean;
 
   @CreateDateColumn()
+  @Field()
   createdAt!: Date;
 
   @UpdateDateColumn()
+  @Field()
   updatedAt!: Date;
 
   @ManyToMany((type) => YoutubeKeyword, (keyword) => keyword.channels)
@@ -65,9 +81,11 @@ export class YoutubeChannel {
       referencedColumnName: "id",
     },
   })
+  @Field((type) => [YoutubeKeyword])
   keywords!: YoutubeKeyword[];
 
   @OneToMany((type) => YoutubeVideo, (video) => video.channel)
+  @Field((type) => [YoutubeVideo])
   videos!: YoutubeVideo[];
 
   @ManyToOne((type) => Account, (account) => account.youtubeChannels, {
@@ -75,5 +93,10 @@ export class YoutubeChannel {
     onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "accountId" })
+  @Field((type) => Account)
   account!: Account;
+
+  @OneToMany((type) => YoutubeChannelVideoCategory, (channelVideoCategory) => channelVideoCategory.channel)
+  @Field((type) => [YoutubeChannelVideoCategory])
+  channelVideoCategories!: YoutubeChannelVideoCategory[];
 }

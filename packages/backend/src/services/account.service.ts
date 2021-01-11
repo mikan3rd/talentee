@@ -7,9 +7,9 @@ import { PrismaService } from "@/services/prisma.service";
 export class AccountService {
   constructor(private prisma: PrismaService) {}
 
-  // async findOne(id: number) {
-  //   return this.accountRepository.findOne(id, { relations: ["youtubeChannels"] });
-  // }
+  async findOne(uuid: string) {
+    return this.prisma.account.findUnique({ where: { uuid }, include: { youtubeChannels: true } });
+  }
 
   // async findByYoutubeChannelId(id: string) {
   //   return this.accountRepository.findOne({
