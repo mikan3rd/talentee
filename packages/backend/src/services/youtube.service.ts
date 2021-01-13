@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 import { google, youtube_v3 } from "googleapis";
@@ -10,6 +10,8 @@ import { UtilsService } from "@/services/utils.service";
 
 @Injectable()
 export class YoutubeService {
+  private readonly logger = new Logger(YoutubeService.name);
+
   constructor(
     private accountService: AccountService,
     private crawlService: CrawlService,
@@ -94,19 +96,15 @@ export class YoutubeService {
   async saveAllChannelVideo() {
     const channels = await this.prisma.youtubeChannel.findMany();
     for (const [index, channel] of channels.entries()) {
-      console.log(index, channel.id);
+      this.logger.log(`${index} ${channel.id}`);
       await this.saveChannelPopularVideo(channel.id);
     }
   }
 
   async saveTrendChannel() {
-    const videoIds = await this.crawlService.getTrendVideoIds();
+    const videoIds = (await this.crawlService.getTrendVideoIds()) ?? [];
 
-    if (!videoIds) {
-      return;
-    }
-
-    console.log({ "videoIds.length": videoIds.length });
+    this.logger.log(`videoIds.length: ${videoIds.length}`);
 
     let channnelIds: string[] = [];
     for (const chunkVideoIds of this.utilsService.chunk(videoIds, 50)) {
@@ -126,7 +124,7 @@ export class YoutubeService {
       channnelIds = channnelIds.concat(additionalChannelIds ?? []);
     }
 
-    console.log({ "channnelIds.length": channnelIds.length });
+    this.logger.log(`channnelIds.length: ${channnelIds.length}`);
     await this.saveChannelByChannelIds(channnelIds);
   }
 
@@ -154,7 +152,7 @@ export class YoutubeService {
         }
       }
 
-      console.log(youtubeChannel.id, youtubeChannel.title);
+      this.logger.log(`${youtubeChannel.id} ${youtubeChannel.title}`);
 
       const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
 
