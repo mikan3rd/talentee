@@ -14,7 +14,7 @@ export class YoutubeController {
 
   @Get("saveAllChannelVideo")
   async saveAllChannelVideo() {
-    await this.youtubeService.saveAllChannelVideo();
+    await this.youtubeService.saveAllChannelVideo(10);
     return "SUCCESS: saveAllChannelVideo";
   }
 

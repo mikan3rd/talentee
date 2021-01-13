@@ -93,8 +93,8 @@ export class YoutubeService {
     await this.prisma.$transaction(values);
   }
 
-  async saveAllChannelVideo() {
-    const channels = await this.prisma.youtubeChannel.findMany();
+  async saveAllChannelVideo(take: number) {
+    const channels = await this.prisma.youtubeChannel.findMany({ take, orderBy: { updatedAt: "desc" } });
     for (const [index, channel] of channels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
       await this.saveChannelPopularVideo(channel.id);
