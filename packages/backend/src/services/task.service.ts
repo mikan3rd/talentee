@@ -23,7 +23,14 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
   }
 
-  @Cron("0 0 0 * * SAT")
+  @Cron("0 1 0 * * *")
+  async bulkUpdateYoutubeChannelVideoCategory() {
+    this.logger.debug("START: bulkUpdateYoutubeChannelVideoCategory");
+    await this.youtubeService.bulkUpdateChannelVideoCategory();
+    this.logger.debug("END: bulkUpdateYoutubeChannelVideoCategory");
+  }
+
+  @Cron("0 0 0 * * *")
   async bulkUpdateYoutubeVideoCategoryCron() {
     await this.bulkUpdateYoutubeVideoCategory();
   }

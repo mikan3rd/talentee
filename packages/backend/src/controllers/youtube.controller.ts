@@ -24,9 +24,9 @@ export class YoutubeController {
     return "SUCCESS: bulkUpdateVideoCategory";
   }
 
-  @Get("saveChannelVideoCategory")
-  async saveChannelVideoCategory() {
-    await this.youtubeService.saveChannelVideoCategory();
-    return "SUCCESS: saveChannelVideoCategory";
+  @Get("bulkUpdateChannelVideoCategory")
+  async bulkUpdateChannelVideoCategory() {
+    await this.youtubeService.bulkUpdateChannelVideoCategory();
+    return "SUCCESS: bulkUpdateChannelVideoCategory";
   }
 }

@@ -255,7 +255,7 @@ export class YoutubeService {
     await this.prisma.$transaction(transactionValues);
   }
 
-  async saveChannelVideoCategory() {
+  async bulkUpdateChannelVideoCategory() {
     const channels = await this.prisma.youtubeChannel.findMany({
       include: { videos: { select: { videoCategoryId: true } } },
     });
