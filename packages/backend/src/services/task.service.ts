@@ -16,7 +16,7 @@ export class TaskService {
     this.logger.debug("START: saveYoutubeTrendChannel");
   }
 
-  @Cron("0 0 */8 * * *")
+  @Cron("0 30 */8 * * *")
   async bulkUpdateYoutubeChannelVideo() {
     this.logger.debug("START: bulkUpdateYoutubeChannelVideo");
     await this.youtubeService.bulkUpdateChannelVideo(100);
@@ -30,12 +30,18 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeChannelVideoCategory");
   }
 
-  // @Cron("0 0 0 * * *")
-  @Timeout(3000)
+  @Cron("0 2 0 * * *")
   async bulkUpdateYoutubeKeyword() {
     this.logger.debug("START: bulkUpdateYoutubeKeyword");
     await this.youtubeService.bulkUpdateChannelKeyword();
     this.logger.debug("END: bulkUpdateYoutubeKeyword");
+  }
+
+  @Cron("0 3 0 * * *")
+  async bulkUpdateYoutubeVideoTag() {
+    this.logger.debug("START: bulkUpdateYoutubeVideoTag");
+    await this.youtubeService.bulkUpdateVideoTag();
+    this.logger.debug("END: bulkUpdateYoutubeVideoTag");
   }
 
   @Cron("0 0 0 * * *")
