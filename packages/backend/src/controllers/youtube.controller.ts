@@ -12,21 +12,21 @@ export class YoutubeController {
     return "SUCCESS: saveTrendChannel";
   }
 
-  @Get("saveAllChannelVideo")
-  async saveAllChannelVideo() {
-    await this.youtubeService.saveAllChannelVideo();
-    return "SUCCESS: saveAllChannelVideo";
+  @Get("bulkUpdateChannelVideo")
+  async bulkUpdateChannelVideo() {
+    await this.youtubeService.bulkUpdateChannelVideo(10);
+    return "SUCCESS: bulkUpdateChannelVideo";
   }
 
-  @Get("saveVideoCategories")
-  async saveVideoCategories() {
-    await this.youtubeService.saveVideoCategories();
-    return "SUCCESS: saveVideoCategories";
+  @Get("bulkUpdateVideoCategory")
+  async bulkUpdateVideoCategory() {
+    await this.youtubeService.bulkUpdateVideoCategory();
+    return "SUCCESS: bulkUpdateVideoCategory";
   }
 
-  @Get("saveChannelVideoCategory")
-  async saveChannelVideoCategory() {
-    await this.youtubeService.saveChannelVideoCategory();
-    return "SUCCESS: saveChannelVideoCategory";
+  @Get("bulkUpdateChannelVideoCategory")
+  async bulkUpdateChannelVideoCategory() {
+    await this.youtubeService.bulkUpdateChannelVideoCategory();
+    return "SUCCESS: bulkUpdateChannelVideoCategory";
   }
 }

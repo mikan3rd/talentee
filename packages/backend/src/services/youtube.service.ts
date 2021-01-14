@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 import { google, youtube_v3 } from "googleapis";
@@ -10,6 +10,8 @@ import { UtilsService } from "@/services/utils.service";
 
 @Injectable()
 export class YoutubeService {
+  private readonly logger = new Logger(YoutubeService.name);
+
   constructor(
     private accountService: AccountService,
     private crawlService: CrawlService,
@@ -66,7 +68,7 @@ export class YoutubeService {
     return videoResponse.data.items;
   }
 
-  async saveVideoCategories() {
+  async bulkUpdateVideoCategory() {
     const videoCategories = await this.getVideoCategories();
 
     const values =
@@ -91,22 +93,18 @@ export class YoutubeService {
     await this.prisma.$transaction(values);
   }
 
-  async saveAllChannelVideo() {
-    const channels = await this.prisma.youtubeChannel.findMany();
+  async bulkUpdateChannelVideo(take: number) {
+    const channels = await this.prisma.youtubeChannel.findMany({ take, orderBy: { updatedAt: "desc" } });
     for (const [index, channel] of channels.entries()) {
-      console.log(index, channel.id);
+      this.logger.log(`${index} ${channel.id}`);
       await this.saveChannelPopularVideo(channel.id);
     }
   }
 
   async saveTrendChannel() {
-    const videoIds = await this.crawlService.getTrendVideoIds();
+    const videoIds = (await this.crawlService.getTrendVideoIds()) ?? [];
 
-    if (!videoIds) {
-      return;
-    }
-
-    console.log({ "videoIds.length": videoIds.length });
+    this.logger.log(`videoIds.length: ${videoIds.length}`);
 
     let channnelIds: string[] = [];
     for (const chunkVideoIds of this.utilsService.chunk(videoIds, 50)) {
@@ -126,7 +124,7 @@ export class YoutubeService {
       channnelIds = channnelIds.concat(additionalChannelIds ?? []);
     }
 
-    console.log({ "channnelIds.length": channnelIds.length });
+    this.logger.log(`channnelIds.length: ${channnelIds.length}`);
     await this.saveChannelByChannelIds(channnelIds);
   }
 
@@ -142,19 +140,23 @@ export class YoutubeService {
       channelItems = channelItems.concat(channelResponse.data.items ?? []);
     }
 
-    for (const item of channelItems) {
-      const { youtubeChannel, youtubeKeywords } = this.formatChannelData(item);
+    let channelDataList = channelItems.map((item) => this.formatChannelData(item));
 
-      if (check) {
-        if (youtubeChannel.country !== "JP") {
-          continue;
-        }
-        if ((youtubeChannel.subscriberCount ?? 0) < 10000 && youtubeChannel.viewCount < 1000000) {
-          continue;
-        }
-      }
+    if (check) {
+      channelDataList = channelDataList.filter(
+        ({ youtubeChannel }) =>
+          youtubeChannel.country === "JP" &&
+          (youtubeChannel.subscriberCount ?? 0) >= 10000 &&
+          youtubeChannel.viewCount >= 1000000,
+      );
+    }
 
-      console.log(youtubeChannel.id, youtubeChannel.title);
+    this.logger.log(`channelDataList.length: ${channelDataList.length}`);
+
+    for (const channelData of channelDataList) {
+      const { youtubeChannel, youtubeKeywords } = channelData;
+
+      this.logger.log(`${youtubeChannel.id} ${youtubeChannel.title}`);
 
       const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
 
@@ -253,7 +255,7 @@ export class YoutubeService {
     await this.prisma.$transaction(transactionValues);
   }
 
-  async saveChannelVideoCategory() {
+  async bulkUpdateChannelVideoCategory() {
     const channels = await this.prisma.youtubeChannel.findMany({
       include: { videos: { select: { videoCategoryId: true } } },
     });

@@ -12,5 +12,6 @@ import { YoutubeService } from "@/services/youtube.service";
   imports: [],
   providers: [AccountService, YoutubeService, CrawlService, UtilsService, PrismaService, YoutubeResolver],
   controllers: [YoutubeController],
+  exports: [YoutubeService],
 })
 export class YoutubeModule {}
