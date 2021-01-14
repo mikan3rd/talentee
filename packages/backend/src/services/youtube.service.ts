@@ -68,7 +68,7 @@ export class YoutubeService {
     return videoResponse.data.items;
   }
 
-  async saveVideoCategories() {
+  async bulkUpdateVideoCategory() {
     const videoCategories = await this.getVideoCategories();
 
     const values =
@@ -93,7 +93,7 @@ export class YoutubeService {
     await this.prisma.$transaction(values);
   }
 
-  async saveAllChannelVideo(take: number) {
+  async bulkUpdateChannel(take: number) {
     const channels = await this.prisma.youtubeChannel.findMany({ take, orderBy: { updatedAt: "desc" } });
     for (const [index, channel] of channels.entries()) {
       this.logger.log(`${index} ${channel.id}`);

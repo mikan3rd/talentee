@@ -19,23 +19,23 @@ export class TaskService {
   @Cron("0 0 */8 * * *")
   async bulkUpdateYoutubeChannel() {
     this.logger.debug("START: bulkUpdateYoutubeChannel");
-    await this.youtubeService.saveAllChannelVideo(100);
+    await this.youtubeService.bulkUpdateChannel(100);
     this.logger.debug("END: bulkUpdateYoutubeChannel");
   }
 
   @Cron("0 0 0 * * SAT")
-  async saveYoutubeVideoCategoriesCron() {
-    await this.saveYoutubeVideoCategories();
+  async bulkUpdateYoutubeVideoCategoryCron() {
+    await this.bulkUpdateYoutubeVideoCategory();
   }
 
   @Timeout(1000)
-  async saveYoutubeVideoCategoriesTimeout() {
-    await this.saveYoutubeVideoCategories();
+  async bulkUpdateYoutubeVideoCategoryTimeout() {
+    await this.bulkUpdateYoutubeVideoCategory();
   }
 
-  async saveYoutubeVideoCategories() {
-    this.logger.debug("START: saveYoutubeVideoCategories");
-    await this.youtubeService.saveVideoCategories();
-    this.logger.debug("END: saveYoutubeVideoCategories");
+  async bulkUpdateYoutubeVideoCategory() {
+    this.logger.debug("START: bulkUpdateYoutubeVideoCategory");
+    await this.youtubeService.bulkUpdateVideoCategory();
+    this.logger.debug("END: bulkUpdateYoutubeVideoCategory");
   }
 }
