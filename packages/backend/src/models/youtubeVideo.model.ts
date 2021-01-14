@@ -39,8 +39,8 @@ export class YoutubeVideo {
   @Field()
   publishedAt!: Date;
 
-  @Column({ type: "bigint", unsigned: true })
-  @Field((type) => BigIntScalar)
+  @Column({ type: "bigint", unsigned: true, nullable: true, default: null })
+  @Field((type) => BigIntScalar, { nullable: true })
   viewCount!: BigInt;
 
   @Column({ type: "bigint", unsigned: true, nullable: true, default: null })

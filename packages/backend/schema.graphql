@@ -20,7 +20,7 @@ type YoutubeVideo {
   description: String!
   thumbnailUrl: String!
   publishedAt: Date!
-  viewCount: BigInt!
+  viewCount: BigInt
   likeCount: BigInt
   dislikeCount: BigInt
   commentCount: BigInt
