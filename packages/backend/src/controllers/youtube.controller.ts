@@ -12,10 +12,10 @@ export class YoutubeController {
     return "SUCCESS: saveTrendChannel";
   }
 
-  @Get("bulkUpdateChannel")
-  async bulkUpdateChannel() {
-    await this.youtubeService.bulkUpdateChannel(10);
-    return "SUCCESS: bulkUpdateChannel";
+  @Get("bulkUpdateChannelVideo")
+  async bulkUpdateChannelVideo() {
+    await this.youtubeService.bulkUpdateChannelVideo(10);
+    return "SUCCESS: bulkUpdateChannelVideo";
   }
 
   @Get("bulkUpdateVideoCategory")

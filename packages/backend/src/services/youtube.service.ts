@@ -93,7 +93,7 @@ export class YoutubeService {
     await this.prisma.$transaction(values);
   }
 
-  async bulkUpdateChannel(take: number) {
+  async bulkUpdateChannelVideo(take: number) {
     const channels = await this.prisma.youtubeChannel.findMany({ take, orderBy: { updatedAt: "desc" } });
     for (const [index, channel] of channels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
@@ -140,17 +140,21 @@ export class YoutubeService {
       channelItems = channelItems.concat(channelResponse.data.items ?? []);
     }
 
-    for (const item of channelItems) {
-      const { youtubeChannel, youtubeKeywords } = this.formatChannelData(item);
+    let channelDataList = channelItems.map((item) => this.formatChannelData(item));
 
-      if (check) {
-        if (youtubeChannel.country !== "JP") {
-          continue;
-        }
-        if ((youtubeChannel.subscriberCount ?? 0) < 10000 && youtubeChannel.viewCount < 1000000) {
-          continue;
-        }
-      }
+    if (check) {
+      channelDataList = channelDataList.filter(
+        ({ youtubeChannel }) =>
+          youtubeChannel.country === "JP" &&
+          (youtubeChannel.subscriberCount ?? 0) >= 10000 &&
+          youtubeChannel.viewCount >= 1000000,
+      );
+    }
+
+    this.logger.log(`channelDataList.length: ${channelDataList.length}`);
+
+    for (const channelData of channelDataList) {
+      const { youtubeChannel, youtubeKeywords } = channelData;
 
       this.logger.log(`${youtubeChannel.id} ${youtubeChannel.title}`);
 
