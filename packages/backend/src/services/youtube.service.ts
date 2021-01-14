@@ -317,6 +317,17 @@ export class YoutubeService {
     return channels.filter((channel) => channel.channelVideoCategories[0].videoCategoryId === videoCategoryId);
   }
 
+  async bulkUpdateChannelKeyword() {
+    const keywords = await this.prisma.youtubeKeyword.findMany({
+      include: { channels: { select: { channelId: true } } },
+    });
+    const transactionValues = keywords.map(({ id, channels }) => {
+      const num = channels.length;
+      return this.prisma.youtubeKeyword.update({ where: { id }, data: { num } });
+    });
+    await this.prisma.$transaction(transactionValues);
+  }
+
   formatChannelData(item: youtube_v3.Schema$Channel) {
     const { id, snippet, statistics, brandingSettings } = item;
     const keywords = brandingSettings?.channel?.keywords;
