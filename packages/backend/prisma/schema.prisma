@@ -48,7 +48,7 @@ model YoutubeChannel {
   country                   String?                     @db.VarChar(255)
   publishedAt               DateTime                    @db.Datetime(0)
   subscriberCount           BigInt?                     @db.BigInt
-  viewCount                 BigInt                      @db.BigInt
+  viewCount                 BigInt                     @db.BigInt
   videoCount                BigInt                      @db.BigInt
   hiddenSubscriberCount     Boolean                     @db.TinyInt
   createdAt                 DateTime                    @default(now()) @db.Datetime(6)
@@ -96,7 +96,7 @@ model YoutubeVideo {
   description            String                 @db.Text
   thumbnailUrl           String                 @db.Text
   publishedAt            DateTime               @db.Datetime(0)
-  viewCount              BigInt                 @db.BigInt
+  viewCount              BigInt?                @db.BigInt
   likeCount              BigInt?                @db.BigInt
   dislikeCount           BigInt?                @db.BigInt
   commentCount           BigInt?                @db.BigInt

@@ -430,7 +430,7 @@ export class YoutubeService {
       title,
       description,
       thumbnailUrl: thumbnails?.medium?.url ?? "",
-      viewCount: Number(viewCount),
+      viewCount: typeof viewCount === "string" ? Number(viewCount) : null,
       likeCount: typeof likeCount === "string" ? Number(likeCount) : null,
       dislikeCount: typeof dislikeCount === "string" ? Number(dislikeCount) : null,
       commentCount: typeof commentCount === "string" ? Number(commentCount) : null,
