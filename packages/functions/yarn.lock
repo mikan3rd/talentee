@@ -2835,20 +2835,20 @@ firebase-functions-test@0.2.3:
     "@types/lodash" "^4.14.104"
     lodash "^4.17.5"
 
-firebase-functions@3.13.0:
-  version "3.13.0"
-  resolved "https://registry.yarnpkg.com/firebase-functions/-/firebase-functions-3.13.0.tgz#66278dbeb45f343a179814f2b1d95b383beec5e7"
-  integrity sha512-tnltJL5KlGtbeBD9scsVjoKTSTMeo6EAy1gsdOfRlrwAu6idgLRKYVdmw0YymS8N7SwJ3CXo+3fuvSSihKhXbA==
+firebase-functions@3.13.1:
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/firebase-functions/-/firebase-functions-3.13.1.tgz#a34e61ab328903fe88a9532d267f031d9a0d9e23"
+  integrity sha512-tmYHN9OWWIij/8xO72AD2sKHm9T8pdLPYXy5RWk9VidP8+LDOUZ68vq1g1WKeSkRR7WyVYQ3scU2QoMDfe9T8g==
   dependencies:
     "@types/express" "4.17.3"
     cors "^2.8.5"
     express "^4.17.1"
     lodash "^4.17.14"
 
-firebase-tools@9.2.0:
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-9.2.0.tgz#17704a59a8fcdd7aba010d89ee957460d60ad8ea"
-  integrity sha512-6sTPPxz9Im9jW7dKpmBMQHJJM38OUNiqs2mxSL3yfwScer4B4XUO2yvcFLjgE338lHnK80lWmH+ORrjADCV4Pg==
+firebase-tools@9.2.1:
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/firebase-tools/-/firebase-tools-9.2.1.tgz#484ed2f492ea2abd2d341b9dafb0e585f4e9f229"
+  integrity sha512-sD4wfB5hs/8IKXV6AJOmkpvXf/St7gVc9QeW4Qz21PG7CkirgRf6FqcYkPKtBcro4wfj48dihnYx/IO1+XPTGg==
   dependencies:
     "@google-cloud/pubsub" "^2.7.0"
     JSONStream "^1.2.1"
