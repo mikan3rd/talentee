@@ -1,13 +1,14 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Cron, Timeout } from "@nestjs/schedule";
 
+import { AccountService } from "@/services/account.service";
 import { YoutubeService } from "@/services/youtube.service";
 
 @Injectable()
 export class TaskService {
   private readonly logger = new Logger(TaskService.name);
 
-  constructor(private youtubeService: YoutubeService) {}
+  constructor(private accountService: AccountService, private youtubeService: YoutubeService) {}
 
   @Cron("0 0 */6 * * *")
   async saveYoutubeTrendChannel() {
@@ -47,6 +48,11 @@ export class TaskService {
   @Cron("0 0 0 * * *")
   async bulkUpdateYoutubeVideoCategoryCron() {
     await this.bulkUpdateYoutubeVideoCategory();
+  }
+
+  @Timeout(1000)
+  async bulkAddServiceByYoutube() {
+    await this.accountService.addServiceByYoutube(1);
   }
 
   // @Timeout(1000)
