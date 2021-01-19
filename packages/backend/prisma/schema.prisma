@@ -9,119 +9,140 @@ datasource db {
 }
 
 model Account {
-  uuid            String            @id @default(uuid()) @db.VarChar(36)
-  displayName     String            @db.VarChar(255)
-  username        String            @unique @db.VarChar(255)
-  thumbnailUrl    String            @db.Text
-  createdAt       DateTime          @default(now()) @db.Datetime(6)
-  updatedAt       DateTime          @updatedAt @db.Datetime(6)
+  uuid            String           @id @default(uuid()) @db.VarChar(36)
+  displayName     String           @db.VarChar(255)
+  username        String           @unique @db.VarChar(255)
+  thumbnailUrl    String           @db.Text
+  createdAt       DateTime         @default(now()) @db.Datetime(6)
+  updatedAt       DateTime         @updatedAt @db.Datetime(6)
+  twitterUser     TwitterUser[]
   youtubeChannels YoutubeChannel[]
 }
 
 model YoutubeChannelKeywordRelation {
-  channelId      String          @db.VarChar(255)
-  keywordId      Int             @db.Int
-  channels YoutubeChannel @relation(fields: [channelId], references: [id])
-  keywords YoutubeKeyword @relation(fields: [keywordId], references: [id])
+  channelId String         @db.VarChar(255)
+  keywordId Int            @db.Int
+  channels  YoutubeChannel @relation(fields: [channelId], references: [id])
+  keywords  YoutubeKeyword @relation(fields: [keywordId], references: [id])
 
   @@id([channelId, keywordId])
-  @@index([channelId])
-  @@index([keywordId])
+  @@index([channelId], name: "IDX_b18b74d0911b0e08ae917029f8")
+  @@index([keywordId], name: "IDX_e2c8f2d1602712387ea922c295")
 }
 
 model YoutubeVideoTagRelation {
-  videoId      String        @db.VarChar(255)
-  tagId        Int           @db.Int
-  tags   YoutubeTag   @relation(fields: [tagId], references: [id])
-  videos YoutubeVideo @relation(fields: [videoId], references: [id])
+  videoId String       @db.VarChar(255)
+  tagId   Int          @db.Int
+  tags    YoutubeTag   @relation(fields: [tagId], references: [id])
+  videos  YoutubeVideo @relation(fields: [videoId], references: [id])
 
   @@id([videoId, tagId])
-  @@index([tagId])
-  @@index([videoId])
+  @@index([videoId], name: "IDX_13e9d8647dadb5d352b6ba6833")
+  @@index([tagId], name: "IDX_be5ac77f3edc4c713a19d34d62")
 }
 
 model YoutubeChannel {
-  id                        String                      @id @db.VarChar(255)
-  title                     String                      @db.VarChar(255)
-  description               String                      @db.Text
-  thumbnailUrl              String                      @db.Text
-  country                   String?                     @db.VarChar(255)
-  publishedAt               DateTime                    @db.Datetime(0)
-  subscriberCount           BigInt?                     @db.BigInt
-  viewCount                 BigInt                     @db.BigInt
-  videoCount                BigInt                      @db.BigInt
-  hiddenSubscriberCount     Boolean                     @db.TinyInt
-  createdAt                 DateTime                    @default(now()) @db.Datetime(6)
-  updatedAt                 DateTime                    @updatedAt @db.Datetime(6)
-  accountId                 String                      @db.VarChar(36)
-  account                  Account                      @relation(fields: [accountId], references: [uuid])
-  keywords                 YoutubeChannelKeywordRelation[]
-  channelVideoCategories   YoutubeChannelVideoCategory[]
-  videos                   YoutubeVideo[]
+  id                     String                          @id @db.VarChar(255)
+  title                  String                          @db.VarChar(255)
+  description            String                          @db.Text
+  thumbnailUrl           String                          @db.Text
+  country                String?                         @db.VarChar(255)
+  publishedAt            DateTime                        @db.Datetime(0)
+  subscriberCount        BigInt?                         @db.BigInt
+  viewCount              BigInt                          @db.BigInt
+  videoCount             BigInt                          @db.BigInt
+  hiddenSubscriberCount  Boolean                         @db.TinyInt
+  createdAt              DateTime                        @default(now()) @db.Datetime(6)
+  updatedAt              DateTime                        @updatedAt @db.Datetime(6)
+  accountId              String                          @db.VarChar(36)
+  account                Account                         @relation(fields: [accountId], references: [uuid])
+  keywords               YoutubeChannelKeywordRelation[]
+  channelVideoCategories YoutubeChannelVideoCategory[]
+  videos                 YoutubeVideo[]
 
-  @@index([accountId])
+  @@index([accountId], name: "FK_f81a0e842021b9f2b7346540195")
 }
 
 model YoutubeKeyword {
-  id                        Int                         @id @default(autoincrement()) @db.Int
-  title                     String                      @unique @db.VarChar(255)
-  num                       Int                         @default(0) @db.Int
-  createdAt                 DateTime                    @default(now()) @db.Datetime(6)
-  updatedAt                 DateTime                    @updatedAt @db.Datetime(6)
-  channels                  YoutubeChannelKeywordRelation[]
+  id        Int                             @id @default(autoincrement()) @db.Int
+  title     String                          @unique @db.VarChar(255)
+  num       Int                             @default(0) @db.Int
+  createdAt DateTime                        @default(now()) @db.Datetime(6)
+  updatedAt DateTime                        @updatedAt @db.Datetime(6)
+  channels  YoutubeChannelKeywordRelation[]
 }
 
 model YoutubeTag {
-  id                  Int                   @id @default(autoincrement()) @db.Int
-  title               String                @unique @db.VarChar(255)
-  num                 Int                   @default(0) @db.Int
-  createdAt           DateTime              @default(now()) @db.Datetime(6)
-  updatedAt           DateTime              @updatedAt @db.Datetime(6)
-  videos YoutubeVideoTagRelation[]
+  id        Int                       @id @default(autoincrement()) @db.Int
+  title     String                    @unique @db.VarChar(255)
+  num       Int                       @default(0) @db.Int
+  createdAt DateTime                  @default(now()) @db.Datetime(6)
+  updatedAt DateTime                  @updatedAt @db.Datetime(6)
+  videos    YoutubeVideoTagRelation[]
 }
 
 model YoutubeVideoCategory {
-  id            Int             @id @db.Int
-  title         String          @db.VarChar(255)
-  assignable    Boolean         @db.TinyInt
-  createdAt     DateTime        @default(now()) @db.Datetime(6)
-  updatedAt     DateTime        @updatedAt @db.Datetime(6)
-  videos YoutubeVideo[]
+  id                     Int                           @id @db.Int
+  title                  String                        @db.VarChar(255)
+  assignable             Boolean                       @db.TinyInt
+  createdAt              DateTime                      @default(now()) @db.Datetime(6)
+  updatedAt              DateTime                      @updatedAt @db.Datetime(6)
   channelVideoCategories YoutubeChannelVideoCategory[]
+  videos                 YoutubeVideo[]
 }
 
 model YoutubeVideo {
-  id                     String                 @id @db.VarChar(255)
-  title                  String                 @db.VarChar(255)
-  description            String                 @db.Text
-  thumbnailUrl           String                 @db.Text
-  publishedAt            DateTime               @db.Datetime(0)
-  viewCount              BigInt?                @db.BigInt
-  likeCount              BigInt?                @db.BigInt
-  dislikeCount           BigInt?                @db.BigInt
-  commentCount           BigInt?                @db.BigInt
-  createdAt              DateTime               @default(now()) @db.Datetime(6)
-  updatedAt              DateTime               @updatedAt @db.Datetime(6)
-  videoCategoryId        Int                    @db.Int
-  channelId              String                 @db.VarChar(255)
-  channel        YoutubeChannel        @relation(fields: [channelId], references: [id])
-  videoCategory YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
-  tags    YoutubeVideoTagRelation[]
+  id              String                    @id @db.VarChar(255)
+  title           String                    @db.VarChar(255)
+  description     String                    @db.Text
+  thumbnailUrl    String                    @db.Text
+  publishedAt     DateTime                  @db.Datetime(0)
+  viewCount       BigInt?                   @db.BigInt
+  likeCount       BigInt?                   @db.BigInt
+  dislikeCount    BigInt?                   @db.BigInt
+  commentCount    BigInt?                   @db.BigInt
+  createdAt       DateTime                  @default(now()) @db.Datetime(6)
+  updatedAt       DateTime                  @updatedAt @db.Datetime(6)
+  videoCategoryId Int                       @db.Int
+  channelId       String                    @db.VarChar(255)
+  channel         YoutubeChannel            @relation(fields: [channelId], references: [id])
+  videoCategory   YoutubeVideoCategory      @relation(fields: [videoCategoryId], references: [id])
+  tags            YoutubeVideoTagRelation[]
 
-  @@index([channelId])
-  @@index([videoCategoryId])
+  @@index([channelId], name: "FK_1dfe47f55b7d574e2079bf8710e")
+  @@index([videoCategoryId], name: "FK_e45ffb57d9965a542c4217dfcb3")
 }
 
 model YoutubeChannelVideoCategory {
-  channelId            String               @db.VarChar(255)
-  videoCategoryId      Int                  @db.Int
-  num                  Int                  @default(0) @db.Int
-  createdAt            DateTime             @default(now()) @db.Datetime(6)
-  updatedAt            DateTime             @updatedAt @db.Datetime(6)
-  channel              YoutubeChannel       @relation(fields: [channelId], references: [id])
-  videoCategory        YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
+  channelId       String               @db.VarChar(255)
+  videoCategoryId Int                  @db.Int
+  num             Int                  @default(0) @db.Int
+  createdAt       DateTime             @default(now()) @db.Datetime(6)
+  updatedAt       DateTime             @updatedAt @db.Datetime(6)
+  channel         YoutubeChannel       @relation(fields: [channelId], references: [id])
+  videoCategory   YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
 
   @@id([channelId, videoCategoryId])
-  @@index([channelId])
-  @@index([videoCategoryId])
+  @@index([videoCategoryId], name: "FK_563ce25ff244de112c485fadc7b")
+}
+
+model TwitterUser {
+  id               String   @id @db.VarChar(255)
+  name             String   @db.VarChar(255)
+  username         String   @unique @db.VarChar(255)
+  description      String   @db.Text
+  profileImageUrl  String   @db.Text
+  followersCount   BigInt   @db.BigInt
+  followingCount   BigInt   @db.BigInt
+  listedCount      BigInt   @db.BigInt
+  tweetCount       BigInt   @db.BigInt
+  verified         Int      @db.TinyInt
+  protected        Int      @db.TinyInt
+  createdTimestamp DateTime @db.Datetime(0)
+  createdAt        DateTime @default(now()) @db.Datetime(6)
+  updatedAt        DateTime @updatedAt @db.Datetime(6)
+  accountId        String   @db.VarChar(36)
+  account          Account  @relation(fields: [accountId], references: [uuid])
+
+  @@index([accountId], name: "FK_bcebed04f6d4c61231f878f54ee")
 }

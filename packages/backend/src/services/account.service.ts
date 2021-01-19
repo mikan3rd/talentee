@@ -59,12 +59,6 @@ export class AccountService {
       .account();
   }
 
-  async create(payload: Prisma.AccountCreateInput) {
-    return this.prisma.account.create({
-      data: payload,
-    });
-  }
-
   async addServiceByYoutube(take: number) {
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
