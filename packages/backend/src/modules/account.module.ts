@@ -1,4 +1,4 @@
-import { Module, forwardRef } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 
 import { YoutubeModule } from "@/modules/youtube.module";
 import { AccountResolver } from "@/resolvers/account.resolver";
@@ -9,7 +9,7 @@ import { UtilsService } from "@/services/utils.service";
 
 @Module({
   imports: [YoutubeModule],
-  providers: [AccountService, PrismaService, AccountResolver, CrawlService, UtilsService],
+  providers: [AccountService, AccountResolver, PrismaService, CrawlService, UtilsService],
   exports: [AccountService],
 })
 export class AccountModule {}

@@ -1,9 +1,8 @@
-import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 import { google, youtube_v3 } from "googleapis";
 
-import { AccountService } from "@/services/account.service";
 import { CrawlService } from "@/services/crawl.service";
 import { PrismaService } from "@/services/prisma.service";
 import { UtilsService } from "@/services/utils.service";
@@ -13,7 +12,6 @@ export class YoutubeService {
   private readonly logger = new Logger(YoutubeService.name);
 
   constructor(
-    private accountService: AccountService,
     private crawlService: CrawlService,
     private utilsService: UtilsService,
     private configService: ConfigService<EnvironmentVariables>,
@@ -94,7 +92,7 @@ export class YoutubeService {
   }
 
   async bulkUpdateChannelVideo(take: number) {
-    const channels = await this.prisma.youtubeChannel.findMany({ take, orderBy: { updatedAt: "desc" } });
+    const channels = await this.prisma.youtubeChannel.findMany({ take, orderBy: { updatedAt: "asc" } });
     for (const [index, channel] of channels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
       await this.saveChannelPopularVideo(channel.id);
@@ -179,7 +177,12 @@ export class YoutubeService {
         })),
       };
 
-      const account = await this.accountService.findByYoutubeChannel(youtubeChannel.id);
+      const account = await this.prisma.youtubeChannel
+        .findUnique({
+          where: { id: youtubeChannel.id },
+        })
+        .account();
+
       const data: Prisma.YoutubeChannelCreateInput = {
         ...youtubeChannel,
         account: {
