@@ -2,6 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Account {
+  uuid: ID!
+  displayName: String!
+  username: String!
+  thumbnailUrl: String!
+  createdAt: Date!
+  updatedAt: Date!
+  youtubeChannels: [YoutubeChannel!]!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
 type YoutubeTag {
   id: Float!
   title: String!
@@ -10,9 +23,6 @@ type YoutubeTag {
   updatedAt: Date!
   videos: [YoutubeVideo!]!
 }
-
-"""Date custom scalar type"""
-scalar Date
 
 type YoutubeVideo {
   id: String!
@@ -80,16 +90,6 @@ type YoutubeChannel {
   videos: [YoutubeVideo!]!
   account: Account!
   channelVideoCategories: [YoutubeChannelVideoCategory!]!
-}
-
-type Account {
-  uuid: ID!
-  displayName: String!
-  username: String!
-  thumbnailUrl: String!
-  createdAt: Date!
-  updatedAt: Date!
-  youtubeChannels: [YoutubeChannel!]!
 }
 
 type Query {

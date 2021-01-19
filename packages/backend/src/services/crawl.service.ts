@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios, { AxiosRequestConfig } from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
@@ -13,6 +13,8 @@ const UserAgent =
 
 @Injectable()
 export class CrawlService {
+  private readonly logger = new Logger(CrawlService.name);
+
   constructor(private configService: ConfigService<EnvironmentVariables>) {}
 
   axiosSetup(proxyType: ProxyType = "none") {
@@ -112,7 +114,6 @@ export class CrawlService {
 
     let videoIds: string[] = [];
     for (const url of trendUrls) {
-      console.log({ url });
       const { data } = await axios.get<string>(url);
       const videoMatchResults = data.match(/(?<=("\/watch\?v=))[^"]*(?=")/g);
       if (videoMatchResults) {
@@ -121,7 +122,7 @@ export class CrawlService {
     }
 
     const uniqueVideoIds = Array.from(new Set(videoIds));
-    console.log({ uniqueVideoIds });
+    this.logger.log(`uniqueVideoIds: ${uniqueVideoIds}`);
     return uniqueVideoIds;
   }
 
@@ -151,4 +152,68 @@ export class CrawlService {
     const uniqueVideoIds = Array.from(new Set(videoIds));
     return uniqueVideoIds;
   }
+
+  async getServiceLinkByYoutube(channelId: string) {
+    const axios = this.axiosSetup();
+
+    const targetUrl = `https://www.youtube.com/channel/${channelId}/about`;
+
+    const { data } = await axios.get<string>(targetUrl);
+
+    const matchResults = data.match(/{"responseContext":(.*})(?=(;))/);
+    if (!matchResults) {
+      return null;
+    }
+
+    const ytInitialData: ytInitialDataType = JSON.parse(matchResults[0]);
+
+    const targetTab = ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.find(
+      (tab) => tab.tabRenderer.selected,
+    );
+    if (!targetTab) {
+      return [];
+    }
+
+    const targetSection = targetTab.tabRenderer.content.sectionListRenderer.contents[0];
+    const targetItem = targetSection.itemSectionRenderer.contents[0];
+    const linkUrls = targetItem.channelAboutFullMetadataRenderer.primaryLinks.map((link) => {
+      const redirectUrl = link.navigationEndpoint.urlEndpoint.url;
+      const decodeUrl = decodeURIComponent(redirectUrl);
+      const UrlObj = new URL(decodeUrl);
+      const queryUrl = UrlObj.searchParams.get("q");
+      if (queryUrl) {
+        return queryUrl;
+      }
+      return `${UrlObj.origin}${UrlObj.pathname}`;
+    });
+
+    this.logger.log(`linkUrls: ${linkUrls}`);
+    return linkUrls;
+  }
 }
+
+type ytInitialDataType = {
+  contents: {
+    twoColumnBrowseResultsRenderer: {
+      tabs: {
+        tabRenderer: {
+          title: string;
+          selected: boolean;
+          content: {
+            sectionListRenderer: {
+              contents: {
+                itemSectionRenderer: {
+                  contents: {
+                    channelAboutFullMetadataRenderer: {
+                      primaryLinks: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
+                    };
+                  }[];
+                };
+              }[];
+            };
+          };
+        };
+      }[];
+    };
+  };
+};
