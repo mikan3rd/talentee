@@ -6,6 +6,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { AppController } from "@/controllers/app.controller";
 import { AccountModule } from "@/modules/account.module";
 import { TaskModule } from "@/modules/task.module";
+import { TwitterModule } from "@/modules/twitter.module";
 import { YoutubeModule } from "@/modules/youtube.module";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
 import { DateScalar } from "@/scalars/date.scalar";
@@ -18,6 +19,7 @@ import { AppService } from "@/services/app.service";
     ScheduleModule.forRoot(),
     AccountModule,
     YoutubeModule,
+    TwitterModule,
     TaskModule,
   ],
   controllers: [AppController],

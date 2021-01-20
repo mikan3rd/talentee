@@ -1,8 +1,8 @@
-import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { Injectable, Logger } from "@nestjs/common";
 
 import { CrawlService } from "@/services/crawl.service";
 import { PrismaService } from "@/services/prisma.service";
+import { TwitterService } from "@/services/twitter.service";
 import { UtilsService } from "@/services/utils.service";
 import { YoutubeService } from "@/services/youtube.service";
 
@@ -30,8 +30,8 @@ export class AccountService {
     private prisma: PrismaService,
     private crawlService: CrawlService,
     private utilsService: UtilsService,
-    @Inject(forwardRef(() => YoutubeService))
     private youtubeService: YoutubeService,
+    private twitterService: TwitterService,
   ) {}
 
   async findOne(uuid: string) {
@@ -51,33 +51,19 @@ export class AccountService {
   //   return this.accountRepository.find({ relations: ["youtubeChannels"] });
   // }
 
-  async findByYoutubeChannel(id: string) {
-    return this.prisma.youtubeChannel
-      .findUnique({
-        where: { id },
-      })
-      .account();
-  }
-
-  async create(payload: Prisma.AccountCreateInput) {
-    return this.prisma.account.create({
-      data: payload,
-    });
-  }
-
   async addServiceByYoutube(take: number) {
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
       include: { account: { select: { uuid: true } } },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { updatedAt: "asc" },
     });
-    for (const channel of youtubeChannels) {
-      this.logger.log(`${channel.id}`);
+    for (const [index, channel] of youtubeChannels.entries()) {
+      this.logger.log(`${index} ${channel.id}`);
       const linkUrls = (await this.crawlService.getServiceLinkByYoutube(channel.id)) ?? [];
       const services = linkUrls
         .map((url) => this.judgeServiceAccount(url))
         .filter((service) => service.serviceName !== "youtube");
-      this.AddServiceByLinkUrls(channel.account.uuid, services);
+      await this.AddServiceByLinkUrls(channel.account.uuid, services);
     }
   }
 
@@ -109,6 +95,24 @@ export class AccountService {
         }
 
         await this.youtubeService.saveChannelByChannelIds([username], false);
+      }
+
+      if (serviceName === "twitter") {
+        const account = await this.prisma.account.findUnique({
+          where: { uuid: accoutId },
+          include: { twitterUser: true },
+        });
+
+        if (!account || account.twitterUser.length > 0) {
+          continue;
+        }
+
+        const twitterUser = await this.prisma.twitterUser.findUnique({ where: { username } });
+        if (twitterUser) {
+          continue;
+        }
+
+        await this.twitterService.upsertUserByUsername(username, accoutId);
       }
     }
   }
