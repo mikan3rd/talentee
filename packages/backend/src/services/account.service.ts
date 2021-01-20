@@ -57,13 +57,13 @@ export class AccountService {
       include: { account: { select: { uuid: true } } },
       orderBy: { updatedAt: "asc" },
     });
-    for (const channel of youtubeChannels) {
-      this.logger.log(`${channel.id}`);
+    for (const [index, channel] of youtubeChannels.entries()) {
+      this.logger.log(`${index} ${channel.id}`);
       const linkUrls = (await this.crawlService.getServiceLinkByYoutube(channel.id)) ?? [];
       const services = linkUrls
         .map((url) => this.judgeServiceAccount(url))
         .filter((service) => service.serviceName !== "youtube");
-      this.AddServiceByLinkUrls(channel.account.uuid, services);
+      await this.AddServiceByLinkUrls(channel.account.uuid, services);
     }
   }
 
@@ -112,7 +112,7 @@ export class AccountService {
           continue;
         }
 
-        await this.twitterService.upsertUserByUsername(username);
+        await this.twitterService.upsertUserByUsername(username, accoutId);
       }
     }
   }

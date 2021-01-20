@@ -22,7 +22,13 @@ export class TwitterService {
     return { Authorization: `Bearer ${this.configService.get("TWITTER_BEARER_TOKEN")}` };
   }
 
-  async upsertUserByUsername(_username: string) {
+  async upsertUserByUsername(_username: string, accountId?: string) {
+    const response = await this.getUserByUsername(_username);
+
+    if (!response) {
+      return;
+    }
+
     const {
       data: {
         id,
@@ -35,13 +41,7 @@ export class TwitterService {
         created_at,
         public_metrics: { followers_count, following_count, listed_count, tweet_count },
       },
-    } = await this.getUserByUsername(_username);
-
-    const account = await this.prisma.twitterUser
-      .findUnique({
-        where: { id },
-      })
-      .account();
+    } = response;
 
     const twitteUser: Prisma.TwitterUserCreateInput = {
       id,
@@ -56,7 +56,16 @@ export class TwitterService {
       verified,
       protected: _protected,
       createdTimestamp: created_at,
-      account: { connect: { uuid: account?.uuid } },
+      account: {
+        connectOrCreate: {
+          where: { uuid: accountId ?? "" },
+          create: {
+            displayName: name,
+            username,
+            thumbnailUrl: profile_image_url,
+          },
+        },
+      },
     };
 
     await this.prisma.twitterUser.upsert({ where: { id: twitteUser.id }, create: twitteUser, update: twitteUser });
@@ -67,8 +76,7 @@ export class TwitterService {
     const params = { "user.fields": userFields.join(",") };
     const { data } = await axios.get<UserResponseType | TwitterApiErrorType>(url, { params, headers: this.headers });
     if (this.hasError(data)) {
-      const error = this.handleError(data);
-      throw error;
+      return this.handleError(data);
     }
     return data;
   }
@@ -78,8 +86,7 @@ export class TwitterService {
     const params = { "user.fields": userFields.join(",") };
     const { data } = await axios.get<UserResponseType | TwitterApiErrorType>(url, { params, headers: this.headers });
     if (this.hasError(data)) {
-      const error = this.handleError(data);
-      throw error;
+      return this.handleError(data);
     }
     return data;
   }
@@ -97,8 +104,7 @@ export class TwitterService {
     };
     const { data } = await axios.get<TweetsResponseType | TwitterApiErrorType>(url, { params, headers: this.headers });
     if (this.hasError(data)) {
-      const error = this.handleError(data);
-      throw error;
+      return this.handleError(data);
     }
     return data;
   }
@@ -108,11 +114,17 @@ export class TwitterService {
   }
 
   handleError(data: TwitterApiErrorType) {
-    console.error(JSON.stringify(data.errors));
+    this.logger.error(JSON.stringify(data.errors));
+    const firstError = data.errors[0];
+
+    if (firstError.title === "Not Found Error" || firstError.title === "Forbidden") {
+      return null;
+    }
+
     const error = new TwitterError("TwitterAPIのレスポンスにエラー");
-    error.name = data.errors[0].title;
+    error.name = firstError.title;
     error.stack = JSON.stringify(data.errors);
-    return error;
+    throw error;
   }
 }
 

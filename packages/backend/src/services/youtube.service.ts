@@ -177,6 +177,7 @@ export class YoutubeService {
         })),
       };
 
+      // TODO: accountのuuidの有無でconnectOrCreateを行うようにする
       const account = await this.prisma.youtubeChannel
         .findUnique({
           where: { id: youtubeChannel.id },

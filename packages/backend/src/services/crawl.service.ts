@@ -176,16 +176,17 @@ export class CrawlService {
 
     const targetSection = targetTab.tabRenderer.content.sectionListRenderer.contents[0];
     const targetItem = targetSection.itemSectionRenderer.contents[0];
-    const linkUrls = targetItem.channelAboutFullMetadataRenderer.primaryLinks.map((link) => {
-      const redirectUrl = link.navigationEndpoint.urlEndpoint.url;
-      const decodeUrl = decodeURIComponent(redirectUrl);
-      const UrlObj = new URL(decodeUrl);
-      const queryUrl = UrlObj.searchParams.get("q");
-      if (queryUrl) {
-        return queryUrl;
-      }
-      return `${UrlObj.origin}${UrlObj.pathname}`;
-    });
+    const linkUrls =
+      targetItem.channelAboutFullMetadataRenderer.primaryLinks?.map((link) => {
+        const redirectUrl = link.navigationEndpoint.urlEndpoint.url;
+        const decodeUrl = decodeURIComponent(redirectUrl);
+        const UrlObj = new URL(decodeUrl);
+        const queryUrl = UrlObj.searchParams.get("q");
+        if (queryUrl) {
+          return queryUrl;
+        }
+        return `${UrlObj.origin}${UrlObj.pathname}`;
+      }) ?? [];
 
     this.logger.log(`linkUrls: ${linkUrls}`);
     return linkUrls;
@@ -205,7 +206,7 @@ type ytInitialDataType = {
                 itemSectionRenderer: {
                   contents: {
                     channelAboutFullMetadataRenderer: {
-                      primaryLinks: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
+                      primaryLinks?: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
                     };
                   }[];
                 };

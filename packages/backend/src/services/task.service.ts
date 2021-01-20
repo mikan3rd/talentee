@@ -10,18 +10,9 @@ export class TaskService {
 
   constructor(private accountService: AccountService, private youtubeService: YoutubeService) {}
 
-  @Cron("0 0 */6 * * *")
-  async saveYoutubeTrendChannel() {
-    this.logger.debug("START: saveYoutubeTrendChannel");
-    await this.youtubeService.saveTrendChannel();
-    this.logger.debug("START: saveYoutubeTrendChannel");
-  }
-
-  @Cron("0 30 */8 * * *")
-  async bulkUpdateYoutubeChannelVideo() {
-    this.logger.debug("START: bulkUpdateYoutubeChannelVideo");
-    await this.youtubeService.bulkUpdateChannelVideo(100);
-    this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
+  @Cron("0 0 0 * * *")
+  async bulkUpdateYoutubeVideoCategoryCron() {
+    await this.bulkUpdateYoutubeVideoCategory();
   }
 
   @Cron("0 1 0 * * *")
@@ -45,14 +36,25 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeVideoTag");
   }
 
-  @Cron("0 0 0 * * *")
-  async bulkUpdateYoutubeVideoCategoryCron() {
-    await this.bulkUpdateYoutubeVideoCategory();
+  @Cron("0 0 */6 * * *")
+  async saveYoutubeTrendChannel() {
+    this.logger.debug("START: saveYoutubeTrendChannel");
+    await this.youtubeService.saveTrendChannel();
+    this.logger.debug("START: saveYoutubeTrendChannel");
   }
 
-  @Timeout(1000)
+  @Cron("0 0 1,9,17 * * *")
   async bulkAddServiceByYoutube() {
-    await this.accountService.addServiceByYoutube(1);
+    this.logger.debug("START: bulkAddServiceByYoutube");
+    await this.accountService.addServiceByYoutube(100);
+    this.logger.debug("END: bulkAddServiceByYoutube");
+  }
+
+  @Cron("0 30 2,10,18 * * *")
+  async bulkUpdateYoutubeChannelVideo() {
+    this.logger.debug("START: bulkUpdateYoutubeChannelVideo");
+    await this.youtubeService.bulkUpdateChannelVideo(100);
+    this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
   }
 
   // @Timeout(1000)
