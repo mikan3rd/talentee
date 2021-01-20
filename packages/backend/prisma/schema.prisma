@@ -136,8 +136,8 @@ model TwitterUser {
   followingCount   BigInt   @db.BigInt
   listedCount      BigInt   @db.BigInt
   tweetCount       BigInt   @db.BigInt
-  verified         Int      @db.TinyInt
-  protected        Int      @db.TinyInt
+  verified         Boolean  @db.TinyInt
+  protected        Boolean  @db.TinyInt
   createdTimestamp DateTime @db.Datetime(0)
   createdAt        DateTime @default(now()) @db.Datetime(6)
   updatedAt        DateTime @updatedAt @db.Datetime(6)

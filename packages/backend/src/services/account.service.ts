@@ -1,7 +1,8 @@
-import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 import { CrawlService } from "@/services/crawl.service";
 import { PrismaService } from "@/services/prisma.service";
+import { TwitterService } from "@/services/twitter.service";
 import { UtilsService } from "@/services/utils.service";
 import { YoutubeService } from "@/services/youtube.service";
 
@@ -30,6 +31,7 @@ export class AccountService {
     private crawlService: CrawlService,
     private utilsService: UtilsService,
     private youtubeService: YoutubeService,
+    private twitterService: TwitterService,
   ) {}
 
   async findOne(uuid: string) {
@@ -109,6 +111,8 @@ export class AccountService {
         if (twitterUser) {
           continue;
         }
+
+        await this.twitterService.upsertUserByUsername(username);
       }
     }
   }
