@@ -63,17 +63,44 @@ export class AccountService {
       const services = linkUrls
         .map((url) => this.judgeServiceAccount(url))
         .filter((service) => service.serviceName !== "youtube");
-      await this.AddServiceByLinkUrls(channel.account.uuid, services);
+      await this.addServiceByLinkUrls(channel.account.uuid, services);
     }
   }
 
-  async AddServiceByLinkUrls(accoutId: string, services: ServiceType[]) {
+  async addServiceByTwitter(take: number) {
+    const twitterUsers = await this.prisma.twitterUser.findMany({
+      take,
+      include: { account: { select: { uuid: true } } },
+      orderBy: { updatedAt: "asc" },
+    });
+    for (const [index, user] of twitterUsers.entries()) {
+      this.logger.log(`${index} ${user.id}`);
+      const response = await this.twitterService.getUserById(user.id);
+      if (!response) {
+        return;
+      }
+
+      const {
+        data: { entities },
+      } = response;
+
+      const linkUrls = entities?.url?.urls.map((url) => url.expanded_url) ?? [];
+      const uniqueUrls = Array.from(new Set(linkUrls));
+
+      const services = uniqueUrls
+        .map((url) => this.judgeServiceAccount(url))
+        .filter((service) => service.serviceName !== "twitter");
+      await this.addServiceByLinkUrls(user.account.uuid, services);
+    }
+  }
+
+  async addServiceByLinkUrls(accoutId: string, services: ServiceType[]) {
     const serviceAccounts = this.groupByServiceName(services);
     for (const serviceAccount of serviceAccounts) {
       const { serviceName, items } = serviceAccount;
       const firstItem = items[0];
       const { username } = firstItem;
-      this.logger.log(`${serviceName}: ${username}`);
+      this.logger.log(`${serviceName}: ${username} ${firstItem.url}`);
 
       if (!username) {
         continue;
