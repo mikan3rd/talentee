@@ -25,6 +25,13 @@ export class YoutubeService {
     });
   }
 
+  async getChannelList(channelIds: string[]) {
+    return await this.youtubeApi.channels.list({
+      part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
+      id: channelIds,
+    });
+  }
+
   async findKeywordsByTitle(titles: string[]) {
     return this.prisma.youtubeKeyword.findMany({
       where: { title: { in: titles } },
@@ -123,18 +130,15 @@ export class YoutubeService {
     }
 
     this.logger.log(`channnelIds.length: ${channnelIds.length}`);
-    await this.saveChannelByChannelIds(channnelIds);
+    await this.bulkUpsertChannelByChannelId(channnelIds);
   }
 
-  async saveChannelByChannelIds(channelIds: string[], check = true) {
+  async bulkUpsertChannelByChannelId(channelIds: string[], check = true) {
     const uniqueChannelIds = Array.from(new Set(channelIds));
 
     let channelItems: youtube_v3.Schema$Channel[] = [];
     for (const chunkChannelIds of this.utilsService.chunk(uniqueChannelIds, 50)) {
-      const channelResponse = await this.youtubeApi.channels.list({
-        part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
-        id: chunkChannelIds,
-      });
+      const channelResponse = await this.getChannelList(chunkChannelIds);
       channelItems = channelItems.concat(channelResponse.data.items ?? []);
     }
 
@@ -151,60 +155,72 @@ export class YoutubeService {
 
     this.logger.log(`channelDataList.length: ${channelDataList.length}`);
 
-    for (const channelData of channelDataList) {
-      const { youtubeChannel, youtubeKeywords } = channelData;
-
-      this.logger.log(`${youtubeChannel.id} ${youtubeChannel.title}`);
-
-      const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
-
-      const keywords: Prisma.YoutubeChannelKeywordRelationCreateManyWithoutChannelsInput = {
-        connectOrCreate: youtubeKeywords.map((title) => ({
-          where: {
-            channelId_keywordId: {
-              channelId: youtubeChannel.id,
-              keywordId: existKeywords.find((exist) => exist.title === title)?.id ?? 0,
-            },
-          },
-          create: {
-            keywords: {
-              connectOrCreate: {
-                where: { title },
-                create: { title },
-              },
-            },
-          },
-        })),
-      };
-
-      // TODO: accountのuuidの有無でconnectOrCreateを行うようにする
+    for (const { youtubeChannel, youtubeKeywords } of channelDataList) {
+      // チャンネル新規登録の場合は必ずアカウントも新規作成されるため注意
       const account = await this.prisma.youtubeChannel
         .findUnique({
           where: { id: youtubeChannel.id },
         })
         .account();
+      await this.upsertChannel(youtubeChannel, youtubeKeywords, account?.uuid);
+    }
+  }
 
-      const data: Prisma.YoutubeChannelCreateInput = {
-        ...youtubeChannel,
-        account: {
-          connectOrCreate: {
-            where: { uuid: account?.uuid ?? "" },
-            create: {
-              displayName: youtubeChannel.title,
-              username: youtubeChannel.id,
-              thumbnailUrl: youtubeChannel.thumbnailUrl,
+  async upsertChannelByChannelId(channelId: string, accountId?: string) {
+    const channelResponse = await this.getChannelList([channelId]);
+    const channelData = channelResponse.data.items?.[0];
+    if (!channelData) {
+      this.logger.error(`Channel Not Found, accountId: ${accountId}, channelId: ${channelId}`);
+      return;
+    }
+    const { youtubeChannel, youtubeKeywords } = this.formatChannelData(channelData);
+    await this.upsertChannel(youtubeChannel, youtubeKeywords, accountId);
+  }
+
+  async upsertChannel(youtubeChannel: YoutubeChannelFormatData, youtubeKeywords: string[], accountId?: string) {
+    this.logger.log(`${youtubeChannel.id} ${youtubeChannel.title}`);
+
+    const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
+
+    const keywords: Prisma.YoutubeChannelKeywordRelationCreateManyWithoutChannelsInput = {
+      connectOrCreate: youtubeKeywords.map((title) => ({
+        where: {
+          channelId_keywordId: {
+            channelId: youtubeChannel.id,
+            keywordId: existKeywords.find((exist) => exist.title === title)?.id ?? 0,
+          },
+        },
+        create: {
+          keywords: {
+            connectOrCreate: {
+              where: { title },
+              create: { title },
             },
           },
         },
-        keywords,
-      };
+      })),
+    };
 
-      await this.prisma.youtubeChannel.upsert({
-        where: { id: data.id },
-        create: data,
-        update: data,
-      });
-    }
+    const data: Prisma.YoutubeChannelCreateInput = {
+      ...youtubeChannel,
+      account: {
+        connectOrCreate: {
+          where: { uuid: accountId },
+          create: {
+            displayName: youtubeChannel.title,
+            username: youtubeChannel.id,
+            thumbnailUrl: youtubeChannel.thumbnailUrl,
+          },
+        },
+      },
+      keywords,
+    };
+
+    await this.prisma.youtubeChannel.upsert({
+      where: { id: data.id },
+      create: data,
+      update: data,
+    });
   }
 
   async saveChannelPopularVideo(channelId: string) {
@@ -389,7 +405,7 @@ export class YoutubeService {
 
     const uniqueKeywords = Array.from(new Set(keywordArray));
 
-    const youtubeChannel: Omit<Prisma.YoutubeChannelCreateInput, "account"> = {
+    const youtubeChannel: YoutubeChannelFormatData = {
       id,
       title,
       description,
@@ -449,3 +465,5 @@ export class YoutubeService {
     };
   }
 }
+
+type YoutubeChannelFormatData = Omit<Prisma.YoutubeChannelCreateInput, "account">;

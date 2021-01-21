@@ -94,7 +94,7 @@ export class AccountService {
           continue;
         }
 
-        await this.youtubeService.saveChannelByChannelIds([username], false);
+        await this.youtubeService.upsertChannelByChannelId(username, accoutId);
       }
 
       if (serviceName === "twitter") {
