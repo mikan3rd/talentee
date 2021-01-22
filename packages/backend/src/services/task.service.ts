@@ -50,6 +50,13 @@ export class TaskService {
     this.logger.debug("END: bulkAddServiceByYoutube");
   }
 
+  @Cron("0 10 1,9,17 * * *")
+  async bulkAddServiceByTwitter() {
+    this.logger.debug("START: bulkAddServiceByTwitter");
+    await this.accountService.addServiceByTwitter(100);
+    this.logger.debug("END: bulkAddServiceByTwitter");
+  }
+
   @Cron("0 30 2,10,18 * * *")
   async bulkUpdateYoutubeChannelVideo() {
     this.logger.debug("START: bulkUpdateYoutubeChannelVideo");

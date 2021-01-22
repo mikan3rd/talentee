@@ -210,7 +210,9 @@ type UserBaseType = {
   profile_image_url: string;
   name: string;
   url: string;
-  entities: { url: { urls: { start: number; end: number; url: string; expanded_url: string; display_url: string }[] } };
+  entities?: {
+    url?: { urls: { start: number; end: number; url: string; expanded_url: string; display_url: string }[] };
+  };
   description: string;
   created_at: string;
 };
