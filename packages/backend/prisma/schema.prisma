@@ -15,7 +15,7 @@ model Account {
   thumbnailUrl    String           @db.Text
   createdAt       DateTime         @default(now()) @db.Datetime(6)
   updatedAt       DateTime         @updatedAt @db.Datetime(6)
-  twitterUser     TwitterUser[]
+  twitterUsers     TwitterUser[]
   youtubeChannels YoutubeChannel[]
 }
 

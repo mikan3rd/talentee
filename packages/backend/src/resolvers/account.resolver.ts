@@ -10,8 +10,6 @@ export class AccountResolver {
 
   @Query((returns) => Account, { nullable: true })
   async account(@Args("uuid", { type: () => ID }) uuid: string) {
-    const result = await this.accountService.findOne(uuid);
-    console.log(result);
-    return result;
+    return await this.accountService.findOne(uuid);
   }
 }

@@ -2,6 +2,30 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type TwitterUser {
+  id: ID!
+  name: String!
+  username: String!
+  description: String!
+  profileImageUrl: String!
+  followersCount: BigInt!
+  followingCount: BigInt!
+  listedCount: BigInt!
+  tweetCount: BigInt!
+  verified: Boolean!
+  protected: Boolean!
+  createdTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  account: Account!
+}
+
+"""BigInt custom scalar type"""
+scalar BigInt
+
+"""Date custom scalar type"""
+scalar Date
+
 type Account {
   uuid: ID!
   displayName: String!
@@ -10,10 +34,8 @@ type Account {
   createdAt: Date!
   updatedAt: Date!
   youtubeChannels: [YoutubeChannel!]!
+  twitterUsers: [TwitterUser!]!
 }
-
-"""Date custom scalar type"""
-scalar Date
 
 type YoutubeTag {
   id: Float!
@@ -40,9 +62,6 @@ type YoutubeVideo {
   videoCategory: YoutubeVideoCategory!
   channel: YoutubeChannel!
 }
-
-"""BigInt custom scalar type"""
-scalar BigInt
 
 type YoutubeVideoCategory {
   id: Float!

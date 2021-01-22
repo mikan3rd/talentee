@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+import { TwitterUser } from "@/models/twitterUser.model";
 import { YoutubeChannel } from "@/models/youtubeChannel.model";
 
 @Entity("Account")
@@ -33,4 +34,8 @@ export class Account {
   @OneToMany((type) => YoutubeChannel, (channel) => channel.account)
   @Field((type) => [YoutubeChannel])
   youtubeChannels!: YoutubeChannel[];
+
+  @OneToMany((type) => TwitterUser, (user) => user.account)
+  @Field((type) => [TwitterUser])
+  twitterUsers!: TwitterUser[];
 }
