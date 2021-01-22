@@ -35,21 +35,14 @@ export class AccountService {
   ) {}
 
   async findOne(uuid: string) {
-    return this.prisma.account.findUnique({ where: { uuid }, include: { youtubeChannels: true } });
+    return this.prisma.account.findUnique({
+      where: { uuid },
+      include: {
+        youtubeChannels: true,
+        twitterUsers: true,
+      },
+    });
   }
-
-  // async findByYoutubeChannelId(id: string) {
-  //   return this.accountRepository.findOne({
-  //     join: { alias: "account", leftJoinAndSelect: { youtubeChannels: "account.youtubeChannels" } },
-  //     where: (qb) => {
-  //       qb.where("youtubeChannels.id = :id", { id });
-  //     },
-  //   });
-  // }
-
-  // async findAll() {
-  //   return this.accountRepository.find({ relations: ["youtubeChannels"] });
-  // }
 
   async addServiceByYoutube(take: number) {
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
@@ -127,10 +120,10 @@ export class AccountService {
       if (serviceName === "twitter") {
         const account = await this.prisma.account.findUnique({
           where: { uuid: accoutId },
-          include: { twitterUser: true },
+          include: { twitterUsers: true },
         });
 
-        if (!account || account.twitterUser.length > 0) {
+        if (!account || account.twitterUsers.length > 0) {
           continue;
         }
 
