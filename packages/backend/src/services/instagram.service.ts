@@ -18,7 +18,14 @@ export class InstagramService {
   ) {}
 
   async upsertUser(_username: string, accountId?: string) {
-    const result = await this.crawlService.crawlInstagramProfile(_username);
+    let result;
+
+    try {
+      result = await this.crawlService.crawlInstagramProfile(_username);
+    } catch (e) {
+      this.logger.error(e);
+    }
+
     if (!result) {
       return;
     }

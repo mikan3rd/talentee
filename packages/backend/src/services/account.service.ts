@@ -26,6 +26,7 @@ export class AccountService {
       include: {
         youtubeChannels: true,
         twitterUsers: true,
+        instagramUsers: true,
       },
     });
   }
@@ -35,6 +36,14 @@ export class AccountService {
       take,
       include: { account: { select: { uuid: true } } },
       orderBy: { updatedAt: "asc" },
+      where: {
+        account: {
+          OR: {
+            twitterUsers: { none: {} },
+            instagramUsers: { none: {} },
+          },
+        },
+      },
     });
     for (const [index, channel] of youtubeChannels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
@@ -51,6 +60,14 @@ export class AccountService {
       take,
       include: { account: { select: { uuid: true } } },
       orderBy: { updatedAt: "asc" },
+      where: {
+        account: {
+          OR: {
+            youtubeChannels: { none: {} },
+            instagramUsers: { none: {} },
+          },
+        },
+      },
     });
     for (const [index, user] of twitterUsers.entries()) {
       this.logger.log(`${index} ${user.id}`);
