@@ -191,6 +191,166 @@ export class CrawlService {
     this.logger.log(`linkUrls: ${linkUrls}`);
     return linkUrls;
   }
+
+  async crawlInstagramProfile(username: string) {
+    const { browser, page } = await this.puppeteerSetup();
+
+    const targetUrl = `https://www.instagram.com/${username}/`;
+    await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+
+    let currentUrl = page.url();
+    this.logger.log(`firstUrl: ${currentUrl}`);
+
+    if (currentUrl.includes("login")) {
+      this.logger.log("LOGIN: start");
+      const UsernameSelector = "input[name=username]";
+      const PasswordSelector = "input[name=password]";
+
+      await page.waitForSelector(UsernameSelector);
+      await page.waitForSelector(PasswordSelector);
+
+      const loginName = this.configService.get("INSTAGRAM_USERNAME");
+      const loginPass = this.configService.get("INSTAGRAM_PASSWORD");
+
+      if (!loginName || !loginPass) {
+        throw Error("env variable is required!!");
+      }
+
+      await page.type(UsernameSelector, loginName);
+      await page.type(PasswordSelector, loginPass);
+
+      await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
+      this.logger.log("LOGIN: end");
+
+      currentUrl = page.url();
+      this.logger.log(`secondUrl: ${currentUrl}`);
+    }
+
+    if (currentUrl.includes("onetap")) {
+      this.logger.log("ONETAP: start");
+      const ButtonSelector = "main section button";
+      await page.waitForSelector(ButtonSelector);
+      await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
+      this.logger.log("ONETAP: end");
+
+      currentUrl = page.url();
+      this.logger.log(`thirdUrl: ${currentUrl}`);
+    }
+
+    if (!currentUrl.includes(username)) {
+      await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+
+      currentUrl = page.url();
+      this.logger.log(`fourthUrl: ${currentUrl}`);
+    }
+
+    // const imageBuffer = await page.screenshot();
+    // return imageBuffer;
+
+    const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
+
+    await browser.close();
+
+    const { ProfilePage } = sharedData.entry_data;
+
+    if (!ProfilePage) {
+      this.logger.log("Failed: crawlInstagramProfile");
+      return null;
+    }
+
+    const {
+      user: {
+        id,
+        username: _username,
+        full_name,
+        biography,
+        external_url,
+        edge_followed_by,
+        edge_follow,
+        is_private,
+        is_verified,
+        profile_pic_url,
+        profile_pic_url_hd,
+        edge_felix_video_timeline,
+        edge_media_collections,
+        edge_mutual_followed_by,
+        edge_saved_media,
+        edge_owner_to_timeline_media,
+        edge_related_profiles,
+      },
+    } = ProfilePage[0].graphql;
+
+    console.log(edge_related_profiles);
+
+    const userData = {
+      id,
+      username: _username,
+      full_name,
+      biography,
+      external_url,
+      followed_by: edge_followed_by.count,
+      follow: edge_follow.count,
+      is_private,
+      is_verified,
+      profile_pic_url,
+      profile_pic_url_hd,
+      felix_video_timeline: edge_felix_video_timeline.count,
+      media_collections: edge_media_collections.count,
+      mutual_followed_by: edge_mutual_followed_by.count,
+      saved_media: edge_saved_media.count,
+      related_profiles: edge_related_profiles?.edges.map((edge) => edge.node) ?? [],
+    };
+
+    const mediaData = edge_owner_to_timeline_media.edges.map((edge) => {
+      const {
+        id: mediaId,
+        shortcode,
+        owner,
+        is_video,
+        taken_at_timestamp,
+        thumbnail_src,
+        comments_disabled,
+        display_url,
+        edge_liked_by,
+        edge_media_preview_like,
+        edge_media_to_caption,
+        edge_media_to_comment,
+        edge_media_to_tagged_user,
+        edge_sidecar_to_children,
+        has_audio,
+        video_view_count,
+        product_type,
+        location,
+        dimensions,
+        thumbnail_resources,
+      } = edge.node;
+
+      return {
+        id: mediaId,
+        shortcode,
+        ownerId: owner.id,
+        is_video,
+        location,
+        taken_at_timestamp,
+        thumbnail_src,
+        thumbnail_resources,
+        comments_disabled,
+        display_url,
+        liked_by: edge_liked_by.count,
+        media_preview_like: edge_media_preview_like.count,
+        media_to_caption: edge_media_to_caption.edges.map((e) => e.node.text),
+        media_to_comment: edge_media_to_comment.count,
+        media_to_tagged_user: edge_media_to_tagged_user.edges.map((e) => e.node.user),
+        sidecar_to_children: edge_sidecar_to_children?.edges.map((e) => e.node) ?? [],
+        has_audio,
+        video_view_count,
+        product_type,
+        dimensions,
+      };
+    });
+
+    return { userData, mediaData };
+  }
 }
 
 type ytInitialDataType = {
@@ -217,4 +377,68 @@ type ytInitialDataType = {
       }[];
     };
   };
+};
+
+let window: customWindow;
+interface customWindow extends Window {
+  _sharedData: shareDataType;
+}
+
+type shareDataType = {
+  entry_data: { ProfilePage?: { graphql: { user: InstagramUserBaseType } }[] };
+};
+
+type InstagramUserBaseType = {
+  id: string;
+  username: string;
+  full_name: string;
+  biography: string;
+  external_url: string;
+  edge_followed_by: { count: number };
+  edge_follow: { count: number };
+  is_private: boolean;
+  is_verified: boolean;
+  profile_pic_url: string;
+  profile_pic_url_hd: string;
+  edge_felix_video_timeline: { count: number };
+  edge_media_collections: { count: number };
+  edge_mutual_followed_by: { count: number };
+  edge_saved_media: { count: number };
+  edge_related_profiles?: {
+    edges: {
+      node: {
+        id: string;
+        full_name: string;
+        is_private: boolean;
+        is_verified: boolean;
+        profile_pic_url: string;
+        username: string;
+      };
+    }[];
+  };
+  edge_owner_to_timeline_media: { count: number; edges: { node: InstagramMediaType }[] };
+};
+
+type InstagramMediaType = {
+  id: string;
+  shortcode: string;
+  owner: { id: string; name: string };
+  is_video: boolean;
+  location: { id: string; name: string; slug: string; has_public_page: boolean };
+  taken_at_timestamp: number;
+  thumbnail_src: string;
+  thumbnail_resources: { src: string; config_width: number; config_height: number }[];
+  accessibility_caption: string;
+  comments_disabled: boolean;
+  dimensions: { height: number; width: number };
+  display_url: string;
+  edge_liked_by: { count: number };
+  edge_media_preview_like: { count: number };
+  edge_media_to_caption: { edges: { node: { text: string } }[] };
+  edge_media_to_comment: { count: number };
+  edge_media_to_tagged_user: { edges: { node: { user: InstagramUserBaseType } }[] };
+  edge_sidecar_to_children?: { edges: { node: InstagramMediaType }[] };
+  has_audio: boolean;
+  video_view_count: number;
+  product_type: "igtv" | "clips";
 };

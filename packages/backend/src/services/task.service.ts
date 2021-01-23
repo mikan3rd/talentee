@@ -2,13 +2,20 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Cron, Timeout } from "@nestjs/schedule";
 
 import { AccountService } from "@/services/account.service";
+import { InstagramService } from "@/services/instagram.service";
+import { TwitterService } from "@/services/twitter.service";
 import { YoutubeService } from "@/services/youtube.service";
 
 @Injectable()
 export class TaskService {
   private readonly logger = new Logger(TaskService.name);
 
-  constructor(private accountService: AccountService, private youtubeService: YoutubeService) {}
+  constructor(
+    private accountService: AccountService,
+    private youtubeService: YoutubeService,
+    private twitterService: TwitterService,
+    private instagramService: InstagramService,
+  ) {}
 
   @Cron("0 0 0 * * *")
   async bulkUpdateYoutubeVideoCategoryCron() {
@@ -40,7 +47,7 @@ export class TaskService {
   async saveYoutubeTrendChannel() {
     this.logger.debug("START: saveYoutubeTrendChannel");
     await this.youtubeService.saveTrendChannel();
-    this.logger.debug("START: saveYoutubeTrendChannel");
+    this.logger.debug("END: saveYoutubeTrendChannel");
   }
 
   @Cron("0 0 1,9,17 * * *")
@@ -62,6 +69,13 @@ export class TaskService {
     this.logger.debug("START: bulkUpdateYoutubeChannelVideo");
     await this.youtubeService.bulkUpdateChannelVideo(100);
     this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
+  }
+
+  @Timeout(1000)
+  async bulkUpdateInstagramUser() {
+    this.logger.debug("START: bulkUpdateInstagramUser");
+    await this.instagramService.upsertUser("yukos0520");
+    this.logger.debug("END: bulkUpdateInstagramUser");
   }
 
   // @Timeout(1000)

@@ -15,4 +15,6 @@ declare type EnvironmentVariables = {
   PROXY_USERNAME_2: string;
   PROXY_PASSWORD_2: string;
   TWITTER_BEARER_TOKEN: string;
+  INSTAGRAM_USERNAME: string;
+  INSTAGRAM_PASSWORD: string;
 };

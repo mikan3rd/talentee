@@ -5,6 +5,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 
 import { AppController } from "@/controllers/app.controller";
 import { AccountModule } from "@/modules/account.module";
+import { InstagramModule } from "@/modules/instagram.module";
 import { TaskModule } from "@/modules/task.module";
 import { TwitterModule } from "@/modules/twitter.module";
 import { YoutubeModule } from "@/modules/youtube.module";
@@ -20,6 +21,7 @@ import { AppService } from "@/services/app.service";
     AccountModule,
     YoutubeModule,
     TwitterModule,
+    InstagramModule,
     TaskModule,
   ],
   controllers: [AppController],

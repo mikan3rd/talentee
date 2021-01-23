@@ -205,7 +205,7 @@ export class YoutubeService {
       ...youtubeChannel,
       account: {
         connectOrCreate: {
-          where: { uuid: accountId },
+          where: { uuid: accountId ?? "" },
           create: {
             displayName: youtubeChannel.title,
             username: youtubeChannel.id,
