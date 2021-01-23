@@ -13,8 +13,8 @@ model Account {
   displayName     String           @db.VarChar(255)
   username        String           @unique @db.VarChar(255)
   thumbnailUrl    String           @db.Text
-  createdAt       DateTime         @default(now()) @db.Datetime(6)
-  updatedAt       DateTime         @updatedAt @db.Datetime(6)
+  createdAt       DateTime         @default(now()) @db.DateTime(6)
+  updatedAt       DateTime         @updatedAt @db.DateTime(6)
   instagramUsers  InstagramUser[]
   twitterUsers    TwitterUser[]
   youtubeChannels YoutubeChannel[]
@@ -48,13 +48,13 @@ model YoutubeChannel {
   description            String                          @db.Text
   thumbnailUrl           String                          @db.Text
   country                String?                         @db.VarChar(255)
-  publishedAt            DateTime                        @db.Datetime(0)
+  publishedAt            DateTime                        @db.DateTime(0)
   subscriberCount        BigInt?                         @db.BigInt
   viewCount              BigInt                          @db.BigInt
   videoCount             BigInt                          @db.BigInt
   hiddenSubscriberCount  Boolean                         @db.TinyInt
-  createdAt              DateTime                        @default(now()) @db.Datetime(6)
-  updatedAt              DateTime                        @updatedAt @db.Datetime(6)
+  createdAt              DateTime                        @default(now()) @db.DateTime(6)
+  updatedAt              DateTime                        @updatedAt @db.DateTime(6)
   accountId              String                          @db.VarChar(36)
   account                Account                         @relation(fields: [accountId], references: [uuid])
   keywords               YoutubeChannelKeywordRelation[]
@@ -68,8 +68,8 @@ model YoutubeKeyword {
   id        Int                             @id @default(autoincrement()) @db.Int
   title     String                          @unique @db.VarChar(255)
   num       Int                             @default(0) @db.Int
-  createdAt DateTime                        @default(now()) @db.Datetime(6)
-  updatedAt DateTime                        @updatedAt @db.Datetime(6)
+  createdAt DateTime                        @default(now()) @db.DateTime(6)
+  updatedAt DateTime                        @updatedAt @db.DateTime(6)
   channels  YoutubeChannelKeywordRelation[]
 }
 
@@ -77,8 +77,8 @@ model YoutubeTag {
   id        Int                       @id @default(autoincrement()) @db.Int
   title     String                    @unique @db.VarChar(255)
   num       Int                       @default(0) @db.Int
-  createdAt DateTime                  @default(now()) @db.Datetime(6)
-  updatedAt DateTime                  @updatedAt @db.Datetime(6)
+  createdAt DateTime                  @default(now()) @db.DateTime(6)
+  updatedAt DateTime                  @updatedAt @db.DateTime(6)
   videos    YoutubeVideoTagRelation[]
 }
 
@@ -86,8 +86,8 @@ model YoutubeVideoCategory {
   id                     Int                           @id @db.Int
   title                  String                        @db.VarChar(255)
   assignable             Boolean                       @db.TinyInt
-  createdAt              DateTime                      @default(now()) @db.Datetime(6)
-  updatedAt              DateTime                      @updatedAt @db.Datetime(6)
+  createdAt              DateTime                      @default(now()) @db.DateTime(6)
+  updatedAt              DateTime                      @updatedAt @db.DateTime(6)
   channelVideoCategories YoutubeChannelVideoCategory[]
   videos                 YoutubeVideo[]
 }
@@ -97,13 +97,13 @@ model YoutubeVideo {
   title           String                    @db.VarChar(255)
   description     String                    @db.Text
   thumbnailUrl    String                    @db.Text
-  publishedAt     DateTime                  @db.Datetime(0)
+  publishedAt     DateTime                  @db.DateTime(0)
   viewCount       BigInt?                   @db.BigInt
   likeCount       BigInt?                   @db.BigInt
   dislikeCount    BigInt?                   @db.BigInt
   commentCount    BigInt?                   @db.BigInt
-  createdAt       DateTime                  @default(now()) @db.Datetime(6)
-  updatedAt       DateTime                  @updatedAt @db.Datetime(6)
+  createdAt       DateTime                  @default(now()) @db.DateTime(6)
+  updatedAt       DateTime                  @updatedAt @db.DateTime(6)
   videoCategoryId Int                       @db.Int
   channelId       String                    @db.VarChar(255)
   channel         YoutubeChannel            @relation(fields: [channelId], references: [id])
@@ -118,8 +118,8 @@ model YoutubeChannelVideoCategory {
   channelId       String               @db.VarChar(255)
   videoCategoryId Int                  @db.Int
   num             Int                  @default(0) @db.Int
-  createdAt       DateTime             @default(now()) @db.Datetime(6)
-  updatedAt       DateTime             @updatedAt @db.Datetime(6)
+  createdAt       DateTime             @default(now()) @db.DateTime(6)
+  updatedAt       DateTime             @updatedAt @db.DateTime(6)
   channel         YoutubeChannel       @relation(fields: [channelId], references: [id])
   videoCategory   YoutubeVideoCategory @relation(fields: [videoCategoryId], references: [id])
 
@@ -139,9 +139,9 @@ model TwitterUser {
   tweetCount       BigInt   @db.BigInt
   verified         Boolean  @db.TinyInt
   protected        Boolean  @db.TinyInt
-  createdTimestamp DateTime @db.Datetime(0)
-  createdAt        DateTime @default(now()) @db.Datetime(6)
-  updatedAt        DateTime @updatedAt @db.Datetime(6)
+  createdTimestamp DateTime @db.DateTime(0)
+  createdAt        DateTime @default(now()) @db.DateTime(6)
+  updatedAt        DateTime @updatedAt @db.DateTime(6)
   accountId        String   @db.VarChar(36)
   account          Account  @relation(fields: [accountId], references: [uuid])
 
@@ -159,8 +159,8 @@ model InstagramUser {
   follow        BigInt   @db.BigInt
   isVerified    Boolean  @db.TinyInt
   isPrivate     Boolean  @db.TinyInt
-  createdAt     DateTime @default(now()) @db.Datetime(6)
-  updatedAt     DateTime @updatedAt @db.Datetime(6)
+  createdAt     DateTime @default(now()) @db.DateTime(6)
+  updatedAt     DateTime @updatedAt @db.DateTime(6)
   accountId     String   @db.VarChar(36)
   account       Account  @relation(fields: [accountId], references: [uuid])
 
