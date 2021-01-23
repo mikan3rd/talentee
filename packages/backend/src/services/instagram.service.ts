@@ -23,5 +23,6 @@ export class InstagramService {
       return;
     }
     const { userData, mediaData } = result;
+    console.log(userData);
   }
 }
