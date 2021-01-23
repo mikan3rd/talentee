@@ -17,4 +17,6 @@ declare type EnvironmentVariables = {
   TWITTER_BEARER_TOKEN: string;
   INSTAGRAM_USERNAME: string;
   INSTAGRAM_PASSWORD: string;
+  SENTRY_DSN: string;
+  SENTRY_ENV: string;
 };
