@@ -85,7 +85,7 @@ model YoutubeTag {
 model YoutubeVideoCategory {
   id                     Int                           @id @db.Int
   title                  String                        @db.VarChar(255)
-  assignable             Boolean                           @db.TinyInt
+  assignable             Boolean                       @db.TinyInt
   createdAt              DateTime                      @default(now()) @db.Datetime(6)
   updatedAt              DateTime                      @updatedAt @db.Datetime(6)
   channelVideoCategories YoutubeChannelVideoCategory[]
