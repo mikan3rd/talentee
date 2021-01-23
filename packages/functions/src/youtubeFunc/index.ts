@@ -12,25 +12,25 @@ import { saveTrendChannel } from "./saveTrendChannel";
 import { updateVideo } from "./updateVideo";
 import { upsertChannelData } from "./upsertChannelData";
 
-export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "1GB" })("0 0,12 * * *").onRun(
-  sentryWrapper(async (context) => {
-    await saveTrendChannel();
-  }),
-);
+// export const getYoutubeTrendChannelScheduler = scheduleFunctions({ memory: "1GB" })("0 0,12 * * *").onRun(
+//   sentryWrapper(async (context) => {
+//     await saveTrendChannel();
+//   }),
+// );
 
-export const getYoutubePopularChannelWeekly = scheduleFunctions()("0 1 * * *").onRun(
-  sentryWrapper(async (context) => {
-    const publishedAfter = dayjs().subtract(1, "week");
-    await savePopularChannel(publishedAfter);
-  }),
-);
+// export const getYoutubePopularChannelWeekly = scheduleFunctions()("0 1 * * *").onRun(
+//   sentryWrapper(async (context) => {
+//     const publishedAfter = dayjs().subtract(1, "week");
+//     await savePopularChannel(publishedAfter);
+//   }),
+// );
 
-export const getYoutubePopularChannelMonthly = scheduleFunctions()("0 2 * * *").onRun(
-  sentryWrapper(async (context) => {
-    const publishedAfter = dayjs().subtract(1, "month");
-    await savePopularChannel(publishedAfter);
-  }),
-);
+// export const getYoutubePopularChannelMonthly = scheduleFunctions()("0 2 * * *").onRun(
+//   sentryWrapper(async (context) => {
+//     const publishedAfter = dayjs().subtract(1, "month");
+//     await savePopularChannel(publishedAfter);
+//   }),
+// );
 
 export const addChannelByYouturaDailyScheduler = scheduleFunctions({ timeoutSeconds: 240 })("0 6 * * *").onRun(
   sentryWrapper(async (context) => {
