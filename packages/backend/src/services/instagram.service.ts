@@ -17,12 +17,53 @@ export class InstagramService {
     private configService: ConfigService<EnvironmentVariables>,
   ) {}
 
-  async upsertUser(username: string) {
-    const result = await this.crawlService.crawlInstagramProfile(username);
+  async upsertUser(_username: string, accountId?: string) {
+    const result = await this.crawlService.crawlInstagramProfile(_username);
     if (!result) {
       return;
     }
     const { userData, mediaData } = result;
-    console.log(userData);
+
+    const {
+      id,
+      username,
+      follow,
+      followed_by,
+      full_name,
+      biography,
+      external_url,
+      profile_pic_url,
+      is_private,
+      is_verified,
+    } = userData;
+
+    const instagramUser: Prisma.InstagramUserCreateInput = {
+      id,
+      username,
+      fullName: full_name,
+      follow,
+      followedBy: followed_by,
+      biography,
+      externalUrl: external_url,
+      isPrivate: is_private,
+      isVerified: is_verified,
+      profilePicUrl: profile_pic_url,
+      account: {
+        connectOrCreate: {
+          where: { uuid: accountId ?? "" },
+          create: {
+            displayName: full_name,
+            username,
+            thumbnailUrl: profile_pic_url,
+          },
+        },
+      },
+    };
+
+    await this.prisma.instagramUser.upsert({
+      where: { id: instagramUser.id },
+      create: instagramUser,
+      update: instagramUser,
+    });
   }
 }

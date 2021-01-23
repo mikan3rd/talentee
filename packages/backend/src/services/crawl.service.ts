@@ -280,8 +280,6 @@ export class CrawlService {
       },
     } = ProfilePage[0].graphql;
 
-    console.log(edge_related_profiles);
-
     const userData = {
       id,
       username: _username,
@@ -393,7 +391,7 @@ type InstagramUserBaseType = {
   username: string;
   full_name: string;
   biography: string;
-  external_url: string;
+  external_url: string | null;
   edge_followed_by: { count: number };
   edge_follow: { count: number };
   is_private: boolean;

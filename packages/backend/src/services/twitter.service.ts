@@ -68,7 +68,11 @@ export class TwitterService {
       },
     };
 
-    await this.prisma.twitterUser.upsert({ where: { id: twitteUser.id }, create: twitteUser, update: twitteUser });
+    await this.prisma.twitterUser.upsert({
+      where: { id: twitteUser.id },
+      create: twitteUser,
+      update: twitteUser,
+    });
   }
 
   async getUserByUsername(username: string) {

@@ -153,7 +153,7 @@ model InstagramUser {
   fullName      String   @db.VarChar(255)
   username      String   @unique @db.VarChar(255)
   biography     String   @db.Text
-  externalUrl   String   @db.Text
+  externalUrl   String?  @db.Text
   profilePicUrl String   @db.Text
   followedBy    BigInt   @db.BigInt
   follow        BigInt   @db.BigInt

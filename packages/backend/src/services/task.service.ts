@@ -71,13 +71,6 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
   }
 
-  @Timeout(1000)
-  async bulkUpdateInstagramUser() {
-    this.logger.debug("START: bulkUpdateInstagramUser");
-    await this.instagramService.upsertUser("yukos0520");
-    this.logger.debug("END: bulkUpdateInstagramUser");
-  }
-
   // @Timeout(1000)
   // async bulkUpdateYoutubeVideoCategoryTimeout() {
   //   await this.bulkUpdateYoutubeVideoCategory();

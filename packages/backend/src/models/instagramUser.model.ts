@@ -23,7 +23,7 @@ export class TwitterUser {
   @Field()
   biography!: string;
 
-  @Column({ type: "text" })
+  @Column({ type: "text", nullable: true })
   @Field()
   externalUrl!: string;
 
