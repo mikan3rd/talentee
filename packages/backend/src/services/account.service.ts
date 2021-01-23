@@ -1,26 +1,11 @@
 import { Injectable, Logger } from "@nestjs/common";
 
 import { CrawlService } from "@/services/crawl.service";
+import { InstagramService } from "@/services/instagram.service";
 import { PrismaService } from "@/services/prisma.service";
 import { TwitterService } from "@/services/twitter.service";
 import { UtilsService } from "@/services/utils.service";
 import { YoutubeService } from "@/services/youtube.service";
-
-type ServiceNameType =
-  | "twitter"
-  | "instagram"
-  | "nicovideo_channel"
-  | "nicovideo_user"
-  | "tiktok"
-  | "tiktok_vt"
-  | "youtube"
-  | "other";
-
-type ServiceType = {
-  serviceName: ServiceNameType;
-  username: string;
-  url: string;
-};
 
 @Injectable()
 export class AccountService {
@@ -32,6 +17,7 @@ export class AccountService {
     private utilsService: UtilsService,
     private youtubeService: YoutubeService,
     private twitterService: TwitterService,
+    private instagramService: InstagramService,
   ) {}
 
   async findOne(uuid: string) {
@@ -40,6 +26,7 @@ export class AccountService {
       include: {
         youtubeChannels: true,
         twitterUsers: true,
+        instagramUsers: true,
       },
     });
   }
@@ -49,6 +36,14 @@ export class AccountService {
       take,
       include: { account: { select: { uuid: true } } },
       orderBy: { updatedAt: "asc" },
+      where: {
+        account: {
+          OR: {
+            twitterUsers: { none: {} },
+            instagramUsers: { none: {} },
+          },
+        },
+      },
     });
     for (const [index, channel] of youtubeChannels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
@@ -65,6 +60,14 @@ export class AccountService {
       take,
       include: { account: { select: { uuid: true } } },
       orderBy: { updatedAt: "asc" },
+      where: {
+        account: {
+          OR: {
+            youtubeChannels: { none: {} },
+            instagramUsers: { none: {} },
+          },
+        },
+      },
     });
     for (const [index, user] of twitterUsers.entries()) {
       this.logger.log(`${index} ${user.id}`);
@@ -87,7 +90,7 @@ export class AccountService {
     }
   }
 
-  async addServiceByLinkUrls(accoutId: string, services: ServiceType[]) {
+  async addServiceByLinkUrls(accountId: string, services: ServiceType[]) {
     const serviceAccounts = this.groupByServiceName(services);
     for (const serviceAccount of serviceAccounts) {
       const { serviceName, items } = serviceAccount;
@@ -99,13 +102,17 @@ export class AccountService {
         continue;
       }
 
-      if (serviceName === "youtube") {
-        const account = await this.prisma.account.findUnique({
-          where: { uuid: accoutId },
-          include: { youtubeChannels: true },
-        });
+      const account = await this.prisma.account.findUnique({
+        where: { uuid: accountId },
+        include: { youtubeChannels: true, twitterUsers: true, instagramUsers: true },
+      });
 
-        if (!account || account.youtubeChannels.length > 0) {
+      if (!account) {
+        continue;
+      }
+
+      if (serviceName === "youtube") {
+        if (account.youtubeChannels.length > 0) {
           continue;
         }
 
@@ -114,16 +121,11 @@ export class AccountService {
           continue;
         }
 
-        await this.youtubeService.upsertChannelByChannelId(username, accoutId);
+        await this.youtubeService.upsertChannelByChannelId(username, accountId);
       }
 
       if (serviceName === "twitter") {
-        const account = await this.prisma.account.findUnique({
-          where: { uuid: accoutId },
-          include: { twitterUsers: true },
-        });
-
-        if (!account || account.twitterUsers.length > 0) {
+        if (account.twitterUsers.length > 0) {
           continue;
         }
 
@@ -132,7 +134,20 @@ export class AccountService {
           continue;
         }
 
-        await this.twitterService.upsertUserByUsername(username, accoutId);
+        await this.twitterService.upsertUserByUsername(username, accountId);
+      }
+
+      if (serviceName === "instagram") {
+        if (account.instagramUsers.length > 0) {
+          continue;
+        }
+
+        const instagramUser = await this.prisma.instagramUser.findUnique({ where: { username } });
+        if (instagramUser) {
+          continue;
+        }
+
+        await this.instagramService.upsertUser(username, accountId);
       }
     }
   }
@@ -187,3 +202,19 @@ export class AccountService {
     };
   }
 }
+
+type ServiceNameType =
+  | "twitter"
+  | "instagram"
+  | "nicovideo_channel"
+  | "nicovideo_user"
+  | "tiktok"
+  | "tiktok_vt"
+  | "youtube"
+  | "other";
+
+type ServiceType = {
+  serviceName: ServiceNameType;
+  username: string;
+  url: string;
+};

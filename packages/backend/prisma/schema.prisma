@@ -15,7 +15,8 @@ model Account {
   thumbnailUrl    String           @db.Text
   createdAt       DateTime         @default(now()) @db.Datetime(6)
   updatedAt       DateTime         @updatedAt @db.Datetime(6)
-  twitterUsers     TwitterUser[]
+  instagramUsers  InstagramUser[]
+  twitterUsers    TwitterUser[]
   youtubeChannels YoutubeChannel[]
 }
 
@@ -145,4 +146,23 @@ model TwitterUser {
   account          Account  @relation(fields: [accountId], references: [uuid])
 
   @@index([accountId], name: "FK_bcebed04f6d4c61231f878f54ee")
+}
+
+model InstagramUser {
+  id            String   @id @db.VarChar(255)
+  fullName      String   @db.VarChar(255)
+  username      String   @unique @db.VarChar(255)
+  biography     String   @db.Text
+  externalUrl   String?  @db.Text
+  profilePicUrl String   @db.Text
+  followedBy    BigInt   @db.BigInt
+  follow        BigInt   @db.BigInt
+  isVerified    Boolean  @db.TinyInt
+  isPrivate     Boolean  @db.TinyInt
+  createdAt     DateTime @default(now()) @db.Datetime(6)
+  updatedAt     DateTime @updatedAt @db.Datetime(6)
+  accountId     String   @db.VarChar(36)
+  account       Account  @relation(fields: [accountId], references: [uuid])
+
+  @@index([accountId], name: "FK_f8dba2deb7e6e7a71494e1db65a")
 }
