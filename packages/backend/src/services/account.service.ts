@@ -85,13 +85,17 @@ export class AccountService {
         continue;
       }
 
-      if (serviceName === "youtube") {
-        const account = await this.prisma.account.findUnique({
-          where: { uuid: accountId },
-          include: { youtubeChannels: true },
-        });
+      const account = await this.prisma.account.findUnique({
+        where: { uuid: accountId },
+        include: { youtubeChannels: true, twitterUsers: true, instagramUsers: true },
+      });
 
-        if (!account || account.youtubeChannels.length > 0) {
+      if (!account) {
+        continue;
+      }
+
+      if (serviceName === "youtube") {
+        if (account.youtubeChannels.length > 0) {
           continue;
         }
 
@@ -104,12 +108,7 @@ export class AccountService {
       }
 
       if (serviceName === "twitter") {
-        const account = await this.prisma.account.findUnique({
-          where: { uuid: accountId },
-          include: { twitterUsers: true },
-        });
-
-        if (!account || account.twitterUsers.length > 0) {
+        if (account.twitterUsers.length > 0) {
           continue;
         }
 
@@ -122,12 +121,7 @@ export class AccountService {
       }
 
       if (serviceName === "instagram") {
-        const account = await this.prisma.account.findUnique({
-          where: { uuid: accountId },
-          include: { instagramUsers: true },
-        });
-
-        if (!account || account.instagramUsers.length > 0) {
+        if (account.instagramUsers.length > 0) {
           continue;
         }
 

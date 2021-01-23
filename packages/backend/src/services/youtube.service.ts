@@ -403,7 +403,7 @@ export class YoutubeService {
       }
     }
 
-    const uniqueKeywords = Array.from(new Set(keywordArray));
+    const uniqueKeywords = Array.from(new Set(keywordArray.map((keyword) => keyword.replace("\b", ""))));
 
     const youtubeChannel: YoutubeChannelFormatData = {
       id,
@@ -444,7 +444,7 @@ export class YoutubeService {
       throw Error("formatChannelData: title,description,publishedAt,hiddenSubscriberCount is required");
     }
 
-    const uniqueTags = Array.from(new Set(tags ?? []));
+    const uniqueTags = Array.from(new Set(tags?.map((tag) => tag.replace("\b", "")) ?? []));
     const youtubeVideo: Omit<Prisma.YoutubeVideoCreateInput, "channel" | "videoCategory"> = {
       id,
       title,
