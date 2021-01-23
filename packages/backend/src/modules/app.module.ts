@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ScheduleModule } from "@nestjs/schedule";
@@ -8,7 +8,6 @@ import { AppController } from "@/controllers/app.controller";
 import { SentryInterceptor } from "@/interceptors/sentry.interceptor";
 import { AccountModule } from "@/modules/account.module";
 import { InstagramModule } from "@/modules/instagram.module";
-import { SentryModule } from "@/modules/sentry.module";
 import { TaskModule } from "@/modules/task.module";
 import { TwitterModule } from "@/modules/twitter.module";
 import { YoutubeModule } from "@/modules/youtube.module";
