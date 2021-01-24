@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios, { AxiosRequestConfig } from "axios";
-import * as cheerio from "cheerio";
+import cheerio = require("cheerio");
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { LaunchOptions } from "puppeteer";
 import puppeteerExtra from "puppeteer-extra";

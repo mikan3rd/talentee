@@ -73,6 +73,13 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
   }
 
+  @Timeout(1000)
+  async testTiktok() {
+    this.logger.debug("START: testTiktok");
+    await this.tiktokService.upsertUser("lovetatsuro");
+    this.logger.debug("END: testTiktok");
+  }
+
   // @Timeout(1000)
   // async bulkUpdateYoutubeVideoCategoryTimeout() {
   //   await this.bulkUpdateYoutubeVideoCategory();
