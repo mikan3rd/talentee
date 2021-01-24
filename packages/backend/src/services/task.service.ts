@@ -3,6 +3,7 @@ import { Cron, Timeout } from "@nestjs/schedule";
 
 import { AccountService } from "@/services/account.service";
 import { InstagramService } from "@/services/instagram.service";
+import { TiktokService } from "@/services/tiktok.service";
 import { TwitterService } from "@/services/twitter.service";
 import { YoutubeService } from "@/services/youtube.service";
 
@@ -15,6 +16,7 @@ export class TaskService {
     private youtubeService: YoutubeService,
     private twitterService: TwitterService,
     private instagramService: InstagramService,
+    private tiktokService: TiktokService,
   ) {}
 
   @Cron("0 0 0 * * *")

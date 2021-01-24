@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios, { AxiosRequestConfig } from "axios";
+import cheerio = require("cheerio");
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { LaunchOptions } from "puppeteer";
 import puppeteerExtra from "puppeteer-extra";
@@ -202,7 +203,6 @@ export class CrawlService {
     this.logger.log(`firstUrl: ${currentUrl}`);
 
     if (currentUrl.includes("login")) {
-      this.logger.log("LOGIN: start");
       const UsernameSelector = "input[name=username]";
       const PasswordSelector = "input[name=password]";
 
@@ -220,18 +220,15 @@ export class CrawlService {
       await page.type(PasswordSelector, loginPass);
 
       await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
-      this.logger.log("LOGIN: end");
 
       currentUrl = page.url();
       this.logger.log(`secondUrl: ${currentUrl}`);
     }
 
     if (currentUrl.includes("onetap")) {
-      this.logger.log("ONETAP: start");
       const ButtonSelector = "main section button";
       await page.waitForSelector(ButtonSelector);
       await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
-      this.logger.log("ONETAP: end");
 
       currentUrl = page.url();
       this.logger.log(`thirdUrl: ${currentUrl}`);
@@ -349,33 +346,30 @@ export class CrawlService {
 
     return { userData, mediaData };
   }
-}
 
-type ytInitialDataType = {
-  contents: {
-    twoColumnBrowseResultsRenderer: {
-      tabs: {
-        tabRenderer: {
-          title: string;
-          selected: boolean;
-          content: {
-            sectionListRenderer: {
-              contents: {
-                itemSectionRenderer: {
-                  contents: {
-                    channelAboutFullMetadataRenderer: {
-                      primaryLinks?: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
-                    };
-                  }[];
-                };
-              }[];
-            };
-          };
-        };
-      }[];
+  async getTiktokUser(uniqueId: string) {
+    type ContentDataType = {
+      props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
-  };
-};
+
+    // const { browser, page } = await this.puppeteerSetup();
+    const axios = this.axiosSetup();
+    const url = `https://www.tiktok.com/@${uniqueId}`;
+    const { data } = await axios.get<string>(url);
+
+    const $ = cheerio.load(data);
+    const DataSelector = "script#__NEXT_DATA__";
+    const content = $(DataSelector).html();
+
+    if (!content) {
+      return null;
+    }
+
+    const contentData = JSON.parse(content) as ContentDataType;
+    const { userInfo, items } = contentData.props.pageProps;
+    return { userInfo, items };
+  }
+}
 
 let window: customWindow;
 interface customWindow extends Window {
@@ -439,4 +433,102 @@ type InstagramMediaType = {
   has_audio: boolean;
   video_view_count: number;
   product_type: "igtv" | "clips";
+};
+
+type TiktokUserType = {
+  user: TiktokUserInfoType;
+  stats: TiktokUserStatType;
+};
+
+type TiktokItemType = {
+  id: string;
+  author: TiktokUserInfoType;
+  authorStats: TiktokUserStatType;
+  desc: string;
+  createTime: number;
+  digged: boolean;
+  duetEnabled: boolean;
+  forFriend: boolean;
+  itemMute: boolean;
+  stitchEnabled: boolean;
+  stats: {
+    commentCount: number;
+    diggCount: number;
+    playCount: number;
+    shareCount: number;
+  };
+  music: {
+    id: string;
+    title: string;
+    authorName: string;
+    coverLarge: string;
+    coverMedium: string;
+    coverThumb: string;
+    original: boolean;
+    playUrl: string;
+  };
+  video: {
+    id: string;
+    cover: string;
+    downloadAddr: string;
+    playAddr: string;
+    duration: number;
+    originCover: string;
+    dynamicCover: string;
+    reflowCover: string;
+    width: number;
+    height: number;
+    ratio: string;
+  };
+};
+
+type TiktokUserInfoType = {
+  id: string;
+  uniqueId: string;
+  nickname: string;
+  avatarThumb: string;
+  avatarMedium: string;
+  signature: string;
+  verified: boolean;
+  secret: boolean;
+  privateAccount: boolean;
+  secUid: string;
+  openFavorite: boolean;
+  relation: number;
+  bioLink?: { link: string };
+  createTime: number;
+};
+
+type TiktokUserStatType = {
+  followingCount: number;
+  followerCount: number;
+  heartCount: number;
+  videoCount: number;
+  diggCount: number;
+};
+
+type ytInitialDataType = {
+  contents: {
+    twoColumnBrowseResultsRenderer: {
+      tabs: {
+        tabRenderer: {
+          title: string;
+          selected: boolean;
+          content: {
+            sectionListRenderer: {
+              contents: {
+                itemSectionRenderer: {
+                  contents: {
+                    channelAboutFullMetadataRenderer: {
+                      primaryLinks?: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
+                    };
+                  }[];
+                };
+              }[];
+            };
+          };
+        };
+      }[];
+    };
+  };
 };

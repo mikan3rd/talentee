@@ -27,6 +27,7 @@ export class InstagramService {
     }
 
     if (!result) {
+      this.logger.warn("Instagram user not found");
       return;
     }
     const { userData, mediaData } = result;

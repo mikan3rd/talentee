@@ -15,9 +15,10 @@ model Account {
   thumbnailUrl    String           @db.Text
   createdAt       DateTime         @default(now()) @db.DateTime(6)
   updatedAt       DateTime         @updatedAt @db.DateTime(6)
+  youtubeChannels YoutubeChannel[]
   instagramUsers  InstagramUser[]
   twitterUsers    TwitterUser[]
-  youtubeChannels YoutubeChannel[]
+  tiktokUsers     TiktokUser[]
 }
 
 model YoutubeChannelKeywordRelation {
@@ -165,4 +166,27 @@ model InstagramUser {
   account       Account  @relation(fields: [accountId], references: [uuid])
 
   @@index([accountId], name: "FK_f8dba2deb7e6e7a71494e1db65a")
+}
+
+model TiktokUser {
+  id               String   @id @db.VarChar(255)
+  nickname         String   @db.VarChar(255)
+  uniqueId         String   @unique @db.VarChar(255)
+  signature        String   @db.Text
+  bioLink          String?  @db.Text
+  avatarThumb      String   @db.Text
+  followerCount    BigInt   @db.UnsignedBigInt
+  followingCount   BigInt   @db.UnsignedBigInt
+  heartCount       BigInt   @db.UnsignedBigInt
+  videoCount       BigInt   @db.UnsignedBigInt
+  verified         Boolean  @db.TinyInt
+  privateAccount   Boolean  @db.TinyInt
+  secret           Boolean  @db.TinyInt
+  createdTimestamp DateTime @db.DateTime(0)
+  createdAt        DateTime @default(now()) @db.DateTime(6)
+  updatedAt        DateTime @updatedAt @db.DateTime(6)
+  accountId        String   @db.VarChar(36)
+  account          Account  @relation(fields: [accountId], references: [uuid])
+
+  @@index([accountId], name: "FK_a32497fecd2f0b0debdaf2815e0")
 }
