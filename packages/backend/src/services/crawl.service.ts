@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios, { AxiosRequestConfig } from "axios";
+import * as cheerio from "cheerio";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { LaunchOptions } from "puppeteer";
 import puppeteerExtra from "puppeteer-extra";
@@ -154,6 +155,32 @@ export class CrawlService {
   }
 
   async getServiceLinkByYoutube(channelId: string) {
+    type ytInitialDataType = {
+      contents: {
+        twoColumnBrowseResultsRenderer: {
+          tabs: {
+            tabRenderer: {
+              title: string;
+              selected: boolean;
+              content: {
+                sectionListRenderer: {
+                  contents: {
+                    itemSectionRenderer: {
+                      contents: {
+                        channelAboutFullMetadataRenderer: {
+                          primaryLinks?: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
+                        };
+                      }[];
+                    };
+                  }[];
+                };
+              };
+            };
+          }[];
+        };
+      };
+    };
+
     const axios = this.axiosSetup();
 
     const targetUrl = `https://www.youtube.com/channel/${channelId}/about`;
@@ -349,33 +376,52 @@ export class CrawlService {
 
     return { userData, mediaData };
   }
-}
 
-type ytInitialDataType = {
-  contents: {
-    twoColumnBrowseResultsRenderer: {
-      tabs: {
-        tabRenderer: {
-          title: string;
-          selected: boolean;
-          content: {
-            sectionListRenderer: {
-              contents: {
-                itemSectionRenderer: {
-                  contents: {
-                    channelAboutFullMetadataRenderer: {
-                      primaryLinks?: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
-                    };
-                  }[];
-                };
-              }[];
-            };
-          };
-        };
-      }[];
+  async getTiktokUser(uniqueId: string) {
+    type ContentDataType = {
+      props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
-  };
-};
+
+    // const { browser, page } = await this.puppeteerSetup();
+    const axios = this.axiosSetup();
+    const url = `https://www.tiktok.com/@${uniqueId}`;
+    const { data } = await axios.get<string>(url);
+
+    // let responseBody;
+
+    // try {
+    //   const url = `https://www.tiktok.com/@${uniqueId}`;
+    //   console.log(url);
+    //   const response = await page.goto(url);
+
+    //   if (!response) {
+    //     return null;
+    //   }
+
+    //   responseBody = await response.text();
+    // } catch (e) {
+    //   console.error(e);
+    // } finally {
+    //   await browser.close();
+    // }
+
+    // if (!responseBody) {
+    //   return null;
+    // }
+
+    const $ = cheerio.load(data);
+    const DataSelector = "script#__NEXT_DATA__";
+    const content = $(DataSelector).html();
+
+    if (!content) {
+      return null;
+    }
+
+    const contentData = JSON.parse(content) as ContentDataType;
+    console.log(contentData.props.pageProps);
+    const { userInfo, items } = contentData.props.pageProps;
+  }
+}
 
 let window: customWindow;
 interface customWindow extends Window {
@@ -439,4 +485,74 @@ type InstagramMediaType = {
   has_audio: boolean;
   video_view_count: number;
   product_type: "igtv" | "clips";
+};
+
+type TiktokUserType = {
+  user: TiktokUserInfoType;
+  stats: TiktokUserStatType;
+};
+
+type TiktokItemType = {
+  id: string;
+  author: TiktokUserInfoType;
+  authorStats: TiktokUserStatType;
+  desc: string;
+  createTime: number;
+  digged: boolean;
+  duetEnabled: boolean;
+  forFriend: boolean;
+  itemMute: boolean;
+  stitchEnabled: boolean;
+  stats: {
+    commentCount: number;
+    diggCount: number;
+    playCount: number;
+    shareCount: number;
+  };
+  music: {
+    id: string;
+    title: string;
+    authorName: string;
+    coverLarge: string;
+    coverMedium: string;
+    coverThumb: string;
+    original: boolean;
+    playUrl: string;
+  };
+  video: {
+    id: string;
+    cover: string;
+    downloadAddr: string;
+    playAddr: string;
+    duration: number;
+    originCover: string;
+    dynamicCover: string;
+    reflowCover: string;
+    width: number;
+    height: number;
+    ratio: string;
+  };
+};
+
+type TiktokUserInfoType = {
+  id: string;
+  uniqueId: string;
+  nickname: string;
+  avatarThumb: string;
+  avatarMedium: string;
+  signature: string;
+  verified: boolean;
+  secret: boolean;
+  secUid: string;
+  openFavorite: boolean;
+  relation: number;
+  bioLink?: { link: string };
+};
+
+type TiktokUserStatType = {
+  followingCount: number;
+  followerCount: number;
+  heartCount: string;
+  videoCount: number;
+  diggCount: string;
 };

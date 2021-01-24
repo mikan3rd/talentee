@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 
 import { InstagramModule } from "@/modules/instagram.module";
+import { TiktokModule } from "@/modules/tiktok.module";
 import { TwitterModule } from "@/modules/twitter.module";
 import { YoutubeModule } from "@/modules/youtube.module";
 import { AccountResolver } from "@/resolvers/account.resolver";
@@ -10,7 +11,7 @@ import { PrismaService } from "@/services/prisma.service";
 import { UtilsService } from "@/services/utils.service";
 
 @Module({
-  imports: [YoutubeModule, TwitterModule, InstagramModule],
+  imports: [YoutubeModule, TwitterModule, InstagramModule, TiktokModule],
   providers: [AccountService, AccountResolver, PrismaService, CrawlService, UtilsService],
   exports: [AccountService],
 })

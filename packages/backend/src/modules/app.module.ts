@@ -4,11 +4,11 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ScheduleModule } from "@nestjs/schedule";
 
-import { AppController } from "@/controllers/app.controller";
 import { SentryInterceptor } from "@/interceptors/sentry.interceptor";
 import { AccountModule } from "@/modules/account.module";
 import { InstagramModule } from "@/modules/instagram.module";
 import { TaskModule } from "@/modules/task.module";
+import { TiktokModule } from "@/modules/tiktok.module";
 import { TwitterModule } from "@/modules/twitter.module";
 import { YoutubeModule } from "@/modules/youtube.module";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
@@ -24,9 +24,10 @@ import { AppService } from "@/services/app.service";
     YoutubeModule,
     TwitterModule,
     InstagramModule,
+    TiktokModule,
     TaskModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
     AppService,
     DateScalar,

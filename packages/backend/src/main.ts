@@ -8,14 +8,12 @@ import { AppModule } from "@/modules/app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  if (process.env.SENTRY_DSN) {
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      environment: process.env.SENTRY_ENV,
-      tracesSampleRate: 1.0,
-    });
-    app.useGlobalInterceptors(new SentryInterceptor());
-  }
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.SENTRY_ENV,
+    tracesSampleRate: 1.0,
+  });
+  app.useGlobalInterceptors(new SentryInterceptor());
 
   app.use(morgan("dev"));
   app.enableCors();
