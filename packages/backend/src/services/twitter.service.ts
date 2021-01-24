@@ -26,6 +26,7 @@ export class TwitterService {
     const response = await this.getUserByUsername(_username);
 
     if (!response) {
+      this.logger.warn("Twitter user not found");
       return;
     }
 

@@ -55,7 +55,7 @@ export class TaskService {
   @Cron("0 0 1,9,17 * * *")
   async bulkAddServiceByYoutube() {
     this.logger.debug("START: bulkAddServiceByYoutube");
-    await this.accountService.addServiceByYoutube(100);
+    await this.accountService.addServiceByYoutube(300);
     this.logger.debug("END: bulkAddServiceByYoutube");
   }
 
@@ -71,11 +71,6 @@ export class TaskService {
     this.logger.debug("START: bulkUpdateYoutubeChannelVideo");
     await this.youtubeService.bulkUpdateChannelVideo(100);
     this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
-  }
-
-  @Timeout(1000)
-  async testTiktok() {
-    await this.tiktokService.upsertUser("kageihina");
   }
 
   // @Timeout(1000)

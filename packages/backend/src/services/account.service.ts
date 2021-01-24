@@ -3,6 +3,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { CrawlService } from "@/services/crawl.service";
 import { InstagramService } from "@/services/instagram.service";
 import { PrismaService } from "@/services/prisma.service";
+import { TiktokService } from "@/services/tiktok.service";
 import { TwitterService } from "@/services/twitter.service";
 import { UtilsService } from "@/services/utils.service";
 import { YoutubeService } from "@/services/youtube.service";
@@ -18,6 +19,7 @@ export class AccountService {
     private youtubeService: YoutubeService,
     private twitterService: TwitterService,
     private instagramService: InstagramService,
+    private tiktokService: TiktokService,
   ) {}
 
   async findOne(uuid: string) {
@@ -38,9 +40,12 @@ export class AccountService {
       orderBy: { updatedAt: "asc" },
       where: {
         account: {
-          OR: {
-            twitterUsers: { none: {} },
-            instagramUsers: { none: {} },
+          isNot: {
+            AND: {
+              twitterUsers: { some: {} },
+              instagramUsers: { some: {} },
+              tiktokUsers: { some: {} },
+            },
           },
         },
       },
@@ -62,9 +67,12 @@ export class AccountService {
       orderBy: { updatedAt: "asc" },
       where: {
         account: {
-          OR: {
-            youtubeChannels: { none: {} },
-            instagramUsers: { none: {} },
+          isNot: {
+            AND: {
+              youtubeChannels: { some: {} },
+              instagramUsers: { some: {} },
+              tiktokUsers: { some: {} },
+            },
           },
         },
       },
@@ -104,7 +112,7 @@ export class AccountService {
 
       const account = await this.prisma.account.findUnique({
         where: { uuid: accountId },
-        include: { youtubeChannels: true, twitterUsers: true, instagramUsers: true },
+        include: { youtubeChannels: true, twitterUsers: true, instagramUsers: true, tiktokUsers: true },
       });
 
       if (!account) {
@@ -148,6 +156,19 @@ export class AccountService {
         }
 
         await this.instagramService.upsertUser(username, accountId);
+      }
+
+      if (serviceName === "tiktok") {
+        if (account.tiktokUsers.length > 0) {
+          continue;
+        }
+
+        const tiktokUser = await this.prisma.tiktokUser.findUnique({ where: { uniqueId: username } });
+        if (tiktokUser) {
+          continue;
+        }
+
+        await this.tiktokService.upsertUser(username, accountId);
       }
     }
   }

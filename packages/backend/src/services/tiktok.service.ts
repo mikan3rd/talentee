@@ -17,7 +17,52 @@ export class TiktokService {
     private configService: ConfigService<EnvironmentVariables>,
   ) {}
 
-  async upsertUser(uniqueId: string, accountId?: string) {
-    await this.crawlService.getTiktokUser(uniqueId);
+  async upsertUser(_uniqueId: string, accountId?: string) {
+    const result = await this.crawlService.getTiktokUser(_uniqueId);
+
+    if (!result) {
+      this.logger.warn("Tiktok user not found");
+      return;
+    }
+
+    const {
+      userInfo: {
+        user: { id, uniqueId, nickname, avatarThumb, signature, bioLink, verified, secret, privateAccount, createTime },
+        stats: { followerCount, followingCount, heartCount, videoCount },
+      },
+    } = result;
+
+    const tiktokUser: Prisma.TiktokUserCreateInput = {
+      id,
+      uniqueId,
+      nickname,
+      avatarThumb,
+      signature,
+      bioLink: bioLink?.link ?? null,
+      followerCount,
+      followingCount,
+      heartCount: Number(heartCount),
+      videoCount,
+      verified,
+      privateAccount,
+      secret,
+      createdTimestamp: new Date(createTime),
+      account: {
+        connectOrCreate: {
+          where: { uuid: accountId ?? "" },
+          create: {
+            displayName: nickname,
+            username: uniqueId,
+            thumbnailUrl: avatarThumb,
+          },
+        },
+      },
+    };
+
+    await this.prisma.tiktokUser.upsert({
+      where: { id: tiktokUser.id },
+      create: tiktokUser,
+      update: tiktokUser,
+    });
   }
 }

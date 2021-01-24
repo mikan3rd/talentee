@@ -155,32 +155,6 @@ export class CrawlService {
   }
 
   async getServiceLinkByYoutube(channelId: string) {
-    type ytInitialDataType = {
-      contents: {
-        twoColumnBrowseResultsRenderer: {
-          tabs: {
-            tabRenderer: {
-              title: string;
-              selected: boolean;
-              content: {
-                sectionListRenderer: {
-                  contents: {
-                    itemSectionRenderer: {
-                      contents: {
-                        channelAboutFullMetadataRenderer: {
-                          primaryLinks?: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
-                        };
-                      }[];
-                    };
-                  }[];
-                };
-              };
-            };
-          }[];
-        };
-      };
-    };
-
     const axios = this.axiosSetup();
 
     const targetUrl = `https://www.youtube.com/channel/${channelId}/about`;
@@ -229,7 +203,6 @@ export class CrawlService {
     this.logger.log(`firstUrl: ${currentUrl}`);
 
     if (currentUrl.includes("login")) {
-      this.logger.log("LOGIN: start");
       const UsernameSelector = "input[name=username]";
       const PasswordSelector = "input[name=password]";
 
@@ -247,18 +220,15 @@ export class CrawlService {
       await page.type(PasswordSelector, loginPass);
 
       await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
-      this.logger.log("LOGIN: end");
 
       currentUrl = page.url();
       this.logger.log(`secondUrl: ${currentUrl}`);
     }
 
     if (currentUrl.includes("onetap")) {
-      this.logger.log("ONETAP: start");
       const ButtonSelector = "main section button";
       await page.waitForSelector(ButtonSelector);
       await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
-      this.logger.log("ONETAP: end");
 
       currentUrl = page.url();
       this.logger.log(`thirdUrl: ${currentUrl}`);
@@ -387,28 +357,6 @@ export class CrawlService {
     const url = `https://www.tiktok.com/@${uniqueId}`;
     const { data } = await axios.get<string>(url);
 
-    // let responseBody;
-
-    // try {
-    //   const url = `https://www.tiktok.com/@${uniqueId}`;
-    //   console.log(url);
-    //   const response = await page.goto(url);
-
-    //   if (!response) {
-    //     return null;
-    //   }
-
-    //   responseBody = await response.text();
-    // } catch (e) {
-    //   console.error(e);
-    // } finally {
-    //   await browser.close();
-    // }
-
-    // if (!responseBody) {
-    //   return null;
-    // }
-
     const $ = cheerio.load(data);
     const DataSelector = "script#__NEXT_DATA__";
     const content = $(DataSelector).html();
@@ -418,8 +366,8 @@ export class CrawlService {
     }
 
     const contentData = JSON.parse(content) as ContentDataType;
-    console.log(contentData.props.pageProps);
     const { userInfo, items } = contentData.props.pageProps;
+    return { userInfo, items };
   }
 }
 
@@ -543,16 +491,44 @@ type TiktokUserInfoType = {
   signature: string;
   verified: boolean;
   secret: boolean;
+  privateAccount: boolean;
   secUid: string;
   openFavorite: boolean;
   relation: number;
   bioLink?: { link: string };
+  createTime: number;
 };
 
 type TiktokUserStatType = {
   followingCount: number;
   followerCount: number;
-  heartCount: string;
+  heartCount: number;
   videoCount: number;
-  diggCount: string;
+  diggCount: number;
+};
+
+type ytInitialDataType = {
+  contents: {
+    twoColumnBrowseResultsRenderer: {
+      tabs: {
+        tabRenderer: {
+          title: string;
+          selected: boolean;
+          content: {
+            sectionListRenderer: {
+              contents: {
+                itemSectionRenderer: {
+                  contents: {
+                    channelAboutFullMetadataRenderer: {
+                      primaryLinks?: { title: string; navigationEndpoint: { urlEndpoint: { url: string } } }[];
+                    };
+                  }[];
+                };
+              }[];
+            };
+          };
+        };
+      }[];
+    };
+  };
 };
