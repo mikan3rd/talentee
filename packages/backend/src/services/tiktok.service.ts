@@ -59,10 +59,10 @@ export class TiktokService {
       },
     };
 
-    // await this.prisma.tiktokUser.upsert({
-    //   where: { id: tiktokUser.id },
-    //   create: tiktokUser,
-    //   update: tiktokUser,
-    // });
+    await this.prisma.tiktokUser.upsert({
+      where: { id: tiktokUser.id },
+      create: tiktokUser,
+      update: tiktokUser,
+    });
   }
 }
