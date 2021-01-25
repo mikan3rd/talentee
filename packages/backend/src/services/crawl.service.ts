@@ -54,6 +54,7 @@ export class CrawlService {
       "--no-first-run",
       "--no-zygote",
       "--single-process",
+      "–disable-extensions",
       "--lang=ja",
     ];
 
