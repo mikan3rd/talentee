@@ -5,7 +5,7 @@
     "packages/backend"
   ],
   "engines": {
-    "node": "12"
+    "node": "14"
   },
   "scripts": {
     "app": "yarn workspace app",
