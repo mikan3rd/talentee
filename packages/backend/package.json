@@ -17,6 +17,7 @@
     "migrate:g": "yarn migrate migration:generate -n",
     "migrate:run": "yarn migrate migration:run",
     "migrate:revert": "yarn migrate migration:revert",
+    "migrate:deploy": "yarn prisma migrate deploy --preview-feature",
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -25,12 +26,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/cli": "7.5.4",
     "@nestjs/common": "7.6.5",
     "@nestjs/config": "0.6.2",
     "@nestjs/core": "7.6.5",
     "@nestjs/graphql": "7.9.8",
     "@nestjs/platform-express": "7.6.5",
     "@nestjs/schedule": "0.4.2",
+    "@nestjs/schematics": "7.2.7",
     "@nestjs/typeorm": "7.1.5",
     "@sentry/node": "6.0.1",
     "apollo-server-express": "2.19.2",
@@ -48,13 +51,12 @@
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "6.6.3",
-    "typeorm": "0.2.30"
+    "typeorm": "0.2.30",
+    "@types/cron": "1.7.2",
+    "@types/morgan": "1.9.2"
   },
   "devDependencies": {
-    "@nestjs/cli": "7.5.4",
-    "@nestjs/schematics": "7.2.7",
     "@nestjs/testing": "7.6.5",
-    "@types/cron": "1.7.2",
     "@types/express": "4.17.11",
     "@types/jest": "26.0.20",
     "@types/morgan": "1.9.2",

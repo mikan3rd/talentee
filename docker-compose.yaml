@@ -38,7 +38,7 @@ services:
   migrate:
     << : *dev-base
     working_dir: /app/packages/backend
-    command: yarn prisma migrate deploy --preview-feature
+    command: yarn migrate:deploy
     depends_on:
       - mysql
 
@@ -46,6 +46,18 @@ services:
     << : *dev-base
     working_dir: /app/packages/backend
     command: yarn start:dev
+    tty: true
+    depends_on:
+      - mysql
+      - migrate
+    ports:
+      - "3300:3300"
+
+  backend-prod:
+    << : *dev-base
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     tty: true
     depends_on:
       - mysql

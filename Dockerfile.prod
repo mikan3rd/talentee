@@ -12,13 +12,11 @@ RUN apt-get update \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./package.json ./package.json
-COPY ./yarn.lock ./yarn.lock
-COPY ./packages/backend/package.json ./packages/backend/package.json
-COPY ./packages/app/package.json ./packages/app/package.json
+COPY . .
 
 WORKDIR /app/packages/backend
-RUN yarn install
+RUN yarn install --production
+RUN yarn prisma generate
 RUN yarn build
 
 CMD yarn start:prod

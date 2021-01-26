@@ -13,7 +13,8 @@ steps:
     args: [
       '/cloud_sql_proxy',
       '-dir=/cloudsql',
-      '-instances=${_CLOUD_SQL_CONNECTION_NAME}'
+      '-instances=${_CLOUD_SQL_CONNECTION_NAME}',
+      # '-ip_address_types=PRIVATE',
     ]
     volumes:
       - name: cloudsql
@@ -25,14 +26,9 @@ steps:
       'run',
       '-v', 'cloudsql:/cloudsql',
       '-w', '/app/packages/backend',
-      '-e', 'DB_SOCKET_PATH=/cloudsql/${_CLOUD_SQL_CONNECTION_NAME}',
-      '-e', 'DB_HOST=/cloudsql/${_CLOUD_SQL_CONNECTION_NAME}',
-      '-e', 'DB_PORT=${_DB_PORT}',
-      '-e', 'DB_USERNAME=${_DB_USERNAME}',
-      '-e', 'DB_PASSWORD=${_DB_PASSWORD}',
-      '-e', 'DB_NAME=${_DB_NAME}',
+      '-e', 'DATABASE_URL=${_DATABASE_URL}',
       'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
-      'yarn prisma migrate deploy --preview-feature'
+      'yarn', 'migrate:deploy'
     ]
     volumes:
       - name: cloudsql
@@ -59,17 +55,21 @@ steps:
       '--image', 'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
       '--region', 'asia-northeast1',
       '--platform', 'managed',
-      '--memory', '256Mi',
+      '--memory', '512Mi',
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
+      '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
       '--set-env-vars', '
-        DB_SOCKET_PATH=/cloudsql/${_CLOUD_SQL_CONNECTION_NAME},
-        DB_HOST=/cloudsql/${_CLOUD_SQL_CONNECTION_NAME},
-        DB_PORT=${_DB_PORT},
-        DB_USERNAME=${_DB_USERNAME},
-        DB_PASSWORD=${_DB_PASSWORD},
-        DB_NAME=${_DB_NAME}'
+        DATABASE_URL=${_DATABASE_URL},
+        YOUTUBE_API_KEY=${_YOUTUBE_API_KEY},
+        TWITTER_BEARER_TOKEN=${_TWITTER_BEARER_TOKEN},
+        INSTAGRAM_USERNAME=${_INSTAGRAM_USERNAME},
+        INSTAGRAM_PASSWORD=${_INSTAGRAM_PASSWORD},
+        SENTRY_DSN=${_SENTRY_DSN},
+        SENTRY_ENV=${_SENTRY_ENV}'
     ]
 
 images:
   - gcr.io/$PROJECT_ID/build:$COMMIT_SHA
+
+timeout: 900s
