@@ -56,6 +56,8 @@ steps:
       '--region', 'asia-northeast1',
       '--platform', 'managed',
       '--memory', '512Mi',
+      '--min-instances', '0',
+      '--max-instances', '3',
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
