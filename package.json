@@ -21,7 +21,7 @@
   "dependencies": {
     "@prisma/client": "2.15.0",
     "dayjs": "1.10.4",
-    "firebase": "8.2.4",
+    "firebase": "8.2.5",
     "firebase-admin": "9.4.2"
   },
   "devDependencies": {
