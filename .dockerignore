@@ -1,0 +1,5 @@
+node_modules
+packages/backend/node_modules
+packages/backend/dist
+packages/app/node_modules
+packages/app/.next
