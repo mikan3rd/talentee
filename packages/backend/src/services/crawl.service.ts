@@ -193,70 +193,77 @@ export class CrawlService {
     return linkUrls;
   }
 
-  async crawlInstagramProfile(username: string) {
+  async crawlInstagramProfile(usernames: string[]) {
     const { browser, page } = await this.puppeteerSetup();
 
-    const targetUrl = `https://www.instagram.com/${username}/`;
-    await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+    const profileDataList = [];
 
-    let currentUrl = page.url();
-    this.logger.log(`firstUrl: ${currentUrl}`);
+    for (const username of usernames) {
+      try {
+        const targetUrl = `https://www.instagram.com/${username}/`;
+        await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
 
-    if (currentUrl.includes("login")) {
-      const UsernameSelector = "input[name=username]";
-      const PasswordSelector = "input[name=password]";
+        let currentUrl = page.url();
+        this.logger.log(`firstUrl: ${currentUrl}`);
 
-      await page.waitForSelector(UsernameSelector);
-      await page.waitForSelector(PasswordSelector);
+        if (currentUrl.includes("login")) {
+          const UsernameSelector = "input[name=username]";
+          const PasswordSelector = "input[name=password]";
 
-      const loginName = this.configService.get("INSTAGRAM_USERNAME");
-      const loginPass = this.configService.get("INSTAGRAM_PASSWORD");
+          await page.waitForSelector(UsernameSelector);
+          await page.waitForSelector(PasswordSelector);
 
-      if (!loginName || !loginPass) {
-        throw Error("env variable is required!!");
+          const loginName = this.configService.get("INSTAGRAM_USERNAME");
+          const loginPass = this.configService.get("INSTAGRAM_PASSWORD");
+
+          if (!loginName || !loginPass) {
+            throw Error("env variable is required!!");
+          }
+
+          await page.type(UsernameSelector, loginName);
+          await page.type(PasswordSelector, loginPass);
+
+          await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
+
+          currentUrl = page.url();
+          this.logger.log(`secondUrl: ${currentUrl}`);
+        }
+
+        if (currentUrl.includes("onetap")) {
+          const ButtonSelector = "main section button";
+          await page.waitForSelector(ButtonSelector);
+          await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
+
+          currentUrl = page.url();
+          this.logger.log(`thirdUrl: ${currentUrl}`);
+        }
+
+        if (!currentUrl.includes(username)) {
+          await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+
+          currentUrl = page.url();
+          this.logger.log(`fourthUrl: ${currentUrl}`);
+        }
+
+        const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
+
+        const { ProfilePage } = sharedData.entry_data;
+
+        if (!ProfilePage) {
+          this.logger.log("Failed: crawlInstagramProfile");
+          continue;
+        }
+
+        profileDataList.push(ProfilePage[0].graphql.user);
+      } catch (e) {
+        this.logger.error(e);
       }
-
-      await page.type(UsernameSelector, loginName);
-      await page.type(PasswordSelector, loginPass);
-
-      await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
-
-      currentUrl = page.url();
-      this.logger.log(`secondUrl: ${currentUrl}`);
     }
-
-    if (currentUrl.includes("onetap")) {
-      const ButtonSelector = "main section button";
-      await page.waitForSelector(ButtonSelector);
-      await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
-
-      currentUrl = page.url();
-      this.logger.log(`thirdUrl: ${currentUrl}`);
-    }
-
-    if (!currentUrl.includes(username)) {
-      await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
-
-      currentUrl = page.url();
-      this.logger.log(`fourthUrl: ${currentUrl}`);
-    }
-
-    // const imageBuffer = await page.screenshot();
-    // return imageBuffer;
-
-    const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
 
     await browser.close();
 
-    const { ProfilePage } = sharedData.entry_data;
-
-    if (!ProfilePage) {
-      this.logger.log("Failed: crawlInstagramProfile");
-      return null;
-    }
-
-    const {
-      user: {
+    return profileDataList.map((profileData) => {
+      const {
         id,
         username: _username,
         full_name,
@@ -274,77 +281,77 @@ export class CrawlService {
         edge_saved_media,
         edge_owner_to_timeline_media,
         edge_related_profiles,
-      },
-    } = ProfilePage[0].graphql;
+      } = profileData;
 
-    const userData = {
-      id,
-      username: _username,
-      full_name,
-      biography,
-      external_url,
-      followed_by: edge_followed_by.count,
-      follow: edge_follow.count,
-      is_private,
-      is_verified,
-      profile_pic_url,
-      profile_pic_url_hd,
-      felix_video_timeline: edge_felix_video_timeline.count,
-      media_collections: edge_media_collections.count,
-      mutual_followed_by: edge_mutual_followed_by.count,
-      saved_media: edge_saved_media.count,
-      related_profiles: edge_related_profiles?.edges.map((edge) => edge.node) ?? [],
-    };
-
-    const mediaData = edge_owner_to_timeline_media.edges.map((edge) => {
-      const {
-        id: mediaId,
-        shortcode,
-        owner,
-        is_video,
-        taken_at_timestamp,
-        thumbnail_src,
-        comments_disabled,
-        display_url,
-        edge_liked_by,
-        edge_media_preview_like,
-        edge_media_to_caption,
-        edge_media_to_comment,
-        edge_media_to_tagged_user,
-        edge_sidecar_to_children,
-        has_audio,
-        video_view_count,
-        product_type,
-        location,
-        dimensions,
-        thumbnail_resources,
-      } = edge.node;
-
-      return {
-        id: mediaId,
-        shortcode,
-        ownerId: owner.id,
-        is_video,
-        location,
-        taken_at_timestamp,
-        thumbnail_src,
-        thumbnail_resources,
-        comments_disabled,
-        display_url,
-        liked_by: edge_liked_by.count,
-        media_preview_like: edge_media_preview_like.count,
-        media_to_caption: edge_media_to_caption.edges.map((e) => e.node.text),
-        media_to_comment: edge_media_to_comment.count,
-        media_to_tagged_user: edge_media_to_tagged_user.edges.map((e) => e.node.user),
-        sidecar_to_children: edge_sidecar_to_children?.edges.map((e) => e.node) ?? [],
-        has_audio,
-        video_view_count,
-        product_type,
-        dimensions,
+      const userData = {
+        id,
+        username: _username,
+        full_name,
+        biography,
+        external_url,
+        followed_by: edge_followed_by.count,
+        follow: edge_follow.count,
+        is_private,
+        is_verified,
+        profile_pic_url,
+        profile_pic_url_hd,
+        felix_video_timeline: edge_felix_video_timeline.count,
+        media_collections: edge_media_collections.count,
+        mutual_followed_by: edge_mutual_followed_by.count,
+        saved_media: edge_saved_media.count,
+        related_profiles: edge_related_profiles?.edges.map((edge) => edge.node) ?? [],
       };
-    });
 
-    return { userData, mediaData };
+      const mediaData = edge_owner_to_timeline_media.edges.map((edge) => {
+        const {
+          id: mediaId,
+          shortcode,
+          owner,
+          is_video,
+          taken_at_timestamp,
+          thumbnail_src,
+          comments_disabled,
+          display_url,
+          edge_liked_by,
+          edge_media_preview_like,
+          edge_media_to_caption,
+          edge_media_to_comment,
+          edge_media_to_tagged_user,
+          edge_sidecar_to_children,
+          has_audio,
+          video_view_count,
+          product_type,
+          location,
+          dimensions,
+          thumbnail_resources,
+        } = edge.node;
+
+        return {
+          id: mediaId,
+          shortcode,
+          ownerId: owner.id,
+          is_video,
+          location,
+          taken_at_timestamp,
+          thumbnail_src,
+          thumbnail_resources,
+          comments_disabled,
+          display_url,
+          liked_by: edge_liked_by.count,
+          media_preview_like: edge_media_preview_like.count,
+          media_to_caption: edge_media_to_caption.edges.map((e) => e.node.text),
+          media_to_comment: edge_media_to_comment.count,
+          media_to_tagged_user: edge_media_to_tagged_user.edges.map((e) => e.node.user),
+          sidecar_to_children: edge_sidecar_to_children?.edges.map((e) => e.node) ?? [],
+          has_audio,
+          video_view_count,
+          product_type,
+          dimensions,
+        };
+      });
+
+      return { userData, mediaData };
+    });
   }
 
   async getTiktokUser(uniqueId: string) {

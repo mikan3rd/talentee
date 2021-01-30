@@ -155,7 +155,7 @@ export class AccountService {
           continue;
         }
 
-        await this.instagramService.upsertUser(username, accountId);
+        await this.instagramService.upsertUsers([{ username, accountId }]);
       }
 
       if (serviceName === "tiktok") {
