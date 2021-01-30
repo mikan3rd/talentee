@@ -33,7 +33,7 @@ export class InstagramService {
     const { userData, mediaData } = result;
 
     const {
-      id,
+      id: ownerId,
       username,
       follow,
       followed_by,
@@ -46,7 +46,7 @@ export class InstagramService {
     } = userData;
 
     const instagramUser: Prisma.InstagramUserCreateInput = {
-      id,
+      id: ownerId,
       username,
       fullName: full_name,
       follow,
@@ -68,10 +68,63 @@ export class InstagramService {
       },
     };
 
+    const instagramMedias = mediaData.map((media) => {
+      const {
+        id,
+        shortcode,
+        thumbnail_src,
+        taken_at_timestamp,
+        is_video,
+        liked_by,
+        display_url,
+        media_to_caption,
+        media_preview_like,
+        media_to_comment,
+        video_view_count,
+        product_type,
+        location,
+      } = media;
+      const instagramMedia: Prisma.InstagramMediaCreateInput = {
+        id,
+        shortcode,
+        thumbnailSrc: thumbnail_src,
+        displayUrl: display_url,
+        likedBy: liked_by,
+        mediaPreviewLike: media_preview_like,
+        mediaToCaption: media_to_caption[0] ?? "",
+        mediaToComment: media_to_comment,
+        videoViewCount: video_view_count,
+        productType: product_type,
+        takenAtTimestamp: new Date(taken_at_timestamp * 1000),
+        isVideo: is_video,
+        user: { connect: { id: ownerId } },
+        location: !location
+          ? undefined
+          : {
+              connectOrCreate: {
+                where: { id: location.id },
+                create: {
+                  id: location.id,
+                  name: location.name,
+                  slug: location.slug,
+                  hasPublicPage: location.has_public_page,
+                },
+              },
+            },
+      };
+      return this.prisma.instagramMedia.upsert({
+        where: { id },
+        create: instagramMedia,
+        update: instagramMedia,
+      });
+    });
+
     await this.prisma.instagramUser.upsert({
       where: { id: instagramUser.id },
       create: instagramUser,
       update: instagramUser,
     });
+
+    await this.prisma.$transaction(instagramMedias);
   }
 }

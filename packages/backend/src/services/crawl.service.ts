@@ -415,7 +415,7 @@ type InstagramMediaType = {
   shortcode: string;
   owner: { id: string; name: string };
   is_video: boolean;
-  location: { id: string; name: string; slug: string; has_public_page: boolean };
+  location?: { id: string; name: string; slug: string; has_public_page: boolean };
   taken_at_timestamp: number;
   thumbnail_src: string;
   thumbnail_resources: { src: string; config_width: number; config_height: number }[];
@@ -429,9 +429,9 @@ type InstagramMediaType = {
   edge_media_to_comment: { count: number };
   edge_media_to_tagged_user: { edges: { node: { user: InstagramUserBaseType } }[] };
   edge_sidecar_to_children?: { edges: { node: InstagramMediaType }[] };
-  has_audio: boolean;
-  video_view_count: number;
-  product_type: "igtv" | "clips";
+  has_audio?: boolean;
+  video_view_count?: number;
+  product_type?: "igtv" | "clips";
 };
 
 type TiktokUserType = {
