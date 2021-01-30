@@ -15,7 +15,7 @@ async function bootstrap() {
   });
   app.useGlobalInterceptors(new SentryInterceptor());
 
-  app.use(morgan("dev"));
+  app.use(morgan(process.env.MORGAN_FORMAT ?? "tiny"));
   app.enableCors();
   await app.listen(process.env.PORT || 3300);
 }
