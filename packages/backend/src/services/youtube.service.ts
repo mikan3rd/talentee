@@ -114,7 +114,7 @@ export class YoutubeService {
 
     this.logger.log(`videoIds.length: ${videoIds.length}`);
 
-    let channnelIds: string[] = [];
+    let channelIds: string[] = [];
     for (const chunkVideoIds of this.utilsService.chunk(videoIds, 50)) {
       const videoResponse = await this.youtubeApi.videos.list({
         part: ["id", "snippet", "contentDetails", "statistics", "player"],
@@ -129,18 +129,24 @@ export class YoutubeService {
         }
         return channelId;
       });
-      channnelIds = channnelIds.concat(additionalChannelIds ?? []);
+      channelIds = channelIds.concat(additionalChannelIds ?? []);
     }
 
-    this.logger.log(`channnelIds.length: ${channnelIds.length}`);
-    await this.bulkUpsertChannelByChannelId(channnelIds);
+    const uniqueChannelIds = Array.from(new Set(channelIds));
+    this.logger.log(`channelIds.length: ${uniqueChannelIds.length}`);
+    const baseDataList = channelIds.map((channelId) => ({ channelId }));
+    await this.bulkUpsertChannelByChannelId(baseDataList);
   }
 
-  async bulkUpsertChannelByChannelId(channelIds: string[], check = true) {
-    const uniqueChannelIds = Array.from(new Set(channelIds));
+  async bulkUpsertChannelByChannelId(baseDataList: { channelId: string; accountId?: string }[], check = true) {
+    const baseDataMapping = baseDataList.reduce((prev, { channelId, accountId }) => {
+      prev[channelId] = { accountId, channelId };
+      return prev;
+    }, {} as { [channelId: string]: { channelId: string; accountId?: string } });
 
     let channelItems: youtube_v3.Schema$Channel[] = [];
-    for (const chunkChannelIds of this.utilsService.chunk(uniqueChannelIds, 50)) {
+    const channelIds = Object.values(baseDataMapping).map(({ channelId }) => channelId);
+    for (const chunkChannelIds of this.utilsService.chunk(channelIds, 50)) {
       const channelResponse = await this.getChannelList(chunkChannelIds);
       channelItems = channelItems.concat(channelResponse.data.items ?? []);
     }
@@ -158,26 +164,13 @@ export class YoutubeService {
 
     this.logger.log(`channelDataList.length: ${channelDataList.length}`);
 
-    for (const { youtubeChannel, youtubeKeywords } of channelDataList) {
-      // チャンネル新規登録の場合は必ずアカウントも新規作成されるため注意
-      const account = await this.prisma.youtubeChannel
-        .findUnique({
-          where: { id: youtubeChannel.id },
-        })
-        .account();
-      await this.upsertChannel(youtubeChannel, youtubeKeywords, account?.uuid);
+    for (const [index, { youtubeChannel, youtubeKeywords }] of channelDataList.entries()) {
+      this.logger.log(`${index} ${youtubeChannel.id}`);
+      const target = baseDataMapping[youtubeChannel.id];
+      const account = await this.prisma.youtubeChannel.findUnique({ where: { id: youtubeChannel.id } }).account();
+      const accountId = account?.uuid ?? target.accountId;
+      await this.upsertChannel(youtubeChannel, youtubeKeywords, accountId);
     }
-  }
-
-  async upsertChannelByChannelId(channelId: string, accountId?: string) {
-    const channelResponse = await this.getChannelList([channelId]);
-    const channelData = channelResponse.data.items?.[0];
-    if (!channelData) {
-      this.logger.error(`Channel Not Found, accountId: ${accountId}, channelId: ${channelId}`);
-      return;
-    }
-    const { youtubeChannel, youtubeKeywords } = this.formatChannelData(channelData);
-    await this.upsertChannel(youtubeChannel, youtubeKeywords, accountId);
   }
 
   async upsertChannel(youtubeChannel: YoutubeChannelFormatData, youtubeKeywords: string[], accountId?: string) {

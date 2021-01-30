@@ -52,12 +52,9 @@ export class InstagramService {
       this.logger.log(`${index} ${username}`);
 
       const target = baseDataMapping[username];
-      if (!target) {
-        this.logger.warn(`${username} not found`);
-        continue;
-      }
-      const { accountId } = target;
+      const account = await this.prisma.instagramUser.findUnique({ where: { id: ownerId } }).account();
 
+      const accountId = account?.uuid ?? target.accountId;
       const instagramUser: Prisma.InstagramUserCreateInput = {
         id: ownerId,
         username,
