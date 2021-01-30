@@ -22,7 +22,7 @@ export class TwitterService {
     return { Authorization: `Bearer ${this.configService.get("TWITTER_BEARER_TOKEN")}` };
   }
 
-  async upsertUserByUsername(_username: string, accountId?: string) {
+  async upsertUserByUsername(_username: string, _accountId?: string) {
     const response = await this.getUserByUsername(_username);
 
     if (!response) {
@@ -32,7 +32,7 @@ export class TwitterService {
 
     const {
       data: {
-        id,
+        id: userId,
         name,
         username,
         description,
@@ -44,8 +44,11 @@ export class TwitterService {
       },
     } = response;
 
+    const account = await this.prisma.twitterUser.findUnique({ where: { id: userId } }).account();
+    const accountId = account?.uuid ?? _accountId;
+
     const twitteUser: Prisma.TwitterUserCreateInput = {
-      id,
+      id: userId,
       name,
       username,
       description,
