@@ -18,7 +18,7 @@ export class TiktokService {
     private configService: ConfigService<EnvironmentVariables>,
   ) {}
 
-  async upsertUser(_uniqueId: string, accountId?: string) {
+  async upsertUser(_uniqueId: string, _accountId?: string) {
     const result = await this.crawlService.getTiktokUser(_uniqueId);
 
     if (!result) {
@@ -29,7 +29,7 @@ export class TiktokService {
     const {
       userInfo: {
         user: {
-          id: useId,
+          id: userId,
           uniqueId,
           nickname,
           avatarThumb,
@@ -45,8 +45,11 @@ export class TiktokService {
       items,
     } = result;
 
+    const account = await this.prisma.instagramUser.findUnique({ where: { id: userId } }).account();
+    const accountId = account?.uuid ?? _accountId;
+
     const tiktokUser: Prisma.TiktokUserCreateInput = {
-      id: useId,
+      id: userId,
       uniqueId,
       nickname,
       avatarThumb,
@@ -87,7 +90,7 @@ export class TiktokService {
         playCount,
         shareCount,
         createdTimestamp: new Date(createTime * 1000),
-        user: { connect: { id: useId } },
+        user: { connect: { id: userId } },
       };
       return this.prisma.tiktokItem.upsert({
         where: { id },

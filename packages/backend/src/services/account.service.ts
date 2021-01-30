@@ -129,7 +129,7 @@ export class AccountService {
           continue;
         }
 
-        await this.youtubeService.upsertChannelByChannelId(username, accountId);
+        await this.youtubeService.bulkUpsertChannelByChannelId([{ channelId: username, accountId }], false);
       }
 
       if (serviceName === "twitter") {
