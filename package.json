@@ -21,15 +21,15 @@
   "dependencies": {
     "@prisma/client": "2.15.0",
     "dayjs": "1.10.4",
-    "firebase": "8.2.4",
+    "firebase": "8.2.5",
     "firebase-admin": "9.4.2"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "11.0.0",
     "@prisma/cli": "2.15.0",
     "@types/node": "12.19.15",
-    "@typescript-eslint/eslint-plugin": "4.14.0",
-    "@typescript-eslint/parser": "4.14.0",
+    "@typescript-eslint/eslint-plugin": "4.14.1",
+    "@typescript-eslint/parser": "4.14.1",
     "dotenv": "8.2.0",
     "eslint": "7.18.0",
     "eslint-config-prettier": "7.2.0",

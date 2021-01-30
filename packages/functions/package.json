@@ -18,7 +18,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/pubsub": "2.8.0",
-    "@sentry/node": "6.0.1",
+    "@sentry/node": "6.0.3",
     "axios": "0.21.1",
     "cheerio": "1.0.0-rc.5",
     "dayjs": "1.10.4",
@@ -28,14 +28,14 @@
     "https-proxy-agent": "5.0.0",
     "puppeteer": "5.5.0",
     "puppeteer-extra": "3.1.16",
-    "puppeteer-extra-plugin-stealth": "2.6.6",
+    "puppeteer-extra-plugin-stealth": "2.6.7",
     "twitter": "1.7.1"
   },
   "devDependencies": {
     "@types/cheerio": "0.22.23",
     "@types/twitter": "1.7.0",
-    "@typescript-eslint/eslint-plugin": "4.14.0",
-    "@typescript-eslint/parser": "4.14.0",
+    "@typescript-eslint/eslint-plugin": "4.14.1",
+    "@typescript-eslint/parser": "4.14.1",
     "eslint": "7.18.0",
     "eslint-config-prettier": "7.2.0",
     "eslint-import-resolver-webpack": "0.13.0",
