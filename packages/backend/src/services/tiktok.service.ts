@@ -31,6 +31,7 @@ export class TiktokService {
         stats: { followerCount, followingCount, heartCount, videoCount },
       },
     } = result;
+    console.log(createTime);
 
     const tiktokUser: Prisma.TiktokUserCreateInput = {
       id,

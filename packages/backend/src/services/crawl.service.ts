@@ -353,7 +353,6 @@ export class CrawlService {
       props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
 
-    // const { browser, page } = await this.puppeteerSetup();
     const axios = this.axiosSetup();
     const url = `https://www.tiktok.com/@${uniqueId}`;
     const { data } = await axios.get<string>(url);

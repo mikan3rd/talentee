@@ -187,6 +187,23 @@ model TiktokUser {
   updatedAt        DateTime @updatedAt @db.DateTime(6)
   accountId        String   @db.VarChar(36)
   account          Account  @relation(fields: [accountId], references: [uuid])
+  items            TiktokItem[]
 
   @@index([accountId], name: "FK_a32497fecd2f0b0debdaf2815e0")
+}
+
+model TiktokItem {
+  id               String                    @id @db.VarChar(255)
+  desc             String                    @db.Text
+  commentCount     BigInt                    @db.UnsignedBigInt
+  diggCount        BigInt                    @db.UnsignedBigInt
+  playCount        BigInt                    @db.UnsignedBigInt
+  shareCount       BigInt                    @db.UnsignedBigInt
+  createdTimestamp DateTime                  @db.DateTime(0)
+  createdAt        DateTime                  @default(now()) @db.DateTime(6)
+  updatedAt        DateTime                  @updatedAt @db.DateTime(6)
+  authorId         String                    @db.VarChar(255)
+  user             TiktokUser                @relation(fields: [authorId], references: [id])
+
+  @@index([authorId])
 }
