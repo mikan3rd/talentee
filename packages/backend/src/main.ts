@@ -1,9 +1,13 @@
 import { NestFactory } from "@nestjs/core";
 import * as Sentry from "@sentry/node";
-import * as morgan from "morgan";
+import dayjs from "dayjs";
+import morgan from "morgan";
+import "dayjs/locale/ja";
 
 import { SentryInterceptor } from "@/interceptors/sentry.interceptor";
 import { AppModule } from "@/modules/app.module";
+
+dayjs.locale("ja");
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

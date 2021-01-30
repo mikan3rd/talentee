@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
+import dayjs from "dayjs";
 
 import { CrawlService } from "@/services/crawl.service";
 import { PrismaService } from "@/services/prisma.service";
@@ -105,13 +106,15 @@ export class TiktokService {
   }
 
   async bulkUpdate(take: number) {
+    const beforeDate = dayjs().subtract(1, "day");
     const channels = await this.prisma.tiktokUser.findMany({
       take,
       orderBy: { updatedAt: "asc" },
       include: { account: { select: { uuid: true } } },
+      where: { updatedAt: { lte: beforeDate.toDate() } },
     });
     for (const [index, user] of channels.entries()) {
-      this.logger.log(`${index} ${user.id}`);
+      this.logger.log(`${index} ${user.uniqueId}`);
       await this.upsertUser(user.uniqueId, user.account.uuid);
     }
   }
