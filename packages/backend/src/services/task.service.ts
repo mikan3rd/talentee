@@ -76,7 +76,7 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
   }
 
-  @Timeout(1000)
+  // @Timeout(1000)
   async bulkUpdateYoutubeVideoCategoryTimeout() {
     await this.bulkUpdateYoutubeVideoCategory();
   }
@@ -95,7 +95,7 @@ export class TaskService {
       timeoutJobs.forEach((job, key, map) => this.schedulerRegistry.deleteTimeout(job));
       const cronJobs = this.schedulerRegistry.getCronJobs();
       cronJobs.forEach((job, key, map) => job.stop());
-      this.logger.debug("SUCCESS: handleCron");
+      this.logger.debug("SUCCESS: stop cron job");
     }
     this.logger.debug("END: handleCron");
   }
