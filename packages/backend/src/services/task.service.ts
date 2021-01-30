@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { Cron, Timeout } from "@nestjs/schedule";
+import { ConfigService } from "@nestjs/config";
+import { Cron, SchedulerRegistry, Timeout } from "@nestjs/schedule";
 
 import { AccountService } from "@/services/account.service";
 import { InstagramService } from "@/services/instagram.service";
@@ -12,11 +13,13 @@ export class TaskService {
   private readonly logger = new Logger(TaskService.name);
 
   constructor(
+    private schedulerRegistry: SchedulerRegistry,
     private accountService: AccountService,
     private youtubeService: YoutubeService,
     private twitterService: TwitterService,
     private instagramService: InstagramService,
     private tiktokService: TiktokService,
+    private configService: ConfigService<EnvironmentVariables>,
   ) {}
 
   @Cron("0 0 0 * * *")
@@ -82,5 +85,18 @@ export class TaskService {
     this.logger.debug("START: bulkUpdateYoutubeVideoCategory");
     await this.youtubeService.bulkUpdateVideoCategory();
     this.logger.debug("END: bulkUpdateYoutubeVideoCategory");
+  }
+
+  @Timeout(0)
+  handleCron() {
+    this.logger.debug("START: handleCron");
+    if (this.configService.get("SCHEDULE_ENABLED") !== "true") {
+      const timeoutJobs = this.schedulerRegistry.getTimeouts();
+      timeoutJobs.forEach((job, key, map) => this.schedulerRegistry.deleteTimeout(job));
+      const cronJobs = this.schedulerRegistry.getCronJobs();
+      cronJobs.forEach((job, key, map) => job.stop());
+      this.logger.debug("SUCCESS: handleCron");
+    }
+    this.logger.debug("END: handleCron");
   }
 }

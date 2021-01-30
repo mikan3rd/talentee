@@ -60,6 +60,29 @@ steps:
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
       '--set-env-vars', '
+        NO_COLOR=true,
+        DATABASE_URL=${_DATABASE_URL},
+        YOUTUBE_API_KEY=${_YOUTUBE_API_KEY},
+        TWITTER_BEARER_TOKEN=${_TWITTER_BEARER_TOKEN},
+        INSTAGRAM_USERNAME=${_INSTAGRAM_USERNAME},
+        INSTAGRAM_PASSWORD=${_INSTAGRAM_PASSWORD},
+        SENTRY_DSN=${_SENTRY_DSN},
+        SENTRY_ENV=${_SENTRY_ENV}'
+    ]
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', '${_CLOUD_RUN_SERVICE_NAME}-schedule',
+      '--image', 'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
+      '--region', 'asia-northeast1',
+      '--platform', 'managed',
+      '--memory', '512Mi',
+      '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
+      '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
+      '--set-env-vars', '
+        SCHEDULE_ENABLED=true,
+        NO_COLOR=true,
         DATABASE_URL=${_DATABASE_URL},
         YOUTUBE_API_KEY=${_YOUTUBE_API_KEY},
         TWITTER_BEARER_TOKEN=${_TWITTER_BEARER_TOKEN},

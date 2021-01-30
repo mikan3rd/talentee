@@ -19,4 +19,5 @@ declare type EnvironmentVariables = {
   INSTAGRAM_PASSWORD: string;
   SENTRY_DSN: string;
   SENTRY_ENV: string;
+  SCHEDULE_ENABLED: string;
 };
