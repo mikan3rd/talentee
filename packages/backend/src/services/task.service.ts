@@ -83,6 +83,13 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateTiktok");
   }
 
+  @Cron("0 50 2,10,18 * * *")
+  async bulkUpdateInstagram() {
+    this.logger.debug("START: bulkUpdateInstagram");
+    await this.instagramService.bulkUpdate(100);
+    this.logger.debug("END: bulkUpdateInstagram");
+  }
+
   // @Timeout(1000)
   async bulkUpdateYoutubeVideoCategoryTimeout() {
     await this.bulkUpdateYoutubeVideoCategory();

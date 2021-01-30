@@ -111,7 +111,7 @@ export class TiktokService {
       include: { account: { select: { uuid: true } } },
     });
     for (const [index, user] of channels.entries()) {
-      this.logger.log(`${index} ${user.id}`);
+      this.logger.log(`${index} ${user.uniqueId}`);
       await this.upsertUser(user.uniqueId, user.account.uuid);
     }
   }

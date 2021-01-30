@@ -127,4 +127,16 @@ export class InstagramService {
 
     await this.prisma.$transaction(instagramMedias);
   }
+
+  async bulkUpdate(take: number) {
+    const channels = await this.prisma.instagramUser.findMany({
+      take,
+      orderBy: { updatedAt: "asc" },
+      include: { account: { select: { uuid: true } } },
+    });
+    for (const [index, user] of channels.entries()) {
+      this.logger.log(`${index} ${user.username}`);
+      await this.upsertUser(user.username, user.account.uuid);
+    }
+  }
 }
