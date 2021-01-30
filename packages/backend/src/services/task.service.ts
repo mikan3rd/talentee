@@ -76,6 +76,13 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeChannelVideo");
   }
 
+  @Cron("0 40 2,10,18 * * *")
+  async bulkUpdateTiktok() {
+    this.logger.debug("START: bulkUpdateTiktok");
+    await this.tiktokService.bulkUpdate(100);
+    this.logger.debug("END: bulkUpdateTiktok");
+  }
+
   // @Timeout(1000)
   async bulkUpdateYoutubeVideoCategoryTimeout() {
     await this.bulkUpdateYoutubeVideoCategory();
@@ -89,7 +96,6 @@ export class TaskService {
 
   @Timeout(0)
   handleCron() {
-    this.logger.debug("START: handleCron");
     if (this.configService.get("SCHEDULE_ENABLED") !== "true") {
       const timeoutJobs = this.schedulerRegistry.getTimeouts();
       timeoutJobs.forEach((job, key, map) => this.schedulerRegistry.deleteTimeout(job));
@@ -97,6 +103,5 @@ export class TaskService {
       cronJobs.forEach((job, key, map) => job.stop());
       this.logger.debug("SUCCESS: stop cron job");
     }
-    this.logger.debug("END: handleCron");
   }
 }

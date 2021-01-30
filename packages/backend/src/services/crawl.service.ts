@@ -101,8 +101,7 @@ export class CrawlService {
     const baseUrl = `https://www.youtube.com`;
     const trendUrl = `${baseUrl}/feed/trending`;
 
-    // TODO
-    const axios = this.axiosSetup();
+    const axios = this.axiosSetup("exclusive");
     const { data } = await axios.get<string>(trendUrl);
 
     // eslint-disable-next-line no-useless-escape
@@ -353,7 +352,6 @@ export class CrawlService {
       props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
 
-    // const { browser, page } = await this.puppeteerSetup();
     const axios = this.axiosSetup();
     const url = `https://www.tiktok.com/@${uniqueId}`;
     const { data } = await axios.get<string>(url);

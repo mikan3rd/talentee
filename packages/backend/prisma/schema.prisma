@@ -17,8 +17,8 @@ model Account {
   updatedAt       DateTime         @updatedAt @db.DateTime(6)
   youtubeChannels YoutubeChannel[]
   instagramUsers  InstagramUser[]
-  twitterUsers    TwitterUser[]
   tiktokUsers     TiktokUser[]
+  twitterUsers    TwitterUser[]
 }
 
 model YoutubeChannelKeywordRelation {
@@ -50,9 +50,9 @@ model YoutubeChannel {
   thumbnailUrl           String                          @db.Text
   country                String?                         @db.VarChar(255)
   publishedAt            DateTime                        @db.DateTime(0)
-  subscriberCount        BigInt?                         @db.BigInt
-  viewCount              BigInt                          @db.BigInt
-  videoCount             BigInt                          @db.BigInt
+  subscriberCount        BigInt?                         @db.UnsignedBigInt
+  viewCount              BigInt                          @db.UnsignedBigInt
+  videoCount             BigInt                          @db.UnsignedBigInt
   hiddenSubscriberCount  Boolean                         @db.TinyInt
   createdAt              DateTime                        @default(now()) @db.DateTime(6)
   updatedAt              DateTime                        @updatedAt @db.DateTime(6)
@@ -99,10 +99,10 @@ model YoutubeVideo {
   description     String                    @db.Text
   thumbnailUrl    String                    @db.Text
   publishedAt     DateTime                  @db.DateTime(0)
-  viewCount       BigInt?                   @db.BigInt
-  likeCount       BigInt?                   @db.BigInt
-  dislikeCount    BigInt?                   @db.BigInt
-  commentCount    BigInt?                   @db.BigInt
+  viewCount       BigInt?                   @db.UnsignedBigInt
+  likeCount       BigInt?                   @db.UnsignedBigInt
+  dislikeCount    BigInt?                   @db.UnsignedBigInt
+  commentCount    BigInt?                   @db.UnsignedBigInt
   createdAt       DateTime                  @default(now()) @db.DateTime(6)
   updatedAt       DateTime                  @updatedAt @db.DateTime(6)
   videoCategoryId Int                       @db.Int
@@ -134,10 +134,10 @@ model TwitterUser {
   username         String   @unique @db.VarChar(255)
   description      String   @db.Text
   profileImageUrl  String   @db.Text
-  followersCount   BigInt   @db.BigInt
-  followingCount   BigInt   @db.BigInt
-  listedCount      BigInt   @db.BigInt
-  tweetCount       BigInt   @db.BigInt
+  followersCount   BigInt   @db.UnsignedBigInt
+  followingCount   BigInt   @db.UnsignedBigInt
+  listedCount      BigInt   @db.UnsignedBigInt
+  tweetCount       BigInt   @db.UnsignedBigInt
   verified         Boolean  @db.TinyInt
   protected        Boolean  @db.TinyInt
   createdTimestamp DateTime @db.DateTime(0)
@@ -156,8 +156,8 @@ model InstagramUser {
   biography     String   @db.Text
   externalUrl   String?  @db.Text
   profilePicUrl String   @db.Text
-  followedBy    BigInt   @db.BigInt
-  follow        BigInt   @db.BigInt
+  followedBy    BigInt   @db.UnsignedBigInt
+  follow        BigInt   @db.UnsignedBigInt
   isVerified    Boolean  @db.TinyInt
   isPrivate     Boolean  @db.TinyInt
   createdAt     DateTime @default(now()) @db.DateTime(6)
@@ -169,24 +169,41 @@ model InstagramUser {
 }
 
 model TiktokUser {
-  id               String   @id @db.VarChar(255)
-  nickname         String   @db.VarChar(255)
-  uniqueId         String   @unique @db.VarChar(255)
-  signature        String   @db.Text
-  bioLink          String?  @db.Text
-  avatarThumb      String   @db.Text
-  followerCount    BigInt   @db.UnsignedBigInt
-  followingCount   BigInt   @db.UnsignedBigInt
-  heartCount       BigInt   @db.UnsignedBigInt
-  videoCount       BigInt   @db.UnsignedBigInt
-  verified         Boolean  @db.TinyInt
-  privateAccount   Boolean  @db.TinyInt
-  secret           Boolean  @db.TinyInt
-  createdTimestamp DateTime @db.DateTime(0)
-  createdAt        DateTime @default(now()) @db.DateTime(6)
-  updatedAt        DateTime @updatedAt @db.DateTime(6)
-  accountId        String   @db.VarChar(36)
-  account          Account  @relation(fields: [accountId], references: [uuid])
+  id               String       @id @db.VarChar(255)
+  nickname         String       @db.VarChar(255)
+  uniqueId         String       @unique @db.VarChar(255)
+  signature        String       @db.Text
+  bioLink          String?      @db.Text
+  avatarThumb      String       @db.Text
+  followerCount    BigInt       @db.UnsignedBigInt
+  followingCount   BigInt       @db.UnsignedBigInt
+  heartCount       BigInt       @db.UnsignedBigInt
+  videoCount       BigInt       @db.UnsignedBigInt
+  verified         Boolean      @db.TinyInt
+  privateAccount   Boolean      @db.TinyInt
+  secret           Boolean      @db.TinyInt
+  createdTimestamp DateTime     @db.DateTime(0)
+  createdAt        DateTime     @default(now()) @db.DateTime(6)
+  updatedAt        DateTime     @updatedAt @db.DateTime(6)
+  accountId        String       @db.VarChar(36)
+  account          Account      @relation(fields: [accountId], references: [uuid])
+  items            TiktokItem[]
 
   @@index([accountId], name: "FK_a32497fecd2f0b0debdaf2815e0")
+}
+
+model TiktokItem {
+  id               String     @id @db.VarChar(255)
+  desc             String     @db.Text
+  commentCount     BigInt     @db.UnsignedBigInt
+  diggCount        BigInt     @db.UnsignedBigInt
+  playCount        BigInt     @db.UnsignedBigInt
+  shareCount       BigInt     @db.UnsignedBigInt
+  createdTimestamp DateTime   @db.DateTime(0)
+  createdAt        DateTime   @default(now()) @db.DateTime(6)
+  updatedAt        DateTime   @updatedAt @db.DateTime(6)
+  authorId         String     @db.VarChar(255)
+  user             TiktokUser @relation(fields: [authorId], references: [id])
+
+  @@index([authorId], name: "TiktokItem.authorId_index")
 }
