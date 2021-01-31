@@ -53,8 +53,7 @@ export class UtilsService {
     return convertedString;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async asyncFilter<T extends any>(array: T[], asyncCallback: (args: T) => Promise<any>) {
+  async asyncFilter<T>(array: T[], asyncCallback: (args: T) => Promise<boolean>) {
     const bits = await Promise.all(array.map(asyncCallback));
     return array.filter((_, i) => bits[i]);
   }
