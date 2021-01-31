@@ -167,15 +167,11 @@ export class YoutubeService {
     for (const [index, { youtubeChannel, youtubeKeywords }] of channelDataList.entries()) {
       this.logger.log(`${index} ${youtubeChannel.id}`);
       const target = baseDataMapping[youtubeChannel.id];
-      const account = await this.prisma.youtubeChannel.findUnique({ where: { id: youtubeChannel.id } }).account();
-      const accountId = account?.uuid ?? target.accountId;
-      await this.upsertChannel(youtubeChannel, youtubeKeywords, accountId);
+      await this.upsertChannel(youtubeChannel, youtubeKeywords, target.accountId);
     }
   }
 
-  async upsertChannel(youtubeChannel: YoutubeChannelFormatData, youtubeKeywords: string[], accountId?: string) {
-    this.logger.log(`${youtubeChannel.id} ${youtubeChannel.title}`);
-
+  async upsertChannel(youtubeChannel: YoutubeChannelFormatData, youtubeKeywords: string[], _accountId?: string) {
     const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
 
     const keywords: Prisma.YoutubeChannelKeywordRelationCreateManyWithoutChannelsInput = {
@@ -196,6 +192,9 @@ export class YoutubeService {
         },
       })),
     };
+
+    const account = await this.prisma.youtubeChannel.findUnique({ where: { id: youtubeChannel.id } }).account();
+    const accountId = account?.uuid ?? _accountId;
 
     const data: Prisma.YoutubeChannelCreateInput = {
       ...youtubeChannel,
