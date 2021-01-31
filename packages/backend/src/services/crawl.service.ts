@@ -65,6 +65,7 @@ export class CrawlService {
     }
     if (proxyType === "exclusive") {
       const proxy = `${this.configService.get("PROXY_HOST")}:${this.configService.get("PROXY_PORT")}`;
+      this.logger.log(`proxy: ${proxy}`);
       args.push(`--proxy-server=${proxy}`);
     }
 
@@ -85,6 +86,8 @@ export class CrawlService {
       });
     }
     if (proxyType === "exclusive") {
+      this.logger.log(`username: ${this.configService.get("PROXY_USERNAME")}`);
+      this.logger.log(`password: ${this.configService.get("PROXY_PASSWORD")}`);
       await page.authenticate({
         username: this.configService.get("PROXY_USERNAME") ?? "",
         password: this.configService.get("PROXY_PASSWORD") ?? "",

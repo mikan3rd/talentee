@@ -68,7 +68,11 @@ steps:
         INSTAGRAM_USERNAME=${_INSTAGRAM_USERNAME},
         INSTAGRAM_PASSWORD=${_INSTAGRAM_PASSWORD},
         SENTRY_DSN=${_SENTRY_DSN},
-        SENTRY_ENV=${_SENTRY_ENV}'
+        SENTRY_ENV=${_SENTRY_ENV},
+        PROXY_HOST=${_PROXY_HOST},
+        PROXY_PORT=${_PROXY_PORT},
+        PROXY_USERNAME=${_PROXY_USERNAME},
+        PROXY_PASSWORD=${_PROXY_PASSWORD}'
     ]
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -91,7 +95,11 @@ steps:
         INSTAGRAM_USERNAME=${_INSTAGRAM_USERNAME},
         INSTAGRAM_PASSWORD=${_INSTAGRAM_PASSWORD},
         SENTRY_DSN=${_SENTRY_DSN},
-        SENTRY_ENV=${_SENTRY_ENV}'
+        SENTRY_ENV=${_SENTRY_ENV},
+        PROXY_HOST=${_PROXY_HOST},
+        PROXY_PORT=${_PROXY_PORT},
+        PROXY_USERNAME=${_PROXY_USERNAME},
+        PROXY_PASSWORD=${_PROXY_PASSWORD}'
     ]
 
 images:
