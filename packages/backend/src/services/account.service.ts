@@ -39,7 +39,7 @@ export class AccountService {
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
       include: { account: { select: { uuid: true } } },
-      orderBy: { updatedAt: "asc" },
+      orderBy: { updatedAt: "desc" },
       where: {
         account: {
           isNot: {
@@ -77,7 +77,7 @@ export class AccountService {
     const twitterUsers = await this.prisma.twitterUser.findMany({
       take,
       include: { account: { select: { uuid: true } } },
-      orderBy: { updatedAt: "asc" },
+      orderBy: { updatedAt: "desc" },
       where: {
         account: {
           isNot: {
@@ -126,7 +126,7 @@ export class AccountService {
     baseDataList: { serviceName: ServiceNameType; data: { accountId: string; username: string }[] }[],
   ) {
     for (const { serviceName, data } of baseDataList) {
-      const filteredData = data.filter(async ({ accountId, username }) => {
+      const filteredData = await this.utilsService.asyncFilter(data, async ({ accountId, username }) => {
         if (!username) return false;
 
         const account = await this.prisma.account.findUnique({
@@ -135,10 +135,10 @@ export class AccountService {
         });
 
         if (!account) return false;
-        if (serviceName === "youtube" && account?.youtubeChannels.length) return false;
-        if (serviceName === "twitter" && account?.twitterUsers.length) return false;
-        if (serviceName === "instagram" && account?.instagramUsers.length) return false;
-        if (serviceName === "tiktok" && account?.tiktokUsers.length) return false;
+        if (serviceName === "youtube" && account.youtubeChannels.length) return false;
+        if (serviceName === "twitter" && account.twitterUsers.length) return false;
+        if (serviceName === "instagram" && account.instagramUsers.length) return false;
+        if (serviceName === "tiktok" && account.tiktokUsers.length) return false;
 
         if (serviceName === "youtube") {
           const youtubeChannel = await this.prisma.youtubeChannel.findUnique({ where: { id: username } });

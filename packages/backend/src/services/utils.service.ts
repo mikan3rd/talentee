@@ -52,4 +52,9 @@ export class UtilsService {
 
     return convertedString;
   }
+
+  async asyncFilter<T>(array: T[], asyncCallback: (args: T) => Promise<boolean>) {
+    const bits = await Promise.all(array.map(asyncCallback));
+    return array.filter((_, i) => bits[i]);
+  }
 }
