@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 import axios from "axios";
+import dayjs from "dayjs";
 
 import { CrawlService } from "@/services/crawl.service";
 import { PrismaService } from "@/services/prisma.service";
@@ -22,26 +23,21 @@ export class TwitterService {
     return { Authorization: `Bearer ${this.configService.get("TWITTER_BEARER_TOKEN")}` };
   }
 
-  async upsertUserByUsername(_username: string, _accountId?: string) {
-    const response = await this.getUserByUsername(_username);
+  async upsertUsersByUsername(baseDataList: { username: string; accountId?: string }[]) {
+    const baseDataMapping = baseDataList.reduce((prev, { username, accountId }) => {
+      prev[username] = { accountId, username };
+      return prev;
+    }, {} as { [username: string]: { username: string; accountId?: string } });
 
-    if (!response) {
-      this.logger.warn("Twitter user not found");
-      return;
+    let userDataList: UserBaseType[] = [];
+    const usernames = Object.values(baseDataMapping).map(({ username }) => username);
+    for (const chunkUsernames of this.utilsService.chunk(usernames, 100)) {
+      const response = await this.getUsersByUsername(chunkUsernames);
+      userDataList = userDataList.concat(response?.data ?? []);
     }
 
-    const tweetResponse = await this.searchRecentTweets(`from:${_username}`);
-
-    if (!tweetResponse) {
-      return;
-    }
-
-    const tweets = tweetResponse.data
-      .sort((a, b) => (a.public_metrics.retweet_count > b.public_metrics.retweet_count ? -1 : 1))
-      .slice(0, 3);
-
-    const {
-      data: {
+    for (const [index, userData] of userDataList.entries()) {
+      const {
         id: userId,
         name,
         username,
@@ -51,71 +47,83 @@ export class TwitterService {
         protected: _protected,
         created_at,
         public_metrics: { followers_count, following_count, listed_count, tweet_count },
-      },
-    } = response;
+      } = userData;
 
-    const account = await this.prisma.twitterUser.findUnique({ where: { id: userId } }).account();
-    const accountId = account?.uuid ?? _accountId;
+      this.logger.log(`${index} ${username}`);
 
-    const twitteUser: Prisma.TwitterUserCreateInput = {
-      id: userId,
-      name,
-      username,
-      description,
-      profileImageUrl: profile_image_url,
-      followersCount: followers_count,
-      followingCount: following_count,
-      listedCount: listed_count,
-      tweetCount: tweet_count,
-      verified,
-      protected: _protected,
-      createdTimestamp: created_at,
-      account: {
-        connectOrCreate: {
-          where: { uuid: accountId ?? "" },
-          create: {
-            displayName: name,
-            username,
-            thumbnailUrl: profile_image_url,
+      const tweetResponse = await this.searchRecentTweets(`from:${username} -is:retweet -is:reply -is:quote`);
+
+      const tweets =
+        tweetResponse?.data
+          ?.sort((a, b) => (a.public_metrics.retweet_count > b.public_metrics.retweet_count ? -1 : 1))
+          .slice(0, 3) ?? [];
+
+      const target = baseDataMapping[username];
+      const account = await this.prisma.twitterUser.findUnique({ where: { id: userId } }).account();
+      const accountId = account?.uuid ?? target?.accountId;
+
+      const twitteUser: Prisma.TwitterUserCreateInput = {
+        id: userId,
+        name,
+        username,
+        description,
+        profileImageUrl: profile_image_url,
+        followersCount: followers_count,
+        followingCount: following_count,
+        listedCount: listed_count,
+        tweetCount: tweet_count,
+        verified,
+        protected: _protected,
+        createdTimestamp: created_at,
+        account: {
+          connectOrCreate: {
+            where: { uuid: accountId ?? "" },
+            create: {
+              displayName: name,
+              username,
+              thumbnailUrl: profile_image_url,
+            },
           },
         },
-      },
-    };
-
-    const twitterTweets = tweets.map((tweet) => {
-      const {
-        id,
-        text,
-        possibly_sensitive,
-        created_at,
-        public_metrics: { reply_count, like_count, quote_count, retweet_count },
-        author_id,
-      } = tweet;
-      const twitterTweet: Prisma.TwitterTweetCreateInput = {
-        id,
-        text,
-        possiblySensitive: possibly_sensitive,
-        retweetCount: retweet_count,
-        likeCount: like_count,
-        quoteCount: quote_count,
-        replyCount: reply_count,
-        createdTimestamp: new Date(created_at),
-        user: { connect: { id: author_id } },
       };
-      return this.prisma.twitterTweet.upsert({
-        where: { id },
-        create: twitterTweet,
-        update: twitterTweet,
+
+      const twitterTweets = tweets.map((tweet) => {
+        const {
+          id,
+          text,
+          possibly_sensitive,
+          created_at,
+          referenced_tweets,
+          public_metrics: { reply_count, like_count, quote_count, retweet_count },
+          author_id,
+        } = tweet;
+        const twitterTweet: Prisma.TwitterTweetCreateInput = {
+          id,
+          text,
+          possiblySensitive: possibly_sensitive,
+          retweetCount: retweet_count,
+          likeCount: like_count,
+          quoteCount: quote_count,
+          replyCount: reply_count,
+          tweetType: referenced_tweets && referenced_tweets.length ? referenced_tweets[0].type : undefined,
+          createdTimestamp: new Date(created_at),
+          user: { connect: { id: author_id } },
+        };
+        return this.prisma.twitterTweet.upsert({
+          where: { id },
+          create: twitterTweet,
+          update: twitterTweet,
+        });
       });
-    });
 
-    await this.prisma.twitterUser.upsert({
-      where: { id: twitteUser.id },
-      create: twitteUser,
-      update: twitteUser,
-    });
+      await this.prisma.twitterUser.upsert({
+        where: { id: twitteUser.id },
+        create: twitteUser,
+        update: twitteUser,
+      });
 
-    await this.prisma.$transaction(twitterTweets);
+      await this.prisma.$transaction(twitterTweets);
+    }
   }
 
   async getUserByUsername(username: string) {
@@ -132,6 +140,19 @@ export class TwitterService {
     const url = `${version2Endpoint}/users/${id}`;
     const params = { "user.fields": userFields.join(",") };
     const { data } = await axios.get<UserResponseType | TwitterApiErrorType>(url, { params, headers: this.headers });
+    if (this.hasError(data)) {
+      return this.handleError(data);
+    }
+    return data;
+  }
+
+  async getUsersByUsername(usernames: string[]) {
+    const url = `${version2Endpoint}/users/by`;
+    const params = {
+      usernames: usernames.join(","),
+      "user.fields": userFields.join(","),
+    };
+    const { data } = await axios.get<UsersResponseType | TwitterApiErrorType>(url, { params, headers: this.headers });
     if (this.hasError(data)) {
       return this.handleError(data);
     }
@@ -173,6 +194,24 @@ export class TwitterService {
       return this.handleError(data);
     }
     return data;
+  }
+
+  async bulkUpsert(take: number) {
+    const beforeDate = dayjs().subtract(1, "day");
+    const users = await this.prisma.twitterUser.findMany({
+      take,
+      orderBy: { updatedAt: "asc" },
+      include: { account: { select: { uuid: true } } },
+      where: { updatedAt: { lte: beforeDate.toDate() } },
+    });
+
+    this.logger.log(`users: ${users.length}`);
+    if (!users.length) {
+      return;
+    }
+
+    const baseDataList = users.map(({ account, username }) => ({ username, accountId: account.uuid }));
+    await this.upsertUsersByUsername(baseDataList);
   }
 
   private hasError(responseData: Record<string, unknown>): responseData is TwitterApiErrorType {
@@ -336,10 +375,12 @@ type TweetBaseType = {
     media_keys: string[];
   };
   created_at: string;
+  referenced_tweets?: { id: string; type: string }[];
 };
 
 type UserResponseType = { data: UserBaseType };
-type TweetsResponseType = { data: TweetBaseType[] };
+type UsersResponseType = { data: UserBaseType[] };
+type TweetsResponseType = { data?: TweetBaseType[] };
 
 type TwitterApiErrorType = {
   errors: {

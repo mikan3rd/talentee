@@ -158,6 +158,7 @@ model TwitterTweet {
   likeCount         BigInt      @db.UnsignedBigInt
   quoteCount        BigInt      @db.UnsignedBigInt
   possiblySensitive Boolean     @db.TinyInt
+  tweetType         String?     @db.VarChar(255)
   createdTimestamp  DateTime    @db.DateTime(0)
   createdAt         DateTime    @default(now()) @db.DateTime(6)
   updatedAt         DateTime    @updatedAt @db.DateTime(6)

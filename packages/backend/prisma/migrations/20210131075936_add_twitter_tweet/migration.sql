@@ -7,6 +7,7 @@ CREATE TABLE `TwitterTweet` (
     `likeCount` BIGINT UNSIGNED NOT NULL,
     `quoteCount` BIGINT UNSIGNED NOT NULL,
     `possiblySensitive` TINYINT NOT NULL,
+    `tweetType` VARCHAR(255),
     `createdTimestamp` DATETIME(0) NOT NULL,
     `createdAt` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `updatedAt` DATETIME(6) NOT NULL,
