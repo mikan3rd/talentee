@@ -201,7 +201,8 @@ export class CrawlService {
 
     const profileDataList = [];
 
-    for (const username of usernames) {
+    for (const [index, username] of usernames.entries()) {
+      this.logger.log(`${index}  ${username}`);
       try {
         const targetUrl = `https://www.instagram.com/${username}/`;
         await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
@@ -253,7 +254,7 @@ export class CrawlService {
         const { ProfilePage } = sharedData.entry_data;
 
         if (!ProfilePage) {
-          this.logger.log("Failed: crawlInstagramProfile");
+          this.logger.log(`Failed: crawlInstagramProfile ${username}`);
           continue;
         }
 

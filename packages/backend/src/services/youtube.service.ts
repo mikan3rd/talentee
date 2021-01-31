@@ -98,17 +98,6 @@ export class YoutubeService {
     await this.prisma.$transaction(values);
   }
 
-  async bulkUpdateChannelVideo(take: number) {
-    const channels = await this.prisma.youtubeChannel.findMany({
-      take,
-      orderBy: { updatedAt: "asc" },
-    });
-    for (const [index, channel] of channels.entries()) {
-      this.logger.log(`${index} ${channel.id}`);
-      await this.saveChannelPopularVideo(channel.id);
-    }
-  }
-
   async saveTrendChannel() {
     const videoIds = (await this.crawlService.getTrendVideoIds()) ?? [];
 
@@ -133,8 +122,18 @@ export class YoutubeService {
     }
 
     const uniqueChannelIds = Array.from(new Set(channelIds));
-    this.logger.log(`channelIds.length: ${uniqueChannelIds.length}`);
-    const baseDataList = channelIds.map((channelId) => ({ channelId }));
+    const existChannelIds = (
+      await this.prisma.youtubeChannel.findMany({
+        where: { id: { in: Array.from(uniqueChannelIds) } },
+        select: { id: true },
+      })
+    ).map(({ id }) => id);
+    const filteredChannelIds = uniqueChannelIds.filter((channelId) => !existChannelIds.includes(channelId));
+    this.logger.log(
+      `uniqueChannelIds: ${uniqueChannelIds.length}, existChannelIds: ${existChannelIds.length}, filteredChannelIds: ${filteredChannelIds.length}`,
+    );
+
+    const baseDataList = filteredChannelIds.map((channelId) => ({ channelId }));
     await this.bulkUpsertChannelByChannelId(baseDataList);
   }
 
@@ -162,12 +161,13 @@ export class YoutubeService {
       );
     }
 
-    this.logger.log(`channelDataList.length: ${channelDataList.length}`);
+    this.logger.log(`channelDataList: ${channelDataList.length}`);
 
     for (const [index, { youtubeChannel, youtubeKeywords }] of channelDataList.entries()) {
       this.logger.log(`${index} ${youtubeChannel.id}`);
       const target = baseDataMapping[youtubeChannel.id];
       await this.upsertChannel(youtubeChannel, youtubeKeywords, target.accountId);
+      await this.saveChannelPopularVideo(youtubeChannel.id);
     }
   }
 
