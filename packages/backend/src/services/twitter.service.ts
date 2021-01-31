@@ -123,6 +123,13 @@ export class TwitterService {
       });
 
       await this.prisma.$transaction(twitterTweets);
+
+      if (accountId) {
+        await this.prisma.account.update({
+          where: { uuid: accountId },
+          data: { uuid: accountId },
+        });
+      }
     }
   }
 

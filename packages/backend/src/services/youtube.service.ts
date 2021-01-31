@@ -216,6 +216,13 @@ export class YoutubeService {
       create: data,
       update: data,
     });
+
+    if (accountId) {
+      await this.prisma.account.update({
+        where: { uuid: accountId },
+        data: { uuid: accountId },
+      });
+    }
   }
 
   async saveChannelPopularVideo(channelId: string) {
