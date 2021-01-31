@@ -106,19 +106,31 @@ export class TiktokService {
     });
 
     await this.prisma.$transaction(tiktokItems);
+
+    if (accountId) {
+      await this.prisma.account.update({
+        where: { uuid: accountId },
+        data: { uuid: accountId },
+      });
+    }
+  }
+
+  async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId: string }[]) {
+    for (const [index, { uniqueId, accountId }] of baseDataList.entries()) {
+      this.logger.log(`${index} ${uniqueId}`);
+      await this.upsertUser(uniqueId, accountId);
+    }
   }
 
   async bulkUpdate(take: number) {
     const beforeDate = dayjs().subtract(1, "day");
-    const channels = await this.prisma.tiktokUser.findMany({
+    const tiktokUsers = await this.prisma.tiktokUser.findMany({
       take,
       orderBy: { updatedAt: "asc" },
       include: { account: { select: { uuid: true } } },
       where: { updatedAt: { lte: beforeDate.toDate() } },
     });
-    for (const [index, user] of channels.entries()) {
-      this.logger.log(`${index} ${user.uniqueId}`);
-      await this.upsertUser(user.uniqueId, user.account.uuid);
-    }
+    const baseDataList = tiktokUsers.map((user) => ({ uniqueId: user.uniqueId, accountId: user.account.uuid }));
+    await this.bulkUpdateByUniqueId(baseDataList);
   }
 }

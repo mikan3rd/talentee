@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import dayjs from "dayjs";
 
 import { CrawlService } from "@/services/crawl.service";
 import { InstagramService } from "@/services/instagram.service";
@@ -29,6 +30,7 @@ export class AccountService {
         youtubeChannels: true,
         twitterUsers: true,
         instagramUsers: true,
+        tiktokUsers: true,
       },
     });
   }
@@ -173,7 +175,52 @@ export class AccountService {
     }
   }
 
-  groupByServiceName(services: ServiceType[]) {
+  async bulkUpdate(take: number) {
+    const beforeDate = dayjs().subtract(1, "day");
+    const accounts = await this.prisma.account.findMany({
+      take,
+      orderBy: { updatedAt: "asc" },
+      include: {
+        youtubeChannels: { select: { id: true } },
+        twitterUsers: { select: { username: true } },
+        instagramUsers: { select: { username: true } },
+        tiktokUsers: { select: { uniqueId: true } },
+      },
+      where: { updatedAt: { lte: beforeDate.toDate() } },
+    });
+
+    const youtubeBaseDataList = [];
+    const twitterBaseDataList = [];
+    const instagramBaseDataList = [];
+    const tiktokBaseDataList = [];
+
+    for (const account of accounts) {
+      const { uuid, youtubeChannels, twitterUsers, instagramUsers, tiktokUsers } = account;
+      for (const youtubeChannel of youtubeChannels) {
+        youtubeBaseDataList.push({ channelId: youtubeChannel.id, accountId: uuid });
+      }
+      for (const twitterUser of twitterUsers) {
+        twitterBaseDataList.push({ username: twitterUser.username, accountId: uuid });
+      }
+      for (const instagramUser of instagramUsers) {
+        instagramBaseDataList.push({ username: instagramUser.username, accountId: uuid });
+      }
+      for (const tiktokUser of tiktokUsers) {
+        tiktokBaseDataList.push({ uniqueId: tiktokUser.uniqueId, accountId: uuid });
+      }
+    }
+
+    this.logger.log(
+      `account: ${accounts.length}, youtube: ${youtubeBaseDataList.length}, twitter: ${twitterBaseDataList.length}, instagram: ${instagramBaseDataList.length}, tiktok: ${tiktokBaseDataList.length}`,
+    );
+
+    await this.youtubeService.bulkUpsertChannelByChannelId(youtubeBaseDataList, false);
+    await this.twitterService.upsertUsersByUsername(twitterBaseDataList);
+    await this.instagramService.upsertUsers(instagramBaseDataList);
+    await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList);
+  }
+
+  private groupByServiceName(services: ServiceType[]) {
     return this.utilsService
       .groupByObject(services, (service) => service.serviceName)
       .map(([serviceName, items]) => {
@@ -181,7 +228,7 @@ export class AccountService {
       });
   }
 
-  judgeServiceAccount(url: string) {
+  private judgeServiceAccount(url: string) {
     let pathname = "";
     try {
       pathname = new URL(url).pathname;

@@ -136,6 +136,13 @@ export class InstagramService {
       });
 
       await this.prisma.$transaction(instagramMedias);
+
+      if (accountId) {
+        await this.prisma.account.update({
+          where: { uuid: accountId },
+          data: { uuid: accountId },
+        });
+      }
     }
   }
 
