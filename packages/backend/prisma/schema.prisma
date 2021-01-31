@@ -151,17 +151,17 @@ model TwitterUser {
 }
 
 model TwitterTweet {
-  id               String     @id @db.VarChar(255)
-  text             String     @db.Text
-  retweetCount     BigInt     @db.UnsignedBigInt
+  id               String      @id @db.VarChar(255)
+  text             String      @db.Text
+  retweetCount     BigInt      @db.UnsignedBigInt
   replyCount        BigInt     @db.UnsignedBigInt
-  likeCount        BigInt     @db.UnsignedBigInt
-  quoteCount       BigInt     @db.UnsignedBigInt
-  possiblySensitive Boolean   @db.TinyInt
-  createdTimestamp DateTime   @db.DateTime(0)
-  createdAt        DateTime   @default(now()) @db.DateTime(6)
-  updatedAt        DateTime   @updatedAt @db.DateTime(6)
-  authorId         String     @db.VarChar(255)
+  likeCount        BigInt      @db.UnsignedBigInt
+  quoteCount       BigInt      @db.UnsignedBigInt
+  possiblySensitive Boolean    @db.TinyInt
+  createdTimestamp DateTime    @db.DateTime(0)
+  createdAt        DateTime    @default(now()) @db.DateTime(6)
+  updatedAt        DateTime    @updatedAt @db.DateTime(6)
+  authorId         String      @db.VarChar(255)
   user             TwitterUser @relation(fields: [authorId], references: [id])
 
   @@index([authorId])
@@ -182,31 +182,31 @@ model InstagramUser {
   updatedAt     DateTime @updatedAt @db.DateTime(6)
   accountId     String   @db.VarChar(36)
   account       Account  @relation(fields: [accountId], references: [uuid])
-  mediaList        InstagramMedia[]
+  mediaList     InstagramMedia[]
 
   @@index([accountId], name: "FK_f8dba2deb7e6e7a71494e1db65a")
 }
 
 
 model InstagramMedia {
-  id            String   @id @db.VarChar(255)
-  shortcode     String   @unique @db.VarChar(255)
-  thumbnailSrc  String   @db.Text
-  mediaToCaption  String   @db.Text
-  displayUrl String   @db.Text
-  isVideo   Boolean   @db.TinyInt
-  likedBy  BigInt   @db.UnsignedBigInt
-  mediaPreviewLike BigInt   @db.UnsignedBigInt
-  mediaToComment BigInt   @db.UnsignedBigInt
-  videoViewCount BigInt?   @db.UnsignedBigInt
-  productType String?                         @db.VarChar(255)
-  takenAtTimestamp  DateTime   @db.DateTime(0)
-  createdAt     DateTime @default(now()) @db.DateTime(6)
-  updatedAt     DateTime @updatedAt @db.DateTime(6)
-  ownerId         String     @db.VarChar(255)
-  locationId         String?     @db.VarChar(255)
-  user             InstagramUser @relation(fields: [ownerId], references: [id])
-  location             InstagramLocation?  @relation(fields: [locationId], references: [id])
+  id                String              @id @db.VarChar(255)
+  shortcode         String              @unique @db.VarChar(255)
+  thumbnailSrc      String              @db.Text
+  mediaToCaption    String              @db.Text
+  displayUrl        String              @db.Text
+  isVideo           Boolean             @db.TinyInt
+  likedBy           BigInt              @db.UnsignedBigInt
+  mediaPreviewLike  BigInt              @db.UnsignedBigInt
+  mediaToComment    BigInt              @db.UnsignedBigInt
+  videoViewCount    BigInt?             @db.UnsignedBigInt
+  productType       String?             @db.VarChar(255)
+  takenAtTimestamp  DateTime            @db.DateTime(0)
+  createdAt         DateTime            @default(now()) @db.DateTime(6)
+  updatedAt         DateTime            @updatedAt @db.DateTime(6)
+  ownerId           String              @db.VarChar(255)
+  locationId        String?             @db.VarChar(255)
+  user              InstagramUser       @relation(fields: [ownerId], references: [id])
+  location          InstagramLocation?  @relation(fields: [locationId], references: [id])
 
   @@index([ownerId])
   @@index([locationId])
@@ -214,9 +214,9 @@ model InstagramMedia {
 
 model InstagramLocation {
   id            String   @id @db.VarChar(255)
-  name     String   @db.VarChar(255)
-  slug String   @db.VarChar(255)
-  hasPublicPage Boolean      @db.TinyInt
+  name          String   @db.VarChar(255)
+  slug          String   @db.VarChar(255)
+  hasPublicPage Boolean  @db.TinyInt
   createdAt     DateTime @default(now()) @db.DateTime(6)
   updatedAt     DateTime @updatedAt @db.DateTime(6)
 }
