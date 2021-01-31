@@ -15,10 +15,10 @@ model Account {
   thumbnailUrl    String           @db.Text
   createdAt       DateTime         @default(now()) @db.DateTime(6)
   updatedAt       DateTime         @updatedAt @db.DateTime(6)
-  youtubeChannels YoutubeChannel[]
   instagramUsers  InstagramUser[]
   tiktokUsers     TiktokUser[]
   twitterUsers    TwitterUser[]
+  youtubeChannels YoutubeChannel[]
 }
 
 model YoutubeChannelKeywordRelation {
@@ -129,78 +129,97 @@ model YoutubeChannelVideoCategory {
 }
 
 model TwitterUser {
-  id               String   @id @db.VarChar(255)
-  name             String   @db.VarChar(255)
-  username         String   @unique @db.VarChar(255)
-  description      String   @db.Text
-  profileImageUrl  String   @db.Text
-  followersCount   BigInt   @db.UnsignedBigInt
-  followingCount   BigInt   @db.UnsignedBigInt
-  listedCount      BigInt   @db.UnsignedBigInt
-  tweetCount       BigInt   @db.UnsignedBigInt
-  verified         Boolean  @db.TinyInt
-  protected        Boolean  @db.TinyInt
-  createdTimestamp DateTime @db.DateTime(0)
-  createdAt        DateTime @default(now()) @db.DateTime(6)
-  updatedAt        DateTime @updatedAt @db.DateTime(6)
-  accountId        String   @db.VarChar(36)
-  account          Account  @relation(fields: [accountId], references: [uuid])
+  id               String         @id @db.VarChar(255)
+  name             String         @db.VarChar(255)
+  username         String         @unique @db.VarChar(255)
+  description      String         @db.Text
+  profileImageUrl  String         @db.Text
+  followersCount   BigInt         @db.UnsignedBigInt
+  followingCount   BigInt         @db.UnsignedBigInt
+  listedCount      BigInt         @db.UnsignedBigInt
+  tweetCount       BigInt         @db.UnsignedBigInt
+  verified         Boolean        @db.TinyInt
+  protected        Boolean        @db.TinyInt
+  createdTimestamp DateTime       @db.DateTime(0)
+  createdAt        DateTime       @default(now()) @db.DateTime(6)
+  updatedAt        DateTime       @updatedAt @db.DateTime(6)
+  accountId        String         @db.VarChar(36)
+  account          Account        @relation(fields: [accountId], references: [uuid])
+  tweets           TwitterTweet[]
 
   @@index([accountId], name: "FK_bcebed04f6d4c61231f878f54ee")
 }
 
+model TwitterTweet {
+  id                String      @id @db.VarChar(255)
+  text              String      @db.Text
+  retweetCount      BigInt      @db.UnsignedBigInt
+  replyCount        BigInt      @db.UnsignedBigInt
+  likeCount         BigInt      @db.UnsignedBigInt
+  quoteCount        BigInt      @db.UnsignedBigInt
+  possiblySensitive Boolean     @db.TinyInt
+  tweetType         String?     @db.VarChar(255)
+  createdTimestamp  DateTime    @db.DateTime(0)
+  createdAt         DateTime    @default(now()) @db.DateTime(6)
+  updatedAt         DateTime    @updatedAt @db.DateTime(6)
+  authorId          String      @db.VarChar(255)
+  user              TwitterUser @relation(fields: [authorId], references: [id])
+
+  @@index([authorId], name: "TwitterTweet.authorId_index")
+}
+
 model InstagramUser {
-  id            String   @id @db.VarChar(255)
-  fullName      String   @db.VarChar(255)
-  username      String   @unique @db.VarChar(255)
-  biography     String   @db.Text
-  externalUrl   String?  @db.Text
-  profilePicUrl String   @db.Text
-  followedBy    BigInt   @db.UnsignedBigInt
-  follow        BigInt   @db.UnsignedBigInt
-  isVerified    Boolean  @db.TinyInt
-  isPrivate     Boolean  @db.TinyInt
-  createdAt     DateTime @default(now()) @db.DateTime(6)
-  updatedAt     DateTime @updatedAt @db.DateTime(6)
-  accountId     String   @db.VarChar(36)
-  account       Account  @relation(fields: [accountId], references: [uuid])
-  mediaList        InstagramMedia[]
+  id            String           @id @db.VarChar(255)
+  fullName      String           @db.VarChar(255)
+  username      String           @unique @db.VarChar(255)
+  biography     String           @db.Text
+  externalUrl   String?          @db.Text
+  profilePicUrl String           @db.Text
+  followedBy    BigInt           @db.UnsignedBigInt
+  follow        BigInt           @db.UnsignedBigInt
+  isVerified    Boolean          @db.TinyInt
+  isPrivate     Boolean          @db.TinyInt
+  createdAt     DateTime         @default(now()) @db.DateTime(6)
+  updatedAt     DateTime         @updatedAt @db.DateTime(6)
+  accountId     String           @db.VarChar(36)
+  account       Account          @relation(fields: [accountId], references: [uuid])
+  mediaList     InstagramMedia[]
 
   @@index([accountId], name: "FK_f8dba2deb7e6e7a71494e1db65a")
 }
 
-
 model InstagramMedia {
-  id            String   @id @db.VarChar(255)
-  shortcode     String   @unique @db.VarChar(255)
-  thumbnailSrc  String   @db.Text
-  mediaToCaption  String   @db.Text
-  displayUrl String   @db.Text
-  isVideo   Boolean   @db.TinyInt
-  likedBy  BigInt   @db.UnsignedBigInt
-  mediaPreviewLike BigInt   @db.UnsignedBigInt
-  mediaToComment BigInt   @db.UnsignedBigInt
-  videoViewCount BigInt?   @db.UnsignedBigInt
-  productType String?                         @db.VarChar(255)
-  takenAtTimestamp  DateTime   @db.DateTime(0)
-  createdAt     DateTime @default(now()) @db.DateTime(6)
-  updatedAt     DateTime @updatedAt @db.DateTime(6)
-  ownerId         String     @db.VarChar(255)
-  locationId         String?     @db.VarChar(255)
-  user             InstagramUser @relation(fields: [ownerId], references: [id])
-  location             InstagramLocation?  @relation(fields: [locationId], references: [id])
+  id               String             @id @db.VarChar(255)
+  shortcode        String             @unique @db.VarChar(255)
+  thumbnailSrc     String             @db.Text
+  mediaToCaption   String             @db.Text
+  displayUrl       String             @db.Text
+  isVideo          Boolean            @db.TinyInt
+  likedBy          BigInt             @db.UnsignedBigInt
+  mediaPreviewLike BigInt             @db.UnsignedBigInt
+  mediaToComment   BigInt             @db.UnsignedBigInt
+  videoViewCount   BigInt?            @db.UnsignedBigInt
+  productType      String?            @db.VarChar(255)
+  takenAtTimestamp DateTime           @db.DateTime(0)
+  createdAt        DateTime           @default(now()) @db.DateTime(6)
+  updatedAt        DateTime           @updatedAt @db.DateTime(6)
+  ownerId          String             @db.VarChar(255)
+  locationId       String?            @db.VarChar(255)
+  location         InstagramLocation? @relation(fields: [locationId], references: [id])
+  user             InstagramUser      @relation(fields: [ownerId], references: [id])
 
-  @@index([ownerId])
-  @@index([locationId])
+  @@index([locationId], name: "InstagramMedia.locationId_index")
+  @@index([ownerId], name: "InstagramMedia.ownerId_index")
 }
 
 model InstagramLocation {
-  id            String   @id @db.VarChar(255)
-  name     String   @db.VarChar(255)
-  slug String   @db.VarChar(255)
-  hasPublicPage Boolean      @db.TinyInt
-  createdAt     DateTime @default(now()) @db.DateTime(6)
-  updatedAt     DateTime @updatedAt @db.DateTime(6)
+  id            String           @id @db.VarChar(255)
+  name          String           @db.VarChar(255)
+  slug          String           @db.VarChar(255)
+  hasPublicPage Boolean          @db.TinyInt
+  createdAt     DateTime         @default(now()) @db.DateTime(6)
+  updatedAt     DateTime         @updatedAt @db.DateTime(6)
+  mediaList     InstagramMedia[]
 }
 
 model TiktokUser {

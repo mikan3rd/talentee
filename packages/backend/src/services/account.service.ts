@@ -142,7 +142,7 @@ export class AccountService {
           continue;
         }
 
-        await this.twitterService.upsertUserByUsername(username, accountId);
+        await this.twitterService.upsertUsersByUsername([{ username, accountId }]);
       }
 
       if (serviceName === "instagram") {
