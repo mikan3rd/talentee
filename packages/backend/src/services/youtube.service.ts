@@ -122,8 +122,18 @@ export class YoutubeService {
     }
 
     const uniqueChannelIds = Array.from(new Set(channelIds));
-    this.logger.log(`channelIds.length: ${uniqueChannelIds.length}`);
-    const baseDataList = channelIds.map((channelId) => ({ channelId }));
+    const existChannelIds = (
+      await this.prisma.youtubeChannel.findMany({
+        where: { id: { in: Array.from(uniqueChannelIds) } },
+        select: { id: true },
+      })
+    ).map(({ id }) => id);
+    const filteredChannelIds = uniqueChannelIds.filter((channelId) => !existChannelIds.includes(channelId));
+    this.logger.log(
+      `uniqueChannelIds: ${uniqueChannelIds.length}, existChannelIds: ${existChannelIds.length}, filteredChannelIds: ${filteredChannelIds.length}`,
+    );
+
+    const baseDataList = filteredChannelIds.map((channelId) => ({ channelId }));
     await this.bulkUpsertChannelByChannelId(baseDataList);
   }
 

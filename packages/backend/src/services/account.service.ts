@@ -52,14 +52,25 @@ export class AccountService {
         },
       },
     });
+
+    let serviceUsernames: ServiceNameDataList = [];
     for (const [index, channel] of youtubeChannels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
       const linkUrls = (await this.crawlService.getServiceLinkByYoutube(channel.id)) ?? [];
       const services = linkUrls
         .map((url) => this.judgeServiceAccount(url))
         .filter((service) => service.serviceName !== "youtube");
-      await this.addServiceByLinkUrls(channel.account.uuid, services);
+
+      const currentServiceUsernames = this.groupByServiceName(services).map(({ serviceName, items }) => ({
+        serviceName,
+        username: items[0].username,
+        accountId: channel.account.uuid,
+      }));
+      serviceUsernames = serviceUsernames.concat(currentServiceUsernames);
     }
+
+    const baseDataList = this.groupByBulkServiceName(serviceUsernames);
+    await this.addServiceByLinkUrls(baseDataList);
   }
 
   async addServiceByTwitter(take: number) {
@@ -79,6 +90,8 @@ export class AccountService {
         },
       },
     });
+
+    let serviceUsernames: ServiceNameDataList = [];
     for (const [index, user] of twitterUsers.entries()) {
       this.logger.log(`${index} ${user.id}`);
       const response = await this.twitterService.getUserById(user.id);
@@ -96,81 +109,74 @@ export class AccountService {
       const services = uniqueUrls
         .map((url) => this.judgeServiceAccount(url))
         .filter((service) => service.serviceName !== "twitter");
-      await this.addServiceByLinkUrls(user.account.uuid, services);
+
+      const currentServiceUsernames = this.groupByServiceName(services).map(({ serviceName, items }) => ({
+        serviceName,
+        username: items[0].username,
+        accountId: user.account.uuid,
+      }));
+      serviceUsernames = serviceUsernames.concat(currentServiceUsernames);
     }
+
+    const baseDataList = this.groupByBulkServiceName(serviceUsernames);
+    await this.addServiceByLinkUrls(baseDataList);
   }
 
-  async addServiceByLinkUrls(accountId: string, services: ServiceType[]) {
-    const serviceAccounts = this.groupByServiceName(services);
-    for (const serviceAccount of serviceAccounts) {
-      const { serviceName, items } = serviceAccount;
-      const firstItem = items[0];
-      const { username } = firstItem;
-      this.logger.log(`${serviceName}: ${username} ${firstItem.url}`);
+  async addServiceByLinkUrls(
+    baseDataList: { serviceName: ServiceNameType; data: { accountId: string; username: string }[] }[],
+  ) {
+    for (const { serviceName, data } of baseDataList) {
+      const filteredData = data.filter(async ({ accountId, username }) => {
+        if (!username) return false;
 
-      if (!username) {
-        continue;
-      }
+        const account = await this.prisma.account.findUnique({
+          where: { uuid: accountId },
+          include: { youtubeChannels: true, twitterUsers: true, instagramUsers: true, tiktokUsers: true },
+        });
 
-      const account = await this.prisma.account.findUnique({
-        where: { uuid: accountId },
-        include: { youtubeChannels: true, twitterUsers: true, instagramUsers: true, tiktokUsers: true },
+        if (!account) return false;
+        if (serviceName === "youtube" && account?.youtubeChannels.length) return false;
+        if (serviceName === "twitter" && account?.twitterUsers.length) return false;
+        if (serviceName === "instagram" && account?.instagramUsers.length) return false;
+        if (serviceName === "tiktok" && account?.tiktokUsers.length) return false;
+
+        if (serviceName === "youtube") {
+          const youtubeChannel = await this.prisma.youtubeChannel.findUnique({ where: { id: username } });
+          if (youtubeChannel) return false;
+        }
+        if (serviceName === "twitter") {
+          const twitterUser = await this.prisma.twitterUser.findUnique({ where: { username } });
+          if (twitterUser) return false;
+        }
+        if (serviceName === "instagram") {
+          const instagramUser = await this.prisma.instagramUser.findUnique({ where: { username } });
+          if (instagramUser) return false;
+        }
+        if (serviceName === "tiktok") {
+          const tiktokUser = await this.prisma.tiktokUser.findUnique({ where: { uniqueId: username } });
+          if (tiktokUser) return false;
+        }
+
+        return true;
       });
 
-      if (!account) {
-        continue;
-      }
+      this.logger.log(`serviceName: ${serviceName}, data: ${data.length}, filteredData: ${filteredData.length}`);
 
       if (serviceName === "youtube") {
-        if (account.youtubeChannels.length > 0) {
-          continue;
-        }
-
-        const youtubeChannel = await this.prisma.youtubeChannel.findUnique({ where: { id: username } });
-        if (youtubeChannel) {
-          continue;
-        }
-
-        await this.youtubeService.bulkUpsertChannelByChannelId([{ channelId: username, accountId }], false);
+        const baseData = filteredData.map(({ accountId, username }) => ({ accountId, channelId: username }));
+        await this.youtubeService.bulkUpsertChannelByChannelId(baseData, false);
       }
-
       if (serviceName === "twitter") {
-        if (account.twitterUsers.length > 0) {
-          continue;
-        }
-
-        const twitterUser = await this.prisma.twitterUser.findUnique({ where: { username } });
-        if (twitterUser) {
-          continue;
-        }
-
-        await this.twitterService.upsertUsersByUsername([{ username, accountId }]);
+        const baseData = filteredData.map(({ accountId, username }) => ({ accountId, username }));
+        await this.twitterService.upsertUsersByUsername(baseData);
       }
-
       if (serviceName === "instagram") {
-        if (account.instagramUsers.length > 0) {
-          continue;
-        }
-
-        const instagramUser = await this.prisma.instagramUser.findUnique({ where: { username } });
-        if (instagramUser) {
-          continue;
-        }
-
-        await this.instagramService.upsertUsers([{ username, accountId }]);
+        const baseData = filteredData.map(({ accountId, username }) => ({ accountId, username }));
+        await this.instagramService.upsertUsers(baseData);
       }
-
       if (serviceName === "tiktok") {
-        if (account.tiktokUsers.length > 0) {
-          continue;
-        }
-
-        const tiktokUser = await this.prisma.tiktokUser.findUnique({ where: { uniqueId: username } });
-        if (tiktokUser) {
-          continue;
-        }
-
-        await this.tiktokService.upsertUser(username, accountId);
+        const baseData = filteredData.map(({ accountId, username }) => ({ accountId, uniqueId: username }));
+        await this.tiktokService.bulkUpdateByUniqueId(baseData);
       }
     }
   }
@@ -218,6 +224,25 @@ export class AccountService {
     await this.twitterService.upsertUsersByUsername(twitterBaseDataList);
     await this.instagramService.upsertUsers(instagramBaseDataList);
     await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList);
+  }
+
+  private groupByBulkServiceName(serviceUsernames: ServiceNameDataList) {
+    const groupByServiceData = serviceUsernames.reduce((prev, { serviceName, username, accountId }) => {
+      if (!prev[serviceName]) {
+        prev[serviceName] = { serviceName, data: {} };
+      }
+      if (!prev[serviceName].data[username]) {
+        prev[serviceName].data[username] = { username, accountId };
+      }
+      return prev;
+    }, {} as { [key in ServiceNameType]: GroupByValue });
+
+    return Object.values(groupByServiceData).map(({ serviceName, data }) => {
+      return {
+        serviceName,
+        data: Object.values(data),
+      };
+    });
   }
 
   private groupByServiceName(services: ServiceType[]) {
@@ -285,4 +310,11 @@ type ServiceType = {
   serviceName: ServiceNameType;
   username: string;
   url: string;
+};
+
+type ServiceNameDataList = { serviceName: ServiceNameType; username: string; accountId: string }[];
+
+type GroupByValue = {
+  serviceName: ServiceNameType;
+  data: { [username: string]: { username: string; accountId: string } };
 };
