@@ -91,19 +91,16 @@ export class AccountService {
       },
     });
 
+    const baseDataMapping = twitterUsers.reduce((prev, { username, accountId }) => {
+      prev[username] = { accountId, username };
+      return prev;
+    }, {} as { [username: string]: { username: string; accountId: string } });
+    const usernames = twitterUsers.map((user) => user.username);
+    const response = await this.twitterService.getUsersByUsername(usernames);
+
     let serviceUsernames: ServiceNameDataList = [];
-    for (const [index, user] of twitterUsers.entries()) {
-      this.logger.log(`${index} ${user.id}`);
-      const response = await this.twitterService.getUserById(user.id);
-      if (!response) {
-        return;
-      }
-
-      const {
-        data: { entities },
-      } = response;
-
-      const linkUrls = entities?.url?.urls.map((url) => url.expanded_url) ?? [];
+    for (const [, user] of (response?.data ?? []).entries()) {
+      const linkUrls = user.entities?.url?.urls.map((url) => url.expanded_url) ?? [];
       const uniqueUrls = Array.from(new Set(linkUrls));
 
       const services = uniqueUrls
@@ -113,7 +110,7 @@ export class AccountService {
       const currentServiceUsernames = this.groupByServiceName(services).map(({ serviceName, items }) => ({
         serviceName,
         username: items[0].username,
-        accountId: user.account.uuid,
+        accountId: baseDataMapping[user.username].accountId,
       }));
       serviceUsernames = serviceUsernames.concat(currentServiceUsernames);
     }

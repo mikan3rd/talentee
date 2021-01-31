@@ -62,7 +62,7 @@ export class TaskService {
     this.logger.debug("END: bulkAddServiceByYoutube");
   }
 
-  @Cron("0 10 1,9,17 * * *")
+  @Cron("0 30 1,9,17 * * *")
   async bulkAddServiceByTwitter() {
     this.logger.debug("START: bulkAddServiceByTwitter");
     await this.accountService.addServiceByTwitter(100);
