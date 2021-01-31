@@ -541,3 +541,11 @@ type ytInitialDataType = {
     };
   };
 };
+
+type SearchResponseType = {
+  globalObjects: {
+    tweets: {
+      [tweetId: string]: { id_str: string };
+    };
+  };
+};

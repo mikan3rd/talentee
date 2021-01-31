@@ -145,8 +145,26 @@ model TwitterUser {
   updatedAt        DateTime @updatedAt @db.DateTime(6)
   accountId        String   @db.VarChar(36)
   account          Account  @relation(fields: [accountId], references: [uuid])
+  tweets           TwitterTweet[]
 
   @@index([accountId], name: "FK_bcebed04f6d4c61231f878f54ee")
+}
+
+model TwitterTweet {
+  id               String     @id @db.VarChar(255)
+  text             String     @db.Text
+  retweetCount     BigInt     @db.UnsignedBigInt
+  replyCount        BigInt     @db.UnsignedBigInt
+  likeCount        BigInt     @db.UnsignedBigInt
+  quoteCount       BigInt     @db.UnsignedBigInt
+  possiblySensitive Boolean   @db.TinyInt
+  createdTimestamp DateTime   @db.DateTime(0)
+  createdAt        DateTime   @default(now()) @db.DateTime(6)
+  updatedAt        DateTime   @updatedAt @db.DateTime(6)
+  authorId         String     @db.VarChar(255)
+  user             TwitterUser @relation(fields: [authorId], references: [id])
+
+  @@index([authorId])
 }
 
 model InstagramUser {

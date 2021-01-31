@@ -30,6 +30,16 @@ export class TwitterService {
       return;
     }
 
+    const tweetResponse = await this.searchRecentTweets(`from:${_username}`);
+
+    if (!tweetResponse) {
+      return;
+    }
+
+    const tweets = tweetResponse.data
+      .sort((a, b) => (a.public_metrics.retweet_count > b.public_metrics.retweet_count ? -1 : 1))
+      .slice(0, 3);
+
     const {
       data: {
         id: userId,
@@ -72,11 +82,40 @@ export class TwitterService {
       },
     };
 
+    const twitterTweets = tweets.map((tweet) => {
+      const {
+        id,
+        text,
+        possibly_sensitive,
+        created_at,
+        public_metrics: { reply_count, like_count, quote_count, retweet_count },
+        author_id,
+      } = tweet;
+      const twitterTweet: Prisma.TwitterTweetCreateInput = {
+        id,
+        text,
+        possiblySensitive: possibly_sensitive,
+        retweetCount: retweet_count,
+        likeCount: like_count,
+        quoteCount: quote_count,
+        replyCount: reply_count,
+        createdTimestamp: new Date(created_at),
+        user: { connect: { id: author_id } },
+      };
+      return this.prisma.twitterTweet.upsert({
+        where: { id },
+        create: twitterTweet,
+        update: twitterTweet,
+      });
+    });
+
     await this.prisma.twitterUser.upsert({
       where: { id: twitteUser.id },
       create: twitteUser,
       update: twitteUser,
     });
+
+    await this.prisma.$transaction(twitterTweets);
   }
 
   async getUserByUsername(username: string) {
@@ -117,11 +156,30 @@ export class TwitterService {
     return data;
   }
 
-  hasError(responseData: Record<string, unknown>): responseData is TwitterApiErrorType {
+  async searchRecentTweets(query: string) {
+    const url = `${version2Endpoint}/tweets/search/recent`;
+    const params = {
+      query,
+      "user.fields": userFields.join(","),
+      "tweet.fields": tweetFields.join(","),
+      "media.fields": mediaFields.join(","),
+      "place.fields": placeFields.join(","),
+      "poll.fields": pollFields.join(","),
+      max_results: 100,
+      expansions: expansions.join(","),
+    };
+    const { data } = await axios.get<TweetsResponseType | TwitterApiErrorType>(url, { params, headers: this.headers });
+    if (this.hasError(data)) {
+      return this.handleError(data);
+    }
+    return data;
+  }
+
+  private hasError(responseData: Record<string, unknown>): responseData is TwitterApiErrorType {
     return "errors" in responseData;
   }
 
-  handleError(data: TwitterApiErrorType) {
+  private handleError(data: TwitterApiErrorType) {
     this.logger.error(JSON.stringify(data.errors));
     const firstError = data.errors[0];
 

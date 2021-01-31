@@ -90,6 +90,11 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateInstagram");
   }
 
+  @Timeout(0)
+  async test() {
+    await this.twitterService.upsertUserByUsername("Otojya");
+  }
+
   // @Timeout(1000)
   async bulkUpdateYoutubeVideoCategoryTimeout() {
     await this.bulkUpdateYoutubeVideoCategory();
