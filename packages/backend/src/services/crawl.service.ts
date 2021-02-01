@@ -131,27 +131,16 @@ export class CrawlService {
   }
 
   async getChannelPopularVideo(channelId: string) {
-    const { browser, page } = await this.puppeteerSetup();
+    const axios = this.axiosSetup();
 
     const targetChannelUrl = `https://www.youtube.com/channel/${channelId}/videos?sort=p`;
-    await page.goto(targetChannelUrl);
+    const { data } = await axios.get<string>(targetChannelUrl);
 
-    const LinkSelector = "a#thumbnail" as const;
-    await page.waitForSelector(LinkSelector);
-    const elements = await page.$$(LinkSelector);
-
-    const videoIds: string[] = [];
-
-    for (const ele of elements) {
-      const property = await ele.getProperty("href");
-      const value = (await property.jsonValue()) as string;
-      const videoId = value.replace("https://www.youtube.com/watch?v=", "");
-      if (videoId) {
-        videoIds.push(videoId);
-      }
+    let videoIds: string[] = [];
+    const videoMatchResults = data.match(/(?<=("\/watch\?v=))[^"]*(?=")/g);
+    if (videoMatchResults) {
+      videoIds = videoMatchResults;
     }
-
-    await browser.close();
 
     const uniqueVideoIds = Array.from(new Set(videoIds));
     return uniqueVideoIds;

@@ -82,7 +82,7 @@ steps:
       '--image', 'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
       '--region', 'asia-northeast1',
       '--platform', 'managed',
-      '--memory', '512Mi',
+      '--memory', '1Gi',
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--set-env-vars', '
