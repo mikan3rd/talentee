@@ -253,9 +253,10 @@ export class CrawlService {
         // await browser.close();
         // return screenshot;
       } catch (e) {
-        await browser.close();
         this.logger.error(e);
-        return await page.screenshot();
+        const screenshot = await page.screenshot();
+        await browser.close();
+        return screenshot;
       }
     }
 
