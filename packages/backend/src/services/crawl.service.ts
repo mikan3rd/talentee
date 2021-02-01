@@ -186,7 +186,7 @@ export class CrawlService {
   }
 
   async crawlInstagramProfile(usernames: string[]) {
-    const { browser, page } = await this.puppeteerSetup();
+    const { browser, page } = await this.puppeteerSetup("exclusive");
 
     const profileDataList: InstagramUserBaseType[] = [];
 
