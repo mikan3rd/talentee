@@ -164,8 +164,8 @@ export class YoutubeService {
     this.logger.log(`channelDataList: ${channelDataList.length}`);
 
     for (const [index, { youtubeChannel, youtubeKeywords }] of channelDataList.entries()) {
-      this.logger.log(`${index} ${youtubeChannel.id}`);
       const target = baseDataMapping[youtubeChannel.id];
+      this.logger.log(`${index} ${youtubeChannel.id} ${target.accountId}`);
       await this.upsertChannel(youtubeChannel, youtubeKeywords, target.accountId);
       await this.saveChannelPopularVideo(youtubeChannel.id);
     }
