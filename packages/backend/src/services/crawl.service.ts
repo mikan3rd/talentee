@@ -55,7 +55,7 @@ export class CrawlService {
       "--no-zygote",
       "--single-process",
       "–disable-extensions",
-      "--lang=ja",
+      // "--lang=ja",
     ];
 
     // -w "%{time_starttransfer}\n"
@@ -86,6 +86,7 @@ export class CrawlService {
       });
     }
     if (proxyType === "exclusive") {
+      this.logger.log("EXCLUSIVE!!");
       this.logger.log(`username: ${this.configService.get("PROXY_USERNAME")}`);
       this.logger.log(`password: ${this.configService.get("PROXY_PASSWORD")}`);
       await page.authenticate({
@@ -94,7 +95,7 @@ export class CrawlService {
       });
     }
 
-    await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
+    // await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
     await page.setUserAgent(UserAgent);
 
     return { browser, page };
