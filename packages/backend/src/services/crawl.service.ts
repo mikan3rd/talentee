@@ -188,7 +188,7 @@ export class CrawlService {
   async crawlInstagramProfile(usernames: string[]) {
     const { browser, page } = await this.puppeteerSetup();
 
-    const profileDataList = [];
+    const profileDataList: InstagramUserBaseType[] = [];
 
     for (const [index, username] of usernames.entries()) {
       this.logger.log(`${index}  ${username}`);
@@ -248,8 +248,14 @@ export class CrawlService {
         }
 
         profileDataList.push(ProfilePage[0].graphql.user);
+
+        // const screenshot = await page.screenshot();
+        // await browser.close();
+        // return screenshot;
       } catch (e) {
+        await browser.close();
         this.logger.error(e);
+        return await page.screenshot();
       }
     }
 

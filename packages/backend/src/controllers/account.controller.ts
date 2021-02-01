@@ -8,11 +8,11 @@ export class AccountController {
 
   @Get("/addServiceByYoutube")
   async addServiceByYoutube() {
-    await this.accountService.addServiceByYoutube(10);
+    return await this.accountService.addServiceByYoutube(10);
   }
 
   @Get("/addServiceByTwitter")
   async addServiceByTwitter() {
-    await this.accountService.addServiceByTwitter(10);
+    return await this.accountService.addServiceByTwitter(10);
   }
 }
