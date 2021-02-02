@@ -18,7 +18,6 @@ COPY . .
 
 WORKDIR /app/packages/backend
 RUN yarn install --production
-RUN yarn prisma generate
 RUN yarn build
 
 CMD yarn start:prod
