@@ -3,7 +3,7 @@ name: Node.js CI
 on: [push]
 
 jobs:
-  app-build:
+  frontend-build:
     runs-on: macos-latest
     strategy:
       matrix:
@@ -27,13 +27,13 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
 
-      - run: yarn app install
+      - run: yarn frontend install
 
-      - run: yarn app type-check
+      - run: yarn frontend type-check
 
-      - run: yarn lint:app
+      - run: yarn lint:frontend
 
-      - run: yarn app next build
+      - run: yarn frontend next build
         env:
           CONFIG_ENV: "dev"
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}

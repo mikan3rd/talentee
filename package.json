@@ -1,17 +1,17 @@
 {
   "private": true,
   "workspaces": [
-    "packages/app",
+    "packages/frontend",
     "packages/backend"
   ],
   "engines": {
     "node": "12"
   },
   "scripts": {
-    "app": "yarn workspace app",
+    "frontend": "yarn workspace frontend",
     "backend": "yarn workspace backend",
     "lint": "eslint .",
-    "lint:app": "eslint ./packages/app",
+    "lint:frontend": "eslint ./packages/frontend",
     "lint:backend": "eslint ./packages/backend",
     "lint:functions": "eslint ./packages/functions"
   },

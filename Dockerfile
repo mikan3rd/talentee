@@ -15,6 +15,6 @@ RUN apt-get update \
 COPY ./package.json ./package.json
 COPY ./yarn.lock ./yarn.lock
 COPY ./packages/backend/package.json ./packages/backend/package.json
-COPY ./packages/app/package.json ./packages/app/package.json
+COPY ./packages/frontend/package.json ./packages/frontend/package.json
 
 RUN yarn install

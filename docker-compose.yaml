@@ -15,8 +15,7 @@ x-dev-base: &dev-base
     - .:/app
     - /app/node_modules
     - /app/packages/backend/node_modules
-    - /app/packages/app/node_modules
-    # - /app/packages/frontend/node_modules
+    - /app/packages/frontend/node_modules
 
 services:
 
@@ -65,13 +64,13 @@ services:
     ports:
       - "3300:3300"
 
-  # frontend:
-  #   << : *dev-base
-  #   working_dir: /app/packages/frontend
-  #   command: yarn dev
-  #   tty: true
-  #   depends_on:
-  #     - backend
-  #   ports:
-  #     - "3000:3000"
+  frontend:
+    << : *dev-base
+    working_dir: /app/packages/frontend
+    command: yarn dev
+    tty: true
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
 
