@@ -69,7 +69,7 @@ export class CrawlService {
     }
 
     const options: LaunchOptions = {
-      // ignoreHTTPSErrors: true,
+      ignoreHTTPSErrors: true,
       headless: true,
       devtools: false,
       args,
