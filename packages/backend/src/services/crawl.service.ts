@@ -196,6 +196,7 @@ export class CrawlService {
       try {
         const targetUrl = `https://www.instagram.com/${username}/`;
         await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+        currentUrl = page.url();
 
         this.logger.log(`firstUrl: ${currentUrl}`);
 
