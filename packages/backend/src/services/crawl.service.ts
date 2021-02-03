@@ -55,7 +55,7 @@ export class CrawlService {
       "--no-zygote",
       "--single-process",
       "–disable-extensions",
-      // "--lang=ja",
+      "--lang=ja",
     ];
 
     // -w "%{time_starttransfer}\n"
@@ -69,7 +69,7 @@ export class CrawlService {
     }
 
     const options: LaunchOptions = {
-      ignoreHTTPSErrors: true,
+      // ignoreHTTPSErrors: true,
       headless: true,
       devtools: false,
       args,
@@ -91,7 +91,7 @@ export class CrawlService {
       });
     }
 
-    // await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
+    await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
     await page.setUserAgent(UserAgent);
 
     return { browser, page };

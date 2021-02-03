@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   frontend-build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
@@ -48,7 +48,7 @@ jobs:
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
 
   functions-build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
@@ -88,7 +88,7 @@ jobs:
           path: packages/functions/lib
 
   backend-build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
@@ -128,7 +128,7 @@ jobs:
   functions-deploy:
     if: github.ref == 'refs/heads/master'
     needs: functions-build
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
@@ -169,7 +169,7 @@ jobs:
   backend-sentry-release:
     if: github.ref == 'refs/heads/master'
     needs: backend-build
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
