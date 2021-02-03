@@ -168,7 +168,7 @@ jobs:
 
   backend-sentry-release:
     if: github.ref == 'refs/heads/master'
-    needs: functions-build
+    needs: backend-build
     runs-on: macos-latest
     strategy:
       matrix:
