@@ -1,17 +1,17 @@
 {
   "private": true,
   "workspaces": [
-    "packages/app",
+    "packages/frontend",
     "packages/backend"
   ],
   "engines": {
     "node": "12"
   },
   "scripts": {
-    "app": "yarn workspace app",
+    "frontend": "yarn workspace frontend",
     "backend": "yarn workspace backend",
     "lint": "eslint .",
-    "lint:app": "eslint ./packages/app",
+    "lint:frontend": "eslint ./packages/frontend",
     "lint:backend": "eslint ./packages/backend",
     "lint:functions": "eslint ./packages/functions"
   },
@@ -19,10 +19,12 @@
     "node-forge": "0.10.0"
   },
   "dependencies": {
+    "@apollo/client": "3.3.7",
     "@prisma/client": "2.15.0",
     "dayjs": "1.10.4",
     "firebase": "8.2.5",
-    "firebase-admin": "9.4.2"
+    "firebase-admin": "9.4.2",
+    "graphql": "15.5.0"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "11.0.0",
