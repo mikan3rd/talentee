@@ -27,6 +27,10 @@ export class InstagramService {
     const usernmes = Object.values(baseDataMapping).map(({ username }) => username);
     const results = await this.crawlService.crawlInstagramProfile(usernmes);
 
+    if (!Array.isArray(results)) {
+      return results;
+    }
+
     this.logger.log(`results: ${results.length}`);
 
     if (!results.length) {

@@ -10,7 +10,7 @@ import StealthPlugin = require("puppeteer-extra-plugin-stealth");
 type ProxyType = "none" | "normal" | "exclusive";
 
 const UserAgent =
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36";
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36";
 
 @Injectable()
 export class CrawlService {
@@ -55,7 +55,7 @@ export class CrawlService {
       "--no-zygote",
       "--single-process",
       "–disable-extensions",
-      "--lang=ja",
+      // "--lang=ja",
     ];
 
     // -w "%{time_starttransfer}\n"
@@ -65,12 +65,11 @@ export class CrawlService {
     }
     if (proxyType === "exclusive") {
       const proxy = `${this.configService.get("PROXY_HOST")}:${this.configService.get("PROXY_PORT")}`;
-      this.logger.log(`proxy: ${proxy}`);
       args.push(`--proxy-server=${proxy}`);
     }
 
     const options: LaunchOptions = {
-      // ignoreHTTPSErrors: true,
+      ignoreHTTPSErrors: true,
       headless: true,
       devtools: false,
       args,
@@ -86,15 +85,13 @@ export class CrawlService {
       });
     }
     if (proxyType === "exclusive") {
-      this.logger.log(`username: ${this.configService.get("PROXY_USERNAME")}`);
-      this.logger.log(`password: ${this.configService.get("PROXY_PASSWORD")}`);
       await page.authenticate({
         username: this.configService.get("PROXY_USERNAME") ?? "",
         password: this.configService.get("PROXY_PASSWORD") ?? "",
       });
     }
 
-    await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
+    // await page.setExtraHTTPHeaders({ "Accept-Language": "ja-JP" });
     await page.setUserAgent(UserAgent);
 
     return { browser, page };
@@ -188,15 +185,19 @@ export class CrawlService {
   async crawlInstagramProfile(usernames: string[]) {
     const { browser, page } = await this.puppeteerSetup();
 
-    const profileDataList = [];
+    await page.goto("https://www.google.com/", { waitUntil: ["load", "networkidle2"] });
+    let currentUrl = page.url();
+    this.logger.log(`startUrl: ${currentUrl}`);
+
+    const profileDataList: InstagramUserBaseType[] = [];
 
     for (const [index, username] of usernames.entries()) {
       this.logger.log(`${index}  ${username}`);
       try {
         const targetUrl = `https://www.instagram.com/${username}/`;
         await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+        currentUrl = page.url();
 
-        let currentUrl = page.url();
         this.logger.log(`firstUrl: ${currentUrl}`);
 
         if (currentUrl.includes("login")) {
@@ -250,6 +251,9 @@ export class CrawlService {
         profileDataList.push(ProfilePage[0].graphql.user);
       } catch (e) {
         this.logger.error(e);
+        const screenshot = await page.screenshot();
+        await browser.close();
+        return screenshot;
       }
     }
 

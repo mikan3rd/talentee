@@ -48,7 +48,7 @@ export class TaskService {
     this.logger.debug("END: bulkUpdateYoutubeVideoTag");
   }
 
-  @Cron("0 0 */6 * * *")
+  @Cron("0 30 */6 * * *")
   async saveYoutubeTrendChannel() {
     this.logger.debug("START: saveYoutubeTrendChannel");
     await this.youtubeService.saveTrendChannel();
