@@ -60,7 +60,6 @@ steps:
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
       '--set-env-vars', '
-        SCHEDULE_ENABLED=true,
         NO_COLOR=true,
         TZ=Asia/Tokyo,
         DATABASE_URL=${_DATABASE_URL},
