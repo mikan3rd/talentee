@@ -7,13 +7,13 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { SentryInterceptor } from "@/interceptors/sentry.interceptor";
 import { AccountModule } from "@/modules/account.module";
 import { InstagramModule } from "@/modules/instagram.module";
-import { TaskModule } from "@/modules/task.module";
 import { TiktokModule } from "@/modules/tiktok.module";
 import { TwitterModule } from "@/modules/twitter.module";
 import { YoutubeModule } from "@/modules/youtube.module";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
 import { DateScalar } from "@/scalars/date.scalar";
 import { AppService } from "@/services/app.service";
+// import { TaskModule } from "@/modules/task.module";
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { AppService } from "@/services/app.service";
     TwitterModule,
     InstagramModule,
     TiktokModule,
-    TaskModule,
+    // TaskModule,
   ],
   controllers: [],
   providers: [
