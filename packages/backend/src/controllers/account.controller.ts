@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Post } from "@nestjs/common";
 
 import { AccountService } from "@/services/account.service";
 
@@ -6,13 +6,18 @@ import { AccountService } from "@/services/account.service";
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  @Get("/addServiceByYoutube")
+  @Post("/addServiceByYoutube")
   async addServiceByYoutube() {
-    return await this.accountService.addServiceByYoutube(10);
+    return await this.accountService.addServiceByYoutube(20);
   }
 
-  @Get("/addServiceByTwitter")
+  @Post("/addServiceByTwitter")
   async addServiceByTwitter() {
-    return await this.accountService.addServiceByTwitter(10);
+    return await this.accountService.addServiceByTwitter(20);
+  }
+
+  @Post("/addServiceByTwitter")
+  async bulkUpdate() {
+    return await this.accountService.bulkUpdate(20);
   }
 }
