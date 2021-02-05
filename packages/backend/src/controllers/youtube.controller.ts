@@ -11,28 +11,23 @@ export class YoutubeController {
     await this.youtubeService.saveTrendChannel();
   }
 
-  @Post("/bulkUpdateYoutubeVideoCategory")
-  async bulkUpdateYoutubeVideoCategory() {
-    await this.bulkUpdateYoutubeVideoCategory();
+  @Post("/bulkUpdateVideoCategory")
+  async bulkUpdateVideoCategory() {
+    await this.youtubeService.bulkUpdateVideoCategory();
   }
 
-  @Post("/bulkUpdateYoutubeChannelVideoCategory")
-  async bulkUpdateYoutubeChannelVideoCategory() {
-    await this.bulkUpdateYoutubeChannelVideoCategory();
+  @Post("/bulkUpdateChannelVideoCategory")
+  async bulkUpdateChannelVideoCategory() {
+    await this.youtubeService.bulkUpdateChannelVideoCategory();
   }
 
-  @Post("/bulkUpdateYoutubeKeyword")
-  async bulkUpdateYoutubeKeyword() {
-    await this.bulkUpdateYoutubeKeyword();
+  @Post("/bulkUpdateChannelKeyword")
+  async bulkUpdateChannelKeyword() {
+    await this.youtubeService.bulkUpdateChannelKeyword();
   }
 
   @Post("/bulkUpdateVideoTag")
   async bulkUpdateVideoTag() {
-    await this.bulkUpdateVideoTag();
-  }
-
-  @Post("/bulkUpdateVideoCategory")
-  async bulkUpdateVideoCategory() {
-    await this.bulkUpdateVideoCategory();
+    await this.youtubeService.bulkUpdateVideoTag();
   }
 }
