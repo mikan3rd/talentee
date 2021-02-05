@@ -16,7 +16,7 @@ export class AccountController {
     return await this.accountService.addServiceByTwitter(20);
   }
 
-  @Post("/addServiceByTwitter")
+  @Post("/bulkUpdate")
   async bulkUpdate() {
     return await this.accountService.bulkUpdate(20);
   }
