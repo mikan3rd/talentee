@@ -25,8 +25,8 @@ export class TiktokUser {
   signature!: string;
 
   @Column({ type: "text", nullable: true })
-  @Field()
-  bioLink!: string;
+  @Field({ nullable: true })
+  bioLink?: string;
 
   @Column({ type: "text" })
   @Field()

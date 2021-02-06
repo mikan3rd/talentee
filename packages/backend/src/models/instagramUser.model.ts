@@ -25,8 +25,8 @@ export class InstagramUser {
   biography!: string;
 
   @Column({ type: "text", nullable: true })
-  @Field()
-  externalUrl!: string;
+  @Field({ nullable: true })
+  externalUrl?: string;
 
   @Column({ type: "text" })
   @Field()

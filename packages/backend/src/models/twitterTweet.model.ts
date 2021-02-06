@@ -26,8 +26,8 @@ export class TwitterTweet {
   @Field()
   possiblySensitive!: boolean;
 
-  @Field()
-  tweetType!: string;
+  @Field({ nullable: true })
+  tweetType?: string;
 
   @Field()
   createdTimestamp!: Date;

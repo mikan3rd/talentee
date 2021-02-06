@@ -42,7 +42,7 @@ type InstagramUser {
   fullName: String!
   username: String!
   biography: String!
-  externalUrl: String!
+  externalUrl: String
   profilePicUrl: String!
   followedBy: BigInt!
   follow: BigInt!
@@ -72,7 +72,7 @@ type TiktokUser {
   nickname: String!
   uniqueId: String!
   signature: String!
-  bioLink: String!
+  bioLink: String
   avatarThumb: String!
   followerCount: BigInt!
   followingCount: BigInt!
@@ -96,7 +96,7 @@ type TwitterTweet {
   likeCount: BigInt!
   quoteCount: BigInt!
   possiblySensitive: Boolean!
-  tweetType: String!
+  tweetType: String
   createdTimestamp: Date!
   createdAt: Date!
   updatedAt: Date!
