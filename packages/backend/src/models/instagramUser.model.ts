@@ -2,11 +2,12 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 import { Account } from "@/models/account.model";
+import { InstagramMedia } from "@/models/instagramMedia.model";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
 
 @Entity("InstagramUser")
 @ObjectType()
-export class TwitterUser {
+export class InstagramUser {
   @PrimaryColumn()
   @Field((type) => ID)
   id!: string;
@@ -62,4 +63,7 @@ export class TwitterUser {
   @JoinColumn({ name: "accountId" })
   @Field((type) => Account)
   account!: Account;
+
+  @Field((type) => [InstagramMedia])
+  mediaList!: InstagramMedia;
 }

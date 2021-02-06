@@ -23,14 +23,21 @@ export class AccountService {
     private tiktokService: TiktokService,
   ) {}
 
-  async findOne(uuid: string) {
+  async getForAccountPage(uuid: string) {
+    const take = 3;
     return this.prisma.account.findUnique({
       where: { uuid },
       include: {
-        youtubeChannels: true,
-        twitterUsers: true,
-        instagramUsers: true,
-        tiktokUsers: true,
+        youtubeChannels: {
+          include: {
+            videos: { take, orderBy: { viewCount: "desc" } },
+            keywords: true,
+            channelVideoCategories: true,
+          },
+        },
+        twitterUsers: { include: { tweets: { take, orderBy: { retweetCount: "desc" } } } },
+        instagramUsers: { include: { mediaList: { take, orderBy: { likedBy: "desc" } } } },
+        tiktokUsers: { include: { items: { take, orderBy: { diggCount: "desc" } } } },
       },
     });
   }
