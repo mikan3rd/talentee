@@ -3,9 +3,9 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Header, Icon } from "semantic-ui-react";
 
-import { toUnitString } from "../../common/utils";
-import { Linkify } from "../atoms/Linkify";
-import { InstagramSocialButton } from "../atoms/SocialButton";
+import { toUnitString } from "@/common/utils";
+import { Linkify } from "@/components/atoms/Linkify";
+import { InstagramSocialButton } from "@/components/atoms/SocialButton";
 
 // Instagramの埋め込みiframeのheightが正しく認識されない場合があるため
 const resetIframeHeight = (repeatNum = 1) => {

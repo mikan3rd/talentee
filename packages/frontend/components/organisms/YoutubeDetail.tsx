@@ -4,11 +4,10 @@ import { css } from "@emotion/react";
 import dayjs from "dayjs";
 import { Header, Icon, Label } from "semantic-ui-react";
 
-import { toUnitString } from "../../common/utils";
-import { Linkify } from "../atoms/Linkify";
-import { YoutubeSocialButton } from "../atoms/SocialButton";
-
-import { YoutubeVideoCard } from "./YoutubeVideoCard";
+import { toUnitString } from "@/common/utils";
+import { Linkify } from "@/components/atoms/Linkify";
+import { YoutubeSocialButton } from "@/components/atoms/SocialButton";
+import { YoutubeVideoCard } from "@/components/organisms/YoutubeVideoCard";
 
 export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopularVideos: IYoutubeVideoData[] }>(
   ({ youtubeData, youtubePopularVideos }) => {

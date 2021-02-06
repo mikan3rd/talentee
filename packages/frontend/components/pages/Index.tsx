@@ -4,11 +4,11 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 import { Button, Divider, Icon } from "semantic-ui-react";
 
-import { useIndexData } from "../../hooks/useIndexData";
-import { InstagramCard } from "../organisms/InstagramCard";
-import { TiktokCard } from "../organisms/TiktokCard";
-import { TwitterCard } from "../organisms/TwitterCard";
-import { YoutubeCard } from "../organisms/YoutubeCard";
+import { InstagramCard } from "@/components/organisms/InstagramCard";
+import { TiktokCard } from "@/components/organisms/TiktokCard";
+import { TwitterCard } from "@/components/organisms/TwitterCard";
+import { YoutubeCard } from "@/components/organisms/YoutubeCard";
+import { useIndexData } from "@/hooks/useIndexData";
 
 export const Index = React.memo(() => {
   const { youtubeData, twitterData, instagramData, tiktokData } = useIndexData();

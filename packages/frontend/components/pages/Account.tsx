@@ -4,24 +4,24 @@ import { css } from "@emotion/react";
 import dayjs from "dayjs";
 import { Divider, Icon, Menu } from "semantic-ui-react";
 
-import { useScrollDirection } from "../../hooks/useScrollDirection";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
-} from "../atoms/IndexLinkButton";
+} from "@/components/atoms/IndexLinkButton";
 import {
   InstagramSocialButton,
   TiktokSocialButton,
   TwitterSocialButton,
   YoutubeSocialButton,
-} from "../atoms/SocialButton";
-import { InstagramDetail } from "../organisms/InstagramDetail";
-import { TiktokDetail } from "../organisms/TiktokDetail";
-import { TwitterDetail } from "../organisms/TwitterDetail";
-import { YoutubeDetail } from "../organisms/YoutubeDetail";
+} from "@/components/atoms/SocialButton";
+import { InstagramDetail } from "@/components/organisms/InstagramDetail";
+import { TiktokDetail } from "@/components/organisms/TiktokDetail";
+import { TwitterDetail } from "@/components/organisms/TwitterDetail";
+import { YoutubeDetail } from "@/components/organisms/YoutubeDetail";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 const ServiceList = ["youtube", "twitter", "instagram", "tiktok"] as const;
 type ServiceType = typeof ServiceList[number];

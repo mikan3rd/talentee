@@ -3,14 +3,14 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button, Divider, Header, Icon } from "semantic-ui-react";
 
-import { useTiktokIndexData } from "../../hooks/useTiktokIndexData";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
-} from "../atoms/IndexLinkButton";
-import { TiktokCard } from "../organisms/TiktokCard";
+} from "@/components/atoms/IndexLinkButton";
+import { TiktokCard } from "@/components/organisms/TiktokCard";
+import { useTiktokIndexData } from "@/hooks/useTiktokIndexData";
 
 export const TiktokIndex = React.memo(() => {
   const { tiktokData, hasNext, getTiktokNextPageData } = useTiktokIndexData();

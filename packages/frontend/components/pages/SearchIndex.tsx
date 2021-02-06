@@ -3,14 +3,14 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Divider, Header, Input } from "semantic-ui-react";
 
-import { useSearchIndex } from "../../hooks/useSearchIndex";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
-} from "../atoms/IndexLinkButton";
-import { AccountCard } from "../organisms/AccountCard";
+} from "@/components/atoms/IndexLinkButton";
+import { AccountCard } from "@/components/organisms/AccountCard";
+import { useSearchIndex } from "@/hooks/useSearchIndex";
 
 export const SearchIndex = React.memo(() => {
   const [text, setText] = React.useState("");

@@ -3,14 +3,14 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button, Divider, Header, Icon } from "semantic-ui-react";
 
-import { useTwitterIndexData } from "../../hooks/useTwitterIndexData";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TiktokIndexLinkButton,
   YoutubeIndexLinkButton,
-} from "../atoms/IndexLinkButton";
-import { TwitterCard } from "../organisms/TwitterCard";
+} from "@/components/atoms/IndexLinkButton";
+import { TwitterCard } from "@/components/organisms/TwitterCard";
+import { useTwitterIndexData } from "@/hooks/useTwitterIndexData";
 
 export const TwitterIndex = React.memo(() => {
   const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();

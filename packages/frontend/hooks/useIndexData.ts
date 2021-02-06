@@ -1,12 +1,12 @@
 import React from "react";
 
-import firebase from "../firebase/clientApp";
+import firebase from "@/firebase/clientApp";
 import {
   InstagramUserCollectionPath,
   TiktokUserCollectionPath,
   TwitterUserCollectionPath,
   YoutubeChannelCollectionPath,
-} from "../firebase/firestore";
+} from "@/firebase/firestore";
 
 export const useIndexData = () => {
   const [youtubeData, setYoutubeData] = React.useState<YoutubeData[]>([]);

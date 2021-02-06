@@ -4,9 +4,9 @@ import { css } from "@emotion/react";
 import { SemanticToastContainer } from "react-semantic-toasts";
 import { Container } from "semantic-ui-react";
 
-import { GlobalStyle } from "../../style/GlobalStyle";
-import { ScrollTopButton } from "../atoms/ScrollTopButton";
-import { Header } from "../molecules/Header";
+import { ScrollTopButton } from "@/components/atoms/ScrollTopButton";
+import { Header } from "@/components/molecules/Header";
+import { GlobalStyle } from "@/style/GlobalStyle";
 
 export const Layout = React.memo(({ children }) => {
   return (

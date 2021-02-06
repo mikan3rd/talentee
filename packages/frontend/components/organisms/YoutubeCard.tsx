@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 import { Icon, Label } from "semantic-ui-react";
 
-import { toUnitString } from "../../common/utils";
+import { toUnitString } from "@/common/utils";
 
 const ketwordNum = 10;
 

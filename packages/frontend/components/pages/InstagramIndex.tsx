@@ -3,14 +3,14 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button, Divider, Header, Icon } from "semantic-ui-react";
 
-import { useInstagramIndexData } from "../../hooks/useInstagramIndexData";
 import {
   IndexLinkButton,
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
-} from "../atoms/IndexLinkButton";
-import { InstagramCard } from "../organisms/InstagramCard";
+} from "@/components/atoms/IndexLinkButton";
+import { InstagramCard } from "@/components/organisms/InstagramCard";
+import { useInstagramIndexData } from "@/hooks/useInstagramIndexData";
 
 export const InstagramIndex = React.memo(() => {
   const { instagramData, hasNext, getInstagramNextPageData } = useInstagramIndexData();
