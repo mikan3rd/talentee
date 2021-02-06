@@ -8,8 +8,8 @@ import { AccountService } from "@/services/account.service";
 export class AccountResolver {
   constructor(@Inject(AccountService) private accountService: AccountService) {}
 
-  @Query((returns) => Account, { nullable: true })
-  async getForAccountPage(@Args("uuid", { type: () => ID }) uuid: string) {
+  @Query((returns) => Account || null, { nullable: true })
+  async getAccountPage(@Args("uuid", { type: () => ID }) uuid: string) {
     return await this.accountService.getForAccountPage(uuid);
   }
 }

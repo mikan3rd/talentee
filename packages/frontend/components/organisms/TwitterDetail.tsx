@@ -7,18 +7,22 @@ import { Header, Icon } from "semantic-ui-react";
 import { toUnitString } from "@/common/utils";
 import { Linkify } from "@/components/atoms/Linkify";
 import { TwitterSocialButton } from "@/components/atoms/SocialButton";
+import { Props as AccountProps } from "@/components/pages/Account";
 
-export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; popularTweets: TweetDataType[] }>(
-  ({ twitterUserData, popularTweets }) => {
-    const {
-      name,
-      username,
-      profile_image_url,
-      description,
-      public_metrics: { followers_count, following_count, tweet_count },
-      created_at,
-    } = twitterUserData;
+export type Props = AccountProps["twitterUsers"][number];
 
+export const TwitterDetail = React.memo<Props>(
+  ({
+    name,
+    username,
+    profileImageUrl,
+    description,
+    followersCount,
+    followingCount,
+    tweetCount,
+    createdTimestamp,
+    tweets,
+  }) => {
     React.useEffect(() => {
       const s = document.createElement("script");
       s.setAttribute("src", "https://platform.twitter.com/widgets.js");
@@ -27,7 +31,7 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
       document.head.appendChild(s);
     }, []);
 
-    const createdAtTime = dayjs.unix(created_at);
+    const createdAtTime = React.useMemo(() => dayjs.unix(createdTimestamp), [createdTimestamp]);
 
     return (
       <div
@@ -50,7 +54,7 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
         >
           <div>
             <img
-              src={profile_image_url}
+              src={profileImageUrl}
               alt={name}
               css={css`
                 width: 64px;
@@ -82,13 +86,13 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
               `}
             >
               <div css={CountWrapperCss}>
-                <div>{toUnitString(following_count)} フォロー中</div>
+                <div>{toUnitString(followingCount)} フォロー中</div>
               </div>
               <div css={CountWrapperCss}>
-                <div>{toUnitString(followers_count)} フォロワー</div>
+                <div>{toUnitString(followersCount)} フォロワー</div>
               </div>
               <div css={CountWrapperCss}>
-                <div>{toUnitString(tweet_count)} ツイート</div>
+                <div>{toUnitString(tweetCount)} ツイート</div>
               </div>
             </div>
           </div>
@@ -111,7 +115,7 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
           開設日 {createdAtTime.format("YYYY年M月D日")}
         </div>
 
-        {popularTweets.length > 0 && (
+        {tweets.length > 0 && (
           <div>
             <Header
               css={css`
@@ -130,7 +134,7 @@ export const TwitterDetail = React.memo<{ twitterUserData: TwitterUserDataType; 
                 }
               `}
             >
-              {popularTweets.map((tweet) => {
+              {tweets.map((tweet) => {
                 const { id } = tweet;
                 return (
                   <blockquote key={id} className="twitter-tweet">
