@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 import { Account } from "@/models/account.model";
+import { TwitterTweet } from "@/models/twitterTweet.model";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
 
 @Entity("TwitterUser")
@@ -70,4 +71,7 @@ export class TwitterUser {
   @JoinColumn({ name: "accountId" })
   @Field((type) => Account)
   account!: Account;
+
+  @Field((type) => [TwitterTweet])
+  tweets!: TwitterTweet;
 }

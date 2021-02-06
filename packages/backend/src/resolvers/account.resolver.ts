@@ -9,7 +9,7 @@ export class AccountResolver {
   constructor(@Inject(AccountService) private accountService: AccountService) {}
 
   @Query((returns) => Account, { nullable: true })
-  async account(@Args("uuid", { type: () => ID }) uuid: string) {
-    return await this.accountService.findOne(uuid);
+  async getForAccountPage(@Args("uuid", { type: () => ID }) uuid: string) {
+    return await this.accountService.getForAccountPage(uuid);
   }
 }

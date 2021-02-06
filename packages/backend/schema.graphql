@@ -2,6 +2,107 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type InstagramLocation {
+  id: ID!
+  name: String!
+  slug: String!
+  hasPublicPage: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  mediaList: [InstagramMedia!]!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type InstagramMedia {
+  id: ID!
+  shortcode: String!
+  thumbnailSrc: String!
+  mediaToCaption: String!
+  displayUrl: String!
+  likedBy: BigInt!
+  mediaPreviewLike: BigInt!
+  mediaToComment: BigInt!
+  videoViewCount: BigInt
+  productType: String
+  isVideo: Boolean!
+  takenAtTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  user: InstagramUser!
+  location: InstagramLocation
+}
+
+"""BigInt custom scalar type"""
+scalar BigInt
+
+type InstagramUser {
+  id: ID!
+  fullName: String!
+  username: String!
+  biography: String!
+  externalUrl: String
+  profilePicUrl: String!
+  followedBy: BigInt!
+  follow: BigInt!
+  isVerified: Boolean!
+  isPrivate: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  account: Account!
+  mediaList: [InstagramMedia!]!
+}
+
+type TiktokItem {
+  id: ID!
+  desc: String!
+  commentCount: BigInt!
+  diggCount: BigInt!
+  playCount: BigInt!
+  shareCount: BigInt!
+  createdTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  user: TiktokUser!
+}
+
+type TiktokUser {
+  id: ID!
+  nickname: String!
+  uniqueId: String!
+  signature: String!
+  bioLink: String
+  avatarThumb: String!
+  followerCount: BigInt!
+  followingCount: BigInt!
+  heartCount: BigInt!
+  videoCount: BigInt!
+  verified: Boolean!
+  privateAccount: Boolean!
+  secret: Boolean!
+  createdTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  account: Account!
+  items: [TiktokItem!]!
+}
+
+type TwitterTweet {
+  id: ID!
+  text: String!
+  retweetCount: BigInt!
+  replyCount: BigInt!
+  likeCount: BigInt!
+  quoteCount: BigInt!
+  possiblySensitive: Boolean!
+  tweetType: String
+  createdTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  user: TwitterUser!
+}
+
 type TwitterUser {
   id: ID!
   name: String!
@@ -18,13 +119,8 @@ type TwitterUser {
   createdAt: Date!
   updatedAt: Date!
   account: Account!
+  tweets: [TwitterTweet!]!
 }
-
-"""BigInt custom scalar type"""
-scalar BigInt
-
-"""Date custom scalar type"""
-scalar Date
 
 type Account {
   uuid: ID!
@@ -35,6 +131,24 @@ type Account {
   updatedAt: Date!
   youtubeChannels: [YoutubeChannel!]!
   twitterUsers: [TwitterUser!]!
+  instagramUsers: [InstagramUser!]!
+  tiktokUsers: [TiktokUser!]!
+}
+
+type YoutubeKeyword {
+  id: Float!
+  title: String!
+  num: Float!
+  createdAt: Date!
+  updatedAt: Date!
+  channels: [YoutubeChannel!]!
+}
+
+type YoutubeChannelKeywordRelation {
+  channelId: ID!
+  keywordId: ID!
+  channel: YoutubeChannel!
+  keyword: YoutubeKeyword!
 }
 
 type YoutubeTag {
@@ -44,6 +158,13 @@ type YoutubeTag {
   createdAt: Date!
   updatedAt: Date!
   videos: [YoutubeVideo!]!
+}
+
+type YoutubeVideoTagRelation {
+  videoId: ID!
+  tagOd: ID!
+  video: YoutubeVideo!
+  tag: YoutubeTag!
 }
 
 type YoutubeVideo {
@@ -58,7 +179,7 @@ type YoutubeVideo {
   commentCount: BigInt
   createdAt: Date!
   updatedAt: Date!
-  tags: [YoutubeTag!]!
+  tags: [YoutubeVideoTagRelation!]!
   videoCategory: YoutubeVideoCategory!
   channel: YoutubeChannel!
 }
@@ -83,15 +204,6 @@ type YoutubeChannelVideoCategory {
   videoCategory: YoutubeVideoCategory!
 }
 
-type YoutubeKeyword {
-  id: Float!
-  title: String!
-  num: Float!
-  createdAt: Date!
-  updatedAt: Date!
-  channels: [YoutubeChannel!]!
-}
-
 type YoutubeChannel {
   id: ID!
   title: String!
@@ -105,13 +217,13 @@ type YoutubeChannel {
   hiddenSubscriberCount: Boolean!
   createdAt: Date!
   updatedAt: Date!
-  keywords: [YoutubeKeyword!]!
+  keywords: [YoutubeChannelKeywordRelation!]!
   videos: [YoutubeVideo!]!
   account: Account!
   channelVideoCategories: [YoutubeChannelVideoCategory!]!
 }
 
 type Query {
-  account(uuid: ID!): Account
+  getForAccountPage(uuid: ID!): Account
   youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
 }

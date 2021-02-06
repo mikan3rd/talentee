@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 import { Account } from "@/models/account.model";
+import { TiktokItem } from "@/models/tiktokItem.model";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
 
 @Entity("TiktokUser")
@@ -24,8 +25,8 @@ export class TiktokUser {
   signature!: string;
 
   @Column({ type: "text", nullable: true })
-  @Field()
-  bioLink!: string;
+  @Field({ nullable: true })
+  bioLink?: string;
 
   @Column({ type: "text" })
   @Field()
@@ -78,4 +79,7 @@ export class TiktokUser {
   @JoinColumn({ name: "accountId" })
   @Field((type) => Account)
   account!: Account;
+
+  @Field((type) => [TiktokItem])
+  items!: TiktokItem[];
 }
