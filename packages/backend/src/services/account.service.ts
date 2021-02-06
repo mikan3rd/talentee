@@ -31,8 +31,8 @@ export class AccountService {
         youtubeChannels: {
           include: {
             videos: { take, orderBy: { viewCount: "desc" } },
-            keywords: true,
-            channelVideoCategories: true,
+            keywords: { include: { keywords: true } },
+            channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
           },
         },
         twitterUsers: { include: { tweets: { take, orderBy: { retweetCount: "desc" } } } },

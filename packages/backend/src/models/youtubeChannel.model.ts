@@ -13,6 +13,7 @@ import {
 } from "typeorm";
 
 import { Account } from "@/models/account.model";
+import { YoutubeChannelKeywordRelation } from "@/models/youtubeChannelKeywordRelation.model";
 import { YoutubeChannelVideoCategory } from "@/models/youtubeChannelVideoCategory.model";
 import { YoutubeKeyword } from "@/models/youtubeKeyword.model";
 import { YoutubeVideo } from "@/models/youtubeVideo.model";
@@ -81,8 +82,8 @@ export class YoutubeChannel {
       referencedColumnName: "id",
     },
   })
-  @Field((type) => [YoutubeKeyword])
-  keywords!: YoutubeKeyword[];
+  @Field((type) => [YoutubeChannelKeywordRelation])
+  keywords!: YoutubeChannelKeywordRelation[];
 
   @OneToMany((type) => YoutubeVideo, (video) => video.channel)
   @Field((type) => [YoutubeVideo])
