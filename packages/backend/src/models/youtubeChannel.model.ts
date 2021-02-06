@@ -4,8 +4,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryColumn,
@@ -15,7 +13,6 @@ import {
 import { Account } from "@/models/account.model";
 import { YoutubeChannelKeywordRelation } from "@/models/youtubeChannelKeywordRelation.model";
 import { YoutubeChannelVideoCategory } from "@/models/youtubeChannelVideoCategory.model";
-import { YoutubeKeyword } from "@/models/youtubeKeyword.model";
 import { YoutubeVideo } from "@/models/youtubeVideo.model";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
 
@@ -70,18 +67,6 @@ export class YoutubeChannel {
   @Field()
   updatedAt!: Date;
 
-  @ManyToMany((type) => YoutubeKeyword, (keyword) => keyword.channels)
-  @JoinTable({
-    name: "YoutubeChannelKeywordRelation",
-    joinColumn: {
-      name: "channelId",
-      referencedColumnName: "id",
-    },
-    inverseJoinColumn: {
-      name: "keywordId",
-      referencedColumnName: "id",
-    },
-  })
   @Field((type) => [YoutubeChannelKeywordRelation])
   keywords!: YoutubeChannelKeywordRelation[];
 

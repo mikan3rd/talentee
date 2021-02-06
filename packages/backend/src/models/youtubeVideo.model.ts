@@ -1,19 +1,9 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 import { YoutubeChannel } from "@/models/youtubeChannel.model";
-import { YoutubeTag } from "@/models/youtubeTag.model";
 import { YoutubeVideoCategory } from "@/models/youtubeVideoCategoriy.model";
+import { YoutubeVideoTagRelation } from "@/models/youtubeVideoTagRelation.mode";
 import { BigIntScalar } from "@/scalars/bigint.scalar";
 
 @Entity("YoutubeVideo")
@@ -63,20 +53,8 @@ export class YoutubeVideo {
   @Field()
   updatedAt!: Date;
 
-  @ManyToMany((type) => YoutubeTag, (tag) => tag.videos)
-  @JoinTable({
-    name: "YoutubeVideoTagRelation",
-    joinColumn: {
-      name: "videoId",
-      referencedColumnName: "id",
-    },
-    inverseJoinColumn: {
-      name: "tagId",
-      referencedColumnName: "id",
-    },
-  })
-  @Field((type) => [YoutubeTag])
-  tags!: YoutubeTag[];
+  @Field((type) => [YoutubeVideoTagRelation])
+  tags!: YoutubeVideoTagRelation[];
 
   @ManyToOne((type) => YoutubeVideoCategory, (category) => category.videos, {
     nullable: false,

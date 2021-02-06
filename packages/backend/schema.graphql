@@ -147,8 +147,8 @@ type YoutubeKeyword {
 type YoutubeChannelKeywordRelation {
   channelId: ID!
   keywordId: ID!
-  channels: YoutubeChannel!
-  keywords: YoutubeKeyword!
+  channel: YoutubeChannel!
+  keyword: YoutubeKeyword!
 }
 
 type YoutubeTag {
@@ -158,6 +158,13 @@ type YoutubeTag {
   createdAt: Date!
   updatedAt: Date!
   videos: [YoutubeVideo!]!
+}
+
+type YoutubeVideoTagRelation {
+  videoId: ID!
+  tagOd: ID!
+  video: YoutubeVideo!
+  tag: YoutubeTag!
 }
 
 type YoutubeVideo {
@@ -172,7 +179,7 @@ type YoutubeVideo {
   commentCount: BigInt
   createdAt: Date!
   updatedAt: Date!
-  tags: [YoutubeTag!]!
+  tags: [YoutubeVideoTagRelation!]!
   videoCategory: YoutubeVideoCategory!
   channel: YoutubeChannel!
 }

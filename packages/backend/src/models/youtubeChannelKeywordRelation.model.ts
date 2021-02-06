@@ -12,8 +12,8 @@ export class YoutubeChannelKeywordRelation {
   keywordId!: string;
 
   @Field((type) => YoutubeChannel)
-  channels!: YoutubeChannel;
+  channel!: YoutubeChannel;
 
   @Field((type) => YoutubeKeyword)
-  keywords!: YoutubeKeyword;
+  keyword!: YoutubeKeyword;
 }

@@ -30,8 +30,12 @@ export class AccountService {
       include: {
         youtubeChannels: {
           include: {
-            videos: { take, orderBy: { viewCount: "desc" } },
-            keywords: { include: { keywords: true } },
+            videos: {
+              take,
+              orderBy: { viewCount: "desc" },
+              include: { tags: { include: { tag: true }, orderBy: { tag: { num: "desc" } } } },
+            },
+            keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
             channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
           },
         },

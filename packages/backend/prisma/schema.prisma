@@ -24,8 +24,8 @@ model Account {
 model YoutubeChannelKeywordRelation {
   channelId String         @db.VarChar(255)
   keywordId Int            @db.Int
-  channels  YoutubeChannel @relation(fields: [channelId], references: [id])
-  keywords  YoutubeKeyword @relation(fields: [keywordId], references: [id])
+  channel  YoutubeChannel @relation(fields: [channelId], references: [id])
+  keyword  YoutubeKeyword @relation(fields: [keywordId], references: [id])
 
   @@id([channelId, keywordId])
   @@index([channelId], name: "IDX_b18b74d0911b0e08ae917029f8")
@@ -35,8 +35,8 @@ model YoutubeChannelKeywordRelation {
 model YoutubeVideoTagRelation {
   videoId String       @db.VarChar(255)
   tagId   Int          @db.Int
-  tags    YoutubeTag   @relation(fields: [tagId], references: [id])
-  videos  YoutubeVideo @relation(fields: [videoId], references: [id])
+  tag    YoutubeTag   @relation(fields: [tagId], references: [id])
+  video  YoutubeVideo @relation(fields: [videoId], references: [id])
 
   @@id([videoId, tagId])
   @@index([videoId], name: "IDX_13e9d8647dadb5d352b6ba6833")
