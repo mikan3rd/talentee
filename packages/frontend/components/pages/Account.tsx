@@ -21,6 +21,7 @@ import { InstagramDetail } from "@/components/organisms/InstagramDetail";
 import { TiktokDetail } from "@/components/organisms/TiktokDetail";
 import { TwitterDetail } from "@/components/organisms/TwitterDetail";
 import { YoutubeDetail } from "@/components/organisms/YoutubeDetail";
+import { GetAccountPageQuery } from "@/graphql/generated";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 const ServiceList = ["youtube", "twitter", "instagram", "tiktok"] as const;
@@ -39,28 +40,10 @@ const scrollToElement = (elementId: ServiceType) => {
   }
 };
 
-export const Account = React.memo<{
-  accountData: AccountDataType;
-  youtubeData?: YoutubeData;
-  youtubePopularVideos: IYoutubeVideoData[];
-  twitterUserData?: TwitterUserDataType;
-  popularTweets: TweetDataType[];
-  instagramUserData?: InstagramUserDataType;
-  instagramPopularMedia: InstagramMediaType[];
-  tiktokUserData?: TiktokUserDataType;
-  tiktokPopularItem: TiktokItemType[];
-}>(
-  ({
-    accountData,
-    youtubeData,
-    youtubePopularVideos,
-    twitterUserData,
-    popularTweets,
-    instagramUserData,
-    instagramPopularMedia,
-    tiktokUserData,
-    tiktokPopularItem,
-  }) => {
+export type Props = Required<GetAccountPageQuery["getAccountPage"]>;
+
+export const Account = React.memo<Props>(
+  ({ displayName, thumbnailUrl, updatedAt, youtubeChannels, twitterUsers, instagramUsers, tiktokUsers }) => {
     const [headerHeight, setHeaderHeight] = React.useState(0);
     const [selectedTab, setSelectedTab] = React.useState<ServiceType>(null);
 
@@ -93,21 +76,27 @@ export const Account = React.memo<{
 
     const isUp = useScrollDirection();
 
-    const { tmpUsername, thumbnailUrl, updatedAt } = accountData;
-
-    const handleSelectedTab = (elementId: ServiceType) => {
+    const handleSelectedTab = React.useCallback((elementId: ServiceType) => {
       const tabEle = document.getElementById("service_tab");
       const targetEle = document.getElementById(`service_tab_${elementId}`);
       tabEle.scrollTo({ left: targetEle.offsetLeft, behavior: "smooth" });
       setSelectedTab(elementId);
-    };
+    }, []);
 
-    const handleOnClickTab = (elementId: ServiceType) => {
-      scrollToElement(elementId);
-      handleSelectedTab(elementId);
-    };
+    const handleOnClickTab = React.useCallback(
+      (elementId: ServiceType) => {
+        scrollToElement(elementId);
+        handleSelectedTab(elementId);
+      },
+      [handleSelectedTab],
+    );
 
-    const updateAtTime = dayjs.unix(updatedAt);
+    const youtubeChannel = youtubeChannels[0];
+    const twitterUser = twitterUsers[0];
+    const instagramUser = instagramUsers[0];
+    const tiktokUser = tiktokUsers[0];
+
+    const updateAtTime = React.useMemo(() => dayjs.unix(updatedAt), [updatedAt]);
 
     return (
       <>
@@ -118,7 +107,7 @@ export const Account = React.memo<{
         >
           <img
             src={thumbnailUrl}
-            alt={tmpUsername}
+            alt={displayName}
             css={css`
               width: 64px;
               height: 64px;
@@ -131,12 +120,12 @@ export const Account = React.memo<{
               margin-left: 10px;
             `}
           >
-            <h1>{tmpUsername}</h1>
+            <h1>{displayName}</h1>
             <div>
-              {youtubeData && <YoutubeSocialButton channelId={youtubeData.id} />}
-              {twitterUserData && <TwitterSocialButton username={twitterUserData.username} />}
-              {instagramUserData && <InstagramSocialButton username={instagramUserData.username} />}
-              {tiktokUserData && <TiktokSocialButton uniqueId={tiktokUserData.user.uniqueId} />}
+              {youtubeChannel && <YoutubeSocialButton channelId={youtubeChannel.id} />}
+              {twitterUser && <TwitterSocialButton username={twitterUser.username} />}
+              {instagramUser && <InstagramSocialButton username={instagramUser.username} />}
+              {tiktokUser && <TiktokSocialButton uniqueId={tiktokUser.uniqueId} />}
             </div>
           </div>
         </div>
@@ -171,7 +160,7 @@ export const Account = React.memo<{
           `}
         >
           {ServiceList.map((serviceName) => {
-            if (serviceName === ServiceYoutube && youtubeData) {
+            if (serviceName === ServiceYoutube && youtubeChannel) {
               return (
                 <Menu.Item
                   key={serviceName}
@@ -190,7 +179,7 @@ export const Account = React.memo<{
                 </Menu.Item>
               );
             }
-            if (serviceName === ServiceTwitter && twitterUserData) {
+            if (serviceName === ServiceTwitter && twitterUser) {
               return (
                 <Menu.Item
                   key={serviceName}
@@ -209,7 +198,7 @@ export const Account = React.memo<{
                 </Menu.Item>
               );
             }
-            if (serviceName === ServiceInstagram && instagramUserData) {
+            if (serviceName === ServiceInstagram && instagramUser) {
               return (
                 <Menu.Item
                   key={serviceName}
@@ -223,7 +212,7 @@ export const Account = React.memo<{
                 </Menu.Item>
               );
             }
-            if (serviceName === ServiceTiktok && tiktokUserData) {
+            if (serviceName === ServiceTiktok && tiktokUser) {
               return (
                 <Menu.Item
                   key={serviceName}
@@ -241,37 +230,37 @@ export const Account = React.memo<{
           })}
         </Menu>
 
-        {youtubeData && (
+        {youtubeChannel && (
           <>
             <div id={ServiceYoutube} ref={(el) => (refs.current[0] = el)}>
-              <YoutubeDetail youtubeData={youtubeData} youtubePopularVideos={youtubePopularVideos} />
+              <YoutubeDetail {...youtubeChannel} />
             </div>
           </>
         )}
 
-        {twitterUserData && (
+        {twitterUser && (
           <>
             <Divider />
             <div id={ServiceTwitter} ref={(el) => (refs.current[1] = el)}>
-              <TwitterDetail twitterUserData={twitterUserData} popularTweets={popularTweets} />
+              <TwitterDetail {...twitterUser} />
             </div>
           </>
         )}
 
-        {instagramUserData && (
+        {instagramUser && (
           <>
             <Divider />
             <div id={ServiceInstagram} ref={(el) => (refs.current[2] = el)}>
-              <InstagramDetail instagramUserData={instagramUserData} instagramPopularMedia={instagramPopularMedia} />
+              <InstagramDetail {...instagramUser} />
             </div>
           </>
         )}
 
-        {tiktokUserData && (
+        {tiktokUser && (
           <>
             <Divider />
             <div id={ServiceTiktok} ref={(el) => (refs.current[3] = el)}>
-              <TiktokDetail tiktokUserData={tiktokUserData} tiktokPopularItem={tiktokPopularItem} />
+              <TiktokDetail {...tiktokUser} />
             </div>
           </>
         )}

@@ -6,8 +6,6 @@
     "build": "next build && node scripts/generate-sitemap.js",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint:fix": "yarn lint --fix",
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {

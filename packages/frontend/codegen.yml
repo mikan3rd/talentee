@@ -1,8 +1,8 @@
 overwrite: true
 schema: "../backend/schema.graphql"
-# documents:
-#   - ./graphql/queries/*.graphql
-#   - ./graphql/mutations/*.graphql
+documents:
+  - ./graphql/queries/*.graphql
+  # - ./graphql/mutations/*.graphql
 generates:
   graphql/generated.ts:
     plugins:
@@ -14,6 +14,3 @@ generates:
       scalars:
         Date: number
         BigInt: number
-    hooks:
-      afterOneFileWrite:
-        - yarn lint --fix

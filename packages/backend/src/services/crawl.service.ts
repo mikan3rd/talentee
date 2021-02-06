@@ -344,6 +344,7 @@ export class CrawlService {
           video_view_count,
           product_type,
           dimensions,
+          mediaCount: edge_owner_to_timeline_media.count,
         };
       });
 

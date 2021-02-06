@@ -6,20 +6,18 @@ import { Header, Icon } from "semantic-ui-react";
 import { toUnitString } from "@/common/utils";
 import { Linkify } from "@/components/atoms/Linkify";
 import { TiktokSocialButton } from "@/components/atoms/SocialButton";
+import { Props as AccountProps } from "@/components/pages/Account";
 
-export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tiktokPopularItem: TiktokItemType[] }>(
-  ({ tiktokUserData, tiktokPopularItem }) => {
+export type Props = AccountProps["tiktokUsers"][number];
+
+export const TiktokDetail = React.memo<Props>(
+  ({ uniqueId, nickname, signature, avatarThumb, followerCount, followingCount, heartCount, videoCount, items }) => {
     React.useEffect(() => {
       const s = document.createElement("script");
       s.setAttribute("src", "https://www.tiktok.com/embed.js");
       s.setAttribute("async", "true");
       document.head.appendChild(s);
     }, []);
-
-    const {
-      user: { uniqueId, nickname, signature, avatarMedium },
-      stats: { followerCount, followingCount, heartCount, videoCount },
-    } = tiktokUserData;
 
     return (
       <div
@@ -42,7 +40,7 @@ export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tik
         >
           <div>
             <img
-              src={avatarMedium}
+              src={avatarThumb}
               alt={nickname}
               css={css`
                 width: 64px;
@@ -97,7 +95,7 @@ export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tik
           <Linkify>{signature}</Linkify>
         </p>
 
-        {tiktokPopularItem.length > 0 && (
+        {items.length > 0 && (
           <div>
             <Header
               css={css`
@@ -109,7 +107,7 @@ export const TiktokDetail = React.memo<{ tiktokUserData: TiktokUserDataType; tik
               <Icon name="heart" />
               人気の動画TOP3
             </Header>
-            {tiktokPopularItem.map((item) => {
+            {items.map((item) => {
               const { id } = item;
               return (
                 <blockquote

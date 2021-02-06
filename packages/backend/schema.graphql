@@ -224,6 +224,6 @@ type YoutubeChannel {
 }
 
 type Query {
-  getForAccountPage(uuid: ID!): Account
+  getAccountPage(uuid: ID!): Account
   youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
 }
