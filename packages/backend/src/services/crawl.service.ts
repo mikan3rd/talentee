@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import axios, { AxiosRequestConfig } from "axios";
 import cheerio = require("cheerio");
 import { HttpsProxyAgent } from "https-proxy-agent";
-import { LaunchOptions } from "puppeteer";
+import * as Puppeteer from "puppeteer";
 import puppeteerExtra from "puppeteer-extra";
 import StealthPlugin = require("puppeteer-extra-plugin-stealth");
 
@@ -68,7 +68,7 @@ export class CrawlService {
       args.push(`--proxy-server=${proxy}`);
     }
 
-    const options: LaunchOptions = {
+    const options: Puppeteer.LaunchOptions = {
       // ignoreHTTPSErrors: true,
       headless: true,
       devtools: false,
