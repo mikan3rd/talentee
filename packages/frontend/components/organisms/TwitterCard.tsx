@@ -3,7 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import Link from "next/link";
 
-import { toUnitString } from "../../common/utils";
+import { toUnitString } from "@/common/utils";
 
 export const TwitterCard = React.memo<{ data: TwitterUserObjectType; rankNum: number }>(({ data, rankNum }) => {
   const {

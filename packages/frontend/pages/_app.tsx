@@ -8,7 +8,7 @@ import "dayjs/locale/ja";
 import "semantic-ui-css/semantic.min.css";
 import "react-semantic-toasts/styles/react-semantic-alert.css";
 
-import { Layout } from "../components/templates/Layout";
+import { Layout } from "@/components/templates/Layout";
 
 dayjs.locale("ja");
 

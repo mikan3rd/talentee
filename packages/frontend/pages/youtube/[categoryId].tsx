@@ -4,10 +4,10 @@ import Error from "next/error";
 import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { VideoCategorieOptions } from "../../common/youtubeVideoCategory";
-import { YoutubeIndex } from "../../components/pages/YoutubeIndex";
-import { TopSection, YoutubeSection } from "../../components/templates/BreadcrumbSection";
-import { Meta } from "../../components/templates/Meta";
+import { VideoCategorieOptions } from "@/common/youtubeVideoCategory";
+import { YoutubeIndex } from "@/components/pages/YoutubeIndex";
+import { TopSection, YoutubeSection } from "@/components/templates/BreadcrumbSection";
+import { Meta } from "@/components/templates/Meta";
 
 export default React.memo(() => {
   const router = useRouter();

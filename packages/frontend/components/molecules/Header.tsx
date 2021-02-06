@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 import { Button, Container, Icon, Image } from "semantic-ui-react";
 
-import { useScrollDirection } from "../../hooks/useScrollDirection";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 export const Header = React.memo(() => {
   const isUp = useScrollDirection();

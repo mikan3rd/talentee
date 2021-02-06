@@ -2,9 +2,9 @@ import React from "react";
 
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { SearchIndex } from "../components/pages/SearchIndex";
-import { SearchSection, TopSection } from "../components/templates/BreadcrumbSection";
-import { Meta } from "../components/templates/Meta";
+import { SearchIndex } from "@/components/pages/SearchIndex";
+import { SearchSection, TopSection } from "@/components/templates/BreadcrumbSection";
+import { Meta } from "@/components/templates/Meta";
 
 export default React.memo(() => {
   return (

@@ -3,16 +3,16 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Button, Divider, Header, Icon, Menu } from "semantic-ui-react";
 
-import { VideoCategorieOptions, VideoCategoryOptionType } from "../../common/youtubeVideoCategory";
-import { useScrollDirection } from "../../hooks/useScrollDirection";
-import { useYoutubeIndexData } from "../../hooks/useYoutubeIndexData";
+import { VideoCategorieOptions, VideoCategoryOptionType } from "@/common/youtubeVideoCategory";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
-} from "../atoms/IndexLinkButton";
-import { YoutubeCard } from "../organisms/YoutubeCard";
+} from "@/components/atoms/IndexLinkButton";
+import { YoutubeCard } from "@/components/organisms/YoutubeCard";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { useYoutubeIndexData } from "@/hooks/useYoutubeIndexData";
 
 export const YoutubeIndex = React.memo<{ categoryOption: VideoCategoryOptionType }>(({ categoryOption }) => {
   const isUp = useScrollDirection();

@@ -1,7 +1,7 @@
 import React from "react";
 
-import firebase from "../firebase/clientApp";
-import { TwitterUserCollectionPath } from "../firebase/firestore";
+import firebase from "@/firebase/clientApp";
+import { TwitterUserCollectionPath } from "@/firebase/firestore";
 
 const PageLimit = 10;
 

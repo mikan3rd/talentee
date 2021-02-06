@@ -2,9 +2,9 @@ import React from "react";
 
 import { Breadcrumb } from "semantic-ui-react";
 
-import { Index } from "../components/pages/Index";
-import { TopSection } from "../components/templates/BreadcrumbSection";
-import { Meta } from "../components/templates/Meta";
+import { Index } from "@/components/pages/Index";
+import { TopSection } from "@/components/templates/BreadcrumbSection";
+import { Meta } from "@/components/templates/Meta";
 
 const Top = React.memo(() => {
   return (

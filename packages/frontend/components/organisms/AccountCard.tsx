@@ -8,7 +8,7 @@ import {
   TiktokSocialButton,
   TwitterSocialButton,
   YoutubeSocialButton,
-} from "../atoms/SocialButton";
+} from "@/components/atoms/SocialButton";
 
 export const AccountCard = React.memo<{ id: string; data: AccountObjectType }>(({ id, data }) => {
   const { tmpUsername, thumbnailUrl, youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = data;

@@ -3,7 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import Link from "next/link";
 
-import { toUnitString } from "../../common/utils";
+import { toUnitString } from "@/common/utils";
 
 export const TiktokCard = React.memo<{ data: TiktokUserObjectType; rankNum: number }>(({ data, rankNum }) => {
   const {

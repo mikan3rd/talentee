@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import dayjs from "dayjs";
 import { Icon, Label } from "semantic-ui-react";
 
-import { toUnitString } from "../../common/utils";
+import { toUnitString } from "@/common/utils";
 
 export const YoutubeVideoCard = React.memo<{ video: IYoutubeVideoData; rankNum: number }>(({ video, rankNum }) => {
   const {

@@ -2,9 +2,9 @@ import React from "react";
 
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { TiktokIndex } from "../components/pages/TiktokIndex";
-import { TiktokSection, TopSection } from "../components/templates/BreadcrumbSection";
-import { Meta } from "../components/templates/Meta";
+import { TiktokIndex } from "@/components/pages/TiktokIndex";
+import { TiktokSection, TopSection } from "@/components/templates/BreadcrumbSection";
+import { Meta } from "@/components/templates/Meta";
 
 const InstagramIndexPage = React.memo(() => {
   return (
