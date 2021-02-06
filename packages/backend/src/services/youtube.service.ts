@@ -228,6 +228,10 @@ export class YoutubeService {
   async saveChannelPopularVideo(channelId: string) {
     const videoIds = await this.crawlService.getChannelPopularVideo(channelId);
 
+    if (!videoIds.length) {
+      return;
+    }
+
     const videoResponse = await this.youtubeApi.videos.list({
       part: ["id", "snippet", "contentDetails", "statistics", "player"],
       hl: "ja",
