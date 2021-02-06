@@ -174,7 +174,7 @@ export class YoutubeService {
   async upsertChannel(youtubeChannel: YoutubeChannelFormatData, youtubeKeywords: string[], _accountId?: string) {
     const existKeywords = await this.findKeywordsByTitle(youtubeKeywords);
 
-    const keywords: Prisma.YoutubeChannelKeywordRelationCreateManyWithoutChannelsInput = {
+    const keywords: Prisma.YoutubeChannelKeywordRelationCreateNestedManyWithoutChannelsInput = {
       connectOrCreate: youtubeKeywords.map((title) => ({
         where: {
           channelId_keywordId: {
@@ -240,7 +240,7 @@ export class YoutubeService {
       const { youtubeVideo, youtubeVideoCategoryId, youtubeTags, youtubeChannelId } = this.formatVideoData(item);
       const existTags = await this.findTagsByTitle(youtubeTags);
 
-      const tags: Prisma.YoutubeVideoTagRelationCreateManyWithoutVideosInput = {
+      const tags: Prisma.YoutubeVideoTagRelationCreateNestedManyWithoutVideosInput = {
         connectOrCreate: youtubeTags.map((title) => ({
           where: {
             videoId_tagId: {
