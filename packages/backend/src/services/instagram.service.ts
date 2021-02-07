@@ -19,6 +19,10 @@ export class InstagramService {
   ) {}
 
   async upsertUsers(baseDataList: { username: string; accountId?: string }[]) {
+    if (!baseDataList.length) {
+      return;
+    }
+
     const baseDataMapping = baseDataList.reduce((prev, { username, accountId }) => {
       prev[username] = { accountId, username };
       return prev;
