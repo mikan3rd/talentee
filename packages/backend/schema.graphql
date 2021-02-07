@@ -54,40 +54,6 @@ type InstagramUser {
   mediaList: [InstagramMedia!]!
 }
 
-type TiktokItem {
-  id: ID!
-  desc: String!
-  commentCount: BigInt!
-  diggCount: BigInt!
-  playCount: BigInt!
-  shareCount: BigInt!
-  createdTimestamp: Date!
-  createdAt: Date!
-  updatedAt: Date!
-  user: TiktokUser!
-}
-
-type TiktokUser {
-  id: ID!
-  nickname: String!
-  uniqueId: String!
-  signature: String!
-  bioLink: String
-  avatarThumb: String!
-  followerCount: BigInt!
-  followingCount: BigInt!
-  heartCount: BigInt!
-  videoCount: BigInt!
-  verified: Boolean!
-  privateAccount: Boolean!
-  secret: Boolean!
-  createdTimestamp: Date!
-  createdAt: Date!
-  updatedAt: Date!
-  account: Account!
-  items: [TiktokItem!]!
-}
-
 type TwitterTweet {
   id: ID!
   text: String!
@@ -120,19 +86,6 @@ type TwitterUser {
   updatedAt: Date!
   account: Account!
   tweets: [TwitterTweet!]!
-}
-
-type Account {
-  uuid: ID!
-  displayName: String!
-  username: String!
-  thumbnailUrl: String!
-  createdAt: Date!
-  updatedAt: Date!
-  youtubeChannels: [YoutubeChannel!]!
-  twitterUsers: [TwitterUser!]!
-  instagramUsers: [InstagramUser!]!
-  tiktokUsers: [TiktokUser!]!
 }
 
 type YoutubeKeyword {
@@ -223,6 +176,53 @@ type YoutubeChannel {
   channelVideoCategories: [YoutubeChannelVideoCategory!]!
 }
 
+type Account {
+  uuid: ID!
+  displayName: String!
+  username: String!
+  thumbnailUrl: String!
+  createdAt: Date!
+  updatedAt: Date!
+  youtubeChannels: [YoutubeChannel!]!
+  twitterUsers: [TwitterUser!]!
+  instagramUsers: [InstagramUser!]!
+  tiktokUsers: [TiktokUser!]!
+}
+
+type TiktokItem {
+  id: ID!
+  desc: String!
+  commentCount: BigInt!
+  diggCount: BigInt!
+  playCount: BigInt!
+  shareCount: BigInt!
+  createdTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  user: TiktokUser!
+}
+
+type TiktokUser {
+  id: ID!
+  nickname: String!
+  uniqueId: String!
+  signature: String!
+  bioLink: String
+  avatarThumb: String!
+  followerCount: BigInt!
+  followingCount: BigInt!
+  heartCount: BigInt!
+  videoCount: BigInt!
+  verified: Boolean!
+  privateAccount: Boolean!
+  secret: Boolean!
+  createdTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  account: Account!
+  items: [TiktokItem!]!
+}
+
 type TopPage {
   youtubeChannels: [YoutubeChannel!]!
   twitterUsers: [TwitterUser!]!
@@ -234,4 +234,10 @@ type Query {
   getAccountPage(uuid: ID!): Account
   getTopPage: TopPage!
   youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
+  getTiktokRankingPage(pagination: PaginationInput!): [TiktokUser!]!
+}
+
+input PaginationInput {
+  take: Float!
+  page: ID!
 }
