@@ -6,11 +6,5 @@ const APOLLO_URI = serverRuntimeConfig.APOLLO_URI || publicRuntimeConfig.APOLLO_
 
 export const client = new ApolloClient({
   uri: `${APOLLO_URI}/graphql`,
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {},
-      },
-    },
-  }),
+  cache: new InMemoryCache(),
 });
