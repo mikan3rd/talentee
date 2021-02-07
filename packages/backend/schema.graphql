@@ -2,56 +2,44 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type InstagramLocation {
+type TiktokItem {
   id: ID!
-  name: String!
-  slug: String!
-  hasPublicPage: Boolean!
+  desc: String!
+  commentCount: BigInt!
+  diggCount: BigInt!
+  playCount: BigInt!
+  shareCount: BigInt!
+  createdTimestamp: Date!
   createdAt: Date!
   updatedAt: Date!
-  mediaList: [InstagramMedia!]!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-type InstagramMedia {
-  id: ID!
-  shortcode: String!
-  thumbnailSrc: String!
-  mediaToCaption: String!
-  displayUrl: String!
-  likedBy: BigInt!
-  mediaPreviewLike: BigInt!
-  mediaToComment: BigInt!
-  videoViewCount: BigInt
-  productType: String
-  isVideo: Boolean!
-  takenAtTimestamp: Date!
-  createdAt: Date!
-  updatedAt: Date!
-  user: InstagramUser!
-  location: InstagramLocation
+  user: TiktokUser!
 }
 
 """BigInt custom scalar type"""
 scalar BigInt
 
-type InstagramUser {
+"""Date custom scalar type"""
+scalar Date
+
+type TiktokUser {
   id: ID!
-  fullName: String!
-  username: String!
-  biography: String!
-  externalUrl: String
-  profilePicUrl: String!
-  followedBy: BigInt!
-  follow: BigInt!
-  isVerified: Boolean!
-  isPrivate: Boolean!
+  nickname: String!
+  uniqueId: String!
+  signature: String!
+  bioLink: String
+  avatarThumb: String!
+  followerCount: BigInt!
+  followingCount: BigInt!
+  heartCount: BigInt!
+  videoCount: BigInt!
+  verified: Boolean!
+  privateAccount: Boolean!
+  secret: Boolean!
+  createdTimestamp: Date!
   createdAt: Date!
   updatedAt: Date!
   account: Account!
-  mediaList: [InstagramMedia!]!
+  items: [TiktokItem!]!
 }
 
 type TwitterTweet {
@@ -189,38 +177,55 @@ type Account {
   tiktokUsers: [TiktokUser!]!
 }
 
-type TiktokItem {
+type InstagramLocation {
   id: ID!
-  desc: String!
-  commentCount: BigInt!
-  diggCount: BigInt!
-  playCount: BigInt!
-  shareCount: BigInt!
-  createdTimestamp: Date!
+  name: String!
+  slug: String!
+  hasPublicPage: Boolean!
   createdAt: Date!
   updatedAt: Date!
-  user: TiktokUser!
+  mediaList: [InstagramMedia!]!
 }
 
-type TiktokUser {
+type InstagramMedia {
   id: ID!
-  nickname: String!
-  uniqueId: String!
-  signature: String!
-  bioLink: String
-  avatarThumb: String!
-  followerCount: BigInt!
-  followingCount: BigInt!
-  heartCount: BigInt!
-  videoCount: BigInt!
-  verified: Boolean!
-  privateAccount: Boolean!
-  secret: Boolean!
-  createdTimestamp: Date!
+  shortcode: String!
+  thumbnailSrc: String!
+  mediaToCaption: String!
+  displayUrl: String!
+  likedBy: BigInt!
+  mediaPreviewLike: BigInt!
+  mediaToComment: BigInt!
+  videoViewCount: BigInt
+  productType: String
+  isVideo: Boolean!
+  takenAtTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  user: InstagramUser!
+  location: InstagramLocation
+}
+
+type InstagramUser {
+  id: ID!
+  fullName: String!
+  username: String!
+  biography: String!
+  externalUrl: String
+  profilePicUrl: String!
+  followedBy: BigInt!
+  follow: BigInt!
+  isVerified: Boolean!
+  isPrivate: Boolean!
   createdAt: Date!
   updatedAt: Date!
   account: Account!
-  items: [TiktokItem!]!
+  mediaList: [InstagramMedia!]!
+}
+
+type InstagramRankingPage {
+  totalPages: Int!
+  instagramUsers: [InstagramUser!]!
 }
 
 type TiktokRankingPage {
@@ -245,6 +250,7 @@ type Query {
   getTopPage: TopPage!
   youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
+  getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
 }
 

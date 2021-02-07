@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
   };
 };
 
-const InstagramIndexPage = React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
+const TiktokIndexPage = React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
   return (
     <>
       <Meta title={`TikTokランキング (${props.page}ページ目)`} description="人気のTikTokランキング" />
@@ -53,4 +53,4 @@ const InstagramIndexPage = React.memo<InferGetServerSidePropsType<typeof getServ
   );
 });
 
-export default InstagramIndexPage;
+export default TiktokIndexPage;

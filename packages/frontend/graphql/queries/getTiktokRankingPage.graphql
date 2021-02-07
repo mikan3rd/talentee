@@ -10,7 +10,7 @@ query getTiktokRankingPage($pagination: PaginationInput!) {
       heartCount
       videoCount
       account {
-      uuid
+        uuid
       }
     }
   }

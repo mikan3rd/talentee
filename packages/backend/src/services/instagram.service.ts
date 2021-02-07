@@ -18,6 +18,20 @@ export class InstagramService {
     private configService: ConfigService<EnvironmentVariables>,
   ) {}
 
+  async getRankingPage({ take, page }: { take: number; page: number }) {
+    const totalCount = await this.prisma.instagramUser.count();
+    const instagramUsers = await this.prisma.instagramUser.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { followedBy: "desc" },
+      include: { account: { select: { uuid: true } } },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      instagramUsers,
+    };
+  }
+
   async upsertUsers(baseDataList: { username: string; accountId?: string }[]) {
     if (!baseDataList.length) {
       return;
