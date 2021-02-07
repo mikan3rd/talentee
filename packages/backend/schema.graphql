@@ -223,7 +223,15 @@ type YoutubeChannel {
   channelVideoCategories: [YoutubeChannelVideoCategory!]!
 }
 
+type TopPage {
+  youtubeChannels: [YoutubeChannel!]!
+  twitterUsers: [TwitterUser!]!
+  instagramUsers: [InstagramUser!]!
+  tiktokUsers: [TiktokUser!]!
+}
+
 type Query {
   getAccountPage(uuid: ID!): Account
+  getTopPage: TopPage!
   youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
 }

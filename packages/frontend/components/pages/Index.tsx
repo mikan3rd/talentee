@@ -8,11 +8,11 @@ import { InstagramCard } from "@/components/organisms/InstagramCard";
 import { TiktokCard } from "@/components/organisms/TiktokCard";
 import { TwitterCard } from "@/components/organisms/TwitterCard";
 import { YoutubeCard } from "@/components/organisms/YoutubeCard";
-import { useIndexData } from "@/hooks/useIndexData";
+import { GetTopPageQuery } from "@/graphql/generated";
 
-export const Index = React.memo(() => {
-  const { youtubeData, twitterData, instagramData, tiktokData } = useIndexData();
+export type Props = Required<GetTopPageQuery["getTopPage"]>;
 
+export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagramUsers, tiktokUsers }) => {
   return (
     <>
       <img
@@ -31,7 +31,7 @@ export const Index = React.memo(() => {
         Talenteeで世界が注目するインフルエンサーを見つけよう！
       </p>
 
-      {youtubeData.length > 0 && (
+      {youtubeChannels.length > 0 && (
         <>
           <Divider />
           <div
@@ -108,8 +108,8 @@ export const Index = React.memo(() => {
               margin: 14px 0;
             `}
           >
-            {youtubeData.map((data, index) => {
-              return <YoutubeCard key={data.id} data={data} rankNum={index + 1} showDetails={false} />;
+            {youtubeChannels.map((data, index) => {
+              return <YoutubeCard key={data.id} {...data} rankNum={index + 1} showDetails={false} />;
             })}
           </div>
 
@@ -135,7 +135,7 @@ export const Index = React.memo(() => {
         </>
       )}
 
-      {twitterData.length > 0 && (
+      {twitterUsers.length > 0 && (
         <>
           <Divider />
           <div
@@ -212,8 +212,8 @@ export const Index = React.memo(() => {
               margin: 14px 0;
             `}
           >
-            {twitterData.map((data, index) => {
-              return <TwitterCard key={data.id} data={data} rankNum={index + 1} />;
+            {twitterUsers.map((data, index) => {
+              return <TwitterCard key={data.username} {...data} rankNum={index + 1} />;
             })}
           </div>
 
@@ -239,7 +239,7 @@ export const Index = React.memo(() => {
         </>
       )}
 
-      {instagramData.length > 0 && (
+      {instagramUsers.length > 0 && (
         <>
           <Divider />
           <div
@@ -322,8 +322,8 @@ export const Index = React.memo(() => {
               margin: 14px 0;
             `}
           >
-            {instagramData.map((data, index) => {
-              return <InstagramCard key={data.id} data={data} rankNum={index + 1} />;
+            {instagramUsers.map((data, index) => {
+              return <InstagramCard key={data.username} {...data} rankNum={index + 1} />;
             })}
           </div>
 
@@ -350,7 +350,7 @@ export const Index = React.memo(() => {
         </>
       )}
 
-      {tiktokData.length > 0 && (
+      {tiktokUsers.length > 0 && (
         <>
           <Divider />
           <div
@@ -434,8 +434,8 @@ export const Index = React.memo(() => {
               margin: 14px 0;
             `}
           >
-            {tiktokData.map((data, index) => {
-              return <TiktokCard key={data.user.id} data={data} rankNum={index + 1} />;
+            {tiktokUsers.map((data, index) => {
+              return <TiktokCard key={data.uniqueId} {...data} rankNum={index + 1} />;
             })}
           </div>
 

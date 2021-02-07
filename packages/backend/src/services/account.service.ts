@@ -23,7 +23,7 @@ export class AccountService {
     private tiktokService: TiktokService,
   ) {}
 
-  async getForAccountPage(uuid: string) {
+  async getAccountPage(uuid: string) {
     const take = 3;
     return this.prisma.account.findUnique({
       where: { uuid },
@@ -44,6 +44,35 @@ export class AccountService {
         tiktokUsers: { include: { items: { take, orderBy: { diggCount: "desc" } } } },
       },
     });
+  }
+
+  async getTopPage() {
+    const take = 3;
+    const youtubeChannels = await this.prisma.youtubeChannel.findMany({
+      take,
+      orderBy: { subscriberCount: "desc" },
+      include: {
+        account: { select: { uuid: true } },
+        keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
+        channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+      },
+    });
+    const twitterUsers = await this.prisma.twitterUser.findMany({
+      take,
+      orderBy: { followersCount: "desc" },
+      include: { account: { select: { uuid: true } } },
+    });
+    const instagramUsers = await this.prisma.instagramUser.findMany({
+      take,
+      orderBy: { followedBy: "desc" },
+      include: { account: { select: { uuid: true } } },
+    });
+    const tiktokUsers = await this.prisma.tiktokUser.findMany({
+      take,
+      orderBy: { followerCount: "desc" },
+      include: { account: { select: { uuid: true } } },
+    });
+    return { youtubeChannels, twitterUsers, instagramUsers, tiktokUsers };
   }
 
   async addServiceByYoutube(take: number) {
