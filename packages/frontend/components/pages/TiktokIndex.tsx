@@ -1,6 +1,7 @@
 import React from "react";
 
 import { css } from "@emotion/react";
+import { useRouter } from "next/router";
 import { Divider, Header, Pagination, PaginationProps } from "semantic-ui-react";
 
 import { toRankingNumByPagination } from "@/common/utils";
@@ -11,32 +12,22 @@ import {
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { TiktokCard } from "@/components/organisms/TiktokCard";
-import { useGetTiktokRankingPageQuery } from "@/graphql/generated";
+import { GetTiktokRankingPageQuery } from "@/graphql/generated";
 
-const take = 10;
+export type Props = {
+  page: number;
+  take: number;
+} & Required<GetTiktokRankingPageQuery["getTiktokRankingPage"]>;
 
-export const TiktokIndex = React.memo(() => {
-  const [page, setPage] = React.useState(1);
-
-  const { data, refetch } = useGetTiktokRankingPageQuery({ variables: { pagination: { take, page } } });
+export const TiktokIndex = React.memo<Props>(({ take, page, totalPages, tiktokUsers }) => {
+  const router = useRouter();
 
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-      const page = Number(data.activePage);
-      refetch({ pagination: { page, take } });
-      setPage(page);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      router.push({ query: { page: data.activePage } });
     },
-    [refetch],
+    [router],
   );
-
-  if (!data) {
-    return null;
-  }
-
-  const {
-    getTiktokRankingPage: { totalPages, tiktokUsers },
-  } = data;
 
   return (
     <>
@@ -80,6 +71,14 @@ export const TiktokIndex = React.memo(() => {
           `}
         >
           フォロワー数ランキング
+          <span
+            css={css`
+              margin-left: 10px;
+              font-size: 14px;
+            `}
+          >
+            {page}ページ目
+          </span>
         </Header>
       </div>
 
@@ -93,13 +92,17 @@ export const TiktokIndex = React.memo(() => {
         })}
       </div>
 
-      <div
+      <Pagination
         css={css`
-          margin: 10px auto 0 auto;
+          &&& {
+            width: 100%;
+            margin-top: 10px;
+          }
         `}
-      >
-        <Pagination activePage={page} totalPages={totalPages} onPageChange={handlePageChange} />
-      </div>
+        activePage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <Divider />
 
