@@ -241,6 +241,7 @@ type TwitterRankingPage {
 type YoutubeRankingPage {
   totalPages: Int!
   youtubeChannels: [YoutubeChannel!]!
+  youtubeVideoCategories: [YoutubeVideoCategory!]!
 }
 
 type TopPage {
@@ -262,7 +263,8 @@ type Query {
 input YoutubePaginationInput {
   take: Int!
   page: Int!
-  videoCategoryId: Float!
+  videoCategoryId: Int
+  isAll: Boolean!
 }
 
 input PaginationInput {

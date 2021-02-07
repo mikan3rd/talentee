@@ -25,5 +25,9 @@ query getYoutubeRankingPage($pagination: YoutubePaginationInput!) {
         uuid
       }
     }
+    youtubeVideoCategories {
+      id
+      title
+    }
   }
 }

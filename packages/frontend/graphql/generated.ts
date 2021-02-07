@@ -250,6 +250,7 @@ export type TwitterRankingPage = {
 export type YoutubeRankingPage = {
   totalPages: Scalars["Int"];
   youtubeChannels: Array<YoutubeChannel>;
+  youtubeVideoCategories: Array<YoutubeVideoCategory>;
 };
 
 export type TopPage = {
@@ -291,7 +292,8 @@ export type QueryGetTiktokRankingPageArgs = {
 export type YoutubePaginationInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
-  videoCategoryId: Scalars["Float"];
+  videoCategoryId?: Maybe<Scalars["Int"]>;
+  isAll: Scalars["Boolean"];
 };
 
 export type PaginationInput = {
@@ -470,6 +472,7 @@ export type GetYoutubeRankingPageQuery = {
         account: Pick<Account, "uuid">;
       }
     >;
+    youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id" | "title">>;
   };
 };
 
@@ -874,6 +877,10 @@ export const GetYoutubeRankingPageDocument = gql`
         account {
           uuid
         }
+      }
+      youtubeVideoCategories {
+        id
+        title
       }
     }
   }

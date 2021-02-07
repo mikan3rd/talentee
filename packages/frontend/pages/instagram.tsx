@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     variables: { pagination: { take, page } },
   });
 
-  if (!data.getInstagramRankingPage || !data.getInstagramRankingPage.instagramUsers.length) {
+  if (!data.getInstagramRankingPage.instagramUsers.length) {
     return { notFound: true };
   }
 

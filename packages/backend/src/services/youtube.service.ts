@@ -25,26 +25,53 @@ export class YoutubeService {
     });
   }
 
-  async getRankingPage({ take, page, videoCategoryId }: { take: number; page: number; videoCategoryId: number }) {
-    const totalCount = await this.prisma.youtubeChannel.count();
+  async getRankingPage({
+    take,
+    page,
+    videoCategoryId,
+    isAll,
+  }: {
+    take: number;
+    page: number;
+    videoCategoryId?: number;
+    isAll?: boolean;
+  }) {
+    const totalCount = await this.prisma.youtubeChannel.count({
+      where:
+        isAll === true
+          ? undefined
+          : {
+              channelVideoCategories: {
+                some: { videoCategoryId },
+              },
+            },
+    });
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
       skip: take * (page - 1),
       orderBy: { subscriberCount: "desc" },
-      where: {
-        channelVideoCategories: {
-          some: { videoCategoryId },
-        },
-      },
+      where:
+        isAll === true
+          ? undefined
+          : {
+              channelVideoCategories: {
+                some: { videoCategoryId },
+              },
+            },
       include: {
         account: { select: { uuid: true } },
         keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
         channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
       },
     });
+    const youtubeVideoCategories = await this.prisma.youtubeVideoCategory.findMany({
+      where: { assignable: true },
+      orderBy: { id: "asc" },
+    });
     return {
       totalPages: Math.ceil(totalCount / take),
       youtubeChannels,
+      youtubeVideoCategories,
     };
   }
 

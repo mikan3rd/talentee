@@ -25,7 +25,6 @@ export const InstagramCard = React.memo<Props>(
       >
         <Link href="/account/[accountId]" as={`/account/${uuid}`} passHref>
           <a
-            target="_blank"
             css={css`
               position: relative;
               display: block;

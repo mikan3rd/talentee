@@ -64,6 +64,14 @@ export const TwitterIndex = React.memo<Props>(({ page, take, totalPages, twitter
           `}
         >
           フォロワー数ランキング
+          <span
+            css={css`
+              margin-left: 10px;
+              font-size: 14px;
+            `}
+          >
+            {page}ページ目
+          </span>
         </Header>
       </div>
 

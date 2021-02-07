@@ -10,7 +10,7 @@ export class YoutubeResolver {
   constructor(@Inject(YoutubeService) private youtubeService: YoutubeService) {}
 
   @Query((returns) => YoutubeRankingPage)
-  async getYoutubeRankingPage(@Args("pagination") { take, page, videoCategoryId }: YoutubePaginationInput) {
-    return this.youtubeService.getRankingPage({ take, page, videoCategoryId });
+  async getYoutubeRankingPage(@Args("pagination") { take, page, videoCategoryId, isAll }: YoutubePaginationInput) {
+    return this.youtubeService.getRankingPage({ take, page, videoCategoryId, isAll });
   }
 }
