@@ -24,7 +24,6 @@ export const AccountCard = React.memo<{ id: string; data: AccountObjectType }>((
     >
       <Link href="/account/[accountId]" as={`/account/${id}`} passHref>
         <a
-          target="_blank"
           css={css`
             position: relative;
             display: block;

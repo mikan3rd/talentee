@@ -94,7 +94,11 @@ export const Account = React.memo<Props>(
       refs.current.forEach((ele) => observer.observe(ele));
 
       return () => {
-        refs.current.forEach((ele) => observer.unobserve(ele));
+        refs.current.forEach((ele) => {
+          if (ele) {
+            observer.unobserve(ele);
+          }
+        });
       };
     }, [handleSelectedTab]);
 

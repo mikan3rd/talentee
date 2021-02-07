@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     variables: { pagination: { take, page } },
   });
 
-  if (!data.getTiktokRankingPage || !data.getTiktokRankingPage.tiktokUsers.length) {
+  if (!data.getTiktokRankingPage.tiktokUsers.length) {
     return { notFound: true };
   }
 

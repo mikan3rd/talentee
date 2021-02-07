@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     variables: { pagination: { take, page } },
   });
 
-  if (!data.getTwitterRankingPage || !data.getTwitterRankingPage.twitterUsers.length) {
+  if (!data.getTwitterRankingPage.twitterUsers.length) {
     return { notFound: true };
   }
 

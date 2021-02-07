@@ -13,11 +13,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const { data } = await client.query<GetTopPageQuery, GetTopPageQueryVariables>({
     query: GetTopPageDocument,
   });
-
-  if (!data.getTopPage) {
-    return { notFound: true };
-  }
-
   return { props: data.getTopPage };
 };
 

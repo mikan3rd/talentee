@@ -8,3 +8,12 @@ export class PaginationInput {
   @Field((type) => Int)
   page!: number;
 }
+
+@InputType()
+export class YoutubePaginationInput extends PaginationInput {
+  @Field((type) => Int, { nullable: true })
+  videoCategoryId?: number;
+
+  @Field()
+  isAll?: boolean;
+}

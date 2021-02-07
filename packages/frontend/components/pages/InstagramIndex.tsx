@@ -71,6 +71,14 @@ export const InstagramIndex = React.memo<Props>(({ page, take, totalPages, insta
           `}
         >
           フォロワー数ランキング
+          <span
+            css={css`
+              margin-left: 10px;
+              font-size: 14px;
+            `}
+          >
+            {page}ページ目
+          </span>
         </Header>
       </div>
 
