@@ -18,6 +18,20 @@ export class TiktokService {
     private configService: ConfigService<EnvironmentVariables>,
   ) {}
 
+  async getRankingPage({ take, page }: { take: number; page: number }) {
+    const totalCount = await this.prisma.tiktokUser.count();
+    const tiktokUsers = await this.prisma.tiktokUser.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { followerCount: "desc" },
+      include: { account: { select: { uuid: true } } },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      tiktokUsers,
+    };
+  }
+
   async upsertUser(_uniqueId: string, _accountId?: string) {
     const result = await this.crawlService.getTiktokUser(_uniqueId);
 
