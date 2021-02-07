@@ -25,7 +25,7 @@ export class TwitterService {
 
   async getRankingPage({ take, page }: { take: number; page: number }) {
     const totalCount = await this.prisma.twitterUser.count();
-    const tiktokUsers = await this.prisma.twitterUser.findMany({
+    const twitterUsers = await this.prisma.twitterUser.findMany({
       take,
       skip: take * (page - 1),
       orderBy: { followersCount: "desc" },
@@ -33,7 +33,7 @@ export class TwitterService {
     });
     return {
       totalPages: Math.ceil(totalCount / take),
-      tiktokUsers,
+      twitterUsers,
     };
   }
 
