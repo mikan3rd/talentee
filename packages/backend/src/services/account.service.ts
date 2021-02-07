@@ -51,18 +51,26 @@ export class AccountService {
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
       orderBy: { subscriberCount: "desc" },
+      include: {
+        account: { select: { uuid: true } },
+        keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
+        channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+      },
     });
     const twitterUsers = await this.prisma.twitterUser.findMany({
       take,
       orderBy: { followersCount: "desc" },
+      include: { account: { select: { uuid: true } } },
     });
     const instagramUsers = await this.prisma.instagramUser.findMany({
       take,
       orderBy: { followedBy: "desc" },
+      include: { account: { select: { uuid: true } } },
     });
     const tiktokUsers = await this.prisma.tiktokUser.findMany({
       take,
       orderBy: { followerCount: "desc" },
+      include: { account: { select: { uuid: true } } },
     });
     return { youtubeChannels, twitterUsers, instagramUsers, tiktokUsers };
   }

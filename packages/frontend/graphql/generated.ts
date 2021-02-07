@@ -232,8 +232,16 @@ export type YoutubeChannel = {
   channelVideoCategories: Array<YoutubeChannelVideoCategory>;
 };
 
+export type TopPage = {
+  youtubeChannels: Array<YoutubeChannel>;
+  twitterUsers: Array<TwitterUser>;
+  instagramUsers: Array<InstagramUser>;
+  tiktokUsers: Array<TiktokUser>;
+};
+
 export type Query = {
   getAccountPage?: Maybe<Account>;
+  getTopPage: TopPage;
   youtubeChannelByMainVideoCategory: Array<YoutubeChannel>;
 };
 
@@ -308,6 +316,46 @@ export type GetAccountPageQuery = {
       >;
     }
   >;
+};
+
+export type GetTopPageQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetTopPageQuery = {
+  getTopPage: {
+    youtubeChannels: Array<
+      Pick<
+        YoutubeChannel,
+        | "id"
+        | "title"
+        | "thumbnailUrl"
+        | "description"
+        | "subscriberCount"
+        | "viewCount"
+        | "videoCount"
+        | "hiddenSubscriberCount"
+      > & {
+        keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+        channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+        account: Pick<Account, "uuid">;
+      }
+    >;
+    twitterUsers: Array<
+      Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
+        account: Pick<Account, "uuid">;
+      }
+    >;
+    instagramUsers: Array<
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy"> & {
+        account: Pick<Account, "uuid">;
+      }
+    >;
+    tiktokUsers: Array<
+      Pick<
+        TiktokUser,
+        "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
+      > & { account: Pick<Account, "uuid"> }
+    >;
+  };
 };
 
 export const GetAccountPageDocument = gql`
@@ -423,3 +471,93 @@ export function useGetAccountPageLazyQuery(
 export type GetAccountPageQueryHookResult = ReturnType<typeof useGetAccountPageQuery>;
 export type GetAccountPageLazyQueryHookResult = ReturnType<typeof useGetAccountPageLazyQuery>;
 export type GetAccountPageQueryResult = Apollo.QueryResult<GetAccountPageQuery, GetAccountPageQueryVariables>;
+export const GetTopPageDocument = gql`
+  query getTopPage {
+    getTopPage {
+      youtubeChannels {
+        id
+        title
+        thumbnailUrl
+        description
+        subscriberCount
+        viewCount
+        videoCount
+        hiddenSubscriberCount
+        keywords {
+          keyword {
+            title
+          }
+        }
+        channelVideoCategories {
+          videoCategory {
+            id
+            title
+          }
+        }
+        account {
+          uuid
+        }
+      }
+      twitterUsers {
+        username
+        name
+        description
+        followersCount
+        tweetCount
+        profileImageUrl
+        account {
+          uuid
+        }
+      }
+      instagramUsers {
+        username
+        fullName
+        biography
+        profilePicUrl
+        followedBy
+        account {
+          uuid
+        }
+      }
+      tiktokUsers {
+        uniqueId
+        nickname
+        signature
+        avatarThumb
+        followerCount
+        heartCount
+        videoCount
+        account {
+          uuid
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetTopPageQuery__
+ *
+ * To run a query within a React component, call `useGetTopPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTopPageQuery(baseOptions?: Apollo.QueryHookOptions<GetTopPageQuery, GetTopPageQueryVariables>) {
+  return Apollo.useQuery<GetTopPageQuery, GetTopPageQueryVariables>(GetTopPageDocument, baseOptions);
+}
+export function useGetTopPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTopPageQuery, GetTopPageQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetTopPageQuery, GetTopPageQueryVariables>(GetTopPageDocument, baseOptions);
+}
+export type GetTopPageQueryHookResult = ReturnType<typeof useGetTopPageQuery>;
+export type GetTopPageLazyQueryHookResult = ReturnType<typeof useGetTopPageLazyQuery>;
+export type GetTopPageQueryResult = Apollo.QueryResult<GetTopPageQuery, GetTopPageQueryVariables>;
