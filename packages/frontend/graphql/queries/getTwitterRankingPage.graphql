@@ -1,0 +1,16 @@
+query getTwitterRankingPage($pagination: PaginationInput!) {
+  getTwitterRankingPage(pagination: $pagination) {
+    totalPages
+    twitterUsers {
+      username
+      name
+      description
+      followersCount
+      tweetCount
+      profileImageUrl
+      account {
+        uuid
+      }
+    }
+  }
+}

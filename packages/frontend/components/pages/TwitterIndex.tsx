@@ -1,8 +1,10 @@
 import React from "react";
 
 import { css } from "@emotion/react";
-import { Button, Divider, Header, Icon } from "semantic-ui-react";
+import { useRouter } from "next/router";
+import { Divider, Header, Icon, Pagination, PaginationProps } from "semantic-ui-react";
 
+import { toRankingNumByPagination } from "@/common/utils";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
@@ -10,10 +12,23 @@ import {
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { TwitterCard } from "@/components/organisms/TwitterCard";
-import { useTwitterIndexData } from "@/hooks/useTwitterIndexData";
+import { GetTwitterRankingPageQuery } from "@/graphql/generated";
 
-export const TwitterIndex = React.memo(() => {
-  const { twitterData, hasNext, getTwitterNextPageData } = useTwitterIndexData();
+export type Props = {
+  page: number;
+  take: number;
+} & Required<GetTwitterRankingPageQuery["getTwitterRankingPage"]>;
+
+export const TwitterIndex = React.memo<Props>(({ page, take, totalPages, twitterUsers }) => {
+  const router = useRouter();
+
+  const handlePageChange = React.useCallback(
+    async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
+      router.push({ query: { page: data.activePage } });
+    },
+    [router],
+  );
+
   return (
     <>
       <Header
@@ -57,28 +72,24 @@ export const TwitterIndex = React.memo(() => {
           margin-top: 10px;
         `}
       >
-        {twitterData.map((data, index) => {
-          return <TwitterCard key={data.id} data={data} rankNum={index + 1} />;
+        {twitterUsers.map((data, index) => {
+          return (
+            <TwitterCard key={data.username} {...data} rankNum={toRankingNumByPagination({ page, take, index })} />
+          );
         })}
       </div>
 
-      {hasNext && (
-        <Button
-          fluid
-          icon
-          labelPosition="left"
-          color="twitter"
-          onClick={() => getTwitterNextPageData()}
-          css={css`
-            &&& {
-              margin: 20px 0 40px 0;
-            }
-          `}
-        >
-          <Icon name="hand point right" />
-          {twitterData.length}位以降を読み込む
-        </Button>
-      )}
+      <Pagination
+        css={css`
+          &&& {
+            width: 100%;
+            margin-top: 10px;
+          }
+        `}
+        activePage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <Divider />
 

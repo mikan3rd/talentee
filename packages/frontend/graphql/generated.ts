@@ -11,56 +11,44 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Date custom scalar type */
-  Date: number;
   /** BigInt custom scalar type */
   BigInt: number;
+  /** Date custom scalar type */
+  Date: number;
 };
 
-export type InstagramLocation = {
+export type TiktokItem = {
   id: Scalars["ID"];
-  name: Scalars["String"];
-  slug: Scalars["String"];
-  hasPublicPage: Scalars["Boolean"];
+  desc: Scalars["String"];
+  commentCount: Scalars["BigInt"];
+  diggCount: Scalars["BigInt"];
+  playCount: Scalars["BigInt"];
+  shareCount: Scalars["BigInt"];
+  createdTimestamp: Scalars["Date"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
-  mediaList: Array<InstagramMedia>;
+  user: TiktokUser;
 };
 
-export type InstagramMedia = {
+export type TiktokUser = {
   id: Scalars["ID"];
-  shortcode: Scalars["String"];
-  thumbnailSrc: Scalars["String"];
-  mediaToCaption: Scalars["String"];
-  displayUrl: Scalars["String"];
-  likedBy: Scalars["BigInt"];
-  mediaPreviewLike: Scalars["BigInt"];
-  mediaToComment: Scalars["BigInt"];
-  videoViewCount?: Maybe<Scalars["BigInt"]>;
-  productType?: Maybe<Scalars["String"]>;
-  isVideo: Scalars["Boolean"];
-  takenAtTimestamp: Scalars["Date"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  user: InstagramUser;
-  location?: Maybe<InstagramLocation>;
-};
-
-export type InstagramUser = {
-  id: Scalars["ID"];
-  fullName: Scalars["String"];
-  username: Scalars["String"];
-  biography: Scalars["String"];
-  externalUrl?: Maybe<Scalars["String"]>;
-  profilePicUrl: Scalars["String"];
-  followedBy: Scalars["BigInt"];
-  follow: Scalars["BigInt"];
-  isVerified: Scalars["Boolean"];
-  isPrivate: Scalars["Boolean"];
+  nickname: Scalars["String"];
+  uniqueId: Scalars["String"];
+  signature: Scalars["String"];
+  bioLink?: Maybe<Scalars["String"]>;
+  avatarThumb: Scalars["String"];
+  followerCount: Scalars["BigInt"];
+  followingCount: Scalars["BigInt"];
+  heartCount: Scalars["BigInt"];
+  videoCount: Scalars["BigInt"];
+  verified: Scalars["Boolean"];
+  privateAccount: Scalars["Boolean"];
+  secret: Scalars["Boolean"];
+  createdTimestamp: Scalars["Date"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
   account: Account;
-  mediaList: Array<InstagramMedia>;
+  items: Array<TiktokItem>;
 };
 
 export type TwitterTweet = {
@@ -198,43 +186,65 @@ export type Account = {
   tiktokUsers: Array<TiktokUser>;
 };
 
-export type TiktokItem = {
+export type InstagramLocation = {
   id: Scalars["ID"];
-  desc: Scalars["String"];
-  commentCount: Scalars["BigInt"];
-  diggCount: Scalars["BigInt"];
-  playCount: Scalars["BigInt"];
-  shareCount: Scalars["BigInt"];
-  createdTimestamp: Scalars["Date"];
+  name: Scalars["String"];
+  slug: Scalars["String"];
+  hasPublicPage: Scalars["Boolean"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
-  user: TiktokUser;
+  mediaList: Array<InstagramMedia>;
 };
 
-export type TiktokUser = {
+export type InstagramMedia = {
   id: Scalars["ID"];
-  nickname: Scalars["String"];
-  uniqueId: Scalars["String"];
-  signature: Scalars["String"];
-  bioLink?: Maybe<Scalars["String"]>;
-  avatarThumb: Scalars["String"];
-  followerCount: Scalars["BigInt"];
-  followingCount: Scalars["BigInt"];
-  heartCount: Scalars["BigInt"];
-  videoCount: Scalars["BigInt"];
-  verified: Scalars["Boolean"];
-  privateAccount: Scalars["Boolean"];
-  secret: Scalars["Boolean"];
-  createdTimestamp: Scalars["Date"];
+  shortcode: Scalars["String"];
+  thumbnailSrc: Scalars["String"];
+  mediaToCaption: Scalars["String"];
+  displayUrl: Scalars["String"];
+  likedBy: Scalars["BigInt"];
+  mediaPreviewLike: Scalars["BigInt"];
+  mediaToComment: Scalars["BigInt"];
+  videoViewCount?: Maybe<Scalars["BigInt"]>;
+  productType?: Maybe<Scalars["String"]>;
+  isVideo: Scalars["Boolean"];
+  takenAtTimestamp: Scalars["Date"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  user: InstagramUser;
+  location?: Maybe<InstagramLocation>;
+};
+
+export type InstagramUser = {
+  id: Scalars["ID"];
+  fullName: Scalars["String"];
+  username: Scalars["String"];
+  biography: Scalars["String"];
+  externalUrl?: Maybe<Scalars["String"]>;
+  profilePicUrl: Scalars["String"];
+  followedBy: Scalars["BigInt"];
+  follow: Scalars["BigInt"];
+  isVerified: Scalars["Boolean"];
+  isPrivate: Scalars["Boolean"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
   account: Account;
-  items: Array<TiktokItem>;
+  mediaList: Array<InstagramMedia>;
+};
+
+export type InstagramRankingPage = {
+  totalPages: Scalars["Int"];
+  instagramUsers: Array<InstagramUser>;
 };
 
 export type TiktokRankingPage = {
   totalPages: Scalars["Int"];
   tiktokUsers: Array<TiktokUser>;
+};
+
+export type TwitterRankingPage = {
+  totalPages: Scalars["Int"];
+  twitterUsers: Array<TwitterUser>;
 };
 
 export type TopPage = {
@@ -248,6 +258,8 @@ export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
   youtubeChannelByMainVideoCategory: Array<YoutubeChannel>;
+  getTwitterRankingPage: TwitterRankingPage;
+  getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
 };
 
@@ -257,6 +269,14 @@ export type QueryGetAccountPageArgs = {
 
 export type QueryYoutubeChannelByMainVideoCategoryArgs = {
   videoCategoryId: Scalars["Int"];
+};
+
+export type QueryGetTwitterRankingPageArgs = {
+  pagination: PaginationInput;
+};
+
+export type QueryGetInstagramRankingPageArgs = {
+  pagination: PaginationInput;
 };
 
 export type QueryGetTiktokRankingPageArgs = {
@@ -333,6 +353,20 @@ export type GetAccountPageQuery = {
   >;
 };
 
+export type GetInstagramRankingPageQueryVariables = Exact<{
+  pagination: PaginationInput;
+}>;
+
+export type GetInstagramRankingPageQuery = {
+  getInstagramRankingPage: Pick<InstagramRankingPage, "totalPages"> & {
+    instagramUsers: Array<
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy"> & {
+        account: Pick<Account, "uuid">;
+      }
+    >;
+  };
+};
+
 export type GetTiktokRankingPageQueryVariables = Exact<{
   pagination: PaginationInput;
 }>;
@@ -384,6 +418,20 @@ export type GetTopPageQuery = {
         TiktokUser,
         "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
       > & { account: Pick<Account, "uuid"> }
+    >;
+  };
+};
+
+export type GetTwitterRankingPageQueryVariables = Exact<{
+  pagination: PaginationInput;
+}>;
+
+export type GetTwitterRankingPageQuery = {
+  getTwitterRankingPage: Pick<TwitterRankingPage, "totalPages"> & {
+    twitterUsers: Array<
+      Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
+        account: Pick<Account, "uuid">;
+      }
     >;
   };
 };
@@ -501,6 +549,62 @@ export function useGetAccountPageLazyQuery(
 export type GetAccountPageQueryHookResult = ReturnType<typeof useGetAccountPageQuery>;
 export type GetAccountPageLazyQueryHookResult = ReturnType<typeof useGetAccountPageLazyQuery>;
 export type GetAccountPageQueryResult = Apollo.QueryResult<GetAccountPageQuery, GetAccountPageQueryVariables>;
+export const GetInstagramRankingPageDocument = gql`
+  query getInstagramRankingPage($pagination: PaginationInput!) {
+    getInstagramRankingPage(pagination: $pagination) {
+      totalPages
+      instagramUsers {
+        username
+        fullName
+        biography
+        profilePicUrl
+        followedBy
+        account {
+          uuid
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetInstagramRankingPageQuery__
+ *
+ * To run a query within a React component, call `useGetInstagramRankingPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInstagramRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInstagramRankingPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetInstagramRankingPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>,
+) {
+  return Apollo.useQuery<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>(
+    GetInstagramRankingPageDocument,
+    baseOptions,
+  );
+}
+export function useGetInstagramRankingPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>(
+    GetInstagramRankingPageDocument,
+    baseOptions,
+  );
+}
+export type GetInstagramRankingPageQueryHookResult = ReturnType<typeof useGetInstagramRankingPageQuery>;
+export type GetInstagramRankingPageLazyQueryHookResult = ReturnType<typeof useGetInstagramRankingPageLazyQuery>;
+export type GetInstagramRankingPageQueryResult = Apollo.QueryResult<
+  GetInstagramRankingPageQuery,
+  GetInstagramRankingPageQueryVariables
+>;
 export const GetTiktokRankingPageDocument = gql`
   query getTiktokRankingPage($pagination: PaginationInput!) {
     getTiktokRankingPage(pagination: $pagination) {
@@ -649,3 +753,60 @@ export function useGetTopPageLazyQuery(
 export type GetTopPageQueryHookResult = ReturnType<typeof useGetTopPageQuery>;
 export type GetTopPageLazyQueryHookResult = ReturnType<typeof useGetTopPageLazyQuery>;
 export type GetTopPageQueryResult = Apollo.QueryResult<GetTopPageQuery, GetTopPageQueryVariables>;
+export const GetTwitterRankingPageDocument = gql`
+  query getTwitterRankingPage($pagination: PaginationInput!) {
+    getTwitterRankingPage(pagination: $pagination) {
+      totalPages
+      twitterUsers {
+        username
+        name
+        description
+        followersCount
+        tweetCount
+        profileImageUrl
+        account {
+          uuid
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetTwitterRankingPageQuery__
+ *
+ * To run a query within a React component, call `useGetTwitterRankingPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTwitterRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTwitterRankingPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetTwitterRankingPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>,
+) {
+  return Apollo.useQuery<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>(
+    GetTwitterRankingPageDocument,
+    baseOptions,
+  );
+}
+export function useGetTwitterRankingPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>(
+    GetTwitterRankingPageDocument,
+    baseOptions,
+  );
+}
+export type GetTwitterRankingPageQueryHookResult = ReturnType<typeof useGetTwitterRankingPageQuery>;
+export type GetTwitterRankingPageLazyQueryHookResult = ReturnType<typeof useGetTwitterRankingPageLazyQuery>;
+export type GetTwitterRankingPageQueryResult = Apollo.QueryResult<
+  GetTwitterRankingPageQuery,
+  GetTwitterRankingPageQueryVariables
+>;
