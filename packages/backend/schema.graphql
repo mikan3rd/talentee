@@ -238,6 +238,11 @@ type TwitterRankingPage {
   twitterUsers: [TwitterUser!]!
 }
 
+type YoutubeRankingPage {
+  totalPages: Int!
+  youtubeChannels: [YoutubeChannel!]!
+}
+
 type TopPage {
   youtubeChannels: [YoutubeChannel!]!
   twitterUsers: [TwitterUser!]!
@@ -248,10 +253,16 @@ type TopPage {
 type Query {
   getAccountPage(uuid: ID!): Account
   getTopPage: TopPage!
-  youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
+  getYoutubeRankingPage(pagination: YoutubePaginationInput!): YoutubeRankingPage!
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
   getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
+}
+
+input YoutubePaginationInput {
+  take: Int!
+  page: Int!
+  videoCategoryId: Float!
 }
 
 input PaginationInput {

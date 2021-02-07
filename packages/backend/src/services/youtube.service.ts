@@ -25,6 +25,29 @@ export class YoutubeService {
     });
   }
 
+  async getRankingPage({ take, page, videoCategoryId }: { take: number; page: number; videoCategoryId: number }) {
+    const totalCount = await this.prisma.youtubeChannel.count();
+    const youtubeChannels = await this.prisma.youtubeChannel.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { subscriberCount: "desc" },
+      where: {
+        channelVideoCategories: {
+          some: { videoCategoryId },
+        },
+      },
+      include: {
+        account: { select: { uuid: true } },
+        keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
+        channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+      },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      youtubeChannels,
+    };
+  }
+
   async getChannelList(channelIds: string[]) {
     return await this.youtubeApi.channels.list({
       part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
@@ -43,26 +66,6 @@ export class YoutubeService {
       where: { title: { in: titles } },
     });
   }
-
-  // async saveKeywords(payloads: Prisma.YoutubeKeywordCreateInput[]) {
-  //   return payloads.map((payload) =>
-  //     this.prisma.youtubeKeyword.upsert({
-  //       where: { title: payload.title },
-  //       create: payload,
-  //       update: payload,
-  //     }),
-  //   );
-  // }
-
-  // async saveTags(payloads: Prisma.YoutubeTagCreateInput[]) {
-  //   return payloads.map((payload) =>
-  //     this.prisma.youtubeTag.upsert({
-  //       where: { title: payload.title },
-  //       create: payload,
-  //       update: payload,
-  //     }),
-  //   );
-  // }
 
   async getVideoCategories() {
     const videoResponse = await this.youtubeApi.videoCategories.list({
@@ -322,25 +325,6 @@ export class YoutubeService {
     }
 
     await this.prisma.$transaction(transactionValues);
-  }
-
-  async getChannelByMainCategory(videoCategoryId: number) {
-    const channels = await this.prisma.youtubeChannel.findMany({
-      where: {
-        channelVideoCategories: {
-          some: { videoCategoryId },
-        },
-      },
-      orderBy: { subscriberCount: "desc" },
-      include: {
-        account: true,
-        channelVideoCategories: {
-          orderBy: { num: "desc" },
-          take: 1,
-        },
-      },
-    });
-    return channels.filter((channel) => channel.channelVideoCategories[0].videoCategoryId === videoCategoryId);
   }
 
   async bulkUpdateChannelKeyword() {

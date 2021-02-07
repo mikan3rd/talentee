@@ -247,6 +247,11 @@ export type TwitterRankingPage = {
   twitterUsers: Array<TwitterUser>;
 };
 
+export type YoutubeRankingPage = {
+  totalPages: Scalars["Int"];
+  youtubeChannels: Array<YoutubeChannel>;
+};
+
 export type TopPage = {
   youtubeChannels: Array<YoutubeChannel>;
   twitterUsers: Array<TwitterUser>;
@@ -257,7 +262,7 @@ export type TopPage = {
 export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
-  youtubeChannelByMainVideoCategory: Array<YoutubeChannel>;
+  getYoutubeRankingPage: YoutubeRankingPage;
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
@@ -267,8 +272,8 @@ export type QueryGetAccountPageArgs = {
   uuid: Scalars["ID"];
 };
 
-export type QueryYoutubeChannelByMainVideoCategoryArgs = {
-  videoCategoryId: Scalars["Int"];
+export type QueryGetYoutubeRankingPageArgs = {
+  pagination: YoutubePaginationInput;
 };
 
 export type QueryGetTwitterRankingPageArgs = {
@@ -281,6 +286,12 @@ export type QueryGetInstagramRankingPageArgs = {
 
 export type QueryGetTiktokRankingPageArgs = {
   pagination: PaginationInput;
+};
+
+export type YoutubePaginationInput = {
+  take: Scalars["Int"];
+  page: Scalars["Int"];
+  videoCategoryId: Scalars["Float"];
 };
 
 export type PaginationInput = {
@@ -430,6 +441,32 @@ export type GetTwitterRankingPageQuery = {
   getTwitterRankingPage: Pick<TwitterRankingPage, "totalPages"> & {
     twitterUsers: Array<
       Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
+        account: Pick<Account, "uuid">;
+      }
+    >;
+  };
+};
+
+export type GetYoutubeRankingPageQueryVariables = Exact<{
+  pagination: YoutubePaginationInput;
+}>;
+
+export type GetYoutubeRankingPageQuery = {
+  getYoutubeRankingPage: Pick<YoutubeRankingPage, "totalPages"> & {
+    youtubeChannels: Array<
+      Pick<
+        YoutubeChannel,
+        | "id"
+        | "title"
+        | "thumbnailUrl"
+        | "description"
+        | "subscriberCount"
+        | "viewCount"
+        | "videoCount"
+        | "hiddenSubscriberCount"
+      > & {
+        keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+        channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
         account: Pick<Account, "uuid">;
       }
     >;
@@ -809,4 +846,74 @@ export type GetTwitterRankingPageLazyQueryHookResult = ReturnType<typeof useGetT
 export type GetTwitterRankingPageQueryResult = Apollo.QueryResult<
   GetTwitterRankingPageQuery,
   GetTwitterRankingPageQueryVariables
+>;
+export const GetYoutubeRankingPageDocument = gql`
+  query getYoutubeRankingPage($pagination: YoutubePaginationInput!) {
+    getYoutubeRankingPage(pagination: $pagination) {
+      totalPages
+      youtubeChannels {
+        id
+        title
+        thumbnailUrl
+        description
+        subscriberCount
+        viewCount
+        videoCount
+        hiddenSubscriberCount
+        keywords {
+          keyword {
+            title
+          }
+        }
+        channelVideoCategories {
+          videoCategory {
+            id
+            title
+          }
+        }
+        account {
+          uuid
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetYoutubeRankingPageQuery__
+ *
+ * To run a query within a React component, call `useGetYoutubeRankingPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetYoutubeRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetYoutubeRankingPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetYoutubeRankingPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>,
+) {
+  return Apollo.useQuery<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>(
+    GetYoutubeRankingPageDocument,
+    baseOptions,
+  );
+}
+export function useGetYoutubeRankingPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>(
+    GetYoutubeRankingPageDocument,
+    baseOptions,
+  );
+}
+export type GetYoutubeRankingPageQueryHookResult = ReturnType<typeof useGetYoutubeRankingPageQuery>;
+export type GetYoutubeRankingPageLazyQueryHookResult = ReturnType<typeof useGetYoutubeRankingPageLazyQuery>;
+export type GetYoutubeRankingPageQueryResult = Apollo.QueryResult<
+  GetYoutubeRankingPageQuery,
+  GetYoutubeRankingPageQueryVariables
 >;
