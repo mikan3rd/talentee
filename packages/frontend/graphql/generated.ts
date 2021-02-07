@@ -237,6 +237,11 @@ export type TiktokRankingPage = {
   tiktokUsers: Array<TiktokUser>;
 };
 
+export type TwitterRankingPage = {
+  totalPages: Scalars["Int"];
+  twitterUsers: Array<TwitterUser>;
+};
+
 export type TopPage = {
   youtubeChannels: Array<YoutubeChannel>;
   twitterUsers: Array<TwitterUser>;
@@ -248,6 +253,7 @@ export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
   youtubeChannelByMainVideoCategory: Array<YoutubeChannel>;
+  getTwitterRankingPage: TwitterRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
 };
 
@@ -257,6 +263,10 @@ export type QueryGetAccountPageArgs = {
 
 export type QueryYoutubeChannelByMainVideoCategoryArgs = {
   videoCategoryId: Scalars["Int"];
+};
+
+export type QueryGetTwitterRankingPageArgs = {
+  pagination: PaginationInput;
 };
 
 export type QueryGetTiktokRankingPageArgs = {
@@ -384,6 +394,20 @@ export type GetTopPageQuery = {
         TiktokUser,
         "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
       > & { account: Pick<Account, "uuid"> }
+    >;
+  };
+};
+
+export type GetTwitterRankingPageQueryVariables = Exact<{
+  pagination: PaginationInput;
+}>;
+
+export type GetTwitterRankingPageQuery = {
+  getTwitterRankingPage: Pick<TwitterRankingPage, "totalPages"> & {
+    twitterUsers: Array<
+      Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
+        account: Pick<Account, "uuid">;
+      }
     >;
   };
 };
@@ -649,3 +673,60 @@ export function useGetTopPageLazyQuery(
 export type GetTopPageQueryHookResult = ReturnType<typeof useGetTopPageQuery>;
 export type GetTopPageLazyQueryHookResult = ReturnType<typeof useGetTopPageLazyQuery>;
 export type GetTopPageQueryResult = Apollo.QueryResult<GetTopPageQuery, GetTopPageQueryVariables>;
+export const GetTwitterRankingPageDocument = gql`
+  query getTwitterRankingPage($pagination: PaginationInput!) {
+    getTwitterRankingPage(pagination: $pagination) {
+      totalPages
+      twitterUsers {
+        username
+        name
+        description
+        followersCount
+        tweetCount
+        profileImageUrl
+        account {
+          uuid
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetTwitterRankingPageQuery__
+ *
+ * To run a query within a React component, call `useGetTwitterRankingPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTwitterRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTwitterRankingPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetTwitterRankingPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>,
+) {
+  return Apollo.useQuery<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>(
+    GetTwitterRankingPageDocument,
+    baseOptions,
+  );
+}
+export function useGetTwitterRankingPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>(
+    GetTwitterRankingPageDocument,
+    baseOptions,
+  );
+}
+export type GetTwitterRankingPageQueryHookResult = ReturnType<typeof useGetTwitterRankingPageQuery>;
+export type GetTwitterRankingPageLazyQueryHookResult = ReturnType<typeof useGetTwitterRankingPageLazyQuery>;
+export type GetTwitterRankingPageQueryResult = Apollo.QueryResult<
+  GetTwitterRankingPageQuery,
+  GetTwitterRankingPageQueryVariables
+>;

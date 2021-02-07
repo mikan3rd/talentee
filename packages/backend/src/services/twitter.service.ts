@@ -23,6 +23,20 @@ export class TwitterService {
     return { Authorization: `Bearer ${this.configService.get("TWITTER_BEARER_TOKEN")}` };
   }
 
+  async getRankingPage({ take, page }: { take: number; page: number }) {
+    const totalCount = await this.prisma.twitterUser.count();
+    const tiktokUsers = await this.prisma.twitterUser.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { followersCount: "desc" },
+      include: { account: { select: { uuid: true } } },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      tiktokUsers,
+    };
+  }
+
   async upsertUsersByUsername(baseDataList: { username: string; accountId?: string }[]) {
     const baseDataMapping = baseDataList.reduce((prev, { username, accountId }) => {
       prev[username] = { accountId, username };
