@@ -232,6 +232,11 @@ export type TiktokUser = {
   items: Array<TiktokItem>;
 };
 
+export type TiktokRankingPage = {
+  totalPages: Scalars["Int"];
+  tiktokUsers: Array<TiktokUser>;
+};
+
 export type TopPage = {
   youtubeChannels: Array<YoutubeChannel>;
   twitterUsers: Array<TwitterUser>;
@@ -243,7 +248,7 @@ export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
   youtubeChannelByMainVideoCategory: Array<YoutubeChannel>;
-  getTiktokRankingPage: Array<TiktokUser>;
+  getTiktokRankingPage: TiktokRankingPage;
 };
 
 export type QueryGetAccountPageArgs = {
@@ -333,12 +338,14 @@ export type GetTiktokRankingPageQueryVariables = Exact<{
 }>;
 
 export type GetTiktokRankingPageQuery = {
-  getTiktokRankingPage: Array<
-    Pick<
-      TiktokUser,
-      "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
-    > & { account: Pick<Account, "uuid"> }
-  >;
+  getTiktokRankingPage: Pick<TiktokRankingPage, "totalPages"> & {
+    tiktokUsers: Array<
+      Pick<
+        TiktokUser,
+        "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
+      > & { account: Pick<Account, "uuid"> }
+    >;
+  };
 };
 
 export type GetTopPageQueryVariables = Exact<{ [key: string]: never }>;
@@ -497,15 +504,18 @@ export type GetAccountPageQueryResult = Apollo.QueryResult<GetAccountPageQuery, 
 export const GetTiktokRankingPageDocument = gql`
   query getTiktokRankingPage($pagination: PaginationInput!) {
     getTiktokRankingPage(pagination: $pagination) {
-      uniqueId
-      nickname
-      signature
-      avatarThumb
-      followerCount
-      heartCount
-      videoCount
-      account {
-        uuid
+      totalPages
+      tiktokUsers {
+        uniqueId
+        nickname
+        signature
+        avatarThumb
+        followerCount
+        heartCount
+        videoCount
+        account {
+          uuid
+        }
       }
     }
   }

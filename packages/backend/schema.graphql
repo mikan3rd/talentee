@@ -223,6 +223,11 @@ type TiktokUser {
   items: [TiktokItem!]!
 }
 
+type TiktokRankingPage {
+  totalPages: Int!
+  tiktokUsers: [TiktokUser!]!
+}
+
 type TopPage {
   youtubeChannels: [YoutubeChannel!]!
   twitterUsers: [TwitterUser!]!
@@ -234,7 +239,7 @@ type Query {
   getAccountPage(uuid: ID!): Account
   getTopPage: TopPage!
   youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
-  getTiktokRankingPage(pagination: PaginationInput!): [TiktokUser!]!
+  getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
 }
 
 input PaginationInput {

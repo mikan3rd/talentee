@@ -24,3 +24,7 @@ export const toUnitString = (targetNum: number) => {
 
   return convertedString;
 };
+
+export const toRankingNumByPagination = ({ take, page, index }: { take: number; page: number; index: number }) => {
+  return take * (page - 1) + index + 1;
+};

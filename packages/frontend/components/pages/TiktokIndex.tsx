@@ -1,8 +1,9 @@
 import React from "react";
 
 import { css } from "@emotion/react";
-import { Button, Divider, Header, Icon } from "semantic-ui-react";
+import { Divider, Header, Pagination, PaginationProps } from "semantic-ui-react";
 
+import { toRankingNumByPagination } from "@/common/utils";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
@@ -10,10 +11,33 @@ import {
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { TiktokCard } from "@/components/organisms/TiktokCard";
-import { useTiktokIndexData } from "@/hooks/useTiktokIndexData";
+import { useGetTiktokRankingPageQuery } from "@/graphql/generated";
+
+const take = 10;
 
 export const TiktokIndex = React.memo(() => {
-  const { tiktokData, hasNext, getTiktokNextPageData } = useTiktokIndexData();
+  const [page, setPage] = React.useState(1);
+
+  const { data, refetch } = useGetTiktokRankingPageQuery({ variables: { pagination: { take, page } } });
+
+  const handlePageChange = React.useCallback(
+    async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
+      const page = Number(data.activePage);
+      refetch({ pagination: { page, take } });
+      setPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [refetch],
+  );
+
+  if (!data) {
+    return null;
+  }
+
+  const {
+    getTiktokRankingPage: { totalPages, tiktokUsers },
+  } = data;
+
   return (
     <>
       <Header
@@ -64,28 +88,18 @@ export const TiktokIndex = React.memo(() => {
           margin-top: 10px;
         `}
       >
-        {tiktokData.map((data, index) => {
-          return <TiktokCard key={data.user.id} data={data} rankNum={index + 1} />;
+        {tiktokUsers.map((data, index) => {
+          return <TiktokCard key={data.uniqueId} {...data} rankNum={toRankingNumByPagination({ page, take, index })} />;
         })}
       </div>
 
-      {hasNext && (
-        <Button
-          fluid
-          icon
-          labelPosition="left"
-          color="black"
-          onClick={() => getTiktokNextPageData()}
-          css={css`
-            &&& {
-              margin: 20px 0 40px 0;
-            }
-          `}
-        >
-          <Icon name="hand point right" />
-          {tiktokData.length}位以降を読み込む
-        </Button>
-      )}
+      <div
+        css={css`
+          margin: 10px auto 0 auto;
+        `}
+      >
+        <Pagination activePage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+      </div>
 
       <Divider />
 
