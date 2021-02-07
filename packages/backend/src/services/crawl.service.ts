@@ -297,6 +297,7 @@ export class CrawlService {
         mutual_followed_by: edge_mutual_followed_by.count,
         saved_media: edge_saved_media.count,
         related_profiles: edge_related_profiles?.edges.map((edge) => edge.node) ?? [],
+        mediaCount: edge_owner_to_timeline_media.count,
       };
 
       const mediaData = edge_owner_to_timeline_media.edges.map((edge) => {
@@ -344,7 +345,6 @@ export class CrawlService {
           video_view_count,
           product_type,
           dimensions,
-          mediaCount: edge_owner_to_timeline_media.count,
         };
       });
 

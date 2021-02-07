@@ -177,6 +177,7 @@ model InstagramUser {
   profilePicUrl String           @db.Text
   followedBy    BigInt           @db.UnsignedBigInt
   follow        BigInt           @db.UnsignedBigInt
+  mediaCount    BigInt           @db.UnsignedBigInt @default(0)
   isVerified    Boolean          @db.TinyInt
   isPrivate     Boolean          @db.TinyInt
   createdAt     DateTime         @default(now()) @db.DateTime(6)

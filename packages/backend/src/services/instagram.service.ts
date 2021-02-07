@@ -19,6 +19,10 @@ export class InstagramService {
   ) {}
 
   async upsertUsers(baseDataList: { username: string; accountId?: string }[]) {
+    if (!baseDataList.length) {
+      return;
+    }
+
     const baseDataMapping = baseDataList.reduce((prev, { username, accountId }) => {
       prev[username] = { accountId, username };
       return prev;
@@ -51,6 +55,7 @@ export class InstagramService {
         profile_pic_url,
         is_private,
         is_verified,
+        mediaCount,
       } = userData;
 
       this.logger.log(`${index} ${username}`);
@@ -70,6 +75,7 @@ export class InstagramService {
         isPrivate: is_private,
         isVerified: is_verified,
         profilePicUrl: profile_pic_url,
+        mediaCount,
         account: {
           connectOrCreate: {
             where: { uuid: accountId ?? "" },
