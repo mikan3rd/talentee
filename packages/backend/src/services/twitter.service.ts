@@ -62,12 +62,14 @@ export class TwitterService {
       const account = await this.prisma.twitterUser.findUnique({ where: { id: userId } }).account();
       const accountId = account?.uuid ?? target?.accountId;
 
+      const profileImageUrl = profile_image_url.replace(/_normal(?=.(jpg|jpeg|png)$)/, "");
+
       const twitteUser: Prisma.TwitterUserCreateInput = {
         id: userId,
         name,
         username,
         description,
-        profileImageUrl: profile_image_url,
+        profileImageUrl,
         followersCount: followers_count,
         followingCount: following_count,
         listedCount: listed_count,
@@ -81,7 +83,7 @@ export class TwitterService {
             create: {
               displayName: name,
               username,
-              thumbnailUrl: profile_image_url,
+              thumbnailUrl: profileImageUrl,
             },
           },
         },
