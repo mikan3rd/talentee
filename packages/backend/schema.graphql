@@ -238,6 +238,6 @@ type Query {
 }
 
 input PaginationInput {
-  take: Float!
-  page: ID!
+  take: Int!
+  page: Int!
 }

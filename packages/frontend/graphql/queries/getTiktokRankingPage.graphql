@@ -1,0 +1,14 @@
+query getTiktokRankingPage($pagination: PaginationInput!) {
+  getTiktokRankingPage(pagination: $pagination) {
+    uniqueId
+    nickname
+    signature
+    avatarThumb
+    followerCount
+    heartCount
+    videoCount
+    account {
+    uuid
+    }
+  }
+}
