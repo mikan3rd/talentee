@@ -1,12 +1,27 @@
 import React from "react";
 
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Breadcrumb } from "semantic-ui-react";
 
-import { Index } from "@/components/pages/Index";
+import { Index, Props } from "@/components/pages/Index";
 import { TopSection } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
+import { client } from "@/graphql/client";
+import { GetTopPageDocument, GetTopPageQuery, GetTopPageQueryVariables } from "@/graphql/generated";
 
-const Top = React.memo(() => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const { data } = await client.query<GetTopPageQuery, GetTopPageQueryVariables>({
+    query: GetTopPageDocument,
+  });
+
+  if (!data.getTopPage) {
+    return { notFound: true };
+  }
+
+  return { props: data.getTopPage };
+};
+
+const Top = React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
   return (
     <>
       <Meta title="Top" />
@@ -15,7 +30,7 @@ const Top = React.memo(() => {
         <TopSection active={true} />
       </Breadcrumb>
 
-      <Index />
+      <Index {...props} />
     </>
   );
 });

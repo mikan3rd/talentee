@@ -49,6 +49,30 @@ export const Account = React.memo<Props>(
 
     const refs = React.useRef<HTMLDivElement[]>([]);
 
+    const isUp = useScrollDirection();
+
+    const youtubeChannel = youtubeChannels[0];
+    const twitterUser = twitterUsers[0];
+    const instagramUser = instagramUsers[0];
+    const tiktokUser = tiktokUsers[0];
+
+    const updateAtTime = React.useMemo(() => dayjs.unix(updatedAt), [updatedAt]);
+
+    const handleSelectedTab = React.useCallback((elementId: ServiceType) => {
+      const tabEle = document.getElementById("service_tab");
+      const targetEle = document.getElementById(`service_tab_${elementId}`);
+      tabEle.scrollTo({ left: targetEle.offsetLeft, behavior: "smooth" });
+      setSelectedTab(elementId);
+    }, []);
+
+    const handleOnClickTab = React.useCallback(
+      (elementId: ServiceType) => {
+        scrollToElement(elementId);
+        handleSelectedTab(elementId);
+      },
+      [handleSelectedTab],
+    );
+
     React.useEffect(() => {
       // SSRの場合にdocumentを直で呼び出せないため
       const headerHeight = document.getElementById("header").clientHeight;
@@ -72,31 +96,7 @@ export const Account = React.memo<Props>(
       return () => {
         refs.current.forEach((ele) => observer.unobserve(ele));
       };
-    }, []);
-
-    const isUp = useScrollDirection();
-
-    const handleSelectedTab = React.useCallback((elementId: ServiceType) => {
-      const tabEle = document.getElementById("service_tab");
-      const targetEle = document.getElementById(`service_tab_${elementId}`);
-      tabEle.scrollTo({ left: targetEle.offsetLeft, behavior: "smooth" });
-      setSelectedTab(elementId);
-    }, []);
-
-    const handleOnClickTab = React.useCallback(
-      (elementId: ServiceType) => {
-        scrollToElement(elementId);
-        handleSelectedTab(elementId);
-      },
-      [handleSelectedTab],
-    );
-
-    const youtubeChannel = youtubeChannels[0];
-    const twitterUser = twitterUsers[0];
-    const instagramUser = instagramUsers[0];
-    const tiktokUser = tiktokUsers[0];
-
-    const updateAtTime = React.useMemo(() => dayjs.unix(updatedAt), [updatedAt]);
+    }, [handleSelectedTab]);
 
     return (
       <>

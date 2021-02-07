@@ -8,15 +8,11 @@ import { InstagramCard } from "@/components/organisms/InstagramCard";
 import { TiktokCard } from "@/components/organisms/TiktokCard";
 import { TwitterCard } from "@/components/organisms/TwitterCard";
 import { YoutubeCard } from "@/components/organisms/YoutubeCard";
-import { useGetTopPageQuery } from "@/graphql/generated";
+import { GetTopPageQuery } from "@/graphql/generated";
 
-export const Index = React.memo(() => {
-  const {
-    data: {
-      getTopPage: { youtubeChannels, twitterUsers, instagramUsers, tiktokUsers },
-    },
-  } = useGetTopPageQuery();
+export type Props = Required<GetTopPageQuery["getTopPage"]>;
 
+export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagramUsers, tiktokUsers }) => {
   return (
     <>
       <img
