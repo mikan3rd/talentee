@@ -36,30 +36,15 @@ export class YoutubeService {
     videoCategoryId?: number;
     isAll?: boolean;
   }) {
-    const totalCount = await this.prisma.youtubeChannel.count({
-      where:
-        isAll === true
-          ? undefined
-          : {
-              channelVideoCategories: {
-                some: { videoCategoryId },
-              },
-            },
-    });
+    const where: Prisma.YoutubeChannelWhereInput | undefined =
+      isAll === true ? undefined : { mainVideoCategoryId: videoCategoryId };
+    const totalCount = await this.prisma.youtubeChannel.count({ where });
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
       skip: take * (page - 1),
       orderBy: { subscriberCount: "desc" },
-      where:
-        isAll === true
-          ? undefined
-          : {
-              channelVideoCategories: {
-                some: { videoCategoryId },
-              },
-            },
+      where,
       include: {
-        account: { select: { uuid: true } },
         keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
         channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
       },
@@ -317,6 +302,7 @@ export class YoutubeService {
     });
 
     const transactionValues = [];
+    const channelTransactionValues = [];
     for (const channel of channels) {
       const { id, videos } = channel;
 
@@ -329,8 +315,14 @@ export class YoutubeService {
         return prev;
       }, {} as { [key: number]: number });
 
-      for (const [videoCategoryIdString, num] of Object.entries(videoCategoryIdsObject)) {
-        const videoCategoryId = Number(videoCategoryIdString);
+      const videoCategories = Object.entries(videoCategoryIdsObject)
+        .map(([videoCategoryIdString, num]) => ({
+          videoCategoryId: Number(videoCategoryIdString),
+          num,
+        }))
+        .sort((a, b) => (a.num > b.num ? -1 : 1));
+      console.log(videoCategories);
+      for (const { videoCategoryId, num } of videoCategories) {
         const transaction = this.prisma.youtubeChannelVideoCategory.upsert({
           where: {
             channelId_videoCategoryId: {
@@ -349,9 +341,16 @@ export class YoutubeService {
         });
         transactionValues.push(transaction);
       }
+
+      const channelTransaction = this.prisma.youtubeChannel.update({
+        where: { id },
+        data: { mainVideoCategoryId: videoCategories[0].videoCategoryId },
+      });
+      channelTransactionValues.push(channelTransaction);
     }
 
     await this.prisma.$transaction(transactionValues);
+    await this.prisma.$transaction(channelTransactionValues);
   }
 
   async bulkUpdateChannelKeyword() {

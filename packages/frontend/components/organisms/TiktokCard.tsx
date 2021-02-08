@@ -4,16 +4,18 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 
 import { toUnitString } from "@/common/utils";
-import { Account, TiktokUser } from "@/graphql/generated";
+import { TiktokUser } from "@/graphql/generated";
 
 interface Props
-  extends Pick<TiktokUser, "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"> {
+  extends Pick<
+    TiktokUser,
+    "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount" | "accountId"
+  > {
   rankNum: number;
-  account: Pick<Account, "uuid">;
 }
 
 export const TiktokCard = React.memo<Props>(
-  ({ rankNum, nickname, signature, avatarThumb, followerCount, heartCount, videoCount, account: { uuid } }) => {
+  ({ rankNum, nickname, signature, avatarThumb, followerCount, heartCount, videoCount, accountId }) => {
     return (
       <div
         css={css`
@@ -24,7 +26,7 @@ export const TiktokCard = React.memo<Props>(
           }
         `}
       >
-        <Link href="/account/[accountId]" as={`/account/${uuid}`} passHref>
+        <Link href="/account/[accountId]" as={`/account/${accountId}`} passHref>
           <a
             css={css`
               position: relative;

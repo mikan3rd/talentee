@@ -24,7 +24,6 @@ export class TiktokService {
       take,
       skip: take * (page - 1),
       orderBy: { followerCount: "desc" },
-      include: { account: { select: { uuid: true } } },
     });
     return {
       totalPages: Math.ceil(totalCount / take),

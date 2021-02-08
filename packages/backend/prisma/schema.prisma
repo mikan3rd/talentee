@@ -57,7 +57,9 @@ model YoutubeChannel {
   createdAt              DateTime                        @default(now()) @db.DateTime(6)
   updatedAt              DateTime                        @updatedAt @db.DateTime(6)
   accountId              String                          @db.VarChar(36)
+  mainVideoCategoryId    Int?                            @db.Int
   account                Account                         @relation(fields: [accountId], references: [uuid])
+  mainVideoCategory      YoutubeVideoCategory?           @relation(fields: [mainVideoCategoryId], references: [id])
   keywords               YoutubeChannelKeywordRelation[]
   channelVideoCategories YoutubeChannelVideoCategory[]
   videos                 YoutubeVideo[]

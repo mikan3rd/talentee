@@ -5,18 +5,25 @@ import Link from "next/link";
 import { Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "@/common/utils";
-import { Account, YoutubeChannel, YoutubeKeyword, YoutubeVideoCategory } from "@/graphql/generated";
+import { YoutubeChannel, YoutubeKeyword, YoutubeVideoCategory } from "@/graphql/generated";
 
 const ketwordNum = 10;
 
 interface Props
   extends Pick<
     YoutubeChannel,
-    "title" | "thumbnailUrl" | "description" | "subscriberCount" | "viewCount" | "videoCount" | "hiddenSubscriberCount"
+    | "title"
+    | "thumbnailUrl"
+    | "description"
+    | "subscriberCount"
+    | "viewCount"
+    | "videoCount"
+    | "hiddenSubscriberCount"
+    | "accountId"
+    | "mainVideoCategoryId"
   > {
   rankNum: number;
   showDetails?: boolean;
-  account: Pick<Account, "uuid">;
   keywords: { keyword: Pick<YoutubeKeyword, "title"> }[];
   channelVideoCategories: { videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }[];
 }
@@ -33,8 +40,9 @@ export const YoutubeCard = React.memo<Props>(
     hiddenSubscriberCount,
     keywords,
     channelVideoCategories,
+    accountId,
+    mainVideoCategoryId,
     showDetails = true,
-    account: { uuid },
   }) => {
     return (
       <div
@@ -46,7 +54,7 @@ export const YoutubeCard = React.memo<Props>(
           }
         `}
       >
-        <Link href="/account/[accountId]" as={`/account/${uuid}`} passHref>
+        <Link href="/account/[accountId]" as={`/account/${accountId}`} passHref>
           <a
             css={css`
               position: relative;
@@ -153,10 +161,10 @@ export const YoutubeCard = React.memo<Props>(
               <div css={LabelWrapeerCss}>
                 {channelVideoCategories.map((channelVideoCategory, index) => {
                   const {
-                    videoCategory: { title },
+                    videoCategory: { id, title },
                   } = channelVideoCategory;
                   return (
-                    <Label key={index} tag color={index === 0 ? "red" : "grey"} css={LabelCss}>
+                    <Label key={index} tag color={mainVideoCategoryId === id ? "red" : "grey"} css={LabelCss}>
                       {title}
                     </Label>
                   );

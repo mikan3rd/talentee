@@ -17,7 +17,7 @@ type Props = {
 
 export const YoutubeVideoCard = React.memo<Props>(
   ({ id, title, publishedAt, viewCount, likeCount, dislikeCount, rankNum, tags }) => {
-    const publishedAtTime = React.useMemo(() => dayjs(publishedAt), [publishedAt]);
+    const publishedAtTime = React.useMemo(() => dayjs.unix(publishedAt), [publishedAt]);
     const totalCount = React.useMemo(() => likeCount + dislikeCount, [dislikeCount, likeCount]);
     return (
       <div

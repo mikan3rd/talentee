@@ -8,9 +8,7 @@ query getTwitterRankingPage($pagination: PaginationInput!) {
       followersCount
       tweetCount
       profileImageUrl
-      account {
-        uuid
-      }
+      accountId
     }
   }
 }

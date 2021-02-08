@@ -24,7 +24,6 @@ export class InstagramService {
       take,
       skip: take * (page - 1),
       orderBy: { followedBy: "desc" },
-      include: { account: { select: { uuid: true } } },
     });
     return {
       totalPages: Math.ceil(totalCount / take),

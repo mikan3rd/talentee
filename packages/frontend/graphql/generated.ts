@@ -47,6 +47,7 @@ export type TiktokUser = {
   createdTimestamp: Scalars["Date"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
   account: Account;
   items: Array<TiktokItem>;
 };
@@ -81,6 +82,7 @@ export type TwitterUser = {
   createdTimestamp: Scalars["Date"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
   account: Account;
   tweets: Array<TwitterTweet>;
 };
@@ -167,6 +169,8 @@ export type YoutubeChannel = {
   hiddenSubscriberCount: Scalars["Boolean"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
+  mainVideoCategoryId: Scalars["Int"];
   keywords: Array<YoutubeChannelKeywordRelation>;
   videos: Array<YoutubeVideo>;
   account: Account;
@@ -228,6 +232,7 @@ export type InstagramUser = {
   isPrivate: Scalars["Boolean"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
   account: Account;
   mediaList: Array<InstagramMedia>;
 };
@@ -320,6 +325,8 @@ export type GetAccountPageQuery = {
           | "viewCount"
           | "videoCount"
           | "publishedAt"
+          | "accountId"
+          | "mainVideoCategoryId"
         > & {
           videos: Array<
             Pick<YoutubeVideo, "id" | "title" | "publishedAt" | "viewCount" | "likeCount" | "dislikeCount"> & {
@@ -327,7 +334,7 @@ export type GetAccountPageQuery = {
             }
           >;
           keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
-          channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "title"> }>;
+          channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
         }
       >;
       twitterUsers: Array<
@@ -373,9 +380,7 @@ export type GetInstagramRankingPageQueryVariables = Exact<{
 export type GetInstagramRankingPageQuery = {
   getInstagramRankingPage: Pick<InstagramRankingPage, "totalPages"> & {
     instagramUsers: Array<
-      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId">
     >;
   };
 };
@@ -389,8 +394,15 @@ export type GetTiktokRankingPageQuery = {
     tiktokUsers: Array<
       Pick<
         TiktokUser,
-        "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
-      > & { account: Pick<Account, "uuid"> }
+        | "uniqueId"
+        | "nickname"
+        | "signature"
+        | "avatarThumb"
+        | "followerCount"
+        | "heartCount"
+        | "videoCount"
+        | "accountId"
+      >
     >;
   };
 };
@@ -410,27 +422,34 @@ export type GetTopPageQuery = {
         | "viewCount"
         | "videoCount"
         | "hiddenSubscriberCount"
+        | "accountId"
+        | "mainVideoCategoryId"
       > & {
         keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
         channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
-        account: Pick<Account, "uuid">;
       }
     >;
     twitterUsers: Array<
-      Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<
+        TwitterUser,
+        "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl" | "accountId"
+      >
     >;
     instagramUsers: Array<
-      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId">
     >;
     tiktokUsers: Array<
       Pick<
         TiktokUser,
-        "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
-      > & { account: Pick<Account, "uuid"> }
+        | "uniqueId"
+        | "nickname"
+        | "signature"
+        | "avatarThumb"
+        | "followerCount"
+        | "heartCount"
+        | "videoCount"
+        | "accountId"
+      >
     >;
   };
 };
@@ -442,9 +461,10 @@ export type GetTwitterRankingPageQueryVariables = Exact<{
 export type GetTwitterRankingPageQuery = {
   getTwitterRankingPage: Pick<TwitterRankingPage, "totalPages"> & {
     twitterUsers: Array<
-      Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<
+        TwitterUser,
+        "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl" | "accountId"
+      >
     >;
   };
 };
@@ -466,10 +486,11 @@ export type GetYoutubeRankingPageQuery = {
         | "viewCount"
         | "videoCount"
         | "hiddenSubscriberCount"
+        | "accountId"
+        | "mainVideoCategoryId"
       > & {
         keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
         channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
-        account: Pick<Account, "uuid">;
       }
     >;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id" | "title">>;
@@ -494,6 +515,8 @@ export const GetAccountPageDocument = gql`
         viewCount
         videoCount
         publishedAt
+        accountId
+        mainVideoCategoryId
         videos {
           id
           title
@@ -514,6 +537,7 @@ export const GetAccountPageDocument = gql`
         }
         channelVideoCategories {
           videoCategory {
+            id
             title
           }
         }
@@ -599,9 +623,7 @@ export const GetInstagramRankingPageDocument = gql`
         biography
         profilePicUrl
         followedBy
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }
@@ -657,9 +679,7 @@ export const GetTiktokRankingPageDocument = gql`
         followerCount
         heartCount
         videoCount
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }
@@ -715,6 +735,8 @@ export const GetTopPageDocument = gql`
         viewCount
         videoCount
         hiddenSubscriberCount
+        accountId
+        mainVideoCategoryId
         keywords {
           keyword {
             title
@@ -726,9 +748,6 @@ export const GetTopPageDocument = gql`
             title
           }
         }
-        account {
-          uuid
-        }
       }
       twitterUsers {
         username
@@ -737,9 +756,7 @@ export const GetTopPageDocument = gql`
         followersCount
         tweetCount
         profileImageUrl
-        account {
-          uuid
-        }
+        accountId
       }
       instagramUsers {
         username
@@ -747,9 +764,7 @@ export const GetTopPageDocument = gql`
         biography
         profilePicUrl
         followedBy
-        account {
-          uuid
-        }
+        accountId
       }
       tiktokUsers {
         uniqueId
@@ -759,9 +774,7 @@ export const GetTopPageDocument = gql`
         followerCount
         heartCount
         videoCount
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }
@@ -804,9 +817,7 @@ export const GetTwitterRankingPageDocument = gql`
         followersCount
         tweetCount
         profileImageUrl
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }
@@ -863,6 +874,8 @@ export const GetYoutubeRankingPageDocument = gql`
         viewCount
         videoCount
         hiddenSubscriberCount
+        accountId
+        mainVideoCategoryId
         keywords {
           keyword {
             title
@@ -873,9 +886,6 @@ export const GetYoutubeRankingPageDocument = gql`
             id
             title
           }
-        }
-        account {
-          uuid
         }
       }
       youtubeVideoCategories {

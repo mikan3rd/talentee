@@ -38,6 +38,7 @@ type TiktokUser {
   createdTimestamp: Date!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
   account: Account!
   items: [TiktokItem!]!
 }
@@ -72,6 +73,7 @@ type TwitterUser {
   createdTimestamp: Date!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
   account: Account!
   tweets: [TwitterTweet!]!
 }
@@ -158,6 +160,8 @@ type YoutubeChannel {
   hiddenSubscriberCount: Boolean!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
+  mainVideoCategoryId: Int!
   keywords: [YoutubeChannelKeywordRelation!]!
   videos: [YoutubeVideo!]!
   account: Account!
@@ -219,6 +223,7 @@ type InstagramUser {
   isPrivate: Boolean!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
   account: Account!
   mediaList: [InstagramMedia!]!
 }

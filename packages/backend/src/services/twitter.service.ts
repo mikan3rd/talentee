@@ -29,7 +29,6 @@ export class TwitterService {
       take,
       skip: take * (page - 1),
       orderBy: { followersCount: "desc" },
-      include: { account: { select: { uuid: true } } },
     });
     return {
       totalPages: Math.ceil(totalCount / take),
