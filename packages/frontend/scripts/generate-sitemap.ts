@@ -52,9 +52,7 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 </urlset>
 `;
 
-  const formattedSiteMap = prettier.format(sitemap, {
-    parser: "html",
-  });
+  const formattedSiteMap = prettier.format(sitemap, { parser: "html" });
   fs.writeFileSync("public/sitemap.xml", formattedSiteMap);
 
   const robots = `User-agent: *
