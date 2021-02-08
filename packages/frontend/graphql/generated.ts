@@ -258,6 +258,11 @@ export type YoutubeRankingPage = {
   youtubeVideoCategories: Array<YoutubeVideoCategory>;
 };
 
+export type AccountSearchResult = {
+  totalPages: Scalars["Int"];
+  accounts: Array<Account>;
+};
+
 export type TopPage = {
   youtubeChannels: Array<YoutubeChannel>;
   twitterUsers: Array<TwitterUser>;
@@ -268,6 +273,7 @@ export type TopPage = {
 export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
+  searchAccount: AccountSearchResult;
   getYoutubeRankingPage: YoutubeRankingPage;
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
@@ -276,6 +282,10 @@ export type Query = {
 
 export type QueryGetAccountPageArgs = {
   uuid: Scalars["ID"];
+};
+
+export type QuerySearchAccountArgs = {
+  pagination: AccountSearchInput;
 };
 
 export type QueryGetYoutubeRankingPageArgs = {
@@ -292,6 +302,12 @@ export type QueryGetInstagramRankingPageArgs = {
 
 export type QueryGetTiktokRankingPageArgs = {
   pagination: PaginationInput;
+};
+
+export type AccountSearchInput = {
+  take: Scalars["Int"];
+  page: Scalars["Int"];
+  word: Scalars["String"];
 };
 
 export type YoutubePaginationInput = {
@@ -494,6 +510,23 @@ export type GetYoutubeRankingPageQuery = {
       }
     >;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id" | "title">>;
+  };
+};
+
+export type SearchAccountQueryVariables = Exact<{
+  pagination: AccountSearchInput;
+}>;
+
+export type SearchAccountQuery = {
+  searchAccount: Pick<AccountSearchResult, "totalPages"> & {
+    accounts: Array<
+      Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
+        youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+        twitterUsers: Array<Pick<TwitterUser, "username">>;
+        instagramUsers: Array<Pick<InstagramUser, "username">>;
+        tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+      }
+    >;
   };
 };
 
@@ -934,3 +967,57 @@ export type GetYoutubeRankingPageQueryResult = Apollo.QueryResult<
   GetYoutubeRankingPageQuery,
   GetYoutubeRankingPageQueryVariables
 >;
+export const SearchAccountDocument = gql`
+  query searchAccount($pagination: AccountSearchInput!) {
+    searchAccount(pagination: $pagination) {
+      totalPages
+      accounts {
+        uuid
+        displayName
+        thumbnailUrl
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useSearchAccountQuery__
+ *
+ * To run a query within a React component, call `useSearchAccountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchAccountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchAccountQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useSearchAccountQuery(
+  baseOptions: Apollo.QueryHookOptions<SearchAccountQuery, SearchAccountQueryVariables>,
+) {
+  return Apollo.useQuery<SearchAccountQuery, SearchAccountQueryVariables>(SearchAccountDocument, baseOptions);
+}
+export function useSearchAccountLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchAccountQuery, SearchAccountQueryVariables>,
+) {
+  return Apollo.useLazyQuery<SearchAccountQuery, SearchAccountQueryVariables>(SearchAccountDocument, baseOptions);
+}
+export type SearchAccountQueryHookResult = ReturnType<typeof useSearchAccountQuery>;
+export type SearchAccountLazyQueryHookResult = ReturnType<typeof useSearchAccountLazyQuery>;
+export type SearchAccountQueryResult = Apollo.QueryResult<SearchAccountQuery, SearchAccountQueryVariables>;

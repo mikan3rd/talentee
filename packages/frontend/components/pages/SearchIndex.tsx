@@ -1,7 +1,7 @@
 import React from "react";
 
 import { css } from "@emotion/react";
-import { Divider, Header, Input } from "semantic-ui-react";
+import { Divider, Header, Input, Pagination, PaginationProps } from "semantic-ui-react";
 
 import {
   IndexLinkButton,
@@ -10,11 +10,32 @@ import {
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { AccountCard } from "@/components/organisms/AccountCard";
-import { useSearchIndex } from "@/hooks/useSearchIndex";
+import { useSearchAccountLazyQuery } from "@/graphql/generated";
+
+const take = 10;
 
 export const SearchIndex = React.memo(() => {
   const [text, setText] = React.useState("");
-  const { accountData, searchAccount } = useSearchIndex();
+  const [page, setPage] = React.useState(1);
+  const [fetch, { data }] = useSearchAccountLazyQuery();
+
+  const handleSearch = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      fetch({ variables: { pagination: { word: text, take, page } } });
+    },
+    [page, fetch, text],
+  );
+
+  const handlePageChange = React.useCallback(
+    async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
+      const page = Number(data.activePage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      fetch({ variables: { pagination: { word: text, take, page } } });
+      setPage(page);
+    },
+    [fetch, text],
+  );
 
   return (
     <>
@@ -36,10 +57,7 @@ export const SearchIndex = React.memo(() => {
           placeholder="アカウント名を入力"
           action={{
             icon: "search",
-            onClick: (e) => {
-              e.preventDefault();
-              searchAccount(text);
-            },
+            onClick: handleSearch,
           }}
           value={text}
           onChange={(e, d) => setText(d.value)}
@@ -51,10 +69,24 @@ export const SearchIndex = React.memo(() => {
           margin-top: 20px;
         `}
       >
-        {accountData.map(({ id, data }) => (
-          <AccountCard key={id} id={id} data={data} />
+        {data?.searchAccount.accounts.map((data) => (
+          <AccountCard key={data.uuid} {...data} />
         ))}
       </div>
+
+      {data?.searchAccount.accounts.length > 0 && (
+        <Pagination
+          css={css`
+            &&& {
+              width: 100%;
+              margin-top: 10px;
+            }
+          `}
+          activePage={page}
+          totalPages={data?.searchAccount.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       <Divider />
 

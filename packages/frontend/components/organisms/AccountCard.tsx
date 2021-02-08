@@ -9,77 +9,86 @@ import {
   TwitterSocialButton,
   YoutubeSocialButton,
 } from "@/components/atoms/SocialButton";
+import { Account, InstagramUser, TiktokUser, TwitterUser, YoutubeChannel } from "@/graphql/generated";
 
-export const AccountCard = React.memo<{ id: string; data: AccountObjectType }>(({ id, data }) => {
-  const { tmpUsername, thumbnailUrl, youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = data;
-  return (
-    <div
-      css={css`
-        position: relative;
-        margin-top: 12px;
-        &:first-of-type {
-          margin-top: 0px;
-        }
-      `}
-    >
-      <Link href="/account/[accountId]" as={`/account/${id}`} passHref>
-        <a
-          css={css`
-            position: relative;
-            display: block;
-            border-radius: 5px;
-            padding: 15px;
-            color: inherit;
-            background-color: white;
-            box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
-            &:hover {
-              color: inherit;
-            }
-          `}
-        >
-          <div
+type Props = Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
+  youtubeChannels: Pick<YoutubeChannel, "id">[];
+  twitterUsers: Pick<TwitterUser, "username">[];
+  instagramUsers: Pick<InstagramUser, "username">[];
+  tiktokUsers: Pick<TiktokUser, "uniqueId">[];
+};
+
+export const AccountCard = React.memo<Props>(
+  ({ uuid, displayName, thumbnailUrl, youtubeChannels, twitterUsers, instagramUsers, tiktokUsers }) => {
+    return (
+      <div
+        css={css`
+          position: relative;
+          margin-top: 12px;
+          &:first-of-type {
+            margin-top: 0px;
+          }
+        `}
+      >
+        <Link href="/account/[accountId]" as={`/account/${uuid}`} passHref>
+          <a
             css={css`
-              display: flex;
+              position: relative;
+              display: block;
+              border-radius: 5px;
+              padding: 15px;
+              color: inherit;
+              background-color: white;
+              box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+              &:hover {
+                color: inherit;
+              }
             `}
           >
-            <div>
-              <img
-                src={thumbnailUrl}
-                alt={tmpUsername}
-                css={css`
-                  width: 64px;
-                  height: 64px;
-                  border-radius: 50%;
-                `}
-              />
-            </div>
             <div
               css={css`
-                margin-left: 10px;
+                display: flex;
               `}
             >
-              <div
-                css={css`
-                  font-size: 20px;
-                  font-weight: bold;
-                `}
-              >
-                {tmpUsername}
+              <div>
+                <img
+                  src={thumbnailUrl}
+                  alt={displayName}
+                  css={css`
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 50%;
+                  `}
+                />
               </div>
               <div
                 css={css`
-                  margin-top: 5px;
+                  margin-left: 10px;
                 `}
               >
-                {youtubeMainRef && <YoutubeSocialButton />}
-                {twitterMainRef && <TwitterSocialButton />}
-                {instagramMainRef && <InstagramSocialButton />}
-                {tiktokMainRef && <TiktokSocialButton />}
+                <div
+                  css={css`
+                    font-size: 20px;
+                    font-weight: bold;
+                  `}
+                >
+                  {displayName}
+                </div>
+                <div
+                  css={css`
+                    margin-top: 5px;
+                  `}
+                >
+                  {youtubeChannels.length > 0 && <YoutubeSocialButton />}
+                  {twitterUsers.length > 0 && <TwitterSocialButton />}
+                  {instagramUsers.length > 0 && <InstagramSocialButton />}
+                  {tiktokUsers.length > 0 && <TiktokSocialButton />}
+                </div>
               </div>
             </div>
-          </div>
-        </a>
-      </Link>
-    </div>
-  );
-});
+          </a>
+        </Link>
+      </div>
+    );
+  },
+);
