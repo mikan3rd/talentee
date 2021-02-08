@@ -17,3 +17,9 @@ export class YoutubePaginationInput extends PaginationInput {
   @Field()
   isAll?: boolean;
 }
+
+@InputType()
+export class AccountSearchInput extends PaginationInput {
+  @Field()
+  word!: string;
+}
