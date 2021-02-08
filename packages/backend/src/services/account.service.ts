@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 
 import { CrawlService } from "@/services/crawl.service";
@@ -52,7 +53,6 @@ export class AccountService {
       take,
       orderBy: { subscriberCount: "desc" },
       include: {
-        account: { select: { uuid: true } },
         keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
         channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
       },
@@ -60,19 +60,40 @@ export class AccountService {
     const twitterUsers = await this.prisma.twitterUser.findMany({
       take,
       orderBy: { followersCount: "desc" },
-      include: { account: { select: { uuid: true } } },
     });
     const instagramUsers = await this.prisma.instagramUser.findMany({
       take,
       orderBy: { followedBy: "desc" },
-      include: { account: { select: { uuid: true } } },
     });
     const tiktokUsers = await this.prisma.tiktokUser.findMany({
       take,
       orderBy: { followerCount: "desc" },
-      include: { account: { select: { uuid: true } } },
     });
     return { youtubeChannels, twitterUsers, instagramUsers, tiktokUsers };
+  }
+
+  async searchByName({ word, take, page }: { word: string; take: number; page: number }) {
+    const where: Prisma.AccountWhereInput = {
+      OR: [
+        { youtubeChannels: { some: { title: { contains: word } } } },
+        { twitterUsers: { some: { name: { contains: word } } } },
+        { instagramUsers: { some: { fullName: { contains: word } } } },
+        { tiktokUsers: { some: { nickname: { contains: word } } } },
+      ],
+    };
+    const totalCount = await this.prisma.account.count({ where });
+    const accounts = this.prisma.account.findMany({
+      take,
+      skip: take * (page - 1),
+      where,
+      include: {
+        youtubeChannels: { select: { id: true } },
+        twitterUsers: { select: { username: true } },
+        instagramUsers: { select: { username: true } },
+        tiktokUsers: { select: { uniqueId: true } },
+      },
+    });
+    return { totalPages: Math.ceil(totalCount / take), accounts };
   }
 
   async addServiceByYoutube(take: number) {
