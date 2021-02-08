@@ -7,9 +7,7 @@ query getInstagramRankingPage($pagination: PaginationInput!) {
       biography
       profilePicUrl
       followedBy
-      account {
-        uuid
-      }
+      accountId
     }
   }
 }

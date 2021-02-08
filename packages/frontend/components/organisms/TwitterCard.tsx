@@ -4,16 +4,18 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 
 import { toUnitString } from "@/common/utils";
-import { Account, TwitterUser } from "@/graphql/generated";
+import { TwitterUser } from "@/graphql/generated";
 
 interface Props
-  extends Pick<TwitterUser, "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> {
+  extends Pick<
+    TwitterUser,
+    "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl" | "accountId"
+  > {
   rankNum: number;
-  account: Pick<Account, "uuid">;
 }
 
 export const TwitterCard = React.memo<Props>(
-  ({ rankNum, name, description, followersCount, tweetCount, profileImageUrl, account: { uuid } }) => {
+  ({ rankNum, name, description, followersCount, tweetCount, profileImageUrl, accountId }) => {
     return (
       <div
         css={css`
@@ -24,7 +26,7 @@ export const TwitterCard = React.memo<Props>(
           }
         `}
       >
-        <Link href="/account/[accountId]" as={`/account/${uuid}`} passHref>
+        <Link href="/account/[accountId]" as={`/account/${accountId}`} passHref>
           <a
             css={css`
               position: relative;

@@ -47,6 +47,7 @@ export type TiktokUser = {
   createdTimestamp: Scalars["Date"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
   account: Account;
   items: Array<TiktokItem>;
 };
@@ -81,6 +82,7 @@ export type TwitterUser = {
   createdTimestamp: Scalars["Date"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
   account: Account;
   tweets: Array<TwitterTweet>;
 };
@@ -230,6 +232,7 @@ export type InstagramUser = {
   isPrivate: Scalars["Boolean"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
   account: Account;
   mediaList: Array<InstagramMedia>;
 };
@@ -377,9 +380,7 @@ export type GetInstagramRankingPageQueryVariables = Exact<{
 export type GetInstagramRankingPageQuery = {
   getInstagramRankingPage: Pick<InstagramRankingPage, "totalPages"> & {
     instagramUsers: Array<
-      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId">
     >;
   };
 };
@@ -393,8 +394,15 @@ export type GetTiktokRankingPageQuery = {
     tiktokUsers: Array<
       Pick<
         TiktokUser,
-        "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
-      > & { account: Pick<Account, "uuid"> }
+        | "uniqueId"
+        | "nickname"
+        | "signature"
+        | "avatarThumb"
+        | "followerCount"
+        | "heartCount"
+        | "videoCount"
+        | "accountId"
+      >
     >;
   };
 };
@@ -422,20 +430,26 @@ export type GetTopPageQuery = {
       }
     >;
     twitterUsers: Array<
-      Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<
+        TwitterUser,
+        "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl" | "accountId"
+      >
     >;
     instagramUsers: Array<
-      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId">
     >;
     tiktokUsers: Array<
       Pick<
         TiktokUser,
-        "uniqueId" | "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount"
-      > & { account: Pick<Account, "uuid"> }
+        | "uniqueId"
+        | "nickname"
+        | "signature"
+        | "avatarThumb"
+        | "followerCount"
+        | "heartCount"
+        | "videoCount"
+        | "accountId"
+      >
     >;
   };
 };
@@ -447,9 +461,10 @@ export type GetTwitterRankingPageQueryVariables = Exact<{
 export type GetTwitterRankingPageQuery = {
   getTwitterRankingPage: Pick<TwitterRankingPage, "totalPages"> & {
     twitterUsers: Array<
-      Pick<TwitterUser, "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl"> & {
-        account: Pick<Account, "uuid">;
-      }
+      Pick<
+        TwitterUser,
+        "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl" | "accountId"
+      >
     >;
   };
 };
@@ -608,9 +623,7 @@ export const GetInstagramRankingPageDocument = gql`
         biography
         profilePicUrl
         followedBy
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }
@@ -666,9 +679,7 @@ export const GetTiktokRankingPageDocument = gql`
         followerCount
         heartCount
         videoCount
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }
@@ -745,9 +756,7 @@ export const GetTopPageDocument = gql`
         followersCount
         tweetCount
         profileImageUrl
-        account {
-          uuid
-        }
+        accountId
       }
       instagramUsers {
         username
@@ -755,9 +764,7 @@ export const GetTopPageDocument = gql`
         biography
         profilePicUrl
         followedBy
-        account {
-          uuid
-        }
+        accountId
       }
       tiktokUsers {
         uniqueId
@@ -767,9 +774,7 @@ export const GetTopPageDocument = gql`
         followerCount
         heartCount
         videoCount
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }
@@ -812,9 +817,7 @@ export const GetTwitterRankingPageDocument = gql`
         followersCount
         tweetCount
         profileImageUrl
-        account {
-          uuid
-        }
+        accountId
       }
     }
   }

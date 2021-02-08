@@ -4,15 +4,14 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 
 import { toUnitString } from "@/common/utils";
-import { Account, InstagramUser } from "@/graphql/generated";
+import { InstagramUser } from "@/graphql/generated";
 
-interface Props extends Pick<InstagramUser, "fullName" | "biography" | "profilePicUrl" | "followedBy"> {
+interface Props extends Pick<InstagramUser, "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId"> {
   rankNum: number;
-  account: Pick<Account, "uuid">;
 }
 
 export const InstagramCard = React.memo<Props>(
-  ({ rankNum, fullName, biography, profilePicUrl, followedBy, account: { uuid } }) => {
+  ({ rankNum, fullName, biography, profilePicUrl, followedBy, accountId }) => {
     return (
       <div
         css={css`
@@ -23,7 +22,7 @@ export const InstagramCard = React.memo<Props>(
           }
         `}
       >
-        <Link href="/account/[accountId]" as={`/account/${uuid}`} passHref>
+        <Link href="/account/[accountId]" as={`/account/${accountId}`} passHref>
           <a
             css={css`
               position: relative;

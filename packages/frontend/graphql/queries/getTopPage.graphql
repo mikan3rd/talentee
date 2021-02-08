@@ -30,9 +30,7 @@ query getTopPage{
       followersCount
       tweetCount
       profileImageUrl
-      account {
-        uuid
-      }
+      accountId
     }
     instagramUsers {
       username
@@ -40,9 +38,7 @@ query getTopPage{
       biography
       profilePicUrl
       followedBy
-      account {
-        uuid
-      }
+      accountId
     }
     tiktokUsers {
       uniqueId
@@ -52,9 +48,7 @@ query getTopPage{
       followerCount
       heartCount
       videoCount
-      account {
-        uuid
-      }
+      accountId
     }
   }
 }
