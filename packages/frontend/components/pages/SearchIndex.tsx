@@ -57,6 +57,7 @@ export const SearchIndex = React.memo(() => {
           placeholder="アカウント名を入力"
           action={{
             icon: "search",
+            disabled: !text,
             onClick: handleSearch,
           }}
           value={text}
