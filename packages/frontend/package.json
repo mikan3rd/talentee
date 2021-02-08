@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
-    "build": "next build && node scripts/generate-sitemap.js",
+    "build": "next build && yarn ts-node scripts/generate-sitemap.ts",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml",
+    "ts-node": "ts-node -r tsconfig-paths/register"
   },
   "dependencies": {
     "@emotion/babel-preset-css-prop": "11.0.0",
