@@ -24,9 +24,7 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
     data: {
       getSitemapData: { accounts, youtubeVideoCategories },
     },
-  } = await client.query<GetSitemapDataQuery>({
-    query: GetSitemapDataDocument,
-  });
+  } = await client.query<GetSitemapDataQuery>({ query: GetSitemapDataDocument });
 
   const pages = await globby(["pages/**/*.tsx", "!pages/_*.tsx", "!pages/account", "!pages/youtube"]);
   const youtubePages = youtubeVideoCategories.map((category) => `/youtube/${category.id}`);
