@@ -25,9 +25,10 @@ export const YoutubeDetail = React.memo<Props>(
     publishedAt,
     keywords,
     channelVideoCategories,
+    mainVideoCategoryId,
     videos,
   }) => {
-    const publishedAtTime = React.useMemo(() => dayjs(publishedAt), [publishedAt]);
+    const publishedAtTime = React.useMemo(() => dayjs.unix(publishedAt), [publishedAt]);
 
     return (
       <div
@@ -110,7 +111,7 @@ export const YoutubeDetail = React.memo<Props>(
           <div css={LabelWrapeerCss}>
             {channelVideoCategories.map(({ videoCategory }, index) => {
               return (
-                <Label key={index} tag color="blue" css={LabelCss}>
+                <Label key={index} tag color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"} css={LabelCss}>
                   {videoCategory.title}
                 </Label>
               );

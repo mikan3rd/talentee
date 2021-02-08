@@ -6,7 +6,7 @@ export class DateScalar implements CustomScalar<number, Date> {
   description = "Date custom scalar type";
 
   serialize(value: Date): number {
-    return value.getTime(); // value sent to the client
+    return value.getTime() / 1000; // value sent to the client
   }
 
   parseValue(value: number): Date {

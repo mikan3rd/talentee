@@ -9,6 +9,8 @@ query getTopPage{
       viewCount
       videoCount
       hiddenSubscriberCount
+      accountId
+      mainVideoCategoryId
       keywords {
         keyword {
           title
@@ -19,9 +21,6 @@ query getTopPage{
           id
           title
         }
-      }
-      account {
-        uuid
       }
     }
     twitterUsers {

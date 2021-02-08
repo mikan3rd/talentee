@@ -15,6 +15,8 @@ query getAccountPage($uuid: ID!) {
       viewCount
       videoCount
       publishedAt
+      accountId
+      mainVideoCategoryId
       videos {
         id
         title
@@ -35,6 +37,7 @@ query getAccountPage($uuid: ID!) {
       }
       channelVideoCategories {
         videoCategory {
+          id
           title
         }
       }

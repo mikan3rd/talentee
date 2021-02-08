@@ -167,6 +167,8 @@ export type YoutubeChannel = {
   hiddenSubscriberCount: Scalars["Boolean"];
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
+  mainVideoCategoryId: Scalars["Int"];
   keywords: Array<YoutubeChannelKeywordRelation>;
   videos: Array<YoutubeVideo>;
   account: Account;
@@ -320,6 +322,8 @@ export type GetAccountPageQuery = {
           | "viewCount"
           | "videoCount"
           | "publishedAt"
+          | "accountId"
+          | "mainVideoCategoryId"
         > & {
           videos: Array<
             Pick<YoutubeVideo, "id" | "title" | "publishedAt" | "viewCount" | "likeCount" | "dislikeCount"> & {
@@ -327,7 +331,7 @@ export type GetAccountPageQuery = {
             }
           >;
           keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
-          channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "title"> }>;
+          channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
         }
       >;
       twitterUsers: Array<
@@ -410,10 +414,11 @@ export type GetTopPageQuery = {
         | "viewCount"
         | "videoCount"
         | "hiddenSubscriberCount"
+        | "accountId"
+        | "mainVideoCategoryId"
       > & {
         keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
         channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
-        account: Pick<Account, "uuid">;
       }
     >;
     twitterUsers: Array<
@@ -466,10 +471,11 @@ export type GetYoutubeRankingPageQuery = {
         | "viewCount"
         | "videoCount"
         | "hiddenSubscriberCount"
+        | "accountId"
+        | "mainVideoCategoryId"
       > & {
         keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
         channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
-        account: Pick<Account, "uuid">;
       }
     >;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id" | "title">>;
@@ -494,6 +500,8 @@ export const GetAccountPageDocument = gql`
         viewCount
         videoCount
         publishedAt
+        accountId
+        mainVideoCategoryId
         videos {
           id
           title
@@ -514,6 +522,7 @@ export const GetAccountPageDocument = gql`
         }
         channelVideoCategories {
           videoCategory {
+            id
             title
           }
         }
@@ -715,6 +724,8 @@ export const GetTopPageDocument = gql`
         viewCount
         videoCount
         hiddenSubscriberCount
+        accountId
+        mainVideoCategoryId
         keywords {
           keyword {
             title
@@ -725,9 +736,6 @@ export const GetTopPageDocument = gql`
             id
             title
           }
-        }
-        account {
-          uuid
         }
       }
       twitterUsers {
@@ -863,6 +871,8 @@ export const GetYoutubeRankingPageDocument = gql`
         viewCount
         videoCount
         hiddenSubscriberCount
+        accountId
+        mainVideoCategoryId
         keywords {
           keyword {
             title
@@ -873,9 +883,6 @@ export const GetYoutubeRankingPageDocument = gql`
             id
             title
           }
-        }
-        account {
-          uuid
         }
       }
       youtubeVideoCategories {

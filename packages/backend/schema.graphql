@@ -158,6 +158,8 @@ type YoutubeChannel {
   hiddenSubscriberCount: Boolean!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
+  mainVideoCategoryId: Int!
   keywords: [YoutubeChannelKeywordRelation!]!
   videos: [YoutubeVideo!]!
   account: Account!

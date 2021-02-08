@@ -10,6 +10,8 @@ query getYoutubeRankingPage($pagination: YoutubePaginationInput!) {
       viewCount
       videoCount
       hiddenSubscriberCount
+      accountId
+      mainVideoCategoryId
       keywords {
         keyword {
           title
@@ -20,9 +22,6 @@ query getYoutubeRankingPage($pagination: YoutubePaginationInput!) {
           id
           title
         }
-      }
-      account {
-        uuid
       }
     }
     youtubeVideoCategories {
