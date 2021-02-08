@@ -254,6 +254,11 @@ type AccountSearchResult {
   accounts: [Account!]!
 }
 
+type Sitemap {
+  accounts: [Account!]!
+  youtubeVideoCategories: [YoutubeVideoCategory!]!
+}
+
 type TopPage {
   youtubeChannels: [YoutubeChannel!]!
   twitterUsers: [TwitterUser!]!
@@ -265,6 +270,7 @@ type Query {
   getAccountPage(uuid: ID!): Account
   getTopPage: TopPage!
   searchAccount(pagination: AccountSearchInput!): AccountSearchResult!
+  getSitemapData: Sitemap!
   getYoutubeRankingPage(pagination: YoutubePaginationInput!): YoutubeRankingPage!
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
   getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!

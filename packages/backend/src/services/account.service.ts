@@ -96,6 +96,15 @@ export class AccountService {
     return { totalPages: Math.ceil(totalCount / take), accounts };
   }
 
+  async getSitemapData() {
+    const accounts = await this.prisma.account.findMany({ select: { uuid: true } });
+    const youtubeVideoCategories = await this.prisma.youtubeVideoCategory.findMany({
+      where: { assignable: true },
+      select: { id: true },
+    });
+    return { accounts, youtubeVideoCategories };
+  }
+
   async addServiceByYoutube(take: number) {
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,

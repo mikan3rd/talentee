@@ -1,0 +1,10 @@
+query getSitemapData {
+  getSitemapData {
+    accounts {
+      uuid
+    }
+    youtubeVideoCategories {
+      id
+    }
+  }
+}

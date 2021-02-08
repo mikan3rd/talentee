@@ -263,6 +263,11 @@ export type AccountSearchResult = {
   accounts: Array<Account>;
 };
 
+export type Sitemap = {
+  accounts: Array<Account>;
+  youtubeVideoCategories: Array<YoutubeVideoCategory>;
+};
+
 export type TopPage = {
   youtubeChannels: Array<YoutubeChannel>;
   twitterUsers: Array<TwitterUser>;
@@ -274,6 +279,7 @@ export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
   searchAccount: AccountSearchResult;
+  getSitemapData: Sitemap;
   getYoutubeRankingPage: YoutubeRankingPage;
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
@@ -398,6 +404,15 @@ export type GetInstagramRankingPageQuery = {
     instagramUsers: Array<
       Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId">
     >;
+  };
+};
+
+export type GetSitemapDataQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetSitemapDataQuery = {
+  getSitemapData: {
+    accounts: Array<Pick<Account, "uuid">>;
+    youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id">>;
   };
 };
 
@@ -700,6 +715,47 @@ export type GetInstagramRankingPageQueryResult = Apollo.QueryResult<
   GetInstagramRankingPageQuery,
   GetInstagramRankingPageQueryVariables
 >;
+export const GetSitemapDataDocument = gql`
+  query getSitemapData {
+    getSitemapData {
+      accounts {
+        uuid
+      }
+      youtubeVideoCategories {
+        id
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetSitemapDataQuery__
+ *
+ * To run a query within a React component, call `useGetSitemapDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSitemapDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSitemapDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSitemapDataQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetSitemapDataQuery, GetSitemapDataQueryVariables>,
+) {
+  return Apollo.useQuery<GetSitemapDataQuery, GetSitemapDataQueryVariables>(GetSitemapDataDocument, baseOptions);
+}
+export function useGetSitemapDataLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetSitemapDataQuery, GetSitemapDataQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetSitemapDataQuery, GetSitemapDataQueryVariables>(GetSitemapDataDocument, baseOptions);
+}
+export type GetSitemapDataQueryHookResult = ReturnType<typeof useGetSitemapDataQuery>;
+export type GetSitemapDataLazyQueryHookResult = ReturnType<typeof useGetSitemapDataLazyQuery>;
+export type GetSitemapDataQueryResult = Apollo.QueryResult<GetSitemapDataQuery, GetSitemapDataQueryVariables>;
 export const GetTiktokRankingPageDocument = gql`
   query getTiktokRankingPage($pagination: PaginationInput!) {
     getTiktokRankingPage(pagination: $pagination) {
