@@ -19,6 +19,11 @@ export const migrateAccountScheduler = scheduleFunctions({ timeoutSeconds: 540 }
       accoutDataList.push(doc.data() as IAccountData);
     });
 
+    if (!accountIds.length) {
+      logger.log("Migrated!!");
+      return;
+    }
+
     const data: BodyType[] = [];
 
     for (const account of accoutDataList) {
