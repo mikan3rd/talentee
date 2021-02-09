@@ -392,7 +392,7 @@ export class AccountService {
     try {
       pathname = new URL(url).pathname;
     } catch (e) {
-      console.error(e);
+      this.logger.error(e);
       return {
         serviceName: "other" as ServiceNameType,
         username: "",
