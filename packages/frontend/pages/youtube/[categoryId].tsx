@@ -16,13 +16,10 @@ import {
 const take = 10;
 const AllCategory = "all" as const;
 
-export const getServerSideProps: GetServerSideProps<Props, { categoryId: string }> = async ({
-  query,
-  params: { categoryId },
-}) => {
+export const getServerSideProps: GetServerSideProps<Props, { categoryId: string }> = async ({ query, params }) => {
   const page = query.page ? Number(query.page) : 1;
-  const isAll = categoryId === AllCategory;
-  const videoCategoryId = isAll ? undefined : Number(categoryId);
+  const isAll = params?.categoryId === AllCategory;
+  const videoCategoryId = isAll ? undefined : Number(params?.categoryId);
 
   const { data } = await client.query<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>({
     query: GetYoutubeRankingPageDocument,
@@ -40,7 +37,7 @@ export const getServerSideProps: GetServerSideProps<Props, { categoryId: string 
     ? allOption
     : videoCategoryOptions.find((category) => category.value === String(videoCategoryId));
 
-  if (!data.getYoutubeRankingPage.youtubeChannels.length || !selectedVideoCategory) {
+  if (!selectedVideoCategory) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
