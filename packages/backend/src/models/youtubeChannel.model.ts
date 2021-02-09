@@ -47,8 +47,8 @@ export class YoutubeChannel {
   @Field()
   accountId!: string;
 
-  @Field((type) => Int)
-  mainVideoCategoryId!: number;
+  @Field((type) => Int, { nullable: true })
+  mainVideoCategoryId?: number;
 
   @Field((type) => [YoutubeChannelKeywordRelation])
   keywords!: YoutubeChannelKeywordRelation[];

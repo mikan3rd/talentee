@@ -170,7 +170,7 @@ export type YoutubeChannel = {
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
   accountId: Scalars["String"];
-  mainVideoCategoryId: Scalars["Int"];
+  mainVideoCategoryId?: Maybe<Scalars["Int"]>;
   keywords: Array<YoutubeChannelKeywordRelation>;
   videos: Array<YoutubeVideo>;
   account: Account;

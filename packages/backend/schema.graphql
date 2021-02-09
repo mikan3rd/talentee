@@ -161,7 +161,7 @@ type YoutubeChannel {
   createdAt: Date!
   updatedAt: Date!
   accountId: String!
-  mainVideoCategoryId: Int!
+  mainVideoCategoryId: Int
   keywords: [YoutubeChannelKeywordRelation!]!
   videos: [YoutubeVideo!]!
   account: Account!
