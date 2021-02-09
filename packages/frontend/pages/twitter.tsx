@@ -22,10 +22,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     variables: { pagination: { take, page } },
   });
 
-  if (!data.getTwitterRankingPage.twitterUsers.length) {
-    return { notFound: true };
-  }
-
   return {
     props: {
       take,

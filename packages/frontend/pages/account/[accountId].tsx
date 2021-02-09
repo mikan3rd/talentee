@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps<Props, { accountId: string }
   });
 
   if (!data.getAccountPage) {
-    return { notFound: true };
+    return { redirect: { statusCode: 302, destination: "/" } };
   }
 
   return { props: data.getAccountPage };

@@ -22,10 +22,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
     variables: { pagination: { take, page } },
   });
 
-  if (!data.getTiktokRankingPage.tiktokUsers.length) {
-    return { notFound: true };
-  }
-
   return {
     props: {
       take,

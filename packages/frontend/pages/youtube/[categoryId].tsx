@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps<Props, { categoryId: string 
     : videoCategoryOptions.find((category) => category.value === String(videoCategoryId));
 
   if (!data.getYoutubeRankingPage.youtubeChannels.length || !selectedVideoCategory) {
-    return { notFound: true };
+    return { redirect: { statusCode: 302, destination: "/" } };
   }
 
   return {
