@@ -10,7 +10,7 @@ export const migrateAccountScheduler = scheduleFunctions({ timeoutSeconds: 540 }
     const db = admin.firestore();
     const accountCollection = db.collection(AccountCollectionPath);
 
-    const docs = await accountCollection.limit(5).get();
+    const docs = await accountCollection.limit(20).get();
 
     const accountIds: string[] = [];
     const accoutDataList: IAccountData[] = [];
