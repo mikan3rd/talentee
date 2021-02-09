@@ -1,0 +1,13 @@
+query getInstagramRankingPage($pagination: PaginationInput!) {
+  getInstagramRankingPage(pagination: $pagination) {
+    totalPages
+    instagramUsers {
+      username
+      fullName
+      biography
+      profilePicUrl
+      followedBy
+      accountId
+    }
+  }
+}

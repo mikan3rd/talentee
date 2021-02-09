@@ -8,19 +8,27 @@ import { toUnitString } from "@/common/utils";
 import { Linkify } from "@/components/atoms/Linkify";
 import { YoutubeSocialButton } from "@/components/atoms/SocialButton";
 import { YoutubeVideoCard } from "@/components/organisms/YoutubeVideoCard";
+import { Props as AccountProps } from "@/components/pages/Account";
 
-export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopularVideos: IYoutubeVideoData[] }>(
-  ({ youtubeData, youtubePopularVideos }) => {
-    const {
-      snippet: { title, thumbnails, description, publishedAt },
-      brandingSettings: {
-        channel: { keywords },
-      },
-      statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
-      videoCategories,
-    } = youtubeData;
+export type Props = AccountProps["youtubeChannels"][number];
 
-    const publishedAtTime = dayjs(publishedAt);
+export const YoutubeDetail = React.memo<Props>(
+  ({
+    id,
+    title,
+    description,
+    thumbnailUrl,
+    hiddenSubscriberCount,
+    subscriberCount,
+    viewCount,
+    videoCount,
+    publishedAt,
+    keywords,
+    channelVideoCategories,
+    mainVideoCategoryId,
+    videos,
+  }) => {
+    const publishedAtTime = React.useMemo(() => dayjs.unix(publishedAt), [publishedAt]);
 
     return (
       <div
@@ -29,7 +37,7 @@ export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopul
         `}
       >
         <YoutubeSocialButton
-          channelId={youtubeData.id}
+          channelId={id}
           css={css`
             position: absolute;
             right: 0px;
@@ -43,7 +51,7 @@ export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopul
         >
           <div>
             <img
-              src={thumbnails.medium.url}
+              src={thumbnailUrl}
               alt={title}
               css={css`
                 width: 64px;
@@ -99,15 +107,12 @@ export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopul
           <Linkify>{description}</Linkify>
         </p>
 
-        {videoCategories && (
+        {channelVideoCategories.length > 0 && (
           <div css={LabelWrapeerCss}>
-            {videoCategories.map((category, index) => {
-              const {
-                snippet: { title },
-              } = category;
+            {channelVideoCategories.map(({ videoCategory }, index) => {
               return (
-                <Label key={index} tag color="blue" css={LabelCss}>
-                  {title}
+                <Label key={index} tag color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"} css={LabelCss}>
+                  {videoCategory.title}
                 </Label>
               );
             })}
@@ -115,10 +120,10 @@ export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopul
         )}
 
         <div css={LabelWrapeerCss}>
-          {keywords.map((keyword, index) => {
+          {keywords.map((keywordRelation, index) => {
             return (
               <Label key={index} tag css={LabelCss}>
-                {keyword}
+                {keywordRelation.keyword.title}
               </Label>
             );
           })}
@@ -133,7 +138,7 @@ export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopul
           開設日 {publishedAtTime.format("YYYY年M月D日")}
         </div>
 
-        {youtubePopularVideos.length > 0 && (
+        {videos.length > 0 && (
           <div>
             <Header
               css={css`
@@ -146,8 +151,8 @@ export const YoutubeDetail = React.memo<{ youtubeData: YoutubeData; youtubePopul
               人気動画TOP3
             </Header>
             <div>
-              {youtubePopularVideos.map((video, index) => (
-                <YoutubeVideoCard key={video.id} video={video} rankNum={index + 1} />
+              {videos.map((video, index) => (
+                <YoutubeVideoCard key={video.id} rankNum={index + 1} {...video} />
               ))}
             </div>
           </div>

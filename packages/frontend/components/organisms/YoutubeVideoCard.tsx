@@ -5,139 +5,145 @@ import dayjs from "dayjs";
 import { Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "@/common/utils";
+import { YoutubeTag, YoutubeVideo, YoutubeVideoTagRelation } from "@/graphql/generated";
 
-export const YoutubeVideoCard = React.memo<{ video: IYoutubeVideoData; rankNum: number }>(({ video, rankNum }) => {
-  const {
-    id,
-    snippet: { title, publishedAt, tags },
-    statistics: { viewCount, likeCount, dislikeCount },
-  } = video;
-  const publishedAtTime = dayjs(publishedAt);
-  const totalCount = likeCount + dislikeCount;
-  return (
-    <div
-      css={css`
-        display: flex;
-        padding: 10px 0;
-        border-top: 1px dashed #22242626;
-        &:first-of-type {
-          border-top: none;
-        }
-        @media (max-width: 600px) {
-          display: block;
-        }
-      `}
-    >
+type CustomYoutubeVideoTagRelation = Omit<YoutubeVideoTagRelation, "tag"> & { tag: Pick<YoutubeTag, "title"> };
+
+type Props = {
+  rankNum: number;
+} & Pick<YoutubeVideo, "id" | "title" | "publishedAt" | "viewCount" | "likeCount" | "dislikeCount"> & {
+    tags: Pick<CustomYoutubeVideoTagRelation, "tag">[];
+  };
+
+export const YoutubeVideoCard = React.memo<Props>(
+  ({ id, title, publishedAt, viewCount, likeCount, dislikeCount, rankNum, tags }) => {
+    const publishedAtTime = React.useMemo(() => dayjs.unix(publishedAt), [publishedAt]);
+    const totalCount = React.useMemo(() => likeCount + dislikeCount, [dislikeCount, likeCount]);
+    return (
       <div
         css={css`
-          width: 300px;
-          flex-shrink: 0;
+          display: flex;
+          padding: 10px 0;
+          border-top: 1px dashed #22242626;
+          &:first-of-type {
+            border-top: none;
+          }
           @media (max-width: 600px) {
-            width: 100%;
+            display: block;
           }
         `}
       >
         <div
           css={css`
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%;
+            width: 300px;
+            flex-shrink: 0;
+            @media (max-width: 600px) {
+              width: 100%;
+            }
           `}
         >
-          <iframe
-            src={`//www.youtube.com/embed/${id}`}
-            frameBorder={0}
-            allow="fullscreen"
+          <div
+            css={css`
+              position: relative;
+              width: 100%;
+              padding-top: 56.25%;
+            `}
+          >
+            <iframe
+              src={`//www.youtube.com/embed/${id}`}
+              frameBorder={0}
+              allow="fullscreen"
+              css={css`
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+              `}
+            />
+          </div>
+        </div>
+        <div
+          css={css`
+            position: relative;
+            margin-left: 10px;
+            @media (max-width: 600px) {
+              margin-left: 0;
+              margin-top: 5px;
+            }
+          `}
+        >
+          <div
             css={css`
               position: absolute;
-              top: 0;
-              right: 0;
-              width: 100%;
-              height: 100%;
+              bottom: 0px;
+              right: 0px;
+              font-weight: bold;
+              font-size: 100px;
+              color: lightgrey;
+              line-height: 1;
             `}
-          />
-        </div>
-      </div>
-      <div
-        css={css`
-          position: relative;
-          margin-left: 10px;
-          @media (max-width: 600px) {
-            margin-left: 0;
-            margin-top: 5px;
-          }
-        `}
-      >
-        <div
-          css={css`
-            position: absolute;
-            bottom: 0px;
-            right: 0px;
-            font-weight: bold;
-            font-size: 100px;
-            color: lightgrey;
-            line-height: 1;
-          `}
-        >
-          {rankNum}
-        </div>
-        <div>{publishedAtTime.format("YYYY年M月D日")}</div>
-        <div
-          css={css`
-            font-size: 16px;
-            font-weight: bold;
-            position: relative;
-          `}
-        >
-          {title}
-        </div>
-        <div
-          css={css`
-            display: block;
-          `}
-        >
-          <div css={CountWrapperCss}>
-            <Icon name="video play" css={CountIconCss} />
-            <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
+          >
+            {rankNum}
+          </div>
+          <div>{publishedAtTime.format("YYYY年M月D日")}</div>
+          <div
+            css={css`
+              font-size: 16px;
+              font-weight: bold;
+              position: relative;
+            `}
+          >
+            {title}
           </div>
           <div
             css={css`
-              display: flex;
+              display: block;
             `}
           >
-            {likeCount && (
-              <div css={CountWrapperCss}>
-                <Icon name="thumbs up" css={CountIconCss} />
-                <div css={CountTextCss}>
-                  {toUnitString(likeCount)} ({Math.round((likeCount / totalCount) * 100)}%)
+            <div css={CountWrapperCss}>
+              <Icon name="video play" css={CountIconCss} />
+              <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
+            </div>
+            <div
+              css={css`
+                display: flex;
+              `}
+            >
+              {likeCount && (
+                <div css={CountWrapperCss}>
+                  <Icon name="thumbs up" css={CountIconCss} />
+                  <div css={CountTextCss}>
+                    {toUnitString(likeCount)} ({Math.round((likeCount / totalCount) * 100)}%)
+                  </div>
                 </div>
-              </div>
-            )}
-            {dislikeCount && (
-              <div css={CountWrapperCss}>
-                <Icon name="thumbs down" css={CountIconCss} />
-                <div css={CountTextCss}>
-                  {toUnitString(dislikeCount)} ({Math.round((dislikeCount / totalCount) * 100)}%)
+              )}
+              {dislikeCount && (
+                <div css={CountWrapperCss}>
+                  <Icon name="thumbs down" css={CountIconCss} />
+                  <div css={CountTextCss}>
+                    {toUnitString(dislikeCount)} ({Math.round((dislikeCount / totalCount) * 100)}%)
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
+          {tags.length > 0 && (
+            <div>
+              {tags.map((tagRelation, index) => {
+                return (
+                  <Label key={index} tag css={LabelCss}>
+                    {tagRelation.tag.title}
+                  </Label>
+                );
+              })}
+            </div>
+          )}
         </div>
-        {tags && (
-          <div>
-            {tags.map((tag, index) => {
-              return (
-                <Label key={index} tag css={LabelCss}>
-                  {tag}
-                </Label>
-              );
-            })}
-          </div>
-        )}
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 const CountWrapperCss = css`
   display: flex;

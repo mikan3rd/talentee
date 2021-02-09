@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { google } from "googleapis";
 
-const { youtube, twitter, sentry, proxy, proxy2, instagram } = functions.config();
+const { youtube, twitter, sentry, proxy, proxy2, instagram, backend } = functions.config();
 
 export const SENTRY_DSN = sentry.dsn;
 export const SENTRY_ENV = sentry.environment;
@@ -27,3 +27,5 @@ export const PROXY_HOST_2 = proxy2.host;
 export const PROXY_PORT_2 = proxy2.port;
 export const PROXY_USERNAME_2 = proxy2.username;
 export const PROXY_PASSWORD_2 = proxy2.password;
+
+export const BACKEND_ENDPOINT = backend.endpoint;

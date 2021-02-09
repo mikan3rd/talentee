@@ -57,7 +57,9 @@ model YoutubeChannel {
   createdAt              DateTime                        @default(now()) @db.DateTime(6)
   updatedAt              DateTime                        @updatedAt @db.DateTime(6)
   accountId              String                          @db.VarChar(36)
+  mainVideoCategoryId    Int?                            @db.Int
   account                Account                         @relation(fields: [accountId], references: [uuid])
+  mainVideoCategory      YoutubeVideoCategory?           @relation(fields: [mainVideoCategoryId], references: [id])
   keywords               YoutubeChannelKeywordRelation[]
   channelVideoCategories YoutubeChannelVideoCategory[]
   videos                 YoutubeVideo[]
@@ -177,6 +179,7 @@ model InstagramUser {
   profilePicUrl String           @db.Text
   followedBy    BigInt           @db.UnsignedBigInt
   follow        BigInt           @db.UnsignedBigInt
+  mediaCount    BigInt           @db.UnsignedBigInt @default(0)
   isVerified    Boolean          @db.TinyInt
   isPrivate     Boolean          @db.TinyInt
   createdAt     DateTime         @default(now()) @db.DateTime(6)

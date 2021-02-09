@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import * as Sentry from "@sentry/node";
 import axios, { AxiosRequestConfig } from "axios";
 import cheerio = require("cheerio");
 import { HttpsProxyAgent } from "https-proxy-agent";
@@ -251,6 +252,7 @@ export class CrawlService {
         profileDataList.push(ProfilePage[0].graphql.user);
       } catch (e) {
         this.logger.error(e);
+        Sentry.captureException(e);
         const screenshot = await page.screenshot();
         await browser.close();
         return screenshot;
@@ -297,6 +299,7 @@ export class CrawlService {
         mutual_followed_by: edge_mutual_followed_by.count,
         saved_media: edge_saved_media.count,
         related_profiles: edge_related_profiles?.edges.map((edge) => edge.node) ?? [],
+        mediaCount: edge_owner_to_timeline_media.count,
       };
 
       const mediaData = edge_owner_to_timeline_media.edges.map((edge) => {

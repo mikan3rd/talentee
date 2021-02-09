@@ -1,15 +1,16 @@
 import { Inject } from "@nestjs/common";
-import { Args, Int, Query, Resolver } from "@nestjs/graphql";
+import { Args, Query, Resolver } from "@nestjs/graphql";
 
-import { YoutubeChannel } from "@/models/youtubeChannel.model";
+import { YoutubePaginationInput } from "@/dto/pagination.input";
+import { YoutubeRankingPage } from "@/dto/youtubeRankingPage.dto";
 import { YoutubeService } from "@/services/youtube.service";
 
 @Resolver()
 export class YoutubeResolver {
   constructor(@Inject(YoutubeService) private youtubeService: YoutubeService) {}
 
-  @Query((returns) => [YoutubeChannel])
-  async youtubeChannelByMainVideoCategory(@Args("videoCategoryId", { type: () => Int }) videoCategoryId: number) {
-    return this.youtubeService.getChannelByMainCategory(videoCategoryId);
+  @Query((returns) => YoutubeRankingPage)
+  async getYoutubeRankingPage(@Args("pagination") { take, page, videoCategoryId, isAll }: YoutubePaginationInput) {
+    return this.youtubeService.getRankingPage({ take, page, videoCategoryId, isAll });
   }
 }

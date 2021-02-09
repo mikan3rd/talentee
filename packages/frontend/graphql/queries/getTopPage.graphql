@@ -1,0 +1,54 @@
+query getTopPage{
+  getTopPage {
+    youtubeChannels {
+      id
+      title
+      thumbnailUrl
+      description
+      subscriberCount
+      viewCount
+      videoCount
+      hiddenSubscriberCount
+      accountId
+      mainVideoCategoryId
+      keywords {
+        keyword {
+          title
+        }
+      }
+      channelVideoCategories {
+        videoCategory {
+          id
+          title
+        }
+      }
+    }
+    twitterUsers {
+      username
+      name
+      description
+      followersCount
+      tweetCount
+      profileImageUrl
+      accountId
+    }
+    instagramUsers {
+      username
+      fullName
+      biography
+      profilePicUrl
+      followedBy
+      accountId
+    }
+    tiktokUsers {
+      uniqueId
+      nickname
+      signature
+      avatarThumb
+      followerCount
+      heartCount
+      videoCount
+      accountId
+    }
+  }
+}

@@ -1,97 +1,54 @@
 import React from "react";
 
-import { GetServerSideProps, GetServerSidePropsResult } from "next";
-import Error from "next/error";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { Account } from "@/components/pages/Account";
+import { Account, Props } from "@/components/pages/Account";
 import { AccountSection, TopSection } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
-import { getAccountPageData } from "@/fetchData/accountPageData";
+import { client } from "@/graphql/client";
+import { GetAccountPageDocument, GetAccountPageQuery, GetAccountPageQueryVariables } from "@/graphql/generated";
 
-type Props = { data: { accountId: string; jsonData: string }; statusCode: number };
+export const getServerSideProps: GetServerSideProps<Props, { accountId: string }> = async ({
+  params: { accountId },
+}) => {
+  const { data } = await client.query<GetAccountPageQuery, GetAccountPageQueryVariables>({
+    query: GetAccountPageDocument,
+    variables: { uuid: accountId },
+  });
 
-const ProfilePage = React.memo<Props>(({ data: { accountId, jsonData }, statusCode }) => {
-  if (statusCode !== 200) {
-    return <Error statusCode={statusCode} />;
+  if (!data.getAccountPage) {
+    return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  const {
-    accountData,
-    youtubeData,
-    youtubePopularVideos,
-    twitterUserData,
-    popularTweets,
-    instagramUserData,
-    instagramPopularMedia,
-    tiktokUserData,
-    tiktokPopularItem,
-  }: {
-    accountData: AccountDataType;
-    youtubeData?: YoutubeData;
-    youtubePopularVideos: IYoutubeVideoData[];
-    twitterUserData?: TwitterUserDataType;
-    popularTweets: TweetDataType[];
-    instagramUserData: InstagramUserDataType;
-    instagramPopularMedia: InstagramMediaType[];
-    tiktokUserData: TiktokUserDataType;
-    tiktokPopularItem: TiktokItemType[];
-  } = JSON.parse(jsonData);
+  return { props: data.getAccountPage };
+};
 
-  const { tmpUsername } = accountData;
+const ProfilePage = React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
+  const { uuid, displayName } = props;
 
   return (
     <>
-      <Meta title={tmpUsername} description={`${tmpUsername} のまとめページはコチラ！`} />
+      <Meta title={displayName} description={`${displayName} のまとめページはコチラ！`} />
 
       <Breadcrumb size="big">
         <TopSection />
         <Breadcrumb.Divider />
         <AccountSection />
         <Breadcrumb.Divider />
-        <Link href={`/account/${accountId}`}>
-          <Breadcrumb.Section href={`/account/${accountId}`} active={true}>
-            {accountData.tmpUsername}
+        <Link href={`/account/${uuid}`}>
+          <Breadcrumb.Section href={`/account/${uuid}`} active={true}>
+            {displayName}
           </Breadcrumb.Section>
         </Link>
       </Breadcrumb>
 
       <Divider />
 
-      <Account
-        accountData={accountData}
-        youtubeData={youtubeData}
-        youtubePopularVideos={youtubePopularVideos}
-        twitterUserData={twitterUserData}
-        popularTweets={popularTweets}
-        instagramUserData={instagramUserData}
-        instagramPopularMedia={instagramPopularMedia}
-        tiktokUserData={tiktokUserData}
-        tiktokPopularItem={tiktokPopularItem}
-      />
+      <Account {...props} />
     </>
   );
 });
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  let statusCode = 200;
-  let accountId = "";
-  let jsonData = "";
-
-  if (!params) {
-    statusCode = 404;
-  } else {
-    accountId = params.accountId as string;
-    jsonData = await getAccountPageData(accountId);
-
-    if (jsonData === null) {
-      statusCode = 404;
-    }
-  }
-
-  const result: GetServerSidePropsResult<Props> = { props: { data: { accountId, jsonData }, statusCode } };
-  return result;
-};
 
 export default ProfilePage;

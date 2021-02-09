@@ -23,6 +23,19 @@ export class TwitterService {
     return { Authorization: `Bearer ${this.configService.get("TWITTER_BEARER_TOKEN")}` };
   }
 
+  async getRankingPage({ take, page }: { take: number; page: number }) {
+    const totalCount = await this.prisma.twitterUser.count();
+    const twitterUsers = await this.prisma.twitterUser.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { followersCount: "desc" },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      twitterUsers,
+    };
+  }
+
   async upsertUsersByUsername(baseDataList: { username: string; accountId?: string }[]) {
     const baseDataMapping = baseDataList.reduce((prev, { username, accountId }) => {
       prev[username] = { accountId, username };
@@ -62,12 +75,14 @@ export class TwitterService {
       const account = await this.prisma.twitterUser.findUnique({ where: { id: userId } }).account();
       const accountId = account?.uuid ?? target?.accountId;
 
+      const profileImageUrl = profile_image_url.replace(/_normal(?=.(jpg|jpeg|png)$)/, "");
+
       const twitteUser: Prisma.TwitterUserCreateInput = {
         id: userId,
         name,
         username,
         description,
-        profileImageUrl: profile_image_url,
+        profileImageUrl,
         followersCount: followers_count,
         followingCount: following_count,
         listedCount: listed_count,
@@ -81,7 +96,7 @@ export class TwitterService {
             create: {
               displayName: name,
               username,
-              thumbnailUrl: profile_image_url,
+              thumbnailUrl: profileImageUrl,
             },
           },
         },

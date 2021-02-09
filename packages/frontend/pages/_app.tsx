@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ApolloProvider } from "@apollo/client";
 import dayjs from "dayjs";
 import { AppProps } from "next/app";
 import smoothscroll from "smoothscroll-polyfill";
@@ -9,6 +10,7 @@ import "semantic-ui-css/semantic.min.css";
 import "react-semantic-toasts/styles/react-semantic-alert.css";
 
 import { Layout } from "@/components/templates/Layout";
+import { client } from "@/graphql/client";
 
 dayjs.locale("ja");
 
@@ -18,9 +20,11 @@ if (typeof window !== "undefined") {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <ApolloProvider client={client}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </ApolloProvider>
   );
 }
 

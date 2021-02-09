@@ -2,58 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type InstagramLocation {
-  id: ID!
-  name: String!
-  slug: String!
-  hasPublicPage: Boolean!
-  createdAt: Date!
-  updatedAt: Date!
-  mediaList: [InstagramMedia!]!
-}
-
-"""Date custom scalar type"""
-scalar Date
-
-type InstagramMedia {
-  id: ID!
-  shortcode: String!
-  thumbnailSrc: String!
-  mediaToCaption: String!
-  displayUrl: String!
-  likedBy: BigInt!
-  mediaPreviewLike: BigInt!
-  mediaToComment: BigInt!
-  videoViewCount: BigInt
-  productType: String
-  isVideo: Boolean!
-  takenAtTimestamp: Date!
-  createdAt: Date!
-  updatedAt: Date!
-  user: InstagramUser!
-  location: InstagramLocation
-}
-
-"""BigInt custom scalar type"""
-scalar BigInt
-
-type InstagramUser {
-  id: ID!
-  fullName: String!
-  username: String!
-  biography: String!
-  externalUrl: String
-  profilePicUrl: String!
-  followedBy: BigInt!
-  follow: BigInt!
-  isVerified: Boolean!
-  isPrivate: Boolean!
-  createdAt: Date!
-  updatedAt: Date!
-  account: Account!
-  mediaList: [InstagramMedia!]!
-}
-
 type TiktokItem {
   id: ID!
   desc: String!
@@ -66,6 +14,12 @@ type TiktokItem {
   updatedAt: Date!
   user: TiktokUser!
 }
+
+"""BigInt custom scalar type"""
+scalar BigInt
+
+"""Date custom scalar type"""
+scalar Date
 
 type TiktokUser {
   id: ID!
@@ -84,6 +38,7 @@ type TiktokUser {
   createdTimestamp: Date!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
   account: Account!
   items: [TiktokItem!]!
 }
@@ -118,21 +73,9 @@ type TwitterUser {
   createdTimestamp: Date!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
   account: Account!
   tweets: [TwitterTweet!]!
-}
-
-type Account {
-  uuid: ID!
-  displayName: String!
-  username: String!
-  thumbnailUrl: String!
-  createdAt: Date!
-  updatedAt: Date!
-  youtubeChannels: [YoutubeChannel!]!
-  twitterUsers: [TwitterUser!]!
-  instagramUsers: [InstagramUser!]!
-  tiktokUsers: [TiktokUser!]!
 }
 
 type YoutubeKeyword {
@@ -217,13 +160,137 @@ type YoutubeChannel {
   hiddenSubscriberCount: Boolean!
   createdAt: Date!
   updatedAt: Date!
+  accountId: String!
+  mainVideoCategoryId: Int!
   keywords: [YoutubeChannelKeywordRelation!]!
   videos: [YoutubeVideo!]!
   account: Account!
   channelVideoCategories: [YoutubeChannelVideoCategory!]!
 }
 
+type Account {
+  uuid: ID!
+  displayName: String!
+  username: String!
+  thumbnailUrl: String!
+  createdAt: Date!
+  updatedAt: Date!
+  youtubeChannels: [YoutubeChannel!]!
+  twitterUsers: [TwitterUser!]!
+  instagramUsers: [InstagramUser!]!
+  tiktokUsers: [TiktokUser!]!
+}
+
+type InstagramLocation {
+  id: ID!
+  name: String!
+  slug: String!
+  hasPublicPage: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  mediaList: [InstagramMedia!]!
+}
+
+type InstagramMedia {
+  id: ID!
+  shortcode: String!
+  thumbnailSrc: String!
+  mediaToCaption: String!
+  displayUrl: String!
+  likedBy: BigInt!
+  mediaPreviewLike: BigInt!
+  mediaToComment: BigInt!
+  videoViewCount: BigInt
+  productType: String
+  isVideo: Boolean!
+  takenAtTimestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
+  user: InstagramUser!
+  location: InstagramLocation
+}
+
+type InstagramUser {
+  id: ID!
+  fullName: String!
+  username: String!
+  biography: String!
+  externalUrl: String
+  profilePicUrl: String!
+  followedBy: BigInt!
+  follow: BigInt!
+  isVerified: Boolean!
+  isPrivate: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  accountId: String!
+  account: Account!
+  mediaList: [InstagramMedia!]!
+}
+
+type InstagramRankingPage {
+  totalPages: Int!
+  instagramUsers: [InstagramUser!]!
+}
+
+type TiktokRankingPage {
+  totalPages: Int!
+  tiktokUsers: [TiktokUser!]!
+}
+
+type TwitterRankingPage {
+  totalPages: Int!
+  twitterUsers: [TwitterUser!]!
+}
+
+type YoutubeRankingPage {
+  totalPages: Int!
+  youtubeChannels: [YoutubeChannel!]!
+  youtubeVideoCategories: [YoutubeVideoCategory!]!
+}
+
+type AccountSearchResult {
+  totalPages: Int!
+  accounts: [Account!]!
+}
+
+type Sitemap {
+  accounts: [Account!]!
+  youtubeVideoCategories: [YoutubeVideoCategory!]!
+}
+
+type TopPage {
+  youtubeChannels: [YoutubeChannel!]!
+  twitterUsers: [TwitterUser!]!
+  instagramUsers: [InstagramUser!]!
+  tiktokUsers: [TiktokUser!]!
+}
+
 type Query {
-  getForAccountPage(uuid: ID!): Account
-  youtubeChannelByMainVideoCategory(videoCategoryId: Int!): [YoutubeChannel!]!
+  getAccountPage(uuid: ID!): Account
+  getTopPage: TopPage!
+  searchAccount(pagination: AccountSearchInput!): AccountSearchResult!
+  getSitemapData: Sitemap!
+  getYoutubeRankingPage(pagination: YoutubePaginationInput!): YoutubeRankingPage!
+  getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
+  getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
+  getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
+}
+
+input AccountSearchInput {
+  take: Int!
+  page: Int!
+  word: String!
+}
+
+input YoutubePaginationInput {
+  take: Int!
+  page: Int!
+  videoCategoryId: Int
+  isAll: Boolean!
+}
+
+input PaginationInput {
+  take: Int!
+  page: Int!
 }

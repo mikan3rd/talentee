@@ -1,0 +1,84 @@
+query getAccountPage($uuid: ID!) {
+  getAccountPage(uuid: $uuid) {
+    uuid
+    displayName
+    thumbnailUrl
+    username
+    updatedAt
+    youtubeChannels {
+      id
+      title
+      description
+      thumbnailUrl
+      hiddenSubscriberCount
+      subscriberCount
+      viewCount
+      videoCount
+      publishedAt
+      accountId
+      mainVideoCategoryId
+      videos {
+        id
+        title
+        publishedAt
+        viewCount
+        likeCount
+        dislikeCount
+        tags {
+          tag {
+            title
+          }
+        }
+      }
+      keywords {
+        keyword {
+          title
+        }
+      }
+      channelVideoCategories {
+        videoCategory {
+          id
+          title
+        }
+      }
+    }
+    twitterUsers {
+      name
+      username
+      profileImageUrl
+      description
+      followersCount
+      followingCount
+      tweetCount
+      createdTimestamp
+      tweets {
+        id
+      }
+    }
+    instagramUsers {
+      username
+      fullName
+      biography
+      externalUrl
+      profilePicUrl
+      follow
+      followedBy
+      mediaList {
+				shortcode
+      }
+    }
+    tiktokUsers {
+      uniqueId
+      nickname
+      signature
+      avatarThumb
+      followerCount
+      followingCount
+      heartCount
+      videoCount
+      items {
+        id
+      }
+    }
+  }
+}

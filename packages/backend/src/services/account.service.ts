@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 
 import { CrawlService } from "@/services/crawl.service";
@@ -23,7 +24,7 @@ export class AccountService {
     private tiktokService: TiktokService,
   ) {}
 
-  async getForAccountPage(uuid: string) {
+  async getAccountPage(uuid: string) {
     const take = 3;
     return this.prisma.account.findUnique({
       where: { uuid },
@@ -44,6 +45,64 @@ export class AccountService {
         tiktokUsers: { include: { items: { take, orderBy: { diggCount: "desc" } } } },
       },
     });
+  }
+
+  async getTopPage() {
+    const take = 3;
+    const youtubeChannels = await this.prisma.youtubeChannel.findMany({
+      take,
+      orderBy: { subscriberCount: "desc" },
+      include: {
+        keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
+        channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+      },
+    });
+    const twitterUsers = await this.prisma.twitterUser.findMany({
+      take,
+      orderBy: { followersCount: "desc" },
+    });
+    const instagramUsers = await this.prisma.instagramUser.findMany({
+      take,
+      orderBy: { followedBy: "desc" },
+    });
+    const tiktokUsers = await this.prisma.tiktokUser.findMany({
+      take,
+      orderBy: { followerCount: "desc" },
+    });
+    return { youtubeChannels, twitterUsers, instagramUsers, tiktokUsers };
+  }
+
+  async searchByName({ word, take, page }: { word: string; take: number; page: number }) {
+    const where: Prisma.AccountWhereInput = {
+      OR: [
+        { youtubeChannels: { some: { title: { contains: word } } } },
+        { twitterUsers: { some: { name: { contains: word } } } },
+        { instagramUsers: { some: { fullName: { contains: word } } } },
+        { tiktokUsers: { some: { nickname: { contains: word } } } },
+      ],
+    };
+    const totalCount = await this.prisma.account.count({ where });
+    const accounts = this.prisma.account.findMany({
+      take,
+      skip: take * (page - 1),
+      where,
+      include: {
+        youtubeChannels: { select: { id: true } },
+        twitterUsers: { select: { username: true } },
+        instagramUsers: { select: { username: true } },
+        tiktokUsers: { select: { uniqueId: true } },
+      },
+    });
+    return { totalPages: Math.ceil(totalCount / take), accounts };
+  }
+
+  async getSitemapData() {
+    const accounts = await this.prisma.account.findMany({ select: { uuid: true } });
+    const youtubeVideoCategories = await this.prisma.youtubeVideoCategory.findMany({
+      where: { assignable: true },
+      select: { id: true },
+    });
+    return { accounts, youtubeVideoCategories };
   }
 
   async addServiceByYoutube(take: number) {
@@ -234,6 +293,73 @@ export class AccountService {
     await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList);
   }
 
+  async addByFirestore(
+    data: {
+      youtubeChannelId?: string;
+      twitterUsername?: string;
+      instagramUsername?: string;
+      tiktokUniqueId?: string;
+    }[],
+  ) {
+    const youtubeBaseDataList = [];
+    const twitterBaseDataList = [];
+    const instagramBaseDataList = [];
+    const tiktokBaseDataList = [];
+
+    for (const { youtubeChannelId, twitterUsername, instagramUsername, tiktokUniqueId } of data) {
+      const OR: Prisma.AccountWhereInput["OR"] = [];
+      if (youtubeChannelId) {
+        OR.push({ youtubeChannels: { some: { id: youtubeChannelId } } });
+      }
+      if (twitterUsername) {
+        OR.push({ twitterUsers: { some: { username: twitterUsername } } });
+      }
+      if (instagramUsername) {
+        OR.push({ instagramUsers: { some: { fullName: instagramUsername } } });
+      }
+      if (tiktokUniqueId) {
+        OR.push({ tiktokUsers: { some: { nickname: tiktokUniqueId } } });
+      }
+
+      const accounts = await this.prisma.account.findMany({ where: { OR } });
+
+      if (!accounts.length) {
+        if (youtubeChannelId) {
+          youtubeBaseDataList.push({ channelId: youtubeChannelId });
+        } else if (twitterUsername) {
+          twitterBaseDataList.push({ username: twitterUsername });
+        } else if (instagramUsername) {
+          instagramBaseDataList.push({ username: instagramUsername });
+        } else if (tiktokUniqueId) {
+          tiktokBaseDataList.push({ uniqueId: tiktokUniqueId });
+        }
+      } else {
+        const accountId = accounts[0].uuid;
+        if (youtubeChannelId) {
+          youtubeBaseDataList.push({ channelId: youtubeChannelId, accountId });
+        }
+        if (twitterUsername) {
+          twitterBaseDataList.push({ username: twitterUsername, accountId });
+        }
+        if (instagramUsername) {
+          instagramBaseDataList.push({ username: instagramUsername, accountId });
+        }
+        if (tiktokUniqueId) {
+          tiktokBaseDataList.push({ uniqueId: tiktokUniqueId, accountId });
+        }
+      }
+    }
+
+    this.logger.log(
+      `data: ${data.length}, youtube: ${youtubeBaseDataList.length}, twitter: ${twitterBaseDataList.length}, instagram: ${instagramBaseDataList.length}, tiktok: ${tiktokBaseDataList.length}`,
+    );
+
+    await this.youtubeService.bulkUpsertChannelByChannelId(youtubeBaseDataList, false);
+    await this.twitterService.upsertUsersByUsername(twitterBaseDataList);
+    await this.instagramService.upsertUsers(instagramBaseDataList);
+    await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList);
+  }
+
   private groupByBulkServiceName(serviceUsernames: ServiceNameDataList) {
     const groupByServiceData = serviceUsernames.reduce((prev, { serviceName, username, accountId }) => {
       if (!prev[serviceName]) {
@@ -266,7 +392,7 @@ export class AccountService {
     try {
       pathname = new URL(url).pathname;
     } catch (e) {
-      console.error(e);
+      this.logger.error(e);
       return {
         serviceName: "other" as ServiceNameType,
         username: "",

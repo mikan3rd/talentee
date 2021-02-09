@@ -1,8 +1,10 @@
 import React from "react";
 
 import { css } from "@emotion/react";
-import { Button, Divider, Header, Icon } from "semantic-ui-react";
+import { useRouter } from "next/router";
+import { Divider, Header, Pagination, PaginationProps } from "semantic-ui-react";
 
+import { toRankingNumByPagination } from "@/common/utils";
 import {
   IndexLinkButton,
   TiktokIndexLinkButton,
@@ -10,10 +12,23 @@ import {
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { InstagramCard } from "@/components/organisms/InstagramCard";
-import { useInstagramIndexData } from "@/hooks/useInstagramIndexData";
+import { GetInstagramRankingPageQuery } from "@/graphql/generated";
 
-export const InstagramIndex = React.memo(() => {
-  const { instagramData, hasNext, getInstagramNextPageData } = useInstagramIndexData();
+export type Props = {
+  page: number;
+  take: number;
+} & Required<GetInstagramRankingPageQuery["getInstagramRankingPage"]>;
+
+export const InstagramIndex = React.memo<Props>(({ page, take, totalPages, instagramUsers }) => {
+  const router = useRouter();
+
+  const handlePageChange = React.useCallback(
+    async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
+      router.push({ query: { page: data.activePage } });
+    },
+    [router],
+  );
+
   return (
     <>
       <Header
@@ -56,6 +71,14 @@ export const InstagramIndex = React.memo(() => {
           `}
         >
           フォロワー数ランキング
+          <span
+            css={css`
+              margin-left: 10px;
+              font-size: 14px;
+            `}
+          >
+            {page}ページ目
+          </span>
         </Header>
       </div>
 
@@ -64,28 +87,24 @@ export const InstagramIndex = React.memo(() => {
           margin-top: 10px;
         `}
       >
-        {instagramData.map((data, index) => {
-          return <InstagramCard key={data.id} data={data} rankNum={index + 1} />;
+        {instagramUsers.map((data, index) => {
+          return (
+            <InstagramCard key={data.username} {...data} rankNum={toRankingNumByPagination({ page, take, index })} />
+          );
         })}
       </div>
 
-      {hasNext && (
-        <Button
-          fluid
-          icon
-          labelPosition="left"
-          color="instagram"
-          onClick={() => getInstagramNextPageData()}
-          css={css`
-            &&& {
-              margin: 20px 0 40px 0;
-            }
-          `}
-        >
-          <Icon name="hand point right" />
-          {instagramData.length}位以降を読み込む
-        </Button>
-      )}
+      <Pagination
+        css={css`
+          &&& {
+            width: 100%;
+            margin-top: 10px;
+          }
+        `}
+        activePage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <Divider />
 

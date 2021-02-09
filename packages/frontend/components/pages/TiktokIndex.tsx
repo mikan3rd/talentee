@@ -1,8 +1,10 @@
 import React from "react";
 
 import { css } from "@emotion/react";
-import { Button, Divider, Header, Icon } from "semantic-ui-react";
+import { useRouter } from "next/router";
+import { Divider, Header, Pagination, PaginationProps } from "semantic-ui-react";
 
+import { toRankingNumByPagination } from "@/common/utils";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
@@ -10,10 +12,23 @@ import {
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { TiktokCard } from "@/components/organisms/TiktokCard";
-import { useTiktokIndexData } from "@/hooks/useTiktokIndexData";
+import { GetTiktokRankingPageQuery } from "@/graphql/generated";
 
-export const TiktokIndex = React.memo(() => {
-  const { tiktokData, hasNext, getTiktokNextPageData } = useTiktokIndexData();
+export type Props = {
+  page: number;
+  take: number;
+} & Required<GetTiktokRankingPageQuery["getTiktokRankingPage"]>;
+
+export const TiktokIndex = React.memo<Props>(({ take, page, totalPages, tiktokUsers }) => {
+  const router = useRouter();
+
+  const handlePageChange = React.useCallback(
+    async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
+      router.push({ query: { page: data.activePage } });
+    },
+    [router],
+  );
+
   return (
     <>
       <Header
@@ -56,6 +71,14 @@ export const TiktokIndex = React.memo(() => {
           `}
         >
           フォロワー数ランキング
+          <span
+            css={css`
+              margin-left: 10px;
+              font-size: 14px;
+            `}
+          >
+            {page}ページ目
+          </span>
         </Header>
       </div>
 
@@ -64,28 +87,22 @@ export const TiktokIndex = React.memo(() => {
           margin-top: 10px;
         `}
       >
-        {tiktokData.map((data, index) => {
-          return <TiktokCard key={data.user.id} data={data} rankNum={index + 1} />;
+        {tiktokUsers.map((data, index) => {
+          return <TiktokCard key={data.uniqueId} {...data} rankNum={toRankingNumByPagination({ page, take, index })} />;
         })}
       </div>
 
-      {hasNext && (
-        <Button
-          fluid
-          icon
-          labelPosition="left"
-          color="black"
-          onClick={() => getTiktokNextPageData()}
-          css={css`
-            &&& {
-              margin: 20px 0 40px 0;
-            }
-          `}
-        >
-          <Icon name="hand point right" />
-          {tiktokData.length}位以降を読み込む
-        </Button>
-      )}
+      <Pagination
+        css={css`
+          &&& {
+            width: 100%;
+            margin-top: 10px;
+          }
+        `}
+        activePage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <Divider />
 

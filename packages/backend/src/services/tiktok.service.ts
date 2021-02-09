@@ -18,6 +18,19 @@ export class TiktokService {
     private configService: ConfigService<EnvironmentVariables>,
   ) {}
 
+  async getRankingPage({ take, page }: { take: number; page: number }) {
+    const totalCount = await this.prisma.tiktokUser.count();
+    const tiktokUsers = await this.prisma.tiktokUser.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { followerCount: "desc" },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      tiktokUsers,
+    };
+  }
+
   async upsertUser(_uniqueId: string, _accountId?: string) {
     const result = await this.crawlService.getTiktokUser(_uniqueId);
 
@@ -48,11 +61,13 @@ export class TiktokService {
     const account = await this.prisma.instagramUser.findUnique({ where: { id: userId } }).account();
     const accountId = account?.uuid ?? _accountId;
 
+    const thumbnailUrl = `https://p16-sg.tiktokcdn.com${new URL(avatarThumb).pathname}`;
+
     const tiktokUser: Prisma.TiktokUserCreateInput = {
       id: userId,
       uniqueId,
       nickname,
-      avatarThumb,
+      avatarThumb: thumbnailUrl,
       signature,
       bioLink: bioLink?.link ?? null,
       followerCount,
@@ -69,7 +84,7 @@ export class TiktokService {
           create: {
             displayName: nickname,
             username: uniqueId,
-            thumbnailUrl: avatarThumb,
+            thumbnailUrl,
           },
         },
       },
@@ -115,7 +130,7 @@ export class TiktokService {
     }
   }
 
-  async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId: string }[]) {
+  async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId?: string }[]) {
     for (const [index, { uniqueId, accountId }] of baseDataList.entries()) {
       this.logger.log(`${index} ${uniqueId}`);
       await this.upsertUser(uniqueId, accountId);

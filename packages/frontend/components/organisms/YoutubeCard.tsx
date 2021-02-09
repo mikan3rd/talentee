@@ -5,21 +5,45 @@ import Link from "next/link";
 import { Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "@/common/utils";
+import { YoutubeChannel, YoutubeKeyword, YoutubeVideoCategory } from "@/graphql/generated";
 
 const ketwordNum = 10;
 
-export const YoutubeCard = React.memo<{ data: YoutubeData; rankNum: number; showDetails?: boolean }>(
-  ({ data, rankNum, showDetails = true }) => {
-    const {
-      accountRef,
-      snippet: { title, thumbnails, description },
-      brandingSettings: {
-        channel: { keywords },
-      },
-      statistics: { subscriberCount, viewCount, videoCount, hiddenSubscriberCount },
-      mainVideoCategoryId,
-      videoCategories,
-    } = data;
+interface Props
+  extends Pick<
+    YoutubeChannel,
+    | "title"
+    | "thumbnailUrl"
+    | "description"
+    | "subscriberCount"
+    | "viewCount"
+    | "videoCount"
+    | "hiddenSubscriberCount"
+    | "accountId"
+    | "mainVideoCategoryId"
+  > {
+  rankNum: number;
+  showDetails?: boolean;
+  keywords: { keyword: Pick<YoutubeKeyword, "title"> }[];
+  channelVideoCategories: { videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }[];
+}
+
+export const YoutubeCard = React.memo<Props>(
+  ({
+    rankNum,
+    title,
+    description,
+    thumbnailUrl,
+    subscriberCount,
+    viewCount,
+    videoCount,
+    hiddenSubscriberCount,
+    keywords,
+    channelVideoCategories,
+    accountId,
+    mainVideoCategoryId,
+    showDetails = true,
+  }) => {
     return (
       <div
         css={css`
@@ -30,9 +54,8 @@ export const YoutubeCard = React.memo<{ data: YoutubeData; rankNum: number; show
           }
         `}
       >
-        <Link href="/account/[accountId]" as={`/account/${accountRef.id}`} passHref>
+        <Link href="/account/[accountId]" as={`/account/${accountId}`} passHref>
           <a
-            target="_blank"
             css={css`
               position: relative;
               display: block;
@@ -66,7 +89,7 @@ export const YoutubeCard = React.memo<{ data: YoutubeData; rankNum: number; show
             >
               <div>
                 <img
-                  src={thumbnails.medium.url}
+                  src={thumbnailUrl}
                   alt={title}
                   css={css`
                     width: 64px;
@@ -134,15 +157,14 @@ export const YoutubeCard = React.memo<{ data: YoutubeData; rankNum: number; show
               </p>
             )}
 
-            {showDetails && videoCategories && (
+            {showDetails && channelVideoCategories.length > 0 && (
               <div css={LabelWrapeerCss}>
-                {videoCategories.map((category, index) => {
+                {channelVideoCategories.map((channelVideoCategory, index) => {
                   const {
-                    id,
-                    snippet: { title },
-                  } = category;
+                    videoCategory: { id, title },
+                  } = channelVideoCategory;
                   return (
-                    <Label key={index} tag color={mainVideoCategoryId == id ? "red" : "grey"} css={LabelCss}>
+                    <Label key={index} tag color={mainVideoCategoryId === id ? "red" : "grey"} css={LabelCss}>
                       {title}
                     </Label>
                   );
@@ -152,10 +174,10 @@ export const YoutubeCard = React.memo<{ data: YoutubeData; rankNum: number; show
 
             {showDetails && keywords.length > 0 && (
               <div css={LabelWrapeerCss}>
-                {keywords.slice(0, ketwordNum - 1).map((keyword, index) => {
+                {keywords.slice(0, ketwordNum - 1).map((keywordRelation, index) => {
                   return (
                     <Label key={index} tag css={LabelCss}>
-                      {keyword}
+                      {keywordRelation.keyword.title}
                     </Label>
                   );
                 })}
@@ -167,7 +189,7 @@ export const YoutubeCard = React.memo<{ data: YoutubeData; rankNum: number; show
                       font-weight: bold;
                     `}
                   >
-                    他{keywords.length}件
+                    他{keywords.length - ketwordNum}件
                   </div>
                 )}
               </div>
