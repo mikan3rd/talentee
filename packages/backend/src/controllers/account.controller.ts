@@ -1,4 +1,4 @@
-import { Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 
 import { AccountService } from "@/services/account.service";
 
@@ -19,5 +19,20 @@ export class AccountController {
   @Post("/bulkUpdate")
   async bulkUpdate() {
     return await this.accountService.bulkUpdate(20);
+  }
+
+  @Post("/addByFirestore")
+  async addByFirestore(
+    @Body()
+    body: {
+      data: {
+        youtubeChannelId?: string;
+        twitterUsername?: string;
+        instagramUsername?: string;
+        tiktokUniqueId?: string;
+      }[];
+    },
+  ) {
+    return await this.accountService.addByFirestore(body.data);
   }
 }

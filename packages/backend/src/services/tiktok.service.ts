@@ -130,7 +130,7 @@ export class TiktokService {
     }
   }
 
-  async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId: string }[]) {
+  async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId?: string }[]) {
     for (const [index, { uniqueId, accountId }] of baseDataList.entries()) {
       this.logger.log(`${index} ${uniqueId}`);
       await this.upsertUser(uniqueId, accountId);

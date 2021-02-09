@@ -321,7 +321,11 @@ export class YoutubeService {
           num,
         }))
         .sort((a, b) => (a.num > b.num ? -1 : 1));
-      console.log(videoCategories);
+
+      if (!videoCategories.length) {
+        continue;
+      }
+
       for (const { videoCategoryId, num } of videoCategories) {
         const transaction = this.prisma.youtubeChannelVideoCategory.upsert({
           where: {
