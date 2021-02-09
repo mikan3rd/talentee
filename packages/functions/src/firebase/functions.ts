@@ -1,4 +1,5 @@
 import * as cloudFunctions from "firebase-functions";
+export { logger } from "firebase-functions/lib";
 
 const REGION = "asia-northeast1" as const;
 const TIMEZONE = "Asia/Tokyo" as const;
