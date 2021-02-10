@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 import { PaginationCount } from "@/dto/pagination.dto";
 import { Account } from "@/models/account.model";
@@ -7,4 +7,7 @@ import { Account } from "@/models/account.model";
 export class AccountSearchResult extends PaginationCount {
   @Field((type) => [Account])
   accounts!: Account[];
+
+  @Field((type) => Int)
+  totalCount!: number;
 }

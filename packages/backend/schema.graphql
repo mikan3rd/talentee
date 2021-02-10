@@ -252,6 +252,7 @@ type YoutubeRankingPage {
 type AccountSearchResult {
   totalPages: Int!
   accounts: [Account!]!
+  totalCount: Int!
 }
 
 type Sitemap {

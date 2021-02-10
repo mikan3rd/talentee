@@ -1,5 +1,6 @@
 query searchAccount($pagination: AccountSearchInput!) {
   searchAccount(pagination: $pagination) {
+    totalCount
     totalPages
     accounts {
       uuid

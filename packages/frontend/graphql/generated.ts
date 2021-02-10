@@ -261,6 +261,7 @@ export type YoutubeRankingPage = {
 export type AccountSearchResult = {
   totalPages: Scalars["Int"];
   accounts: Array<Account>;
+  totalCount: Scalars["Int"];
 };
 
 export type Sitemap = {
@@ -533,7 +534,7 @@ export type SearchAccountQueryVariables = Exact<{
 }>;
 
 export type SearchAccountQuery = {
-  searchAccount: Pick<AccountSearchResult, "totalPages"> & {
+  searchAccount: Pick<AccountSearchResult, "totalCount" | "totalPages"> & {
     accounts: Array<
       Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
         youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
@@ -1026,6 +1027,7 @@ export type GetYoutubeRankingPageQueryResult = Apollo.QueryResult<
 export const SearchAccountDocument = gql`
   query searchAccount($pagination: AccountSearchInput!) {
     searchAccount(pagination: $pagination) {
+      totalCount
       totalPages
       accounts {
         uuid
