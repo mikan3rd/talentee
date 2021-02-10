@@ -17,7 +17,7 @@ import { GetTwitterRankingPageQuery } from "@/graphql/generated";
 export type Props = {
   page: number;
   take: number;
-} & Required<GetTwitterRankingPageQuery["getTwitterRankingPage"]>;
+} & NonNullable<GetTwitterRankingPageQuery["getTwitterRankingPage"]>;
 
 export const TwitterIndex = React.memo<Props>(({ page, take, totalPages, twitterUsers }) => {
   const router = useRouter();

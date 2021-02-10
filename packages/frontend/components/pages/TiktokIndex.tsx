@@ -17,7 +17,7 @@ import { GetTiktokRankingPageQuery } from "@/graphql/generated";
 export type Props = {
   page: number;
   take: number;
-} & Required<GetTiktokRankingPageQuery["getTiktokRankingPage"]>;
+} & NonNullable<GetTiktokRankingPageQuery["getTiktokRankingPage"]>;
 
 export const TiktokIndex = React.memo<Props>(({ take, page, totalPages, tiktokUsers }) => {
   const router = useRouter();

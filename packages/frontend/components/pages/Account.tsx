@@ -40,12 +40,12 @@ const scrollToElement = (elementId: ServiceType) => {
   }
 };
 
-export type Props = Required<GetAccountPageQuery["getAccountPage"]>;
+export type Props = NonNullable<GetAccountPageQuery["getAccountPage"]>;
 
 export const Account = React.memo<Props>(
   ({ displayName, thumbnailUrl, updatedAt, youtubeChannels, twitterUsers, instagramUsers, tiktokUsers }) => {
     const [headerHeight, setHeaderHeight] = React.useState(0);
-    const [selectedTab, setSelectedTab] = React.useState<ServiceType>(null);
+    const [selectedTab, setSelectedTab] = React.useState<ServiceType | null>(null);
 
     const refs = React.useRef<HTMLDivElement[]>([]);
 
@@ -61,7 +61,7 @@ export const Account = React.memo<Props>(
     const handleSelectedTab = React.useCallback((elementId: ServiceType) => {
       const tabEle = document.getElementById("service_tab");
       const targetEle = document.getElementById(`service_tab_${elementId}`);
-      tabEle.scrollTo({ left: targetEle.offsetLeft, behavior: "smooth" });
+      tabEle?.scrollTo({ left: targetEle?.offsetLeft, behavior: "smooth" });
       setSelectedTab(elementId);
     }, []);
 
@@ -75,8 +75,10 @@ export const Account = React.memo<Props>(
 
     React.useEffect(() => {
       // SSRの場合にdocumentを直で呼び出せないため
-      const headerHeight = document.getElementById("header").clientHeight;
-      setHeaderHeight(headerHeight);
+      const headerHeight = document.getElementById("header")?.clientHeight;
+      if (headerHeight) {
+        setHeaderHeight(headerHeight);
+      }
 
       const observer = new IntersectionObserver(
         (entries) => {
@@ -236,7 +238,12 @@ export const Account = React.memo<Props>(
 
         {youtubeChannel && (
           <>
-            <div id={ServiceYoutube} ref={(el) => (refs.current[0] = el)}>
+            <div
+              id={ServiceYoutube}
+              ref={(el) => {
+                if (el) refs.current[0] = el;
+              }}
+            >
               <YoutubeDetail {...youtubeChannel} />
             </div>
           </>
@@ -245,7 +252,12 @@ export const Account = React.memo<Props>(
         {twitterUser && (
           <>
             <Divider />
-            <div id={ServiceTwitter} ref={(el) => (refs.current[1] = el)}>
+            <div
+              id={ServiceTwitter}
+              ref={(el) => {
+                if (el) refs.current[1] = el;
+              }}
+            >
               <TwitterDetail {...twitterUser} />
             </div>
           </>
@@ -254,7 +266,12 @@ export const Account = React.memo<Props>(
         {instagramUser && (
           <>
             <Divider />
-            <div id={ServiceInstagram} ref={(el) => (refs.current[2] = el)}>
+            <div
+              id={ServiceInstagram}
+              ref={(el) => {
+                if (el) refs.current[2] = el;
+              }}
+            >
               <InstagramDetail {...instagramUser} />
             </div>
           </>
@@ -263,7 +280,12 @@ export const Account = React.memo<Props>(
         {tiktokUser && (
           <>
             <Divider />
-            <div id={ServiceTiktok} ref={(el) => (refs.current[3] = el)}>
+            <div
+              id={ServiceTiktok}
+              ref={(el) => {
+                if (el) refs.current[3] = el;
+              }}
+            >
               <TiktokDetail {...tiktokUser} />
             </div>
           </>

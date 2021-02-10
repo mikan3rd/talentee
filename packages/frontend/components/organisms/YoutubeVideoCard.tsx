@@ -18,7 +18,7 @@ type Props = {
 export const YoutubeVideoCard = React.memo<Props>(
   ({ id, title, publishedAt, viewCount, likeCount, dislikeCount, rankNum, tags }) => {
     const publishedAtTime = React.useMemo(() => dayjs.unix(publishedAt), [publishedAt]);
-    const totalCount = React.useMemo(() => likeCount + dislikeCount, [dislikeCount, likeCount]);
+    const totalCount = React.useMemo(() => (likeCount ?? 0) + (dislikeCount ?? 0), [dislikeCount, likeCount]);
     return (
       <div
         css={css`
@@ -101,10 +101,12 @@ export const YoutubeVideoCard = React.memo<Props>(
               display: block;
             `}
           >
-            <div css={CountWrapperCss}>
-              <Icon name="video play" css={CountIconCss} />
-              <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
-            </div>
+            {viewCount && (
+              <div css={CountWrapperCss}>
+                <Icon name="video play" css={CountIconCss} />
+                <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
+              </div>
+            )}
             <div
               css={css`
                 display: flex;

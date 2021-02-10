@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import dayjs from "dayjs";
 import { AppProps } from "next/app";
-import smoothscroll from "smoothscroll-polyfill";
+import { polyfill } from "smoothscroll-polyfill";
 
 import "dayjs/locale/ja";
 import "semantic-ui-css/semantic.min.css";
@@ -19,7 +19,7 @@ import "@/firebase/clientApp";
 dayjs.locale("ja");
 
 if (typeof window !== "undefined") {
-  smoothscroll.polyfill();
+  polyfill();
 }
 
 Sentry.init({

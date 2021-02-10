@@ -10,12 +10,13 @@ import { Meta } from "@/components/templates/Meta";
 import { client } from "@/graphql/client";
 import { GetAccountPageDocument, GetAccountPageQuery, GetAccountPageQueryVariables } from "@/graphql/generated";
 
-export const getServerSideProps: GetServerSideProps<Props, { accountId: string }> = async ({
-  params: { accountId },
-}) => {
+export const getServerSideProps: GetServerSideProps<Props, { accountId: string }> = async ({ params }) => {
+  if (!params) {
+    return { notFound: true };
+  }
   const { data } = await client.query<GetAccountPageQuery, GetAccountPageQueryVariables>({
     query: GetAccountPageDocument,
-    variables: { uuid: accountId },
+    variables: { uuid: params.accountId },
   });
 
   if (!data.getAccountPage) {

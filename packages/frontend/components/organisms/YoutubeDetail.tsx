@@ -84,7 +84,9 @@ export const YoutubeDetail = React.memo<Props>(
             >
               <div css={CountWrapperCss}>
                 <Icon name="user plus" css={CountIconCss} />
-                <div css={CountTextCss}>{hiddenSubscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}</div>
+                <div css={CountTextCss}>
+                  {hiddenSubscriberCount || !subscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}
+                </div>
               </div>
               <div css={CountWrapperCss}>
                 <Icon name="video play" css={CountIconCss} />

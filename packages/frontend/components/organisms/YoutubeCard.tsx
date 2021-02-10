@@ -123,7 +123,7 @@ export const YoutubeCard = React.memo<Props>(
                   <div css={CountWrapperCss}>
                     <Icon name="user plus" css={CountIconCss} />
                     <div css={CountTextCss}>
-                      {hiddenSubscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}
+                      {hiddenSubscriberCount || !subscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}
                     </div>
                   </div>
                   <div css={CountWrapperCss}>
