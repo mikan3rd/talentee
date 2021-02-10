@@ -12,6 +12,8 @@ import "react-semantic-toasts/styles/react-semantic-alert.css";
 import { Layout } from "@/components/templates/Layout";
 import { client } from "@/graphql/client";
 
+import "@/firebase/clientApp";
+
 dayjs.locale("ja");
 
 if (typeof window !== "undefined") {
