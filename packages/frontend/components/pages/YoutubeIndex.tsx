@@ -147,6 +147,12 @@ export const YoutubeIndex = React.memo<Props>(
             &&& {
               width: 100%;
               margin-top: 10px;
+              overflow-x: auto;
+              > a {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+              }
             }
           `}
           activePage={page}
