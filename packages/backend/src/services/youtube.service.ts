@@ -82,7 +82,7 @@ export class YoutubeService {
   async getVideoCategories() {
     const videoResponse = await this.youtubeApi.videoCategories.list({
       part: ["id", "snippet"],
-      regionCode: "JP",
+      regionCode: "US", // JPだと非営利団体と社会活動カテゴリが取得できないため
       hl: "ja",
     });
     return videoResponse.data.items;
