@@ -22,7 +22,6 @@ if (typeof window !== "undefined") {
   smoothscroll.polyfill();
 }
 
-console.log(process.env.SENTRY_FRONTEND_DSN);
 Sentry.init({
   dsn: process.env.SENTRY_FRONTEND_DSN,
   integrations: [new Integrations.BrowserTracing()],
