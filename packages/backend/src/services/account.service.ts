@@ -93,7 +93,7 @@ export class AccountService {
         tiktokUsers: { select: { uniqueId: true } },
       },
     });
-    return { totalPages: Math.ceil(totalCount / take), accounts };
+    return { totalCount, totalPages: Math.ceil(totalCount / take), accounts };
   }
 
   async getSitemapData() {

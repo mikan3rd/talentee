@@ -17,7 +17,7 @@ const take = 10;
 export const SearchIndex = React.memo(() => {
   const [text, setText] = React.useState("");
   const [page, setPage] = React.useState(1);
-  const [fetch, { data }] = useSearchAccountLazyQuery();
+  const [fetch, { data, loading }] = useSearchAccountLazyQuery();
 
   const handleSearch = React.useCallback(
     (e: React.MouseEvent) => {
@@ -56,6 +56,7 @@ export const SearchIndex = React.memo(() => {
           fluid
           placeholder="アカウント名を入力"
           action={{
+            loading,
             icon: "search",
             disabled: !text,
             onClick: handleSearch,
@@ -64,6 +65,16 @@ export const SearchIndex = React.memo(() => {
           onChange={(e, d) => setText(d.value)}
         />
       </form>
+
+      {data !== undefined && (
+        <div
+          css={css`
+            margin-top: 20px;
+          `}
+        >
+          検索結果 {data.searchAccount.totalCount}件
+        </div>
+      )}
 
       <div
         css={css`
@@ -75,12 +86,18 @@ export const SearchIndex = React.memo(() => {
         ))}
       </div>
 
-      {data?.searchAccount.accounts.length > 0 && (
+      {data?.searchAccount.totalCount > 0 && (
         <Pagination
           css={css`
             &&& {
               width: 100%;
               margin-top: 10px;
+              overflow-x: auto;
+              > a {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+              }
             }
           `}
           activePage={page}

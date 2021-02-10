@@ -92,6 +92,12 @@ export const TwitterIndex = React.memo<Props>(({ page, take, totalPages, twitter
           &&& {
             width: 100%;
             margin-top: 10px;
+            overflow-x: auto;
+            > a {
+              flex-grow: 1;
+              display: flex;
+              justify-content: center;
+            }
           }
         `}
         activePage={page}

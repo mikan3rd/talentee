@@ -5,12 +5,12 @@ import { BACKEND_ENDPOINT } from "./common/config";
 import { AccountCollectionPath } from "./firebase/collectionPath";
 import { logger, scheduleFunctions } from "./firebase/functions";
 
-export const migrateAccountScheduler = scheduleFunctions({ timeoutSeconds: 540 })("0,30 * * * *").onRun(
+export const migrateAccountScheduler = scheduleFunctions({ timeoutSeconds: 540 })("15,45 * * * *").onRun(
   async (context) => {
     const db = admin.firestore();
     const accountCollection = db.collection(AccountCollectionPath);
 
-    const docs = await accountCollection.limit(20).get();
+    const docs = await accountCollection.limit(30).get();
 
     const accountIds: string[] = [];
     const accoutDataList: IAccountData[] = [];
