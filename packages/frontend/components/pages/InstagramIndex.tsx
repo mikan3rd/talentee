@@ -17,7 +17,7 @@ import { GetInstagramRankingPageQuery } from "@/graphql/generated";
 export type Props = {
   page: number;
   take: number;
-} & Required<GetInstagramRankingPageQuery["getInstagramRankingPage"]>;
+} & NonNullable<GetInstagramRankingPageQuery["getInstagramRankingPage"]>;
 
 export const InstagramIndex = React.memo<Props>(({ page, take, totalPages, instagramUsers }) => {
   const router = useRouter();

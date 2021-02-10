@@ -22,7 +22,7 @@ export type Props = {
   take: number;
   videoCategoryOptions: CategoryOption[];
   selectedVideoCategory: CategoryOption;
-} & Required<GetYoutubeRankingPageQuery["getYoutubeRankingPage"]>;
+} & NonNullable<GetYoutubeRankingPageQuery["getYoutubeRankingPage"]>;
 
 export const YoutubeIndex = React.memo<Props>(
   ({ page, take, totalPages, youtubeChannels, videoCategoryOptions, selectedVideoCategory }) => {
@@ -43,7 +43,7 @@ export const YoutubeIndex = React.memo<Props>(
     React.useEffect(() => {
       const menuEle = document.getElementById("youtube_category_menu");
       const targetEle = document.getElementById(`youtube_category_${selectedVideoCategory.value}`);
-      menuEle.scrollTo({ left: targetEle.offsetLeft, behavior: "smooth" });
+      menuEle?.scrollTo({ left: targetEle?.offsetLeft, behavior: "smooth" });
     }, [selectedVideoCategory.value]);
 
     return (

@@ -86,7 +86,7 @@ export const SearchIndex = React.memo(() => {
         ))}
       </div>
 
-      {data?.searchAccount.totalCount > 0 && (
+      {data?.searchAccount?.totalCount !== undefined && data.searchAccount.totalCount > 0 && (
         <Pagination
           css={css`
             &&& {

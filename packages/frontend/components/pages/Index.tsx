@@ -10,7 +10,7 @@ import { TwitterCard } from "@/components/organisms/TwitterCard";
 import { YoutubeCard } from "@/components/organisms/YoutubeCard";
 import { GetTopPageQuery } from "@/graphql/generated";
 
-export type Props = Required<GetTopPageQuery["getTopPage"]>;
+export type Props = NonNullable<GetTopPageQuery["getTopPage"]>;
 
 export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagramUsers, tiktokUsers }) => {
   return (
