@@ -12,3 +12,9 @@ export class YoutubeRankingPage extends PaginationCount {
   @Field((type) => [YoutubeVideoCategory])
   youtubeVideoCategories!: YoutubeVideoCategory[];
 }
+
+@ObjectType()
+export class YoutubeKeywordRankingPage extends PaginationCount {
+  @Field((type) => [YoutubeChannel])
+  youtubeChannels!: YoutubeChannel[];
+}

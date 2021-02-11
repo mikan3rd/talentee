@@ -258,6 +258,11 @@ export type YoutubeRankingPage = {
   youtubeVideoCategories: Array<YoutubeVideoCategory>;
 };
 
+export type YoutubeKeywordRankingPage = {
+  totalPages: Scalars["Int"];
+  youtubeChannels: Array<YoutubeChannel>;
+};
+
 export type AccountSearchResult = {
   totalPages: Scalars["Int"];
   accounts: Array<Account>;
@@ -281,7 +286,8 @@ export type Query = {
   getTopPage: TopPage;
   searchAccount: AccountSearchResult;
   getSitemapData: Sitemap;
-  getYoutubeRankingPage: YoutubeRankingPage;
+  getYoutubeCategoryRankingPage: YoutubeRankingPage;
+  getYoutubeKeywordRankingPage: YoutubeKeywordRankingPage;
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
@@ -295,8 +301,12 @@ export type QuerySearchAccountArgs = {
   pagination: AccountSearchInput;
 };
 
-export type QueryGetYoutubeRankingPageArgs = {
-  pagination: YoutubePaginationInput;
+export type QueryGetYoutubeCategoryRankingPageArgs = {
+  pagination: YoutubeCategoryPaginationInput;
+};
+
+export type QueryGetYoutubeKeywordRankingPageArgs = {
+  pagination: YoutubeKeywordPaginationInput;
 };
 
 export type QueryGetTwitterRankingPageArgs = {
@@ -317,11 +327,17 @@ export type AccountSearchInput = {
   word: Scalars["String"];
 };
 
-export type YoutubePaginationInput = {
+export type YoutubeCategoryPaginationInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
   videoCategoryId?: Maybe<Scalars["Int"]>;
   isAll: Scalars["Boolean"];
+};
+
+export type YoutubeKeywordPaginationInput = {
+  take: Scalars["Int"];
+  page: Scalars["Int"];
+  keywordTitle: Scalars["String"];
 };
 
 export type PaginationInput = {
@@ -501,12 +517,12 @@ export type GetTwitterRankingPageQuery = {
   };
 };
 
-export type GetYoutubeRankingPageQueryVariables = Exact<{
-  pagination: YoutubePaginationInput;
+export type GetYoutubeCategoryRankingPageQueryVariables = Exact<{
+  pagination: YoutubeCategoryPaginationInput;
 }>;
 
-export type GetYoutubeRankingPageQuery = {
-  getYoutubeRankingPage: Pick<YoutubeRankingPage, "totalPages"> & {
+export type GetYoutubeCategoryRankingPageQuery = {
+  getYoutubeCategoryRankingPage: Pick<YoutubeRankingPage, "totalPages"> & {
     youtubeChannels: Array<
       Pick<
         YoutubeChannel,
@@ -526,6 +542,33 @@ export type GetYoutubeRankingPageQuery = {
       }
     >;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id" | "title">>;
+  };
+};
+
+export type GetYoutubeKeywordRankingPageQueryVariables = Exact<{
+  pagination: YoutubeKeywordPaginationInput;
+}>;
+
+export type GetYoutubeKeywordRankingPageQuery = {
+  getYoutubeKeywordRankingPage: Pick<YoutubeKeywordRankingPage, "totalPages"> & {
+    youtubeChannels: Array<
+      Pick<
+        YoutubeChannel,
+        | "id"
+        | "title"
+        | "thumbnailUrl"
+        | "description"
+        | "subscriberCount"
+        | "viewCount"
+        | "videoCount"
+        | "hiddenSubscriberCount"
+        | "accountId"
+        | "mainVideoCategoryId"
+      > & {
+        keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+        channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+      }
+    >;
   };
 };
 
@@ -951,9 +994,9 @@ export type GetTwitterRankingPageQueryResult = Apollo.QueryResult<
   GetTwitterRankingPageQuery,
   GetTwitterRankingPageQueryVariables
 >;
-export const GetYoutubeRankingPageDocument = gql`
-  query getYoutubeRankingPage($pagination: YoutubePaginationInput!) {
-    getYoutubeRankingPage(pagination: $pagination) {
+export const GetYoutubeCategoryRankingPageDocument = gql`
+  query getYoutubeCategoryRankingPage($pagination: YoutubeCategoryPaginationInput!) {
+    getYoutubeCategoryRankingPage(pagination: $pagination) {
       totalPages
       youtubeChannels {
         id
@@ -987,42 +1030,121 @@ export const GetYoutubeRankingPageDocument = gql`
 `;
 
 /**
- * __useGetYoutubeRankingPageQuery__
+ * __useGetYoutubeCategoryRankingPageQuery__
  *
- * To run a query within a React component, call `useGetYoutubeRankingPageQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetYoutubeRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetYoutubeCategoryRankingPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetYoutubeCategoryRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetYoutubeRankingPageQuery({
+ * const { data, loading, error } = useGetYoutubeCategoryRankingPageQuery({
  *   variables: {
  *      pagination: // value for 'pagination'
  *   },
  * });
  */
-export function useGetYoutubeRankingPageQuery(
-  baseOptions: Apollo.QueryHookOptions<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>,
+export function useGetYoutubeCategoryRankingPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>,
 ) {
-  return Apollo.useQuery<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>(
-    GetYoutubeRankingPageDocument,
+  return Apollo.useQuery<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>(
+    GetYoutubeCategoryRankingPageDocument,
     baseOptions,
   );
 }
-export function useGetYoutubeRankingPageLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>,
+export function useGetYoutubeCategoryRankingPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetYoutubeCategoryRankingPageQuery,
+    GetYoutubeCategoryRankingPageQueryVariables
+  >,
 ) {
-  return Apollo.useLazyQuery<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>(
-    GetYoutubeRankingPageDocument,
+  return Apollo.useLazyQuery<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>(
+    GetYoutubeCategoryRankingPageDocument,
     baseOptions,
   );
 }
-export type GetYoutubeRankingPageQueryHookResult = ReturnType<typeof useGetYoutubeRankingPageQuery>;
-export type GetYoutubeRankingPageLazyQueryHookResult = ReturnType<typeof useGetYoutubeRankingPageLazyQuery>;
-export type GetYoutubeRankingPageQueryResult = Apollo.QueryResult<
-  GetYoutubeRankingPageQuery,
-  GetYoutubeRankingPageQueryVariables
+export type GetYoutubeCategoryRankingPageQueryHookResult = ReturnType<typeof useGetYoutubeCategoryRankingPageQuery>;
+export type GetYoutubeCategoryRankingPageLazyQueryHookResult = ReturnType<
+  typeof useGetYoutubeCategoryRankingPageLazyQuery
+>;
+export type GetYoutubeCategoryRankingPageQueryResult = Apollo.QueryResult<
+  GetYoutubeCategoryRankingPageQuery,
+  GetYoutubeCategoryRankingPageQueryVariables
+>;
+export const GetYoutubeKeywordRankingPageDocument = gql`
+  query getYoutubeKeywordRankingPage($pagination: YoutubeKeywordPaginationInput!) {
+    getYoutubeKeywordRankingPage(pagination: $pagination) {
+      totalPages
+      youtubeChannels {
+        id
+        title
+        thumbnailUrl
+        description
+        subscriberCount
+        viewCount
+        videoCount
+        hiddenSubscriberCount
+        accountId
+        mainVideoCategoryId
+        keywords {
+          keyword {
+            title
+          }
+        }
+        channelVideoCategories {
+          videoCategory {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetYoutubeKeywordRankingPageQuery__
+ *
+ * To run a query within a React component, call `useGetYoutubeKeywordRankingPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetYoutubeKeywordRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetYoutubeKeywordRankingPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetYoutubeKeywordRankingPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>,
+) {
+  return Apollo.useQuery<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>(
+    GetYoutubeKeywordRankingPageDocument,
+    baseOptions,
+  );
+}
+export function useGetYoutubeKeywordRankingPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetYoutubeKeywordRankingPageQuery,
+    GetYoutubeKeywordRankingPageQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>(
+    GetYoutubeKeywordRankingPageDocument,
+    baseOptions,
+  );
+}
+export type GetYoutubeKeywordRankingPageQueryHookResult = ReturnType<typeof useGetYoutubeKeywordRankingPageQuery>;
+export type GetYoutubeKeywordRankingPageLazyQueryHookResult = ReturnType<
+  typeof useGetYoutubeKeywordRankingPageLazyQuery
+>;
+export type GetYoutubeKeywordRankingPageQueryResult = Apollo.QueryResult<
+  GetYoutubeKeywordRankingPageQuery,
+  GetYoutubeKeywordRankingPageQueryVariables
 >;
 export const SearchAccountDocument = gql`
   query searchAccount($pagination: AccountSearchInput!) {

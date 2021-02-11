@@ -1,5 +1,5 @@
-query getYoutubeRankingPage($pagination: YoutubePaginationInput!) {
-  getYoutubeRankingPage(pagination: $pagination) {
+query getYoutubeCategoryRankingPage($pagination: YoutubeCategoryPaginationInput!) {
+  getYoutubeCategoryRankingPage(pagination: $pagination) {
     totalPages
     youtubeChannels {
       id

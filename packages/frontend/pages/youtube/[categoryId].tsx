@@ -8,9 +8,9 @@ import { TopSection, YoutubeSection } from "@/components/templates/BreadcrumbSec
 import { Meta } from "@/components/templates/Meta";
 import { client } from "@/graphql/client";
 import {
-  GetYoutubeRankingPageDocument,
-  GetYoutubeRankingPageQuery,
-  GetYoutubeRankingPageQueryVariables,
+  GetYoutubeCategoryRankingPageDocument,
+  GetYoutubeCategoryRankingPageQuery,
+  GetYoutubeCategoryRankingPageQueryVariables,
 } from "@/graphql/generated";
 
 const take = 10;
@@ -21,13 +21,13 @@ export const getServerSideProps: GetServerSideProps<Props, { categoryId: string 
   const isAll = params?.categoryId === AllCategory;
   const videoCategoryId = isAll ? undefined : Number(params?.categoryId);
 
-  const { data } = await client.query<GetYoutubeRankingPageQuery, GetYoutubeRankingPageQueryVariables>({
-    query: GetYoutubeRankingPageDocument,
+  const { data } = await client.query<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>({
+    query: GetYoutubeCategoryRankingPageDocument,
     variables: { pagination: { take, page, videoCategoryId, isAll } },
   });
 
   const allOption = { value: AllCategory, text: "すべてのカテゴリ" };
-  const videoCategoryOptions = data.getYoutubeRankingPage.youtubeVideoCategories.map((category) => ({
+  const videoCategoryOptions = data.getYoutubeCategoryRankingPage.youtubeVideoCategories.map((category) => ({
     value: String(category.id),
     text: category.title,
   }));
@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps<Props, { categoryId: string 
       page,
       videoCategoryOptions,
       selectedVideoCategory,
-      ...data.getYoutubeRankingPage,
+      ...data.getYoutubeCategoryRankingPage,
     },
   };
 };
