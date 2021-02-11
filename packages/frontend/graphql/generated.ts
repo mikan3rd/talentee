@@ -272,6 +272,7 @@ export type AccountSearchResult = {
 export type Sitemap = {
   accounts: Array<Account>;
   youtubeVideoCategories: Array<YoutubeVideoCategory>;
+  youtubeKeywords: Array<YoutubeKeyword>;
 };
 
 export type TopPage = {
@@ -430,6 +431,7 @@ export type GetSitemapDataQuery = {
   getSitemapData: {
     accounts: Array<Pick<Account, "uuid">>;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id">>;
+    youtubeKeywords: Array<Pick<YoutubeKeyword, "title">>;
   };
 };
 
@@ -767,6 +769,9 @@ export const GetSitemapDataDocument = gql`
       }
       youtubeVideoCategories {
         id
+      }
+      youtubeKeywords {
+        title
       }
     }
   }

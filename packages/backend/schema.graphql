@@ -263,6 +263,7 @@ type AccountSearchResult {
 type Sitemap {
   accounts: [Account!]!
   youtubeVideoCategories: [YoutubeVideoCategory!]!
+  youtubeKeywords: [YoutubeKeyword!]!
 }
 
 type TopPage {
