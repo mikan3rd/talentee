@@ -21,7 +21,8 @@ async function bootstrap() {
 
   app.use(morgan(process.env.MORGAN_FORMAT ?? "tiny"));
   app.enableCors();
-  await app.listen(process.env.PORT || 3300);
+  const server = await app.listen(process.env.PORT || 3300);
+  server.setTimeout(1000 * 60 * 5); // 5min
 }
 
 bootstrap();
