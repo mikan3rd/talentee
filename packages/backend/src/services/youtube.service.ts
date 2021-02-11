@@ -363,6 +363,8 @@ export class YoutubeService {
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
+      this.logger.debug(`bulkUpdateChannelKeyword, page: ${page}`);
+
       const keywords = await this.prisma.youtubeKeyword.findMany({
         take,
         skip: take * (page - 1),
@@ -389,6 +391,8 @@ export class YoutubeService {
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
+      this.logger.debug(`bulkUpdateVideoTag, page: ${page}`);
+
       const tags = await this.prisma.youtubeTag.findMany({
         take,
         skip: take * (page - 1),

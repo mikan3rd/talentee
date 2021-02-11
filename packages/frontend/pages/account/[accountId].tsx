@@ -1,33 +1,45 @@
 import React from "react";
 
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { Account, Props } from "@/components/pages/Account";
+import { Account } from "@/components/pages/Account";
 import { AccountSection, TopSection } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
 import { client } from "@/graphql/client";
 import { GetAccountPageDocument, GetAccountPageQuery, GetAccountPageQueryVariables } from "@/graphql/generated";
 
-export const getServerSideProps: GetServerSideProps<Props, { accountId: string }> = async ({ params }) => {
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: [],
+  fallback: true,
+});
+
+export const getStaticProps: GetStaticProps<GetAccountPageQuery, { accountId: string }> = async ({ params }) => {
   if (!params) {
-    return { notFound: true };
+    return { redirect: { statusCode: 302, destination: "/" } };
   }
+
   const { data } = await client.query<GetAccountPageQuery, GetAccountPageQueryVariables>({
     query: GetAccountPageDocument,
-    variables: { uuid: params.accountId },
+    variables: { uuid: params?.accountId },
   });
 
   if (!data.getAccountPage) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  return { props: data.getAccountPage };
+  return { props: data, revalidate: 60 * 10 };
 };
 
-const ProfilePage = React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
-  const { uuid, displayName } = props;
+const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
+  if (!props.getAccountPage) {
+    return null;
+  }
+
+  const {
+    getAccountPage: { uuid, displayName },
+  } = props;
 
   return (
     <>
@@ -47,7 +59,7 @@ const ProfilePage = React.memo<InferGetServerSidePropsType<typeof getServerSideP
 
       <Divider />
 
-      <Account {...props} />
+      <Account {...props.getAccountPage} />
     </>
   );
 });
