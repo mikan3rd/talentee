@@ -40,6 +40,7 @@ export const InstagramIndex = React.memo<Props>(({ page, take, totalPages, insta
       >
         <img
           src="/icon_instagram.svg"
+          alt="icon_instagram"
           css={css`
             &&& {
               width: 42px;

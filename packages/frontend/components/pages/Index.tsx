@@ -270,6 +270,7 @@ export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagr
               >
                 <img
                   src="/icon_instagram.svg"
+                  alt="icon_instagram"
                   css={css`
                     width: 32px;
                     margin-right: 5px;
@@ -381,6 +382,7 @@ export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagr
               >
                 <img
                   src="/icon_tiktok_black.svg"
+                  alt="icon_tiktok"
                   css={css`
                     width: 32px;
                     margin-right: 5px;
