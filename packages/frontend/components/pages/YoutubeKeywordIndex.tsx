@@ -18,9 +18,10 @@ export type Props = {
   page: number;
   take: number;
   keywordTitle: string;
-} & NonNullable<GetYoutubeKeywordRankingPageQuery["getYoutubeKeywordRankingPage"]>;
+  getYoutubeKeywordRankingPage: GetYoutubeKeywordRankingPageQuery["getYoutubeKeywordRankingPage"];
+};
 
-export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle, totalPages, youtubeChannels }) => {
+export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle, getYoutubeKeywordRankingPage }) => {
   const router = useRouter();
 
   const handlePageChange = React.useCallback(
@@ -29,6 +30,8 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
     },
     [router],
   );
+
+  const { youtubeChannels, totalPages } = getYoutubeKeywordRankingPage;
 
   return (
     <>

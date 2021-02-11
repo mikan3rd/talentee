@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeKeywordIndex } from "@/components/pages/YoutubeKeywordIndex";
@@ -15,9 +15,12 @@ import {
 
 const take = 10;
 
-export const getServerSideProps: GetServerSideProps<Props, { keywordTitle: string; page: string }> = async ({
-  params,
-}) => {
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: [],
+  fallback: true,
+});
+
+export const getStaticProps: GetStaticProps<Props, { keywordTitle: string; page: string }> = async ({ params }) => {
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
@@ -35,13 +38,19 @@ export const getServerSideProps: GetServerSideProps<Props, { keywordTitle: strin
       take,
       page,
       keywordTitle,
-      ...data.getYoutubeKeywordRankingPage,
+      getYoutubeKeywordRankingPage: data.getYoutubeKeywordRankingPage,
     },
+    revalidate: 60 * 10,
   };
 };
 
-export default React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
+export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
+  if (!props.getYoutubeKeywordRankingPage) {
+    return null;
+  }
+
   const { keywordTitle, page } = props;
+
   return (
     <>
       <Meta
