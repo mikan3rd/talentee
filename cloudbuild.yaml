@@ -58,6 +58,7 @@ steps:
       '--memory', '1Gi',
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
+      '--timeout', '10m',
       '--allow-unauthenticated',
       '--set-env-vars', '
         NO_COLOR=true,
@@ -85,6 +86,7 @@ steps:
       '--memory', '1Gi',
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
+      '--allow-unauthenticated',
       '--set-env-vars', '
         SCHEDULE_ENABLED=true,
         NO_COLOR=true,
