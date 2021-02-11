@@ -34,7 +34,6 @@
     "@nestjs/platform-express": "7.6.11",
     "@nestjs/schedule": "0.4.2",
     "@nestjs/schematics": "7.2.7",
-    "@nestjs/typeorm": "7.1.5",
     "@types/cron": "1.7.2",
     "@types/morgan": "1.9.2",
     "apollo-server-express": "2.19.2",
@@ -51,8 +50,7 @@
     "puppeteer-extra-plugin-stealth": "2.7.4",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "6.6.3",
-    "typeorm": "0.2.30"
+    "rxjs": "6.6.3"
   },
   "devDependencies": {
     "@nestjs/testing": "7.6.11",
