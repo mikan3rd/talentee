@@ -44,7 +44,6 @@
     "graphql-tools": "7.0.2",
     "https-proxy-agent": "5.0.0",
     "morgan": "1.10.0",
-    "mysql": "2.18.1",
     "puppeteer": "6.0.0",
     "puppeteer-extra": "3.1.16",
     "puppeteer-extra-plugin-stealth": "2.7.4",
