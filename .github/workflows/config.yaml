@@ -46,8 +46,8 @@ jobs:
           FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
           FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
-          SERVER_APOLLO_URI: "http://localhost:3300"
-          PUBLIC_APOLLO_URI: "http://localhost:3300"
+          SERVER_APOLLO_URI: ${{ secrets.SERVER_APOLLO_URI }}
+          PUBLIC_APOLLO_URI: ${{ secrets.PUBLIC_APOLLO_URI }}
 
   functions-build:
     runs-on: ubuntu-latest
