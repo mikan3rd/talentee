@@ -48,8 +48,6 @@ const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((
       <Breadcrumb size="big">
         <TopSection />
         <Breadcrumb.Divider />
-        <AccountSection />
-        <Breadcrumb.Divider />
         <Link href={`/account/${uuid}`}>
           <Breadcrumb.Section href={`/account/${uuid}`} active={true}>
             {displayName}

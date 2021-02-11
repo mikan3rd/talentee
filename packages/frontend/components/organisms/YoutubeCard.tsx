@@ -174,7 +174,7 @@ export const YoutubeCard = React.memo<Props>(
 
             {showDetails && keywords.length > 0 && (
               <div css={LabelWrapeerCss}>
-                {keywords.slice(0, ketwordNum - 1).map((keywordRelation, index) => {
+                {keywords.slice(0, ketwordNum).map((keywordRelation, index) => {
                   return (
                     <Label key={index} tag css={LabelCss}>
                       {keywordRelation.keyword.title}
