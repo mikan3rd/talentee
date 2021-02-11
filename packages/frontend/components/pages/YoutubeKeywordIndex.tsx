@@ -26,9 +26,9 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
 
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-      router.push({ query: { page: data.activePage } });
+      router.push({ query: { keywordTitle, page: data.activePage } });
     },
-    [router],
+    [keywordTitle, router],
   );
 
   const { youtubeChannels, totalPages } = getYoutubeKeywordRankingPage;
