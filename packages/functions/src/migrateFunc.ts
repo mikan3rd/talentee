@@ -28,20 +28,25 @@ export const migrateAccountScheduler = scheduleFunctions({ timeoutSeconds: 540 }
 
     for (const account of accoutDataList) {
       const d: BodyType = {};
-      const { youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = account;
+      const { tmpUsername, youtubeMainRef, twitterMainRef, instagramMainRef, tiktokMainRef } = account;
+      logger.log(`tmpUsername: ${tmpUsername}`);
 
       if (youtubeMainRef?.id) {
         d.youtubeChannelId = youtubeMainRef.id;
       }
 
       if (twitterMainRef) {
-        const { username } = (await twitterMainRef.get()).data() as TwitterUserDataType;
-        d.twitterUsername = username;
+        const twitterData = (await twitterMainRef.get()).data() as TwitterUserDataType;
+        if (twitterData && twitterData.username) {
+          d.twitterUsername = twitterData.username;
+        }
       }
 
       if (instagramMainRef) {
-        const { username } = (await instagramMainRef.get()).data() as InstagramUserType;
-        d.instagramUsername = username;
+        const instagramData = (await instagramMainRef.get()).data() as InstagramUserType;
+        if (instagramData && instagramData.username) {
+          d.instagramUsername = instagramData.username;
+        }
       }
 
       if (tiktokMainRef) {
