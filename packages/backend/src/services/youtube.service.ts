@@ -358,25 +358,55 @@ export class YoutubeService {
   }
 
   async bulkUpdateChannelKeyword() {
-    const keywords = await this.prisma.youtubeKeyword.findMany({
-      include: { channels: { select: { channelId: true } } },
-    });
-    const transactionValues = keywords.map(({ id, channels }) => {
-      const num = channels.length;
-      return this.prisma.youtubeKeyword.update({ where: { id }, data: { num } });
-    });
-    await this.prisma.$transaction(transactionValues);
+    let page = 1;
+    const take = 10000;
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const keywords = await this.prisma.youtubeKeyword.findMany({
+        take,
+        skip: take * (page - 1),
+        include: { channels: { select: { channelId: true } } },
+      });
+
+      if (keywords.length === 0) {
+        break;
+      }
+
+      const transactionValues = keywords.map(({ id, channels }) => {
+        const num = channels.length;
+        return this.prisma.youtubeKeyword.update({ where: { id }, data: { num } });
+      });
+      await this.prisma.$transaction(transactionValues);
+
+      page += 1;
+    }
   }
 
   async bulkUpdateVideoTag() {
-    const tags = await this.prisma.youtubeTag.findMany({
-      include: { videos: { select: { videoId: true } } },
-    });
-    const transactionValues = tags.map(({ id, videos }) => {
-      const num = videos.length;
-      return this.prisma.youtubeTag.update({ where: { id }, data: { num } });
-    });
-    await this.prisma.$transaction(transactionValues);
+    let page = 1;
+    const take = 10000;
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const tags = await this.prisma.youtubeTag.findMany({
+        take,
+        skip: take * (page - 1),
+        include: { videos: { select: { videoId: true } } },
+      });
+
+      if (tags.length === 0) {
+        break;
+      }
+
+      const transactionValues = tags.map(({ id, videos }) => {
+        const num = videos.length;
+        return this.prisma.youtubeTag.update({ where: { id }, data: { num } });
+      });
+      await this.prisma.$transaction(transactionValues);
+
+      page += 1;
+    }
   }
 
   formatChannelData(item: youtube_v3.Schema$Channel) {

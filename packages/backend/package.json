@@ -34,7 +34,6 @@
     "@nestjs/platform-express": "7.6.11",
     "@nestjs/schedule": "0.4.2",
     "@nestjs/schematics": "7.2.7",
-    "@nestjs/typeorm": "7.1.5",
     "@types/cron": "1.7.2",
     "@types/morgan": "1.9.2",
     "apollo-server-express": "2.19.2",
@@ -45,14 +44,12 @@
     "graphql-tools": "7.0.2",
     "https-proxy-agent": "5.0.0",
     "morgan": "1.10.0",
-    "mysql": "2.18.1",
     "puppeteer": "6.0.0",
     "puppeteer-extra": "3.1.16",
     "puppeteer-extra-plugin-stealth": "2.7.4",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "6.6.3",
-    "typeorm": "0.2.30"
+    "rxjs": "6.6.3"
   },
   "devDependencies": {
     "@nestjs/testing": "7.6.11",
