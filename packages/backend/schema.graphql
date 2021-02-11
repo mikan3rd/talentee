@@ -249,6 +249,11 @@ type YoutubeRankingPage {
   youtubeVideoCategories: [YoutubeVideoCategory!]!
 }
 
+type YoutubeKeywordRankingPage {
+  totalPages: Int!
+  youtubeChannels: [YoutubeChannel!]!
+}
+
 type AccountSearchResult {
   totalPages: Int!
   accounts: [Account!]!
@@ -258,6 +263,7 @@ type AccountSearchResult {
 type Sitemap {
   accounts: [Account!]!
   youtubeVideoCategories: [YoutubeVideoCategory!]!
+  youtubeKeywords: [YoutubeKeyword!]!
 }
 
 type TopPage {
@@ -272,7 +278,8 @@ type Query {
   getTopPage: TopPage!
   searchAccount(pagination: AccountSearchInput!): AccountSearchResult!
   getSitemapData: Sitemap!
-  getYoutubeRankingPage(pagination: YoutubePaginationInput!): YoutubeRankingPage!
+  getYoutubeCategoryRankingPage(pagination: YoutubeCategoryPaginationInput!): YoutubeRankingPage!
+  getYoutubeKeywordRankingPage(pagination: YoutubeKeywordPaginationInput!): YoutubeKeywordRankingPage!
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
   getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
@@ -284,11 +291,17 @@ input AccountSearchInput {
   word: String!
 }
 
-input YoutubePaginationInput {
+input YoutubeCategoryPaginationInput {
   take: Int!
   page: Int!
   videoCategoryId: Int
   isAll: Boolean!
+}
+
+input YoutubeKeywordPaginationInput {
+  take: Int!
+  page: Int!
+  keywordTitle: String!
 }
 
 input PaginationInput {

@@ -40,6 +40,7 @@ export const TiktokIndex = React.memo<Props>(({ take, page, totalPages, tiktokUs
       >
         <img
           src="/icon_tiktok_black.svg"
+          alt="icon_tiktok"
           css={css`
             &&& {
               width: 42px;

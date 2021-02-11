@@ -12,7 +12,7 @@ import {
   TwitterIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { YoutubeCard } from "@/components/organisms/YoutubeCard";
-import { GetYoutubeRankingPageQuery } from "@/graphql/generated";
+import { GetYoutubeCategoryRankingPageQuery } from "@/graphql/generated";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 type CategoryOption = { value: string; text: string };
@@ -22,7 +22,7 @@ export type Props = {
   take: number;
   videoCategoryOptions: CategoryOption[];
   selectedVideoCategory: CategoryOption;
-} & NonNullable<GetYoutubeRankingPageQuery["getYoutubeRankingPage"]>;
+} & NonNullable<GetYoutubeCategoryRankingPageQuery["getYoutubeCategoryRankingPage"]>;
 
 export const YoutubeIndex = React.memo<Props>(
   ({ page, take, totalPages, youtubeChannels, videoCategoryOptions, selectedVideoCategory }) => {

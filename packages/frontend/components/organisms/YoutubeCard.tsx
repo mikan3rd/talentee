@@ -7,7 +7,7 @@ import { Icon, Label } from "semantic-ui-react";
 import { toUnitString } from "@/common/utils";
 import { YoutubeChannel, YoutubeKeyword, YoutubeVideoCategory } from "@/graphql/generated";
 
-const ketwordNum = 10;
+const keywordNum = 10;
 
 interface Props
   extends Pick<
@@ -24,6 +24,7 @@ interface Props
   > {
   rankNum: number;
   showDetails?: boolean;
+  activeKeywordTitle?: string;
   keywords: { keyword: Pick<YoutubeKeyword, "title"> }[];
   channelVideoCategories: { videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }[];
 }
@@ -43,6 +44,7 @@ export const YoutubeCard = React.memo<Props>(
     accountId,
     mainVideoCategoryId,
     showDetails = true,
+    activeKeywordTitle,
   }) => {
     return (
       <div
@@ -174,14 +176,20 @@ export const YoutubeCard = React.memo<Props>(
 
             {showDetails && keywords.length > 0 && (
               <div css={LabelWrapeerCss}>
-                {keywords.slice(0, ketwordNum - 1).map((keywordRelation, index) => {
+                {keywords.slice(0, keywordNum).map((keywordRelation, index) => {
+                  const { keyword } = keywordRelation;
                   return (
-                    <Label key={index} tag css={LabelCss}>
-                      {keywordRelation.keyword.title}
+                    <Label
+                      key={index}
+                      tag
+                      css={LabelCss}
+                      color={keyword.title === activeKeywordTitle ? "black" : undefined}
+                    >
+                      {keyword.title}
                     </Label>
                   );
                 })}
-                {keywords.length > ketwordNum && (
+                {keywords.length > keywordNum && (
                   <div
                     css={css`
                       margin-top: 5px;
@@ -189,7 +197,7 @@ export const YoutubeCard = React.memo<Props>(
                       font-weight: bold;
                     `}
                   >
-                    他{keywords.length - ketwordNum}件
+                    他{keywords.length - keywordNum}件
                   </div>
                 )}
               </div>

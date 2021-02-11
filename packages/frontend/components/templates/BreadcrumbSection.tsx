@@ -23,6 +23,18 @@ export const YoutubeSection = React.memo<{ active?: boolean }>(({ active = false
   );
 });
 
+export const YoutubeKeywordSection = React.memo<{ active?: boolean; keywordTitle: string }>(
+  ({ keywordTitle, active = false }) => {
+    return (
+      <Link href={`/youtube/keyword/${keywordTitle}/page/1`}>
+        <Breadcrumb.Section href={`/youtube/keyword/${keywordTitle}/page/1`} active={active}>
+          {keywordTitle}
+        </Breadcrumb.Section>
+      </Link>
+    );
+  },
+);
+
 export const TwitterSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
     <Link href="/twitter">

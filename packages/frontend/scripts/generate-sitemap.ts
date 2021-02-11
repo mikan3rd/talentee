@@ -22,15 +22,16 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 
   const {
     data: {
-      getSitemapData: { accounts, youtubeVideoCategories },
+      getSitemapData: { accounts, youtubeVideoCategories, youtubeKeywords },
     },
   } = await client.query<GetSitemapDataQuery>({ query: GetSitemapDataDocument });
 
   const pages = await globby(["pages/**/*.tsx", "!pages/_*.tsx", "!pages/account", "!pages/youtube"]);
   const youtubePages = youtubeVideoCategories.map((category) => `/youtube/${category.id}`);
+  const youtubeKeywordPages = youtubeKeywords.map((keyword) => `/youtube/keyword/${keyword.title}/page/1`);
   const accountPages = accounts.map((accout) => `/account/${accout.uuid}`);
 
-  const allPages = [...pages, ...youtubePages, ...accountPages];
+  const allPages = [...pages, ...youtubePages, ...youtubeKeywordPages, ...accountPages];
 
   const sitemap = `
 <?xml version="1.0" encoding="UTF-8"?>

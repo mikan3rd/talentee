@@ -102,7 +102,12 @@ export class AccountService {
       where: { assignable: true },
       select: { id: true },
     });
-    return { accounts, youtubeVideoCategories };
+    const youtubeKeywords = await this.prisma.youtubeKeyword.findMany({
+      select: { title: true },
+      where: { num: { gte: 3 } },
+      orderBy: { num: "desc" },
+    });
+    return { accounts, youtubeVideoCategories, youtubeKeywords };
   }
 
   async addServiceByYoutube(take: number) {
