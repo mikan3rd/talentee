@@ -2,6 +2,7 @@ import React from "react";
 
 import { css } from "@emotion/react";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { Header, Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "@/common/utils";
@@ -113,9 +114,11 @@ export const YoutubeDetail = React.memo<Props>(
           <div css={LabelWrapeerCss}>
             {channelVideoCategories.map(({ videoCategory }, index) => {
               return (
-                <Label key={index} tag color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"} css={LabelCss}>
-                  {videoCategory.title}
-                </Label>
+                <Link key={index} href={`/youtube/${videoCategory.id}`} passHref>
+                  <Label tag color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"} css={LabelCss}>
+                    {videoCategory.title}
+                  </Label>
+                </Link>
               );
             })}
           </div>
@@ -123,10 +126,13 @@ export const YoutubeDetail = React.memo<Props>(
 
         <div css={LabelWrapeerCss}>
           {keywords.map((keywordRelation, index) => {
+            const { keyword } = keywordRelation;
             return (
-              <Label key={index} tag css={LabelCss}>
-                {keywordRelation.keyword.title}
-              </Label>
+              <Link key={index} href={`/youtube/keyword/${keyword.title}/page/1`} passHref>
+                <Label tag css={LabelCss}>
+                  {keyword.title}
+                </Label>
+              </Link>
             );
           })}
         </div>

@@ -81,7 +81,14 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
         `}
       >
         {youtubeChannels.map((data, index) => {
-          return <YoutubeCard key={data.id} {...data} rankNum={toRankingNumByPagination({ page, take, index })} />;
+          return (
+            <YoutubeCard
+              key={data.id}
+              {...data}
+              rankNum={toRankingNumByPagination({ page, take, index })}
+              activeKeywordTitle={keywordTitle}
+            />
+          );
         })}
       </div>
 
