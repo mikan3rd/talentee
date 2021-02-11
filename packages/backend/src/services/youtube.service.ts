@@ -369,14 +369,29 @@ export class YoutubeService {
   }
 
   async bulkUpdateVideoTag() {
-    const tags = await this.prisma.youtubeTag.findMany({
-      include: { videos: { select: { videoId: true } } },
-    });
-    const transactionValues = tags.map(({ id, videos }) => {
-      const num = videos.length;
-      return this.prisma.youtubeTag.update({ where: { id }, data: { num } });
-    });
-    await this.prisma.$transaction(transactionValues);
+    let page = 1;
+    const take = 10000;
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const tags = await this.prisma.youtubeTag.findMany({
+        take,
+        skip: take * (page - 1),
+        include: { videos: { select: { videoId: true } } },
+      });
+
+      if (tags.length === 0) {
+        break;
+      }
+
+      const transactionValues = tags.map(({ id, videos }) => {
+        const num = videos.length;
+        return this.prisma.youtubeTag.update({ where: { id }, data: { num } });
+      });
+      await this.prisma.$transaction(transactionValues);
+
+      page += 1;
+    }
   }
 
   formatChannelData(item: youtube_v3.Schema$Channel) {
