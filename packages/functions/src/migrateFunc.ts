@@ -50,10 +50,10 @@ export const migrateAccountScheduler = scheduleFunctions({ timeoutSeconds: 540 }
       }
 
       if (tiktokMainRef) {
-        const {
-          user: { uniqueId },
-        } = (await tiktokMainRef.get()).data() as TiktokUserType;
-        d.tiktokUniqueId = uniqueId;
+        const tiktokUser = (await tiktokMainRef.get()).data() as TiktokUserType;
+        if (tiktokUser && tiktokUser.user?.uniqueId) {
+          d.tiktokUniqueId = tiktokUser.user.uniqueId;
+        }
       }
 
       logger.log(d);
