@@ -86,7 +86,7 @@ steps:
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
-      '--timeout', '10m',
+      '--timeout', '15m',
       '--set-env-vars', '
         SCHEDULE_ENABLED=true,
         NO_COLOR=true,
