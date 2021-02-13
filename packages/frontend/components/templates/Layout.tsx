@@ -2,13 +2,17 @@ import React from "react";
 
 import { css } from "@emotion/react";
 import { SemanticToastContainer } from "react-semantic-toasts";
+import TopBarProgress from "react-topbar-progress-indicator";
 import { Container } from "semantic-ui-react";
 
 import { ScrollTopButton } from "@/components/atoms/ScrollTopButton";
 import { Header } from "@/components/molecules/Header";
+import { useRouteChange } from "@/hooks/useRouteChange";
 import { GlobalStyle } from "@/style/GlobalStyle";
 
 export const Layout = React.memo(({ children }) => {
+  const { loading } = useRouteChange();
+
   return (
     <>
       {GlobalStyle}
@@ -22,6 +26,8 @@ export const Layout = React.memo(({ children }) => {
         `}
       >
         <Header />
+
+        {loading && <TopBarProgress />}
 
         <Container
           text
