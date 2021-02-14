@@ -9,8 +9,8 @@ export const getStaticProps: GetStaticProps<Props, { categoryId: string; page: s
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
-  const page = Number(params.page);
-  return await getCommonStaticProps({ categoryId: params.categoryId, page });
+
+  return await getCommonStaticProps({ categoryId: params.categoryId, page: Number(params.page) });
 };
 
 export default YoutubeCategoryPage;

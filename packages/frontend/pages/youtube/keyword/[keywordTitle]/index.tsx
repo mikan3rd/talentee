@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeKeywordIndex } from "@/components/pages/YoutubeKeywordIndex";
@@ -14,20 +14,23 @@ import {
 } from "@/graphql/generated";
 
 const take = 10;
-const page = 1;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],
   fallback: true,
 });
 
-export const getStaticProps: GetStaticProps<Props, { keywordTitle: string }> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Props, { keywordTitle: string }> = async ({
+  params,
+}): Promise<GetStaticPropsResult<Props>> => {
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  const { keywordTitle } = params;
+  return await getCommonStaticProps({ keywordTitle: params.keywordTitle, page: 1 });
+};
 
+export const getCommonStaticProps = async ({ keywordTitle, page }: { keywordTitle: string; page: number }) => {
   const { data } = await client.query<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>({
     query: GetYoutubeKeywordRankingPageDocument,
     variables: { pagination: { take, page, keywordTitle } },
