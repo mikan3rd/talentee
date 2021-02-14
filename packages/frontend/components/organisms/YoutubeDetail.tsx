@@ -122,15 +122,15 @@ export const YoutubeDetail = React.memo<Props>(
                       }
                     `}
                   >
-                    {videoCategory.title}
                     <Icon
                       name="linkify"
                       css={css`
                         &&& {
-                          margin: 0 0 0 5px;
+                          margin: 0 5px 0 0;
                         }
                       `}
                     />
+                    {videoCategory.title}
                   </Label>
                 </Link>
               );
@@ -153,15 +153,15 @@ export const YoutubeDetail = React.memo<Props>(
                     }
                   `}
                 >
-                  {keyword.title}
                   <Icon
                     name="linkify"
                     css={css`
                       &&& {
-                        margin: 0 0 0 5px;
+                        margin: 0 5px 0 0;
                       }
                     `}
                   />
+                  {keyword.title}
                 </Label>
               </Link>
             );
