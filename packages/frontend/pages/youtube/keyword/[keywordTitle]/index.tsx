@@ -66,6 +66,8 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
         <Breadcrumb.Divider />
         <YoutubeSection />
         <Breadcrumb.Divider />
+        <Breadcrumb.Section>キーワード</Breadcrumb.Section>
+        <Breadcrumb.Divider />
         <YoutubeKeywordSection keywordTitle={keywordTitle} active={true} />
       </Breadcrumb>
 

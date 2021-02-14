@@ -4,7 +4,7 @@ import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPro
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeIndex } from "@/components/pages/YoutubeIndex";
-import { TopSection, YoutubeSection } from "@/components/templates/BreadcrumbSection";
+import { TopSection, YoutubeCategorySection, YoutubeSection } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
 import { client } from "@/graphql/client";
 import {
@@ -86,7 +86,15 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
       <Breadcrumb size="big">
         <TopSection />
         <Breadcrumb.Divider />
-        <YoutubeSection active={true} />
+        <YoutubeSection />
+        <Breadcrumb.Divider />
+        <Breadcrumb.Section>カテゴリ</Breadcrumb.Section>
+        <Breadcrumb.Divider />
+        <YoutubeCategorySection
+          categoryName={selectedVideoCategory.text}
+          categoryId={selectedVideoCategory.value}
+          active
+        />
       </Breadcrumb>
 
       <Divider />

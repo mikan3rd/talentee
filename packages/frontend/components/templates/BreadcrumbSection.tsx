@@ -23,6 +23,18 @@ export const YoutubeSection = React.memo<{ active?: boolean }>(({ active = false
   );
 });
 
+export const YoutubeCategorySection = React.memo<{ active?: boolean; categoryName: string; categoryId: string }>(
+  ({ categoryName, categoryId, active = false }) => {
+    return (
+      <Link href={`/youtube/category/${categoryId}`}>
+        <Breadcrumb.Section href={`/youtube/keyword/${categoryId}`} active={active}>
+          {categoryName}
+        </Breadcrumb.Section>
+      </Link>
+    );
+  },
+);
+
 export const YoutubeKeywordSection = React.memo<{ active?: boolean; keywordTitle: string }>(
   ({ keywordTitle, active = false }) => {
     return (
