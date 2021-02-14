@@ -124,17 +124,17 @@ export const YoutubeCard = React.memo<Props>(
                 >
                   <div css={CountWrapperCss}>
                     <Icon name="user plus" css={CountIconCss} />
-                    <div css={CountTextCss}>
+                    <div>
                       {hiddenSubscriberCount || !subscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}
                     </div>
                   </div>
                   <div css={CountWrapperCss}>
                     <Icon name="video play" css={CountIconCss} />
-                    <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
+                    <div>{toUnitString(viewCount)}回</div>
                   </div>
                   <div css={CountWrapperCss}>
                     <Icon name="video" css={CountIconCss} />
-                    <div css={CountTextCss}>{toUnitString(videoCount)}本</div>
+                    <div>{toUnitString(videoCount)}本</div>
                   </div>
                 </div>
               </div>
@@ -166,7 +166,15 @@ export const YoutubeCard = React.memo<Props>(
                     videoCategory: { id, title },
                   } = channelVideoCategory;
                   return (
-                    <Label key={index} color={mainVideoCategoryId === id ? "red" : "grey"} css={LabelCss}>
+                    <Label
+                      key={index}
+                      color={mainVideoCategoryId === id ? "red" : "grey"}
+                      css={css`
+                        &&& {
+                          margin: 5px 10px 0 0;
+                        }
+                      `}
+                    >
                       {title}
                     </Label>
                   );
@@ -182,7 +190,13 @@ export const YoutubeCard = React.memo<Props>(
                     <Label
                       key={index}
                       tag
-                      css={LabelCss}
+                      css={css`
+                        &&& {
+                          margin: 5px 10px 0 12px;
+                          padding-left: 1em;
+                          padding-right: 0.5em;
+                        }
+                      `}
                       color={keyword.title === activeKeywordTitle ? "black" : undefined}
                     >
                       {keyword.title}
@@ -226,18 +240,9 @@ const CountIconCss = css`
   }
 `;
 
-const CountTextCss = css``;
-
 const LabelWrapeerCss = css`
   position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 10px;
-`;
-
-const LabelCss = css`
-  &&& {
-    margin: 5px 10px 0 0;
-  }
 `;

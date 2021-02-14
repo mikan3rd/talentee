@@ -104,7 +104,7 @@ export const YoutubeVideoCard = React.memo<Props>(
             {viewCount && (
               <div css={CountWrapperCss}>
                 <Icon name="video play" css={CountIconCss} />
-                <div css={CountTextCss}>{toUnitString(viewCount)}回</div>
+                <div>{toUnitString(viewCount)}回</div>
               </div>
             )}
             <div
@@ -115,7 +115,7 @@ export const YoutubeVideoCard = React.memo<Props>(
               {likeCount && (
                 <div css={CountWrapperCss}>
                   <Icon name="thumbs up" css={CountIconCss} />
-                  <div css={CountTextCss}>
+                  <div>
                     {toUnitString(likeCount)} ({Math.round((likeCount / totalCount) * 100)}%)
                   </div>
                 </div>
@@ -123,7 +123,7 @@ export const YoutubeVideoCard = React.memo<Props>(
               {dislikeCount && (
                 <div css={CountWrapperCss}>
                   <Icon name="thumbs down" css={CountIconCss} />
-                  <div css={CountTextCss}>
+                  <div>
                     {toUnitString(dislikeCount)} ({Math.round((dislikeCount / totalCount) * 100)}%)
                   </div>
                 </div>
@@ -163,8 +163,6 @@ const CountIconCss = css`
     display: flex;
   }
 `;
-
-const CountTextCss = css``;
 
 const LabelCss = css`
   &&& {
