@@ -35,13 +35,4 @@ module.exports = {
     }
     return config;
   },
-  async redirects() {
-    return [
-      {
-        source: "/youtube",
-        destination: "/youtube/all",
-        permanent: true,
-      },
-    ];
-  },
 };

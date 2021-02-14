@@ -28,7 +28,7 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 
   const pages = await globby(["pages/**/*.tsx", "!pages/_*.tsx", "!pages/account", "!pages/youtube"]);
   const youtubePages = youtubeVideoCategories.map((category) => `/youtube/${category.id}`);
-  youtubePages.unshift(`/youtube/all`);
+  youtubePages.unshift(`/youtube/category/all`);
   const youtubeKeywordPages = youtubeKeywords.map((keyword) => `/youtube/keyword/${encodeURIComponent(keyword.title)}`);
   const accountPages = accounts.map((accout) => `/account/${accout.uuid}`);
 

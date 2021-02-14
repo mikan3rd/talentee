@@ -15,8 +15,8 @@ export const TopSection = React.memo<{ active?: boolean }>(({ active = false }) 
 
 export const YoutubeSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
-    <Link href="/youtube/all">
-      <Breadcrumb.Section href="/youtube/all" active={active}>
+    <Link href="/youtube/category/all">
+      <Breadcrumb.Section href="/youtube/category/all" active={active}>
         YouTubeランキング
       </Breadcrumb.Section>
     </Link>

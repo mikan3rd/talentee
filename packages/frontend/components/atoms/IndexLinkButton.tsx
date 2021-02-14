@@ -17,7 +17,7 @@ export const IndexLinkButton = React.memo(() => {
 
 export const YoutubeIndexLinkButton = React.memo(() => {
   return (
-    <Link href="/youtube/all" passHref>
+    <Link href="/youtube/category/all" passHref>
       <Button icon labelPosition="left" color="youtube" as="a" css={WideButtonCss}>
         <Icon name="hand point right" />
         Youtubeのランキングを見る
