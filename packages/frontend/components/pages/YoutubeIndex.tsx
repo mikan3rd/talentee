@@ -22,22 +22,35 @@ export type Props = {
   take: number;
   videoCategoryOptions: CategoryOption[];
   selectedVideoCategory: CategoryOption;
-} & NonNullable<GetYoutubeCategoryRankingPageQuery["getYoutubeCategoryRankingPage"]>;
+  getYoutubeCategoryRankingPage: GetYoutubeCategoryRankingPageQuery["getYoutubeCategoryRankingPage"];
+};
 
 export const YoutubeIndex = React.memo<Props>(
-  ({ page, take, totalPages, youtubeChannels, videoCategoryOptions, selectedVideoCategory }) => {
+  ({
+    page,
+    take,
+    getYoutubeCategoryRankingPage: { totalPages, youtubeChannels },
+    videoCategoryOptions,
+    selectedVideoCategory,
+  }) => {
     const router = useRouter();
     const isUp = useScrollDirection();
 
     const handlePageChange = React.useCallback(
       async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-        router.push({ query: { categoryId: selectedVideoCategory.value, page: data.activePage } });
+        router.push({
+          pathname: "/youtube/category/[categoryId]/page/[page]",
+          query: { categoryId: selectedVideoCategory.value, page: data.activePage },
+        });
       },
       [router, selectedVideoCategory.value],
     );
 
     const handleOnClickCategory = (value: CategoryOption["value"]) => {
-      router.push({ query: { categoryId: value } });
+      router.push({
+        pathname: "/youtube/category/[categoryId]",
+        query: { categoryId: value },
+      });
     };
 
     React.useEffect(() => {
@@ -59,7 +72,12 @@ export const YoutubeIndex = React.memo<Props>(
             }
           `}
         >
-          <div>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+            `}
+          >
             <Icon name="youtube" color="red" size="big" />
             YouTubeランキング
           </div>

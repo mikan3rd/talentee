@@ -86,7 +86,7 @@ export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagr
               </span>
             </div>
 
-            <Link href="/youtube/all" passHref>
+            <Link href="/youtube/category/all" passHref>
               <Button
                 color="red"
                 as="a"
@@ -118,7 +118,7 @@ export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagr
               text-align: right;
             `}
           >
-            <Link href="/youtube/all" passHref>
+            <Link href="/youtube/category/all" passHref>
               <Button
                 color="red"
                 as="a"

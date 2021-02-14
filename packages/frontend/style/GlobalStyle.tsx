@@ -13,6 +13,9 @@ export const GlobalStyle = (
         word-break: break-word;
         -webkit-overflow-scrolling: touch;
       }
+      p {
+        margin: 0;
+      }
     `}
   />
 );

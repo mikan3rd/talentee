@@ -85,19 +85,17 @@ export const YoutubeDetail = React.memo<Props>(
             >
               <div css={CountWrapperCss}>
                 <Icon name="user plus" css={CountIconCss} />
-                <div css={CountTextCss}>
-                  {hiddenSubscriberCount || !subscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}
-                </div>
+                <div>{hiddenSubscriberCount || !subscriberCount ? "非表示" : `${toUnitString(subscriberCount)}人`}</div>
               </div>
               <div css={CountWrapperCss}>
                 <Icon name="video play" css={CountIconCss} />
-                <div css={CountTextCss}>
+                <div>
                   {toUnitString(viewCount)}回 (平均 {toUnitString(viewCount / (videoCount | 1))}回)
                 </div>
               </div>
               <div css={CountWrapperCss}>
                 <Icon name="video" css={CountIconCss} />
-                <div css={CountTextCss}>{toUnitString(videoCount)}本</div>
+                <div>{toUnitString(videoCount)}本</div>
               </div>
             </div>
           </div>
@@ -115,7 +113,23 @@ export const YoutubeDetail = React.memo<Props>(
             {channelVideoCategories.map(({ videoCategory }, index) => {
               return (
                 <Link key={index} href={`/youtube/${videoCategory.id}`} passHref>
-                  <Label tag color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"} css={LabelCss}>
+                  <Label
+                    size="large"
+                    color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"}
+                    css={css`
+                      &&& {
+                        margin: 5px 10px 0 0;
+                      }
+                    `}
+                  >
+                    <Icon
+                      name="linkify"
+                      css={css`
+                        &&& {
+                          margin: 0 5px 0 0;
+                        }
+                      `}
+                    />
                     {videoCategory.title}
                   </Label>
                 </Link>
@@ -128,8 +142,25 @@ export const YoutubeDetail = React.memo<Props>(
           {keywords.map((keywordRelation, index) => {
             const { keyword } = keywordRelation;
             return (
-              <Link key={index} href={`/youtube/keyword/${keyword.title}/page/1`} passHref>
-                <Label tag css={LabelCss}>
+              <Link key={index} href={`/youtube/keyword/${keyword.title}`} passHref>
+                <Label
+                  tag
+                  css={css`
+                    &&& {
+                      margin: 5px 10px 0 12px;
+                      padding-left: 1em;
+                      padding-right: 0.5em;
+                    }
+                  `}
+                >
+                  <Icon
+                    name="linkify"
+                    css={css`
+                      &&& {
+                        margin: 0 5px 0 0;
+                      }
+                    `}
+                  />
                   {keyword.title}
                 </Label>
               </Link>
@@ -187,17 +218,8 @@ const CountIconCss = css`
   }
 `;
 
-const CountTextCss = css``;
-
 const LabelWrapeerCss = css`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 10px;
-`;
-
-const LabelCss = css`
-  &&& {
-    margin: 5px 10px 0 12px;
-  }
 `;

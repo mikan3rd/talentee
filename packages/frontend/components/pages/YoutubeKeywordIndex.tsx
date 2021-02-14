@@ -26,7 +26,10 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
 
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-      router.push({ query: { keywordTitle, page: data.activePage } });
+      router.push({
+        pathname: "/youtube/keyword/[keywordTitle]/page/[page]",
+        query: { keywordTitle, page: data.activePage },
+      });
     },
     [keywordTitle, router],
   );
@@ -46,7 +49,12 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
           }
         `}
       >
-        <div>
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+          `}
+        >
           <Icon name="youtube" color="red" size="big" />
           YouTubeランキング
         </div>

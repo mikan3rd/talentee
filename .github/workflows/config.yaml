@@ -49,46 +49,6 @@ jobs:
           SERVER_APOLLO_URI: ${{ secrets.SERVER_APOLLO_URI }}
           PUBLIC_APOLLO_URI: ${{ secrets.PUBLIC_APOLLO_URI }}
 
-  functions-build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    steps:
-      - uses: actions/checkout@main
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
-
-      - run: yarn install
-
-      - run: yarn install
-        working-directory: ./packages/functions
-
-      - run: yarn lint:functions
-
-      - run: yarn build
-        working-directory: ./packages/functions
-
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: functions-build-files
-          path: packages/functions/lib
-
   backend-build:
     runs-on: ubuntu-latest
     strategy:
@@ -126,47 +86,6 @@ jobs:
         with:
           name: backend-build-files
           path: packages/backend/dist
-
-  functions-deploy:
-    if: github.ref == 'refs/heads/master'
-    needs: functions-build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    steps:
-      - uses: actions/checkout@main
-
-      - name: Download Artifact
-        uses: actions/download-artifact@main
-        with:
-          name: functions-build-files
-          path: packages/functions/lib
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
-
-      - run: yarn install
-        working-directory: ./packages/functions
-
-      - name: deploy to Firebase Functions
-        working-directory: ./packages/functions
-        run: yarn deploy:prod --token=${{ secrets.FIREBASE_TOKEN }}
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   backend-sentry-release:
     if: github.ref == 'refs/heads/master'

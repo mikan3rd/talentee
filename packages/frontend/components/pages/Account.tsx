@@ -138,7 +138,7 @@ export const Account = React.memo<Props>(
 
         <div
           css={css`
-            margin-top: 20px;
+            margin-top: 10px;
             text-align: right;
           `}
         >
@@ -154,7 +154,7 @@ export const Account = React.memo<Props>(
               position: sticky;
               top: ${isUp ? `${headerHeight}px` : 0};
               z-index: 1;
-              margin-top: 20px;
+              margin-top: 10px;
               background-color: #f7f7f7;
               transition: all 0.5s ease;
               overflow-x: scroll;

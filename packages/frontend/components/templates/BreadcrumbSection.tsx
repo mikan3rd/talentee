@@ -15,19 +15,31 @@ export const TopSection = React.memo<{ active?: boolean }>(({ active = false }) 
 
 export const YoutubeSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
-    <Link href="/youtube/all">
-      <Breadcrumb.Section href="/youtube/all" active={active}>
+    <Link href="/youtube/category/all">
+      <Breadcrumb.Section href="/youtube/category/all" active={active}>
         YouTubeランキング
       </Breadcrumb.Section>
     </Link>
   );
 });
 
+export const YoutubeCategorySection = React.memo<{ active?: boolean; categoryName: string; categoryId: string }>(
+  ({ categoryName, categoryId, active = false }) => {
+    return (
+      <Link href={`/youtube/category/${categoryId}`}>
+        <Breadcrumb.Section href={`/youtube/keyword/${categoryId}`} active={active}>
+          {categoryName}
+        </Breadcrumb.Section>
+      </Link>
+    );
+  },
+);
+
 export const YoutubeKeywordSection = React.memo<{ active?: boolean; keywordTitle: string }>(
   ({ keywordTitle, active = false }) => {
     return (
-      <Link href={`/youtube/keyword/${keywordTitle}/page/1`}>
-        <Breadcrumb.Section href={`/youtube/keyword/${keywordTitle}/page/1`} active={active}>
+      <Link href={`/youtube/keyword/${keywordTitle}`}>
+        <Breadcrumb.Section href={`/youtube/keyword/${keywordTitle}`} active={active}>
           {keywordTitle}
         </Breadcrumb.Section>
       </Link>
