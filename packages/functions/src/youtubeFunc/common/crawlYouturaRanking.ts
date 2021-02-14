@@ -24,7 +24,6 @@ const crawlYouturaRanking = async (pagePath: string, pageNum: number) => {
   for (const i of [...Array(pageNum).keys()]) {
     const subscribeUrl = `${baseUrl}${pagePath}/?p=${i + 1}`;
     const playCountUrl = `${baseUrl}${pagePath}/?p=${i + 1}&mode=view`;
-    console.log(playCountUrl);
     const subscribeResponse = await axios.get<string>(subscribeUrl);
     const playcountResponse = await axios.get<string>(playCountUrl);
 

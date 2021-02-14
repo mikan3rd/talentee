@@ -21,4 +21,4 @@ dayjs.locale("ja");
 // export * from "./instagramFunc";
 // export * from "./tiktokFunc";
 
-export * from "./migrateFunc";
+// export * from "./migrateFunc";
