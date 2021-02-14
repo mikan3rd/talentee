@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeIndex } from "@/components/pages/YoutubeIndex";
@@ -16,10 +16,28 @@ import {
 const take = 10;
 const AllCategory = "all" as const;
 
-export const getServerSideProps: GetServerSideProps<Props, { categoryId: string }> = async ({ query, params }) => {
-  const page = query.page ? Number(query.page) : 1;
-  const isAll = params?.categoryId === AllCategory;
-  const videoCategoryId = isAll ? undefined : Number(params?.categoryId);
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: [],
+  fallback: true,
+});
+
+export const getStaticProps: GetStaticProps<Props, { categoryId: string }> = async ({ params }) => {
+  if (!params) {
+    return { redirect: { statusCode: 302, destination: "/" } };
+  }
+
+  return await getCommonStaticProps({ categoryId: params.categoryId, page: 1 });
+};
+
+export const getCommonStaticProps = async ({
+  categoryId,
+  page,
+}: {
+  categoryId: string;
+  page: number;
+}): Promise<GetStaticPropsResult<Props>> => {
+  const isAll = categoryId === AllCategory;
+  const videoCategoryId = isAll ? undefined : Number(categoryId);
 
   const { data } = await client.query<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>({
     query: GetYoutubeCategoryRankingPageDocument,
@@ -47,12 +65,16 @@ export const getServerSideProps: GetServerSideProps<Props, { categoryId: string 
       page,
       videoCategoryOptions,
       selectedVideoCategory,
-      ...data.getYoutubeCategoryRankingPage,
+      getYoutubeCategoryRankingPage: data.getYoutubeCategoryRankingPage,
     },
   };
 };
 
-export default React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
+export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
+  if (!props.getYoutubeCategoryRankingPage) {
+    return null;
+  }
+
   const { selectedVideoCategory, page } = props;
   return (
     <>
