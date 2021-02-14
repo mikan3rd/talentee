@@ -27,7 +27,7 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
   } = await client.query<GetSitemapDataQuery>({ query: GetSitemapDataDocument });
 
   const pages = await globby(["pages/**/*.tsx", "!pages/_*.tsx", "!pages/account", "!pages/youtube"]);
-  const youtubePages = youtubeVideoCategories.map((category) => `/youtube/${category.id}`);
+  const youtubePages = youtubeVideoCategories.map((category) => `/youtube/category/${category.id}`);
   youtubePages.unshift(`/youtube/category/all`);
   const youtubeKeywordPages = youtubeKeywords.map((keyword) => `/youtube/keyword/${encodeURIComponent(keyword.title)}`);
   const accountPages = accounts.map((accout) => `/account/${accout.uuid}`);
