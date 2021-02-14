@@ -49,7 +49,12 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
           }
         `}
       >
-        <div>
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+          `}
+        >
           <Icon name="youtube" color="red" size="big" />
           YouTubeランキング
         </div>

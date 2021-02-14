@@ -72,7 +72,12 @@ export const YoutubeIndex = React.memo<Props>(
             }
           `}
         >
-          <div>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+            `}
+          >
             <Icon name="youtube" color="red" size="big" />
             YouTubeランキング
           </div>
