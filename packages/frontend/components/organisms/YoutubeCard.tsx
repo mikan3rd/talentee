@@ -166,7 +166,7 @@ export const YoutubeCard = React.memo<Props>(
                     videoCategory: { id, title },
                   } = channelVideoCategory;
                   return (
-                    <Label key={index} tag color={mainVideoCategoryId === id ? "red" : "grey"} css={LabelCss}>
+                    <Label key={index} color={mainVideoCategoryId === id ? "red" : "grey"} css={LabelCss}>
                       {title}
                     </Label>
                   );
@@ -238,6 +238,6 @@ const LabelWrapeerCss = css`
 
 const LabelCss = css`
   &&& {
-    margin: 5px 10px 0 12px;
+    margin: 5px 10px 0 0;
   }
 `;

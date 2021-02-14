@@ -115,8 +115,16 @@ export const YoutubeDetail = React.memo<Props>(
             {channelVideoCategories.map(({ videoCategory }, index) => {
               return (
                 <Link key={index} href={`/youtube/${videoCategory.id}`} passHref>
-                  <Label tag color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"} css={LabelCss}>
+                  <Label size="large" color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"} css={LabelCss}>
                     {videoCategory.title}
+                    <Icon
+                      name="linkify"
+                      css={css`
+                        &&& {
+                          margin: 0 0 0 5px;
+                        }
+                      `}
+                    />
                   </Label>
                 </Link>
               );
@@ -198,6 +206,6 @@ const LabelWrapeerCss = css`
 
 const LabelCss = css`
   &&& {
-    margin: 5px 10px 0 12px;
+    margin: 5px 10px 0 0;
   }
 `;
