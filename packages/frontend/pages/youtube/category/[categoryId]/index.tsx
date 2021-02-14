@@ -79,8 +79,8 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
   return (
     <>
       <Meta
-        title={`Youtubeランキング - ${selectedVideoCategory.value} (${page}ページ目)`}
-        description={`人気のYoutubeランキング - ${selectedVideoCategory.value}`}
+        title={`Youtubeランキング | カテゴリ | ${selectedVideoCategory.text} (${page}ページ目)`}
+        description={`人気のYoutubeランキング\nカテゴリ「${selectedVideoCategory.text}」で人気のYoutubeチャンネル一覧`}
       />
 
       <Breadcrumb size="big">
