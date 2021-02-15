@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
+import { GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeKeywordIndex } from "@/components/pages/YoutubeKeywordIndex";
@@ -14,11 +14,6 @@ import {
 } from "@/graphql/generated";
 
 const take = 50;
-
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: true,
-});
 
 export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
   return await getCommonStaticProps({ page: 1 });

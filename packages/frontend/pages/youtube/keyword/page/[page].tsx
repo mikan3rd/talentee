@@ -1,9 +1,12 @@
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 
 import { Props } from "@/components/pages/YoutubeKeywordIndex";
-import YoutubeKeywordIndexPage, { getCommonStaticProps, getStaticPaths } from "@/pages/youtube/keyword";
+import YoutubeKeywordIndexPage, { getCommonStaticProps } from "@/pages/youtube/keyword";
 
-export { getStaticPaths };
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: [],
+  fallback: true,
+});
 
 export const getStaticProps: GetStaticProps<Props, { page: string }> = async ({ params }) => {
   if (!params) {
