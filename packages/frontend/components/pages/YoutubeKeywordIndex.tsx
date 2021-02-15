@@ -10,6 +10,7 @@ import {
   InstagramIndexLinkButton,
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
+  YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { GetYoutubeKeywordIndexPageQuery } from "@/graphql/generated";
 
@@ -136,6 +137,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
       <Divider />
 
       <div>
+        <YoutubeIndexLinkButton />
         <TwitterIndexLinkButton />
         <InstagramIndexLinkButton />
         <TiktokIndexLinkButton />

@@ -26,6 +26,16 @@ export const YoutubeIndexLinkButton = React.memo(() => {
   );
 });
 
+export const YoutubeKeywordLinkButton = React.memo(() => {
+  return (
+    <Link href="/youtube/keyword" passHref>
+      <Button basic color="red" as="a" css={WideButtonCss}>
+        Youtubeのキーワード一覧を見る
+      </Button>
+    </Link>
+  );
+});
+
 export const TwitterIndexLinkButton = React.memo(() => {
   return (
     <Link href="/twitter" passHref>

@@ -4,7 +4,12 @@ import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPro
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeKeywordRankingIndex } from "@/components/pages/YoutubeKeywordRankingIndex";
-import { TopSection, YoutubeKeywordSection, YoutubeSection } from "@/components/templates/BreadcrumbSection";
+import {
+  TopSection,
+  YoutubeKeywordIndexSection,
+  YoutubeKeywordSection,
+  YoutubeSection,
+} from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
 import { client } from "@/graphql/client";
 import {
@@ -66,7 +71,7 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
         <Breadcrumb.Divider />
         <YoutubeSection />
         <Breadcrumb.Divider />
-        <Breadcrumb.Section>キーワード</Breadcrumb.Section>
+        <YoutubeKeywordIndexSection />
         <Breadcrumb.Divider />
         <YoutubeKeywordSection keywordTitle={keywordTitle} active={true} />
       </Breadcrumb>
