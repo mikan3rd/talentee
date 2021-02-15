@@ -22,7 +22,9 @@ async function bootstrap() {
   app.use(morgan(process.env.MORGAN_FORMAT ?? "tiny"));
   app.enableCors();
   const server = await app.listen(process.env.PORT || 3300);
-  server.setTimeout(1000 * 60 * 10); // 10min
+  if (process.env.HTTPS_TIMEOUT) {
+    server.setTimeout(1000 * 60 * Number(process.env.HTTPS_TIMEOUT));
+  }
 }
 
 bootstrap();

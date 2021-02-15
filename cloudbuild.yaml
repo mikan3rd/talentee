@@ -86,11 +86,12 @@ steps:
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
-      '--timeout', '15m',
+      '--timeout', '20m',
       '--set-env-vars', '
         SCHEDULE_ENABLED=true,
         NO_COLOR=true,
         TZ=Asia/Tokyo,
+        HTTPS_TIMEOUT=20,
         DATABASE_URL=${_DATABASE_URL},
         YOUTUBE_API_KEY=${_YOUTUBE_API_KEY},
         TWITTER_BEARER_TOKEN=${_TWITTER_BEARER_TOKEN},
