@@ -60,6 +60,19 @@ export class YoutubeService {
     };
   }
 
+  async getKeywordIndexPage({ take, page }: { take: number; page: number }) {
+    const totalCount = await this.prisma.youtubeKeyword.count();
+    const youtubeKeywords = await this.prisma.youtubeKeyword.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { num: "desc" },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      youtubeKeywords,
+    };
+  }
+
   async getKeywordRankingPage({ take, page, keywordTitle }: { take: number; page: number; keywordTitle: string }) {
     const where: Prisma.YoutubeChannelWhereInput = { keywords: { some: { keyword: { title: keywordTitle } } } };
     const totalCount = await this.prisma.youtubeChannel.count({ where });

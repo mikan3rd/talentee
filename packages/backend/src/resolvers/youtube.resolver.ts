@@ -1,8 +1,8 @@
 import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
-import { YoutubeCategoryPaginationInput, YoutubeKeywordPaginationInput } from "@/dto/pagination.input";
-import { YoutubeKeywordRankingPage, YoutubeRankingPage } from "@/dto/youtubeRankingPage.dto";
+import { PaginationInput, YoutubeCategoryPaginationInput, YoutubeKeywordPaginationInput } from "@/dto/pagination.input";
+import { YoutubeKeywordIndexPage, YoutubeKeywordRankingPage, YoutubeRankingPage } from "@/dto/youtubeRankingPage.dto";
 import { YoutubeService } from "@/services/youtube.service";
 
 @Resolver()
@@ -19,5 +19,10 @@ export class YoutubeResolver {
   @Query((returns) => YoutubeKeywordRankingPage)
   async getYoutubeKeywordRankingPage(@Args("pagination") { take, page, keywordTitle }: YoutubeKeywordPaginationInput) {
     return this.youtubeService.getKeywordRankingPage({ take, page, keywordTitle });
+  }
+
+  @Query((returns) => YoutubeKeywordIndexPage)
+  async getYoutubeKeywordIndexPage(@Args("pagination") { take, page }: PaginationInput) {
+    return this.youtubeService.getKeywordIndexPage({ take, page });
   }
 }

@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 import { Button, Divider, Icon } from "semantic-ui-react";
 
+import { YoutubeKeywordLinkButton } from "@/components/atoms/IndexLinkButton";
 import { InstagramCard } from "@/components/organisms/InstagramCard";
 import { TiktokCard } from "@/components/organisms/TiktokCard";
 import { TwitterCard } from "@/components/organisms/TwitterCard";
@@ -131,6 +132,14 @@ export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagr
                 ランキングを見る
               </Button>
             </Link>
+          </div>
+
+          <div
+            css={css`
+              margin-top: 15px;
+            `}
+          >
+            <YoutubeKeywordLinkButton />
           </div>
         </>
       )}

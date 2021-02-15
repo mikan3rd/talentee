@@ -1,0 +1,9 @@
+query getYoutubeKeywordIndexPage($pagination: PaginationInput!) {
+  getYoutubeKeywordIndexPage(pagination: $pagination) {
+    totalPages
+    youtubeKeywords {
+      num
+      title
+    }
+  }
+}
