@@ -1,40 +1,38 @@
 import React from "react";
 
 import { css } from "@emotion/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { Divider, Header, Icon, Pagination, PaginationProps } from "semantic-ui-react";
+import { Divider, Header, Icon, Label, Pagination, PaginationProps } from "semantic-ui-react";
 
-import { toRankingNumByPagination } from "@/common/utils";
 import {
   IndexLinkButton,
   InstagramIndexLinkButton,
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
-import { YoutubeCard } from "@/components/organisms/YoutubeCard";
-import { GetYoutubeKeywordRankingPageQuery } from "@/graphql/generated";
+import { GetYoutubeKeywordIndexPageQuery } from "@/graphql/generated";
 
 export type Props = {
   page: number;
   take: number;
-  keywordTitle: string;
-  getYoutubeKeywordRankingPage: GetYoutubeKeywordRankingPageQuery["getYoutubeKeywordRankingPage"];
+  getYoutubeKeywordIndexPage: GetYoutubeKeywordIndexPageQuery["getYoutubeKeywordIndexPage"];
 };
 
-export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle, getYoutubeKeywordRankingPage }) => {
+export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKeywordIndexPage }) => {
   const router = useRouter();
 
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
       router.push({
-        pathname: "/youtube/keyword/[keywordTitle]/page/[page]",
-        query: { keywordTitle, page: data.activePage },
+        pathname: "/youtube/keyword/page/[page]",
+        query: { page: data.activePage },
       });
     },
-    [keywordTitle, router],
+    [router],
   );
 
-  const { youtubeChannels, totalPages } = getYoutubeKeywordRankingPage;
+  const { youtubeKeywords, totalPages } = getYoutubeKeywordIndexPage;
 
   return (
     <>
@@ -68,7 +66,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
             }
           `}
         >
-          {keywordTitle}
+          キーワード一覧
         </span>
         <span
           css={css`
@@ -88,14 +86,31 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, keywordTitle
           margin-top: 10px;
         `}
       >
-        {youtubeChannels.map((data, index) => {
+        {youtubeKeywords.map((keyword, index) => {
           return (
-            <YoutubeCard
-              key={data.id}
-              {...data}
-              rankNum={toRankingNumByPagination({ page, take, index })}
-              activeKeywordTitle={keywordTitle}
-            />
+            <Link key={index} href={`/youtube/keyword/${keyword.title}`} passHref>
+              <Label
+                tag
+                size="large"
+                css={css`
+                  &&& {
+                    margin: 15px 15px 0 12px;
+                    padding-left: 1em;
+                    padding-right: 0.5em;
+                  }
+                `}
+              >
+                <Icon
+                  name="linkify"
+                  css={css`
+                    &&& {
+                      margin: 0 5px 0 0;
+                    }
+                  `}
+                />
+                {keyword.title}
+              </Label>
+            </Link>
           );
         })}
       </div>

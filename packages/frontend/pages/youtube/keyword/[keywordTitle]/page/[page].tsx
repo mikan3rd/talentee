@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 
-import { Props } from "@/components/pages/YoutubeKeywordIndex";
+import { Props } from "@/components/pages/YoutubeKeywordRankingIndex";
 import YoutubeKeywordPage, { getCommonStaticProps, getStaticPaths } from "@/pages/youtube/keyword/[keywordTitle]";
 
 export { getStaticPaths };

@@ -2,6 +2,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 
 import { PaginationCount } from "@/dto/pagination.dto";
 import { YoutubeChannel } from "@/models/youtubeChannel.model";
+import { YoutubeKeyword } from "@/models/youtubeKeyword.model";
 import { YoutubeVideoCategory } from "@/models/youtubeVideoCategoriy.model";
 
 @ObjectType()
@@ -17,4 +18,10 @@ export class YoutubeRankingPage extends PaginationCount {
 export class YoutubeKeywordRankingPage extends PaginationCount {
   @Field((type) => [YoutubeChannel])
   youtubeChannels!: YoutubeChannel[];
+}
+
+@ObjectType()
+export class YoutubeKeywordIndexPage extends PaginationCount {
+  @Field((type) => [YoutubeKeyword])
+  youtubeKeywords!: YoutubeKeyword[];
 }

@@ -51,7 +51,7 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
-      'run', 'beta', 'deploy', '$_CLOUD_RUN_SERVICE_NAME',
+      'beta', 'run', 'deploy', '$_CLOUD_RUN_SERVICE_NAME',
       '--image', 'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
       '--region', 'asia-northeast1',
       '--platform', 'managed',
@@ -79,7 +79,7 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
-      'run', 'beta', 'deploy', '${_CLOUD_RUN_SERVICE_NAME}-schedule',
+      'beta', 'run', 'deploy', '${_CLOUD_RUN_SERVICE_NAME}-schedule',
       '--image', 'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
       '--region', 'asia-northeast1',
       '--platform', 'managed',

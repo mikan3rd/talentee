@@ -3,7 +3,7 @@ import React from "react";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
-import { Props, YoutubeKeywordIndex } from "@/components/pages/YoutubeKeywordIndex";
+import { Props, YoutubeKeywordRankingIndex } from "@/components/pages/YoutubeKeywordRankingIndex";
 import { TopSection, YoutubeKeywordSection, YoutubeSection } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
 import { client } from "@/graphql/client";
@@ -73,7 +73,7 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
 
       <Divider />
 
-      <YoutubeKeywordIndex {...props} />
+      <YoutubeKeywordRankingIndex {...props} />
     </>
   );
 });
