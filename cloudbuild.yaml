@@ -51,11 +51,12 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
-      'run', 'deploy', '$_CLOUD_RUN_SERVICE_NAME',
+      'run', 'beta', 'deploy', '$_CLOUD_RUN_SERVICE_NAME',
       '--image', 'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
       '--region', 'asia-northeast1',
       '--platform', 'managed',
       '--memory', '512Mi',
+      '--min-instances', '0',
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
@@ -78,15 +79,16 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
-      'run', 'deploy', '${_CLOUD_RUN_SERVICE_NAME}-schedule',
+      'run', 'beta', 'deploy', '${_CLOUD_RUN_SERVICE_NAME}-schedule',
       '--image', 'gcr.io/$PROJECT_ID/build:$COMMIT_SHA',
       '--region', 'asia-northeast1',
       '--platform', 'managed',
       '--memory', '1Gi',
+      '--min-instances', '0',
+      '--timeout', '20m',
       '--set-cloudsql-instances', '${_CLOUD_SQL_CONNECTION_NAME}',
       '--vpc-connector', '${_VPC_CONNECTOR_NAME}',
       '--allow-unauthenticated',
-      '--timeout', '20m',
       '--set-env-vars', '
         SCHEDULE_ENABLED=true,
         NO_COLOR=true,
