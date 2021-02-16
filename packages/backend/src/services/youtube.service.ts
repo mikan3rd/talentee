@@ -73,6 +73,17 @@ export class YoutubeService {
     };
   }
 
+  async searchKeywordByWord({ take, word }: { take: number; word: string }) {
+    const youtubeKeywords = await this.prisma.youtubeKeyword.findMany({
+      take,
+      orderBy: { num: "desc" },
+      where: { title: { contains: word } },
+    });
+    return {
+      youtubeKeywords,
+    };
+  }
+
   async getKeywordRankingPage({ take, page, keywordTitle }: { take: number; page: number; keywordTitle: string }) {
     const where: Prisma.YoutubeChannelWhereInput = { keywords: { some: { keyword: { title: keywordTitle } } } };
     const totalCount = await this.prisma.youtubeChannel.count({ where });

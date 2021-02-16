@@ -1,8 +1,8 @@
 import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
-import { InstagramRankingPage } from "@/dto/instagramRankingPage.dto";
-import { PaginationInput } from "@/dto/pagination.input";
+import { PaginationInput } from "@/dto/input/pagination.input";
+import { InstagramRankingPage } from "@/dto/output/instagramRankingPage.output";
 import { InstagramService } from "@/services/instagram.service";
 
 @Resolver()

@@ -1,6 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 
-import { PaginationCount } from "@/dto/pagination.dto";
+import { PaginationCount } from "@/dto/output/pagination.output";
 import { YoutubeChannel } from "@/models/youtubeChannel.model";
 import { YoutubeKeyword } from "@/models/youtubeKeyword.model";
 import { YoutubeVideoCategory } from "@/models/youtubeVideoCategoriy.model";

@@ -1,0 +1,7 @@
+query searchYoutubeKeywordByWord($input: YoutubeKeywordSearchInput!) {
+  searchYoutubeKeywordByWord(input: $input) {
+    youtubeKeywords {
+      title
+    }
+  }
+}

@@ -243,6 +243,10 @@ type TwitterRankingPage {
   twitterUsers: [TwitterUser!]!
 }
 
+type YoutubeKeywordSearchResult {
+  youtubeKeywords: [YoutubeKeyword!]!
+}
+
 type YoutubeRankingPage {
   totalPages: Int!
   youtubeChannels: [YoutubeChannel!]!
@@ -286,6 +290,7 @@ type Query {
   getYoutubeCategoryRankingPage(pagination: YoutubeCategoryPaginationInput!): YoutubeRankingPage!
   getYoutubeKeywordRankingPage(pagination: YoutubeKeywordPaginationInput!): YoutubeKeywordRankingPage!
   getYoutubeKeywordIndexPage(pagination: PaginationInput!): YoutubeKeywordIndexPage!
+  searchYoutubeKeywordByWord(input: YoutubeKeywordSearchInput!): YoutubeKeywordSearchResult!
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
   getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
@@ -313,4 +318,9 @@ input YoutubeKeywordPaginationInput {
 input PaginationInput {
   take: Int!
   page: Int!
+}
+
+input YoutubeKeywordSearchInput {
+  take: Int!
+  word: String!
 }

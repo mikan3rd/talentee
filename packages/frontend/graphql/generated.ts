@@ -252,6 +252,10 @@ export type TwitterRankingPage = {
   twitterUsers: Array<TwitterUser>;
 };
 
+export type YoutubeKeywordSearchResult = {
+  youtubeKeywords: Array<YoutubeKeyword>;
+};
+
 export type YoutubeRankingPage = {
   totalPages: Scalars["Int"];
   youtubeChannels: Array<YoutubeChannel>;
@@ -295,6 +299,7 @@ export type Query = {
   getYoutubeCategoryRankingPage: YoutubeRankingPage;
   getYoutubeKeywordRankingPage: YoutubeKeywordRankingPage;
   getYoutubeKeywordIndexPage: YoutubeKeywordIndexPage;
+  searchYoutubeKeywordByWord: YoutubeKeywordSearchResult;
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
@@ -318,6 +323,10 @@ export type QueryGetYoutubeKeywordRankingPageArgs = {
 
 export type QueryGetYoutubeKeywordIndexPageArgs = {
   pagination: PaginationInput;
+};
+
+export type QuerySearchYoutubeKeywordByWordArgs = {
+  input: YoutubeKeywordSearchInput;
 };
 
 export type QueryGetTwitterRankingPageArgs = {
@@ -354,6 +363,11 @@ export type YoutubeKeywordPaginationInput = {
 export type PaginationInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
+};
+
+export type YoutubeKeywordSearchInput = {
+  take: Scalars["Int"];
+  word: Scalars["String"];
 };
 
 export type GetAccountPageQueryVariables = Exact<{
@@ -609,6 +623,14 @@ export type SearchAccountQuery = {
       }
     >;
   };
+};
+
+export type SearchYoutubeKeywordByWordQueryVariables = Exact<{
+  input: YoutubeKeywordSearchInput;
+}>;
+
+export type SearchYoutubeKeywordByWordQuery = {
+  searchYoutubeKeywordByWord: { youtubeKeywords: Array<Pick<YoutubeKeyword, "title">> };
 };
 
 export const GetAccountPageDocument = gql`
@@ -1276,3 +1298,51 @@ export function useSearchAccountLazyQuery(
 export type SearchAccountQueryHookResult = ReturnType<typeof useSearchAccountQuery>;
 export type SearchAccountLazyQueryHookResult = ReturnType<typeof useSearchAccountLazyQuery>;
 export type SearchAccountQueryResult = Apollo.QueryResult<SearchAccountQuery, SearchAccountQueryVariables>;
+export const SearchYoutubeKeywordByWordDocument = gql`
+  query searchYoutubeKeywordByWord($input: YoutubeKeywordSearchInput!) {
+    searchYoutubeKeywordByWord(input: $input) {
+      youtubeKeywords {
+        title
+      }
+    }
+  }
+`;
+
+/**
+ * __useSearchYoutubeKeywordByWordQuery__
+ *
+ * To run a query within a React component, call `useSearchYoutubeKeywordByWordQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchYoutubeKeywordByWordQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchYoutubeKeywordByWordQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSearchYoutubeKeywordByWordQuery(
+  baseOptions: Apollo.QueryHookOptions<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>,
+) {
+  return Apollo.useQuery<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>(
+    SearchYoutubeKeywordByWordDocument,
+    baseOptions,
+  );
+}
+export function useSearchYoutubeKeywordByWordLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>,
+) {
+  return Apollo.useLazyQuery<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>(
+    SearchYoutubeKeywordByWordDocument,
+    baseOptions,
+  );
+}
+export type SearchYoutubeKeywordByWordQueryHookResult = ReturnType<typeof useSearchYoutubeKeywordByWordQuery>;
+export type SearchYoutubeKeywordByWordLazyQueryHookResult = ReturnType<typeof useSearchYoutubeKeywordByWordLazyQuery>;
+export type SearchYoutubeKeywordByWordQueryResult = Apollo.QueryResult<
+  SearchYoutubeKeywordByWordQuery,
+  SearchYoutubeKeywordByWordQueryVariables
+>;
