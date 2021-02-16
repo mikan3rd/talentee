@@ -3,7 +3,18 @@ import React from "react";
 import { css } from "@emotion/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Divider, Header, Icon, Label, Pagination, PaginationProps } from "semantic-ui-react";
+import { useDebounce } from "react-use";
+import {
+  Divider,
+  Header,
+  Icon,
+  Label,
+  Pagination,
+  PaginationProps,
+  Search,
+  SearchProps,
+  SearchResultData,
+} from "semantic-ui-react";
 
 import {
   IndexLinkButton,
@@ -12,7 +23,7 @@ import {
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
-import { GetYoutubeKeywordIndexPageQuery } from "@/graphql/generated";
+import { GetYoutubeKeywordIndexPageQuery, useSearchYoutubeKeywordByWordLazyQuery } from "@/graphql/generated";
 
 export type Props = {
   page: number;
@@ -21,10 +32,40 @@ export type Props = {
 };
 
 export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKeywordIndexPage }) => {
+  const [searchText, setSearchText] = React.useState("");
+  const [debounce, setDebounce] = React.useState(false);
+
   const router = useRouter();
+  const [fetch, { data, loading }] = useSearchYoutubeKeywordByWordLazyQuery();
+
+  useDebounce(
+    () => {
+      fetch({ variables: { input: { word: searchText, take: 10 } } });
+      setDebounce(false);
+    },
+    1000,
+    [searchText],
+  );
+
+  const handleSearchChange = React.useCallback((event: React.MouseEvent, data: SearchProps) => {
+    setDebounce(true);
+    setSearchText(data.value ?? "");
+  }, []);
+
+  const handleSelectResult = React.useCallback(
+    (event: React.MouseEvent, data: SearchResultData) => {
+      const keywordTitle = data.result.title;
+      router.push({
+        pathname: "/youtube/keyword/[keywordTitle]",
+        query: { keywordTitle },
+      });
+      setSearchText(keywordTitle);
+    },
+    [router],
+  );
 
   const handlePageChange = React.useCallback(
-    async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
+    async (event: React.MouseEvent, data: PaginationProps) => {
       router.push({
         pathname: "/youtube/keyword/page/[page]",
         query: { page: data.activePage },
@@ -79,6 +120,19 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
           {page}ページ目
         </span>
       </Header>
+
+      <Divider />
+
+      <Search
+        value={searchText}
+        onSearchChange={handleSearchChange}
+        loading={loading || debounce}
+        results={data?.searchYoutubeKeywordByWord.youtubeKeywords ?? []}
+        minCharacters={0}
+        noResultsMessage="見つかりませんでした"
+        onResultSelect={handleSelectResult}
+        input={{ fluid: true, placeholder: "キーワードを検索" }}
+      />
 
       <Divider />
 
