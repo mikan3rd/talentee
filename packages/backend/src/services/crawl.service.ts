@@ -375,6 +375,58 @@ export class CrawlService {
     const { userInfo, items } = contentData.props.pageProps;
     return { userInfo, items };
   }
+
+  async crawlYouturaRanking(pageNum: number) {
+    const baseUrl = `https://ytranking.net`;
+    const pagePath = `/ranking/mon`;
+    const linkSelector = "p.more a" as const;
+
+    const axios = this.axiosSetup();
+
+    const detailLinks: string[] = [];
+    for (const i of [...Array(pageNum).keys()]) {
+      const subscribeUrl = `${baseUrl}${pagePath}/?p=${i + 1}`;
+      const playCountUrl = `${baseUrl}${pagePath}/?p=${i + 1}&mode=view`;
+      const subscribeResponse = await axios.get<string>(subscribeUrl);
+      const playcountResponse = await axios.get<string>(playCountUrl);
+
+      {
+        const $ = cheerio.load(subscribeResponse.data);
+        $(linkSelector).each((index, ele) => {
+          const link = $(ele).attr("href");
+          if (link) {
+            detailLinks.push(link);
+          }
+        });
+      }
+
+      {
+        const $ = cheerio.load(playcountResponse.data);
+        $(linkSelector).each((index, ele) => {
+          const link = $(ele).attr("href");
+          if (link) {
+            detailLinks.push(link);
+          }
+        });
+      }
+    }
+
+    const uniqueDetailLinks = Array.from(new Set(detailLinks));
+
+    const channeUrls: string[] = [];
+    for (const link of uniqueDetailLinks) {
+      const detailUrl = `${baseUrl}${link}`;
+      const { data } = await axios.get<string>(detailUrl);
+      const $ = cheerio.load(data);
+      const channelUrl = $("article header h1 a").attr("href");
+      if (channelUrl) {
+        channeUrls.push(channelUrl);
+      }
+    }
+
+    const uniqueChannelUrls = Array.from(new Set(channeUrls));
+    return uniqueChannelUrls;
+  }
 }
 
 let window: customWindow;

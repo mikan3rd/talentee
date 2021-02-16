@@ -1,7 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class UtilsService {
+  private readonly logger = new Logger(UtilsService.name);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   chunk<T extends any>(arr: T[], len: number) {
     const chunks = [];
