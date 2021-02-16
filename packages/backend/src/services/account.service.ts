@@ -365,6 +365,14 @@ export class AccountService {
     await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList);
   }
 
+  async addYoutubeChannelByYoutura(pageNum: number) {
+    const channeUrls = await this.crawlService.crawlYouturaRanking(pageNum);
+    this.logger.log(`channeUrls: ${channeUrls.length}`);
+    const channelIds = channeUrls.map((url) => this.judgeServiceAccount(url)).map((service) => service.username);
+    const baseDataList = channelIds.map((channelId) => ({ channelId }));
+    await this.youtubeService.bulkUpsertChannelByChannelId(baseDataList, false);
+  }
+
   private groupByBulkServiceName(serviceUsernames: ServiceNameDataList) {
     const groupByServiceData = serviceUsernames.reduce((prev, { serviceName, username, accountId }) => {
       if (!prev[serviceName]) {

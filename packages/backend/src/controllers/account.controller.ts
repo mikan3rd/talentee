@@ -35,4 +35,9 @@ export class AccountController {
   ) {
     return await this.accountService.addByFirestore(body.data);
   }
+
+  @Post("/addYoutubeChannelByYoutura")
+  async addYoutubeChannelByYoutura() {
+    await this.accountService.addYoutubeChannelByYoutura(1);
+  }
 }
