@@ -2,7 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
 import { PaginationInput } from "@/dto/input/pagination.input";
-import { TwitterRankingPage } from "@/dto/output/twitterRankingPage.dto";
+import { TwitterRankingPage } from "@/dto/output/twitterRankingPage.output";
 import { TwitterService } from "@/services/twitter.service";
 
 @Resolver()

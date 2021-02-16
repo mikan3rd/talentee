@@ -7,12 +7,12 @@ import {
   YoutubeKeywordPaginationInput,
 } from "@/dto/input/pagination.input";
 import { YoutubeKeywordSearchInput } from "@/dto/input/youtubeKeywordSearch.input";
-import { YoutubeKeywordSearchResult } from "@/dto/output/youtubeKeywordSearch.dto";
+import { YoutubeKeywordSearchResult } from "@/dto/output/youtubeKeywordSearch.output";
 import {
   YoutubeKeywordIndexPage,
   YoutubeKeywordRankingPage,
   YoutubeRankingPage,
-} from "@/dto/output/youtubeRankingPage.dto";
+} from "@/dto/output/youtubeRankingPage.output";
 import { YoutubeService } from "@/services/youtube.service";
 
 @Resolver()

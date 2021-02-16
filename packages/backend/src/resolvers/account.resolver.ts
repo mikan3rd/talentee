@@ -2,9 +2,9 @@ import { Inject } from "@nestjs/common";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 
 import { AccountSearchInput } from "@/dto/input/pagination.input";
-import { AccountSearchResult } from "@/dto/output/accountSearchResult.dto";
-import { Sitemap } from "@/dto/output/sitemap.dto";
-import { TopPage } from "@/dto/output/topPage.dto";
+import { AccountSearchResult } from "@/dto/output/accountSearchResult.output";
+import { Sitemap } from "@/dto/output/sitemap.output";
+import { TopPage } from "@/dto/output/topPage.output";
 import { Account } from "@/models/account.model";
 import { AccountService } from "@/services/account.service";
 

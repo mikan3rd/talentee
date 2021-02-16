@@ -2,7 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
 import { PaginationInput } from "@/dto/input/pagination.input";
-import { TiktokRankingPage } from "@/dto/output/tiktokRankingPage.dto";
+import { TiktokRankingPage } from "@/dto/output/tiktokRankingPage.output";
 import { TiktokService } from "@/services/tiktok.service";
 
 @Resolver()

@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 
-import { PaginationCount } from "@/dto/output/pagination.dto";
+import { PaginationCount } from "@/dto/output/pagination.output";
 import { Account } from "@/models/account.model";
 
 @ObjectType()
