@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 import axios from "axios";
 import dayjs from "dayjs";
+import Twitter from "twitter";
 
 import { CrawlService } from "@/services/crawl.service";
 import { PrismaService } from "@/services/prisma.service";
@@ -21,6 +22,21 @@ export class TwitterService {
 
   get headers() {
     return { Authorization: `Bearer ${this.configService.get("TWITTER_BEARER_TOKEN")}` };
+  }
+
+  getOldClient({ access_token_key, access_token_secret }: { access_token_key: string; access_token_secret: string }) {
+    return new Twitter({
+      consumer_key: this.configService.get("TWITTER_API_KEY") ?? "",
+      consumer_secret: this.configService.get("TWITTER_API_SECRET_KET") ?? "",
+      access_token_key,
+      access_token_secret,
+    });
+  }
+
+  getOldClientBot() {
+    const access_token_key = this.configService.get("TWITTER_ACCESS_TOKEN") ?? "";
+    const access_token_secret = this.configService.get("TWITTER_ACCESS_TOKEN_SECRET") ?? "";
+    return this.getOldClient({ access_token_key, access_token_secret });
   }
 
   async getRankingPage({ take, page }: { take: number; page: number }) {
