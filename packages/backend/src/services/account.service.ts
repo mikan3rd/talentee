@@ -373,6 +373,40 @@ export class AccountService {
     await this.youtubeService.bulkUpsertChannelByChannelId(baseDataList, false);
   }
 
+  async tweetRandomYoutubeAccount() {
+    const where: Prisma.AccountWhereInput = { youtubeChannels: { some: {} } };
+
+    const count = await this.prisma.account.count({ where });
+    const skip = this.utilsService.getRandomNum(count);
+    console.log(`${skip} / ${count}`);
+
+    const account = await this.prisma.account.findFirst({ skip, where, include: { youtubeChannels: true } });
+    const youtubeChannel = account?.youtubeChannels[0];
+
+    if (!account || !youtubeChannel) {
+      return;
+    }
+
+    let statuses = [`【人気YouTuberまとめ】`, ``, youtubeChannel.title, ``];
+
+    if (youtubeChannel.subscriberCount) {
+      statuses.push(`【チャンネル登録者数】${this.utilsService.toUnitString(youtubeChannel.subscriberCount)}人`);
+    }
+
+    statuses = statuses.concat([
+      `【再生回数】${this.utilsService.toUnitString(youtubeChannel.viewCount)}回`,
+      `【動画投稿数】${this.utilsService.toUnitString(youtubeChannel.videoCount)}本`,
+      ``,
+      `https://talentee.jp/account/${account.uuid}`,
+    ]);
+
+    const status = statuses.join("\n");
+    console.log(JSON.stringify(status));
+
+    const client = this.twitterService.getOldClientBot();
+    await client.post("statuses/update", { status });
+  }
+
   private groupByBulkServiceName(serviceUsernames: ServiceNameDataList) {
     const groupByServiceData = serviceUsernames.reduce((prev, { serviceName, username, accountId }) => {
       if (!prev[serviceName]) {

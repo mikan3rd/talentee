@@ -28,7 +28,7 @@ export class UtilsService {
       }, new Map<K, V[]>()),
     );
 
-  toUnitString(targetNum: number) {
+  toUnitString(targetNum: number | BigInt) {
     const unitArray = ["万", "億", "兆"];
     const magnification = 10000;
 
@@ -43,13 +43,13 @@ export class UtilsService {
         unitNum *= magnification;
         continue;
       }
-      convertedString = `${(targetNum / unitNum).toFixed(1).replace(".0", "")}${unit}`;
+      convertedString = `${(Number(targetNum) / unitNum).toFixed(1).replace(".0", "")}${unit}`;
       break;
     }
 
     if (!convertedString) {
       const lastArray = unitArray[unitArray.length - 1];
-      convertedString = `${Math.round((targetNum / unitNum) * magnification).toLocaleString()}${lastArray}`;
+      convertedString = `${Math.round((Number(targetNum) / unitNum) * magnification).toLocaleString()}${lastArray}`;
     }
 
     return convertedString;
@@ -58,5 +58,9 @@ export class UtilsService {
   async asyncFilter<T>(array: T[], asyncCallback: (args: T) => Promise<boolean>) {
     const bits = await Promise.all(array.map(asyncCallback));
     return array.filter((_, i) => bits[i]);
+  }
+
+  getRandomNum(maxNum: number) {
+    return Math.floor(Math.random() * maxNum);
   }
 }

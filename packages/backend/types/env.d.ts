@@ -1,10 +1,4 @@
 declare type EnvironmentVariables = {
-  // DB_HOST: string;
-  // DB_PORT: number;
-  // DB_USERNAME: string;
-  // DB_PASSWORD: string;
-  // DB_NAME: string;
-  // DB_SOCKET_PATH?: string;
   YOUTUBE_API_KEY: string;
   PROXY_HOST: string;
   PROXY_PORT: string;
@@ -15,6 +9,10 @@ declare type EnvironmentVariables = {
   PROXY_USERNAME_2: string;
   PROXY_PASSWORD_2: string;
   TWITTER_BEARER_TOKEN: string;
+  TWITTER_API_KEY: string;
+  TWITTER_API_SECRET_KET: string;
+  TWITTER_ACCESS_TOKEN: string;
+  TWITTER_ACCESS_TOKEN_SECRET: string;
   INSTAGRAM_USERNAME: string;
   INSTAGRAM_PASSWORD: string;
   SENTRY_DSN: string;

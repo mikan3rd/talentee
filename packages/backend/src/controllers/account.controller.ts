@@ -21,23 +21,13 @@ export class AccountController {
     return await this.accountService.bulkUpdate(30);
   }
 
-  @Post("/addByFirestore")
-  async addByFirestore(
-    @Body()
-    body: {
-      data: {
-        youtubeChannelId?: string;
-        twitterUsername?: string;
-        instagramUsername?: string;
-        tiktokUniqueId?: string;
-      }[];
-    },
-  ) {
-    return await this.accountService.addByFirestore(body.data);
-  }
-
   @Post("/addYoutubeChannelByYoutura")
   async addYoutubeChannelByYoutura() {
     await this.accountService.addYoutubeChannelByYoutura(1);
+  }
+
+  @Post("/tweetRandomYoutubeAccount")
+  async tweetRandomYoutubeAccount() {
+    await this.accountService.tweetRandomYoutubeAccount();
   }
 }
