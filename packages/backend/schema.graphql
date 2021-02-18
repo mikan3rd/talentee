@@ -288,7 +288,7 @@ type Query {
   searchAccount(pagination: AccountSearchInput!): AccountSearchResult!
   getSitemapData: Sitemap!
   getYoutubeCategoryRankingPage(pagination: YoutubeCategoryPaginationInput!): YoutubeRankingPage!
-  getYoutubeKeywordRankingPage(pagination: YoutubeKeywordPaginationInput!): YoutubeKeywordRankingPage!
+  getYoutubeKeywordRankingPage(pagination: YoutubeKeywordPaginationInput!): YoutubeKeywordRankingPage
   getYoutubeKeywordIndexPage(pagination: PaginationInput!): YoutubeKeywordIndexPage!
   searchYoutubeKeywordByWord(input: YoutubeKeywordSearchInput!): YoutubeKeywordSearchResult!
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!

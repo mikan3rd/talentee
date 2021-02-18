@@ -8,7 +8,7 @@ import { Linkify } from "@/components/atoms/Linkify";
 import { InstagramSocialButton } from "@/components/atoms/SocialButton";
 import { Props as AccountProps } from "@/components/pages/Account";
 
-export type Props = AccountProps["instagramUsers"][number];
+export type Props = AccountProps["getAccountPage"]["instagramUsers"][number];
 
 export const InstagramDetail = React.memo<Props>(
   ({ username, fullName, biography, externalUrl, profilePicUrl, follow, followedBy, mediaList }) => {

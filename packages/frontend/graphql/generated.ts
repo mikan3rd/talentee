@@ -297,7 +297,7 @@ export type Query = {
   searchAccount: AccountSearchResult;
   getSitemapData: Sitemap;
   getYoutubeCategoryRankingPage: YoutubeRankingPage;
-  getYoutubeKeywordRankingPage: YoutubeKeywordRankingPage;
+  getYoutubeKeywordRankingPage?: Maybe<YoutubeKeywordRankingPage>;
   getYoutubeKeywordIndexPage: YoutubeKeywordIndexPage;
   searchYoutubeKeywordByWord: YoutubeKeywordSearchResult;
   getTwitterRankingPage: TwitterRankingPage;
@@ -586,26 +586,28 @@ export type GetYoutubeKeywordRankingPageQueryVariables = Exact<{
 }>;
 
 export type GetYoutubeKeywordRankingPageQuery = {
-  getYoutubeKeywordRankingPage: Pick<YoutubeKeywordRankingPage, "totalPages"> & {
-    youtubeChannels: Array<
-      Pick<
-        YoutubeChannel,
-        | "id"
-        | "title"
-        | "thumbnailUrl"
-        | "description"
-        | "subscriberCount"
-        | "viewCount"
-        | "videoCount"
-        | "hiddenSubscriberCount"
-        | "accountId"
-        | "mainVideoCategoryId"
-      > & {
-        keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
-        channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
-      }
-    >;
-  };
+  getYoutubeKeywordRankingPage?: Maybe<
+    Pick<YoutubeKeywordRankingPage, "totalPages"> & {
+      youtubeChannels: Array<
+        Pick<
+          YoutubeChannel,
+          | "id"
+          | "title"
+          | "thumbnailUrl"
+          | "description"
+          | "subscriberCount"
+          | "viewCount"
+          | "videoCount"
+          | "hiddenSubscriberCount"
+          | "accountId"
+          | "mainVideoCategoryId"
+        > & {
+          keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+          channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+        }
+      >;
+    }
+  >;
 };
 
 export type SearchAccountQueryVariables = Exact<{

@@ -11,7 +11,7 @@ import { YoutubeSocialButton } from "@/components/atoms/SocialButton";
 import { YoutubeVideoCard } from "@/components/organisms/YoutubeVideoCard";
 import { Props as AccountProps } from "@/components/pages/Account";
 
-export type Props = AccountProps["youtubeChannels"][number];
+export type Props = AccountProps["getAccountPage"]["youtubeChannels"][number];
 
 export const YoutubeDetail = React.memo<Props>(
   ({

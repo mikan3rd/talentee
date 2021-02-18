@@ -2,6 +2,7 @@ import React from "react";
 
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Account } from "@/components/pages/Account";
@@ -15,7 +16,9 @@ export const getStaticPaths: GetStaticPaths = async () => ({
   fallback: true,
 });
 
-export const getStaticProps: GetStaticProps<GetAccountPageQuery, { accountId: string }> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>, { accountId: string }> = async ({
+  params,
+}) => {
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
@@ -29,11 +32,13 @@ export const getStaticProps: GetStaticProps<GetAccountPageQuery, { accountId: st
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  return { props: data, revalidate: 60 * 10 };
+  return { props: { getAccountPage: data.getAccountPage }, revalidate: 60 * 10 };
 };
 
 const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  if (!props.getAccountPage) {
+  const { isFallback } = useRouter();
+
+  if (isFallback) {
     return null;
   }
 
@@ -57,7 +62,7 @@ const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((
 
       <Divider />
 
-      <Account {...props.getAccountPage} />
+      <Account {...props} />
     </>
   );
 });

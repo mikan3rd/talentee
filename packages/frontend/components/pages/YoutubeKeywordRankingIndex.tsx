@@ -19,7 +19,7 @@ export type Props = {
   page: number;
   take: number;
   keywordTitle: string;
-  getYoutubeKeywordRankingPage: GetYoutubeKeywordRankingPageQuery["getYoutubeKeywordRankingPage"];
+  getYoutubeKeywordRankingPage: NonNullable<GetYoutubeKeywordRankingPageQuery["getYoutubeKeywordRankingPage"]>;
 };
 
 export const YoutubeKeywordRankingIndex = React.memo<Props>(

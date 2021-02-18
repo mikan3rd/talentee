@@ -9,7 +9,7 @@ import { Linkify } from "@/components/atoms/Linkify";
 import { TwitterSocialButton } from "@/components/atoms/SocialButton";
 import { Props as AccountProps } from "@/components/pages/Account";
 
-export type Props = AccountProps["twitterUsers"][number];
+export type Props = AccountProps["getAccountPage"]["twitterUsers"][number];
 
 export const TwitterDetail = React.memo<Props>(
   ({
