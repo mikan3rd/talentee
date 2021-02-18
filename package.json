@@ -13,7 +13,6 @@
     "lint": "eslint .",
     "lint:frontend": "eslint ./packages/frontend",
     "lint:backend": "eslint ./packages/backend",
-    "lint:functions": "eslint ./packages/functions",
     "codegen": "yarn frontend codegen && yarn eslint ./packages/frontend/graphql --fix"
   },
   "resolutions": {
