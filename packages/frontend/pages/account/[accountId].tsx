@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  return { props: { ...data.getAccountPage }, revalidate: 60 * 10 };
+  return { props: { getAccountPage: data.getAccountPage }, revalidate: 60 * 10 };
 };
 
 const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
@@ -42,7 +42,9 @@ const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((
     return null;
   }
 
-  const { uuid, displayName } = props;
+  const {
+    getAccountPage: { uuid, displayName },
+  } = props;
 
   return (
     <>

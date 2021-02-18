@@ -26,7 +26,7 @@ export class YoutubeResolver {
     return this.youtubeService.getCategoryRankingPage({ take, page, videoCategoryId, isAll });
   }
 
-  @Query((returns) => YoutubeKeywordRankingPage)
+  @Query((returns) => YoutubeKeywordRankingPage, { nullable: true })
   async getYoutubeKeywordRankingPage(@Args("pagination") { take, page, keywordTitle }: YoutubeKeywordPaginationInput) {
     return this.youtubeService.getKeywordRankingPage({ take, page, keywordTitle });
   }

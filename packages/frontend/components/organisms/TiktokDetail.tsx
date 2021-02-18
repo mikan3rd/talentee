@@ -8,7 +8,7 @@ import { Linkify } from "@/components/atoms/Linkify";
 import { TiktokSocialButton } from "@/components/atoms/SocialButton";
 import { Props as AccountProps } from "@/components/pages/Account";
 
-export type Props = AccountProps["tiktokUsers"][number];
+export type Props = AccountProps["getAccountPage"]["tiktokUsers"][number];
 
 export const TiktokDetail = React.memo<Props>(
   ({ uniqueId, nickname, signature, avatarThumb, followerCount, followingCount, heartCount, videoCount, items }) => {

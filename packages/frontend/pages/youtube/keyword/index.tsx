@@ -1,6 +1,7 @@
 import React from "react";
 
 import { GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeKeywordIndex } from "@/components/pages/YoutubeKeywordIndex";
@@ -15,11 +16,11 @@ import {
 
 const take = 50;
 
-export const getStaticProps: GetStaticProps<Props> = async (): Promise<GetStaticPropsResult<Props>> => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   return await getCommonStaticProps({ page: 1 });
 };
 
-export const getCommonStaticProps = async ({ page }: { page: number }) => {
+export const getCommonStaticProps = async ({ page }: { page: number }): Promise<GetStaticPropsResult<Props>> => {
   const { data } = await client.query<GetYoutubeKeywordIndexPageQuery, GetYoutubeKeywordIndexPageQueryVariables>({
     query: GetYoutubeKeywordIndexPageDocument,
     variables: { pagination: { take, page } },
@@ -36,7 +37,9 @@ export const getCommonStaticProps = async ({ page }: { page: number }) => {
 };
 
 export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  if (!props.getYoutubeKeywordIndexPage) {
+  const { isFallback } = useRouter();
+
+  if (isFallback) {
     return null;
   }
 

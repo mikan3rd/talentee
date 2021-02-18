@@ -12,7 +12,7 @@ import { AccountService } from "@/services/account.service";
 export class AccountResolver {
   constructor(@Inject(AccountService) private accountService: AccountService) {}
 
-  @Query((returns) => Account || null, { nullable: true })
+  @Query((returns) => Account, { nullable: true })
   async getAccountPage(@Args("uuid", { type: () => ID }) uuid: string) {
     return await this.accountService.getAccountPage(uuid);
   }

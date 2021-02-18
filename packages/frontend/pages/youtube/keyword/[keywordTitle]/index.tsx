@@ -1,6 +1,7 @@
 import React from "react";
 
 import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeKeywordRankingIndex } from "@/components/pages/YoutubeKeywordRankingIndex";
@@ -25,9 +26,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
   fallback: true,
 });
 
-export const getStaticProps: GetStaticProps<Props, { keywordTitle: string }> = async ({
-  params,
-}): Promise<GetStaticPropsResult<Props>> => {
+export const getStaticProps: GetStaticProps<Props, { keywordTitle: string }> = async ({ params }) => {
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
@@ -35,11 +34,21 @@ export const getStaticProps: GetStaticProps<Props, { keywordTitle: string }> = a
   return await getCommonStaticProps({ keywordTitle: params.keywordTitle, page: 1 });
 };
 
-export const getCommonStaticProps = async ({ keywordTitle, page }: { keywordTitle: string; page: number }) => {
+export const getCommonStaticProps = async ({
+  keywordTitle,
+  page,
+}: {
+  keywordTitle: string;
+  page: number;
+}): Promise<GetStaticPropsResult<Props>> => {
   const { data } = await client.query<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>({
     query: GetYoutubeKeywordRankingPageDocument,
     variables: { pagination: { take, page, keywordTitle } },
   });
+
+  if (!data.getYoutubeKeywordRankingPage) {
+    return { redirect: { statusCode: 302, destination: "/youtube/keyword" } };
+  }
 
   return {
     props: {
@@ -53,7 +62,9 @@ export const getCommonStaticProps = async ({ keywordTitle, page }: { keywordTitl
 };
 
 export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  if (!props.getYoutubeKeywordRankingPage) {
+  const { isFallback } = useRouter();
+
+  if (isFallback) {
     return null;
   }
 
