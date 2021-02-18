@@ -112,7 +112,7 @@ export const YoutubeDetail = React.memo<Props>(
           <div css={LabelWrapeerCss}>
             {channelVideoCategories.map(({ videoCategory }, index) => {
               return (
-                <Link key={index} href={`/youtube/${videoCategory.id}`} passHref>
+                <Link key={index} href={`/youtube/category/${videoCategory.id}`} passHref>
                   <Label
                     size="large"
                     color={mainVideoCategoryId === videoCategory.id ? "red" : "grey"}
