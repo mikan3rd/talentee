@@ -21,6 +21,15 @@ export const Index = React.memo<Props>(({ youtubeChannels, twitterUsers, instagr
         alt="logo"
         css={css`
           width: 100%;
+          animation: fadeIn ease 2s;
+          @keyframes fadeIn {
+            0% {
+              opacity: 0;
+            }
+            100% {
+              opacity: 1;
+            }
+          }
         `}
       />
 

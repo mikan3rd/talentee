@@ -1,6 +1,7 @@
 import React from "react";
 
 import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeIndex } from "@/components/pages/YoutubeIndex";
@@ -56,7 +57,7 @@ export const getCommonStaticProps = async ({
     : videoCategoryOptions.find((category) => category.value === String(videoCategoryId));
 
   if (!selectedVideoCategory) {
-    return { redirect: { statusCode: 302, destination: "/" } };
+    return { redirect: { statusCode: 302, destination: "/youtube/category/all" } };
   }
 
   return {
@@ -71,7 +72,9 @@ export const getCommonStaticProps = async ({
 };
 
 export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  if (!props.getYoutubeCategoryRankingPage) {
+  const { isFallback } = useRouter();
+
+  if (isFallback) {
     return null;
   }
 
