@@ -153,22 +153,31 @@ export class CrawlService {
 
     const matchResults = data.match(/{"responseContext":(.*})(?=(;))/);
     if (!matchResults) {
-      return null;
+      return;
     }
 
     const ytInitialData: ytInitialDataType = JSON.parse(matchResults[0]);
+
+    if (!ytInitialData.contents) {
+      return;
+    }
 
     const targetTab = ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs.find(
       (tab) => tab.tabRenderer.selected,
     );
     if (!targetTab) {
-      return [];
+      return;
     }
 
     const targetSection = targetTab.tabRenderer.content.sectionListRenderer.contents[0];
     const targetItem = targetSection.itemSectionRenderer.contents[0];
+
+    if (!targetItem.channelAboutFullMetadataRenderer.primaryLinks) {
+      return;
+    }
+
     const linkUrls =
-      targetItem.channelAboutFullMetadataRenderer.primaryLinks?.map((link) => {
+      targetItem.channelAboutFullMetadataRenderer.primaryLinks.map((link) => {
         const redirectUrl = link.navigationEndpoint.urlEndpoint.url;
         const decodeUrl = decodeURIComponent(redirectUrl);
         const UrlObj = new URL(decodeUrl);
@@ -566,7 +575,7 @@ type TiktokUserStatType = {
 };
 
 type ytInitialDataType = {
-  contents: {
+  contents?: {
     twoColumnBrowseResultsRenderer: {
       tabs: {
         tabRenderer: {

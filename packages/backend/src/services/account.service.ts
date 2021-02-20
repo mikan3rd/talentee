@@ -131,7 +131,12 @@ export class AccountService {
     let serviceUsernames: ServiceNameDataList = [];
     for (const [index, channel] of youtubeChannels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
-      const linkUrls = (await this.crawlService.getServiceLinkByYoutube(channel.id)) ?? [];
+      const linkUrls = await this.crawlService.getServiceLinkByYoutube(channel.id);
+
+      if (!linkUrls) {
+        return;
+      }
+
       const services = linkUrls
         .map((url) => this.judgeServiceAccount(url))
         .filter((service) => service.serviceName !== "youtube");
