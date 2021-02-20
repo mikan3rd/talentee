@@ -1,4 +1,4 @@
-FROM node:12-slim
+FROM node:14-slim
 
 WORKDIR /app
 
@@ -12,9 +12,6 @@ RUN apt-get update \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./package.json ./package.json
-COPY ./yarn.lock ./yarn.lock
-COPY ./packages/backend/package.json ./packages/backend/package.json
-COPY ./packages/frontend/package.json ./packages/frontend/package.json
+COPY . .
 
 RUN yarn install

@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["nativeTypes"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -23,9 +22,9 @@ model Account {
 
 model YoutubeChannelKeywordRelation {
   channelId String         @db.VarChar(255)
-  keywordId Int            @db.Int
-  channel  YoutubeChannel @relation(fields: [channelId], references: [id])
-  keyword  YoutubeKeyword @relation(fields: [keywordId], references: [id])
+  keywordId Int
+  channel   YoutubeChannel @relation(fields: [channelId], references: [id])
+  keyword   YoutubeKeyword @relation(fields: [keywordId], references: [id])
 
   @@id([channelId, keywordId])
   @@index([channelId], name: "IDX_b18b74d0911b0e08ae917029f8")
@@ -34,9 +33,9 @@ model YoutubeChannelKeywordRelation {
 
 model YoutubeVideoTagRelation {
   videoId String       @db.VarChar(255)
-  tagId   Int          @db.Int
-  tag    YoutubeTag   @relation(fields: [tagId], references: [id])
-  video  YoutubeVideo @relation(fields: [videoId], references: [id])
+  tagId   Int
+  tag     YoutubeTag   @relation(fields: [tagId], references: [id])
+  video   YoutubeVideo @relation(fields: [videoId], references: [id])
 
   @@id([videoId, tagId])
   @@index([videoId], name: "IDX_13e9d8647dadb5d352b6ba6833")
@@ -57,7 +56,7 @@ model YoutubeChannel {
   createdAt              DateTime                        @default(now()) @db.DateTime(6)
   updatedAt              DateTime                        @updatedAt @db.DateTime(6)
   accountId              String                          @db.VarChar(36)
-  mainVideoCategoryId    Int?                            @db.Int
+  mainVideoCategoryId    Int?
   account                Account                         @relation(fields: [accountId], references: [uuid])
   mainVideoCategory      YoutubeVideoCategory?           @relation(fields: [mainVideoCategoryId], references: [id])
   keywords               YoutubeChannelKeywordRelation[]
@@ -65,32 +64,34 @@ model YoutubeChannel {
   videos                 YoutubeVideo[]
 
   @@index([accountId], name: "FK_f81a0e842021b9f2b7346540195")
+  @@index([mainVideoCategoryId], name: "mainVideoCategoryId")
 }
 
 model YoutubeKeyword {
-  id        Int                             @id @default(autoincrement()) @db.Int
+  id        Int                             @id @default(autoincrement())
   title     String                          @unique @db.VarChar(255)
-  num       Int                             @default(0) @db.Int
+  num       Int                             @default(0)
   createdAt DateTime                        @default(now()) @db.DateTime(6)
   updatedAt DateTime                        @updatedAt @db.DateTime(6)
   channels  YoutubeChannelKeywordRelation[]
 }
 
 model YoutubeTag {
-  id        Int                       @id @default(autoincrement()) @db.Int
+  id        Int                       @id @default(autoincrement())
   title     String                    @unique @db.VarChar(255)
-  num       Int                       @default(0) @db.Int
+  num       Int                       @default(0)
   createdAt DateTime                  @default(now()) @db.DateTime(6)
   updatedAt DateTime                  @updatedAt @db.DateTime(6)
   videos    YoutubeVideoTagRelation[]
 }
 
 model YoutubeVideoCategory {
-  id                     Int                           @id @db.Int
+  id                     Int                           @id
   title                  String                        @db.VarChar(255)
   assignable             Boolean                       @db.TinyInt
   createdAt              DateTime                      @default(now()) @db.DateTime(6)
   updatedAt              DateTime                      @updatedAt @db.DateTime(6)
+  YoutubeChannel         YoutubeChannel[]
   channelVideoCategories YoutubeChannelVideoCategory[]
   videos                 YoutubeVideo[]
 }
@@ -107,7 +108,7 @@ model YoutubeVideo {
   commentCount    BigInt?                   @db.UnsignedBigInt
   createdAt       DateTime                  @default(now()) @db.DateTime(6)
   updatedAt       DateTime                  @updatedAt @db.DateTime(6)
-  videoCategoryId Int                       @db.Int
+  videoCategoryId Int
   channelId       String                    @db.VarChar(255)
   channel         YoutubeChannel            @relation(fields: [channelId], references: [id])
   videoCategory   YoutubeVideoCategory      @relation(fields: [videoCategoryId], references: [id])
@@ -119,8 +120,8 @@ model YoutubeVideo {
 
 model YoutubeChannelVideoCategory {
   channelId       String               @db.VarChar(255)
-  videoCategoryId Int                  @db.Int
-  num             Int                  @default(0) @db.Int
+  videoCategoryId Int
+  num             Int                  @default(0)
   createdAt       DateTime             @default(now()) @db.DateTime(6)
   updatedAt       DateTime             @updatedAt @db.DateTime(6)
   channel         YoutubeChannel       @relation(fields: [channelId], references: [id])
@@ -179,12 +180,12 @@ model InstagramUser {
   profilePicUrl String           @db.Text
   followedBy    BigInt           @db.UnsignedBigInt
   follow        BigInt           @db.UnsignedBigInt
-  mediaCount    BigInt           @db.UnsignedBigInt @default(0)
   isVerified    Boolean          @db.TinyInt
   isPrivate     Boolean          @db.TinyInt
   createdAt     DateTime         @default(now()) @db.DateTime(6)
   updatedAt     DateTime         @updatedAt @db.DateTime(6)
   accountId     String           @db.VarChar(36)
+  mediaCount    BigInt           @default(0) @db.UnsignedBigInt
   account       Account          @relation(fields: [accountId], references: [uuid])
   mediaList     InstagramMedia[]
 

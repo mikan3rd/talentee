@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
+import axios from "axios";
 import dayjs from "dayjs";
 
 import { CrawlService } from "@/services/crawl.service";
@@ -131,7 +132,12 @@ export class AccountService {
     let serviceUsernames: ServiceNameDataList = [];
     for (const [index, channel] of youtubeChannels.entries()) {
       this.logger.log(`${index} ${channel.id}`);
-      const linkUrls = (await this.crawlService.getServiceLinkByYoutube(channel.id)) ?? [];
+      const linkUrls = await this.crawlService.getServiceLinkByYoutube(channel.id);
+
+      if (!linkUrls) {
+        return;
+      }
+
       const services = linkUrls
         .map((url) => this.judgeServiceAccount(url))
         .filter((service) => service.serviceName !== "youtube");
@@ -387,6 +393,9 @@ export class AccountService {
       return;
     }
 
+    const accountUrl = `https://talentee.jp/account/${account.uuid}`;
+    await axios.get(accountUrl); // ISRのページにOGPを表示させるため
+
     let statuses = [`【人気YouTuberまとめ】`, ``, youtubeChannel.title, ``];
 
     if (youtubeChannel.subscriberCount) {
@@ -397,11 +406,9 @@ export class AccountService {
       `【再生回数】${this.utilsService.toUnitString(youtubeChannel.viewCount)}回`,
       `【動画投稿数】${this.utilsService.toUnitString(youtubeChannel.videoCount)}本`,
       ``,
-      `https://talentee.jp/account/${account.uuid}`,
+      accountUrl,
     ]);
-
     const status = statuses.join("\n");
-    console.log(JSON.stringify(status));
 
     const client = this.twitterService.getOldClientBot();
     await client.post("statuses/update", { status });
