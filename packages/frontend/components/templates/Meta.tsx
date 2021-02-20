@@ -17,6 +17,7 @@ export const Meta = React.memo<{
       <meta property="og:type" content="website" />
       <meta name="twitter:title" content={titleWithSiteName} />
       <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content="https://talentee.jp/ogp.png" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="viewport" content="initial-scale=1, width=device-width" />
       <link rel="shortcut icon" href="/favicon.ico" />
