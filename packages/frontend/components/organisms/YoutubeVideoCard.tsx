@@ -67,6 +67,7 @@ export const YoutubeVideoCard = React.memo<Props>(
           css={css`
             position: relative;
             margin-left: 10px;
+            flex-grow: 1;
             @media (max-width: 600px) {
               margin-left: 0;
               margin-top: 5px;
