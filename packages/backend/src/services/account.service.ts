@@ -1,6 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import axios from "axios";
 import dayjs from "dayjs";
 
 import { CrawlService } from "@/services/crawl.service";
@@ -394,7 +393,9 @@ export class AccountService {
     }
 
     const accountUrl = `https://talentee.jp/account/${account.uuid}`;
-    await axios.get(accountUrl); // ISRのページにOGPを表示させるため
+
+    // TODO: OGPを表示させるためにTwitterのcacheを更新
+    await this.crawlService.updateTwitterCardCache([accountUrl]);
 
     let statuses = [`【人気YouTuberまとめ】`, ``, youtubeChannel.title, ``];
 
@@ -412,6 +413,12 @@ export class AccountService {
 
     const client = this.twitterService.getOldClientBot();
     await client.post("statuses/update", { status });
+  }
+
+  async updateTwitterCardCache() {
+    const accounts = await this.prisma.account.findMany();
+    const accountUrls = accounts.map((account) => `https://talentee.jp/account/${account.uuid}`);
+    await this.crawlService.updateTwitterCardCache(accountUrls);
   }
 
   private groupByBulkServiceName(serviceUsernames: ServiceNameDataList) {

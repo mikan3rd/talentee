@@ -13,6 +13,9 @@ declare type EnvironmentVariables = {
   TWITTER_API_SECRET_KET: string;
   TWITTER_ACCESS_TOKEN: string;
   TWITTER_ACCESS_TOKEN_SECRET: string;
+  TWITTER_USERNAME: string;
+  TWITTER_PASSWORD: string;
+  TWITTER_PHONE: string;
   INSTAGRAM_USERNAME: string;
   INSTAGRAM_PASSWORD: string;
   SENTRY_DSN: string;

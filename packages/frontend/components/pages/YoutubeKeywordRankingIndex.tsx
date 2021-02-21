@@ -83,6 +83,8 @@ export const YoutubeKeywordRankingIndex = React.memo<Props>(
           </span>
         </Header>
 
+        <p>「{keywordTitle}」で人気のYoutubeチャンネル一覧</p>
+
         <Divider />
 
         <div
