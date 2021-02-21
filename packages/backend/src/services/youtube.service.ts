@@ -47,6 +47,14 @@ export class YoutubeService {
       include: {
         keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
         channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+        account: {
+          include: {
+            youtubeChannels: { select: { id: true } },
+            twitterUsers: { select: { username: true } },
+            instagramUsers: { select: { username: true } },
+            tiktokUsers: { select: { uniqueId: true } },
+          },
+        },
       },
     });
     const youtubeVideoCategories = await this.prisma.youtubeVideoCategory.findMany({
@@ -95,6 +103,14 @@ export class YoutubeService {
       include: {
         keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
         channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+        account: {
+          include: {
+            youtubeChannels: { select: { id: true } },
+            twitterUsers: { select: { username: true } },
+            instagramUsers: { select: { username: true } },
+            tiktokUsers: { select: { uniqueId: true } },
+          },
+        },
       },
     });
     return {

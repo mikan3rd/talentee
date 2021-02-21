@@ -8,6 +8,20 @@ query getInstagramRankingPage($pagination: PaginationInput!) {
       profilePicUrl
       followedBy
       accountId
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
   }
 }

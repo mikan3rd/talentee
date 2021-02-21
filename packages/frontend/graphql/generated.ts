@@ -444,7 +444,14 @@ export type GetInstagramRankingPageQueryVariables = Exact<{
 export type GetInstagramRankingPageQuery = {
   getInstagramRankingPage: Pick<InstagramRankingPage, "totalPages"> & {
     instagramUsers: Array<
-      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId">
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId"> & {
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
     >;
   };
 };
@@ -486,7 +493,14 @@ export type GetTiktokRankingPageQuery = {
         | "heartCount"
         | "videoCount"
         | "accountId"
-      >
+      > & {
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
     >;
   };
 };
@@ -575,7 +589,14 @@ export type GetTwitterRankingPageQuery = {
       Pick<
         TwitterUser,
         "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl" | "accountId"
-      >
+      > & {
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
     >;
   };
 };
@@ -602,6 +623,12 @@ export type GetYoutubeCategoryRankingPageQuery = {
       > & {
         keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
         channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
       }
     >;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id" | "title">>;
@@ -631,6 +658,12 @@ export type GetYoutubeKeywordRankingPageQuery = {
         > & {
           keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
           channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+          account: {
+            youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+            twitterUsers: Array<Pick<TwitterUser, "username">>;
+            instagramUsers: Array<Pick<InstagramUser, "username">>;
+            tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+          };
         }
       >;
     }
@@ -789,6 +822,20 @@ export const GetInstagramRankingPageDocument = gql`
         profilePicUrl
         followedBy
         accountId
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
       }
     }
   }
@@ -939,6 +986,20 @@ export const GetTiktokRankingPageDocument = gql`
         heartCount
         videoCount
         accountId
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
       }
     }
   }
@@ -1133,6 +1194,20 @@ export const GetTwitterRankingPageDocument = gql`
         tweetCount
         profileImageUrl
         accountId
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
       }
     }
   }
@@ -1200,6 +1275,20 @@ export const GetYoutubeCategoryRankingPageDocument = gql`
           videoCategory {
             id
             title
+          }
+        }
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
           }
         }
       }
@@ -1278,6 +1367,20 @@ export const GetYoutubeKeywordRankingPageDocument = gql`
           videoCategory {
             id
             title
+          }
+        }
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
           }
         }
       }

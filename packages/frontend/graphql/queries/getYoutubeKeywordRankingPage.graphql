@@ -23,6 +23,20 @@ query getYoutubeKeywordRankingPage($pagination: YoutubeKeywordPaginationInput!) 
           title
         }
       }
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
   }
 }
