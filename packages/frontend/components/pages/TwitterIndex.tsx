@@ -24,7 +24,10 @@ export const TwitterIndex = React.memo<Props>(({ page, take, totalPages, twitter
 
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-      router.push({ query: { page: data.activePage } });
+      router.push({
+        pathname: "/twitter/page/[page]",
+        query: { page: data.activePage },
+      });
     },
     [router],
   );

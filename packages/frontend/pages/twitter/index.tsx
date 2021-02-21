@@ -1,6 +1,7 @@
 import React from "react";
 
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, TwitterIndex } from "@/components/pages/TwitterIndex";
@@ -15,8 +16,11 @@ import {
 
 const take = 10;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
-  const page = query.page ? Number(query.page) : 1;
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  return await getCommonStaticProps({ page: 1 });
+};
+
+export const getCommonStaticProps = async ({ page }: { page: number }): Promise<GetStaticPropsResult<Props>> => {
   const { data } = await client.query<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>({
     query: GetTwitterRankingPageDocument,
     variables: { pagination: { take, page } },
@@ -28,13 +32,25 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
       page,
       ...data.getTwitterRankingPage,
     },
+    revalidate: 60 * 10,
   };
 };
 
-const TwitterIndexPage = React.memo<InferGetServerSidePropsType<typeof getServerSideProps>>((props) => {
+const TwitterIndexPage = React.memo<InferGetStaticPropsType<typeof getCommonStaticProps>>((props) => {
+  const { isFallback } = useRouter();
+
+  if (isFallback) {
+    return null;
+  }
+
+  const { page } = props;
+
   return (
     <>
-      <Meta title={`Twitterランキング (${props.page}ページ目)`} description="人気のTwitterランキング" />
+      <Meta
+        title={`Twitterランキング ${page > 1 ? ` (${page}ページ目)` : ""}`}
+        description={`人気のTwitterランキング${page > 1 ? ` (${page}ページ目)` : ""}`}
+      />
 
       <Breadcrumb size="big">
         <TopSection />
