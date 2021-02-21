@@ -460,11 +460,21 @@ export class CrawlService {
 
         await page.type(UsernameSelector, loginName);
         await page.type(PasswordSelector, loginPass);
-
         await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
 
         currentUrl = page.url();
         this.logger.log(`secondUrl: ${currentUrl}`);
+      }
+
+      if (currentUrl.includes("login_challenge")) {
+        const phoneSelector = "input#challenge_response";
+        await page.waitForSelector(phoneSelector);
+        const phone = this.configService.get("TWITTER_PHONE");
+        await page.type(phoneSelector, phone);
+        await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation({ waitUntil: "networkidle2" })]);
+
+        currentUrl = page.url();
+        this.logger.log(`thirdUrl: ${currentUrl}`);
       }
 
       const urlSelector = `input[name="url"]`;
