@@ -26,7 +26,14 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
     },
   } = await client.query<GetSitemapDataQuery>({ query: GetSitemapDataDocument });
 
-  const pages = await globby(["pages/**/*.tsx", "!pages/_*.tsx", "!pages/account", "!pages/youtube"]);
+  const pages = await globby([
+    "pages/**/*.tsx",
+    "!pages/_*.tsx",
+    "!pages/account",
+    "!pages/youtube",
+    "!pages/**/[page].tsx",
+  ]);
+  console.log(pages);
   const youtubePages = youtubeVideoCategories.map((category) => `/youtube/category/${category.id}`);
   youtubePages.unshift(`/youtube/category/all`);
   const youtubeKeywordPages = youtubeKeywords.map((keyword) => `/youtube/keyword/${encodeURIComponent(keyword.title)}`);
@@ -39,9 +46,8 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${allPages
     .map((page) => {
-      const path = page.replace("pages", "").replace(".tsx", "");
-      const route = path === "/index" ? "" : path;
-      const url = `${baseUrl}${route}`;
+      const path = page.replace("pages", "").replace("/index", "").replace(".tsx", "");
+      const url = `${baseUrl}${path}`;
       return `
 <url>
   <loc>${url}</loc>

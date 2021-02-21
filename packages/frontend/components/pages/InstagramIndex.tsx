@@ -24,7 +24,10 @@ export const InstagramIndex = React.memo<Props>(({ page, take, totalPages, insta
 
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-      router.push({ query: { page: data.activePage } });
+      router.push({
+        pathname: "/instagram/page/[page]",
+        query: { page: data.activePage },
+      });
     },
     [router],
   );
