@@ -4,7 +4,8 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 
 import { toUnitString } from "@/common/utils";
-import { TiktokUser } from "@/graphql/generated";
+import { SocialButtonList } from "@/components/molecules/SocialButtonList";
+import { InstagramUser, TiktokUser, TwitterUser, YoutubeChannel } from "@/graphql/generated";
 
 interface Props
   extends Pick<
@@ -12,10 +13,16 @@ interface Props
     "nickname" | "signature" | "avatarThumb" | "followerCount" | "heartCount" | "videoCount" | "accountId"
   > {
   rankNum: number;
+  account: {
+    youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+    twitterUsers: Array<Pick<TwitterUser, "username">>;
+    instagramUsers: Array<Pick<InstagramUser, "username">>;
+    tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+  };
 }
 
 export const TiktokCard = React.memo<Props>(
-  ({ rankNum, nickname, signature, avatarThumb, followerCount, heartCount, videoCount, accountId }) => {
+  ({ rankNum, nickname, signature, avatarThumb, followerCount, heartCount, videoCount, accountId, account }) => {
     return (
       <div
         css={css`
@@ -123,6 +130,16 @@ export const TiktokCard = React.memo<Props>(
                 {signature}
               </p>
             )}
+
+            <SocialButtonList
+              hasYoutube={account.youtubeChannels.length > 0}
+              hasTwitter={account.twitterUsers.length > 0}
+              hasInstagram={account.instagramUsers.length > 0}
+              hasTiktok={account.tiktokUsers.length > 0}
+              css={css`
+                margin-top: 6px;
+              `}
+            />
           </a>
         </Link>
       </div>

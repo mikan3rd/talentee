@@ -23,6 +23,20 @@ query getYoutubeCategoryRankingPage($pagination: YoutubeCategoryPaginationInput!
           title
         }
       }
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
     youtubeVideoCategories {
       id

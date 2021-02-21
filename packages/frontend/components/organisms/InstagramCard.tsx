@@ -4,14 +4,21 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 
 import { toUnitString } from "@/common/utils";
-import { InstagramUser } from "@/graphql/generated";
+import { SocialButtonList } from "@/components/molecules/SocialButtonList";
+import { InstagramUser, TiktokUser, TwitterUser, YoutubeChannel } from "@/graphql/generated";
 
 interface Props extends Pick<InstagramUser, "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId"> {
   rankNum: number;
+  account: {
+    youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+    twitterUsers: Array<Pick<TwitterUser, "username">>;
+    instagramUsers: Array<Pick<InstagramUser, "username">>;
+    tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+  };
 }
 
 export const InstagramCard = React.memo<Props>(
-  ({ rankNum, fullName, biography, profilePicUrl, followedBy, accountId }) => {
+  ({ rankNum, fullName, biography, profilePicUrl, followedBy, accountId, account }) => {
     return (
       <div
         css={css`
@@ -119,6 +126,16 @@ export const InstagramCard = React.memo<Props>(
                 {biography}
               </p>
             )}
+
+            <SocialButtonList
+              hasYoutube={account.youtubeChannels.length > 0}
+              hasTwitter={account.twitterUsers.length > 0}
+              hasInstagram={account.instagramUsers.length > 0}
+              hasTiktok={account.tiktokUsers.length > 0}
+              css={css`
+                margin-top: 6px;
+              `}
+            />
           </a>
         </Link>
       </div>

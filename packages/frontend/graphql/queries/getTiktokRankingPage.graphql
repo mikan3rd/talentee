@@ -10,6 +10,20 @@ query getTiktokRankingPage($pagination: PaginationInput!) {
       heartCount
       videoCount
       accountId
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
   }
 }

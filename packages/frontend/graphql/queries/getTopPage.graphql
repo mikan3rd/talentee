@@ -22,6 +22,20 @@ query getTopPage{
           title
         }
       }
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
     twitterUsers {
       username
@@ -31,6 +45,20 @@ query getTopPage{
       tweetCount
       profileImageUrl
       accountId
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
     instagramUsers {
       username
@@ -39,6 +67,20 @@ query getTopPage{
       profilePicUrl
       followedBy
       accountId
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
     tiktokUsers {
       uniqueId
@@ -49,6 +91,20 @@ query getTopPage{
       heartCount
       videoCount
       accountId
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
   }
 }

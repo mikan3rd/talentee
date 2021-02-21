@@ -9,6 +9,20 @@ query getTwitterRankingPage($pagination: PaginationInput!) {
       tweetCount
       profileImageUrl
       accountId
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
     }
   }
 }

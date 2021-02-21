@@ -24,6 +24,16 @@ export class TiktokService {
       take,
       skip: take * (page - 1),
       orderBy: { followerCount: "desc" },
+      include: {
+        account: {
+          include: {
+            youtubeChannels: { select: { id: true } },
+            twitterUsers: { select: { username: true } },
+            instagramUsers: { select: { username: true } },
+            tiktokUsers: { select: { uniqueId: true } },
+          },
+        },
+      },
     });
     return {
       totalPages: Math.ceil(totalCount / take),
