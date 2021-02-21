@@ -24,7 +24,10 @@ export const TiktokIndex = React.memo<Props>(({ take, page, totalPages, tiktokUs
 
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-      router.push({ query: { page: data.activePage } });
+      router.push({
+        pathname: "/tiktok/page/[page]",
+        query: { page: data.activePage },
+      });
     },
     [router],
   );
