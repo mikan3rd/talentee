@@ -48,8 +48,8 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
   return (
     <>
       <Meta
-        title={`Youtubeランキング | キーワード一覧${page > 0 ? ` (${page}ページ目)` : ""}`}
-        description={`Youtubeランキング | キーワード一覧${page > 0 ? ` (${page}ページ目)` : ""}`}
+        title={`Youtubeランキング | キーワード一覧${page > 1 ? ` (${page}ページ目)` : ""}`}
+        description={`Youtubeランキング | キーワード一覧${page > 1 ? ` (${page}ページ目)` : ""}`}
       />
 
       <Breadcrumb size="big">
