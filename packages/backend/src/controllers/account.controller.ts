@@ -30,4 +30,9 @@ export class AccountController {
   async tweetRandomYoutubeAccount() {
     await this.accountService.tweetRandomYoutubeAccount();
   }
+
+  @Post("/updateTwitterCardCache")
+  async updateTwitterCardCache() {
+    await this.accountService.updateTwitterCardCache();
+  }
 }

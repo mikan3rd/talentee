@@ -436,6 +436,57 @@ export class CrawlService {
     const uniqueChannelUrls = Array.from(new Set(channeUrls));
     return uniqueChannelUrls;
   }
+
+  async updateTwitterCardCache(urls: string[]) {
+    const { browser, page } = await this.puppeteerSetup();
+
+    try {
+      await page.goto("https://cards-dev.twitter.com/validator", { waitUntil: ["load", "networkidle2"] });
+      let currentUrl = page.url();
+
+      if (currentUrl.includes("login")) {
+        const UsernameSelector = `input[name="session[username_or_email]"]`;
+        const PasswordSelector = `input[name="session[password]"]`;
+
+        await page.waitForSelector(UsernameSelector);
+        await page.waitForSelector(PasswordSelector);
+
+        const loginName = this.configService.get("TWITTER_USERNAME");
+        const loginPass = this.configService.get("TWITTER_PASSWORD");
+
+        if (!loginName || !loginPass) {
+          throw Error("env variable is required!!");
+        }
+
+        await page.type(UsernameSelector, loginName);
+        await page.type(PasswordSelector, loginPass);
+
+        await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
+
+        currentUrl = page.url();
+        this.logger.log(`secondUrl: ${currentUrl}`);
+      }
+
+      const urlSelector = `input[name="url"]`;
+      const iframeSelector = `iframe`;
+      const buttonSelector = `input[type="submit"]`;
+      for (const [index, url] of urls.entries()) {
+        this.logger.log(`${index}: ${url}`);
+        await page.$eval(urlSelector, (element) => ((element as HTMLInputElement).value = ""));
+        await page.type(urlSelector, url);
+        await page.click(buttonSelector);
+        await page.waitForTimeout(2000);
+        await page.click(buttonSelector);
+        await page.waitForTimeout(3000);
+        await page.waitForSelector(iframeSelector);
+      }
+    } catch (e) {
+      this.logger.error(e);
+      Sentry.captureException(e);
+    } finally {
+      await browser.close();
+    }
+  }
 }
 
 let window: customWindow;
