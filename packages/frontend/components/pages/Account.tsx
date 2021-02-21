@@ -11,12 +11,7 @@ import {
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
-import {
-  InstagramSocialButton,
-  TiktokSocialButton,
-  TwitterSocialButton,
-  YoutubeSocialButton,
-} from "@/components/atoms/SocialButton";
+import { SocialButtonList } from "@/components/molecules/SocialButtonList";
 import { InstagramDetail } from "@/components/organisms/InstagramDetail";
 import { TiktokDetail } from "@/components/organisms/TiktokDetail";
 import { TwitterDetail } from "@/components/organisms/TwitterDetail";
@@ -136,12 +131,12 @@ export const Account = React.memo<Props>(({ getAccountPage }) => {
           `}
         >
           <h1>{displayName}</h1>
-          <div>
-            {youtubeChannel && <YoutubeSocialButton channelId={youtubeChannel.id} />}
-            {twitterUser && <TwitterSocialButton username={twitterUser.username} />}
-            {instagramUser && <InstagramSocialButton username={instagramUser.username} />}
-            {tiktokUser && <TiktokSocialButton uniqueId={tiktokUser.uniqueId} />}
-          </div>
+          <SocialButtonList
+            youtubeChannelId={youtubeChannel?.id}
+            twitterUsername={twitterUser?.username}
+            instagramUsername={instagramUser?.username}
+            tiktokUniqueId={tiktokUser?.uniqueId}
+          />
         </div>
       </div>
 

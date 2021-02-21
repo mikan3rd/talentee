@@ -5,47 +5,55 @@ import { Button } from "semantic-ui-react";
 
 export const YoutubeSocialButton = React.memo<{ className?: string; channelId?: string }>(
   ({ className, channelId }) => {
-    let linkProps = {};
+    let linkProps: IconButtonCommonProps = {
+      circular: true,
+    };
     if (channelId) {
       linkProps = {
         as: "a",
         href: `https://www.youtube.com/channel/${channelId}`,
         target: "_black",
+        circular: false,
       };
     }
 
-    return <Button className={className} circular color="youtube" icon="youtube" {...linkProps} css={LinkButtonCss} />;
+    return <Button className={className} color="youtube" icon="youtube" {...linkProps} css={LinkButtonCss} />;
   },
 );
 
 export const TwitterSocialButton = React.memo<{ className?: string; username?: string }>(({ className, username }) => {
-  let linkProps = {};
+  let linkProps: IconButtonCommonProps = {
+    circular: true,
+  };
   if (username) {
     linkProps = {
       as: "a",
       href: `https://twitter.com/${username}`,
       target: "_black",
+      circular: false,
     };
   }
 
-  return <Button className={className} circular color="twitter" icon="twitter" {...linkProps} css={LinkButtonCss} />;
+  return <Button className={className} color="twitter" icon="twitter" {...linkProps} css={LinkButtonCss} />;
 });
 
 export const InstagramSocialButton = React.memo<{ className?: string; username?: string }>(
   ({ className, username }) => {
-    let linkProps = {};
+    let linkProps: IconButtonCommonProps = {
+      circular: true,
+    };
     if (username) {
       linkProps = {
         as: "a",
         href: `https://instagram.com/${username}/`,
         target: "_black",
+        circular: false,
       };
     }
 
     return (
       <Button
         className={className}
-        circular
         color="black"
         icon="instagram"
         {...linkProps}
@@ -68,17 +76,20 @@ export const InstagramSocialButton = React.memo<{ className?: string; username?:
 );
 
 export const TiktokSocialButton = React.memo<{ className?: string; uniqueId?: string }>(({ className, uniqueId }) => {
-  let linkProps = {};
+  let linkProps: IconButtonCommonProps = {
+    circular: true,
+  };
   if (uniqueId) {
     linkProps = {
       as: "a",
       href: `https://www.tiktok.com/@${uniqueId}`,
       target: "_black",
+      circular: false,
     };
   }
 
   return (
-    <Button className={className} circular color="black" {...linkProps} css={LinkButtonCss}>
+    <Button className={className} color="black" {...linkProps} css={LinkButtonCss}>
       <img
         src="/icon_tiktok.svg"
         alt="icon_tiktok"
@@ -90,14 +101,19 @@ export const TiktokSocialButton = React.memo<{ className?: string; uniqueId?: st
   );
 });
 
+type IconButtonCommonProps = {
+  as?: string;
+  href?: string;
+  target?: string;
+  circular: boolean;
+};
+
 const LinkButtonCss = css`
   &&& {
-    margin: 0 0 0 10px;
+    margin: 0;
     padding: 11px;
-    &:first-of-type {
-      margin-left: 0;
-    }
     > * {
+      margin: 0;
       width: 14px;
       height: 12px;
     }

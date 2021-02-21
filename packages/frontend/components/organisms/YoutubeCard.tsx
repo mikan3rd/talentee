@@ -5,7 +5,15 @@ import Link from "next/link";
 import { Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "@/common/utils";
-import { YoutubeChannel, YoutubeKeyword, YoutubeVideoCategory } from "@/graphql/generated";
+import { SocialButtonList } from "@/components/molecules/SocialButtonList";
+import {
+  InstagramUser,
+  TiktokUser,
+  TwitterUser,
+  YoutubeChannel,
+  YoutubeKeyword,
+  YoutubeVideoCategory,
+} from "@/graphql/generated";
 
 const keywordNum = 10;
 
@@ -27,6 +35,12 @@ interface Props
   activeKeywordTitle?: string;
   keywords: { keyword: Pick<YoutubeKeyword, "title"> }[];
   channelVideoCategories: { videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }[];
+  account: {
+    youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+    twitterUsers: Array<Pick<TwitterUser, "username">>;
+    instagramUsers: Array<Pick<InstagramUser, "username">>;
+    tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+  };
 }
 
 export const YoutubeCard = React.memo<Props>(
@@ -45,6 +59,7 @@ export const YoutubeCard = React.memo<Props>(
     mainVideoCategoryId,
     showDetails = true,
     activeKeywordTitle,
+    account,
   }) => {
     return (
       <div
@@ -216,6 +231,15 @@ export const YoutubeCard = React.memo<Props>(
                 )}
               </div>
             )}
+            <SocialButtonList
+              hasYoutube={account.youtubeChannels.length > 0}
+              hasTwitter={account.twitterUsers.length > 0}
+              hasInstagram={account.instagramUsers.length > 0}
+              hasTiktok={account.tiktokUsers.length > 0}
+              css={css`
+                margin-top: 6px;
+              `}
+            />
           </a>
         </Link>
       </div>

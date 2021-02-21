@@ -49,25 +49,37 @@ export class AccountService {
 
   async getTopPage() {
     const take = 3;
+    const accountArgs: Prisma.AccountArgs = {
+      include: {
+        youtubeChannels: { select: { id: true } },
+        twitterUsers: { select: { username: true } },
+        instagramUsers: { select: { username: true } },
+        tiktokUsers: { select: { uniqueId: true } },
+      },
+    };
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
       orderBy: { subscriberCount: "desc" },
       include: {
         keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
         channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+        account: accountArgs,
       },
     });
     const twitterUsers = await this.prisma.twitterUser.findMany({
       take,
       orderBy: { followersCount: "desc" },
+      include: { account: accountArgs },
     });
     const instagramUsers = await this.prisma.instagramUser.findMany({
       take,
       orderBy: { followedBy: "desc" },
+      include: { account: accountArgs },
     });
     const tiktokUsers = await this.prisma.tiktokUser.findMany({
       take,
       orderBy: { followerCount: "desc" },
+      include: { account: accountArgs },
     });
     return { youtubeChannels, twitterUsers, instagramUsers, tiktokUsers };
   }
@@ -394,7 +406,7 @@ export class AccountService {
 
     const accountUrl = `https://talentee.jp/account/${account.uuid}`;
 
-    // TODO: OGPを表示させるためにTwitterのcacheを更新
+    // OGPを表示させるためにTwitterのcacheを更新
     await this.crawlService.updateTwitterCardCache([accountUrl]);
 
     let statuses = [`【人気YouTuberまとめ】`, ``, youtubeChannel.title, ``];

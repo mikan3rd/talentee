@@ -511,16 +511,36 @@ export type GetTopPageQuery = {
       > & {
         keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
         channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
       }
     >;
     twitterUsers: Array<
       Pick<
         TwitterUser,
         "username" | "name" | "description" | "followersCount" | "tweetCount" | "profileImageUrl" | "accountId"
-      >
+      > & {
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
     >;
     instagramUsers: Array<
-      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId">
+      Pick<InstagramUser, "username" | "fullName" | "biography" | "profilePicUrl" | "followedBy" | "accountId"> & {
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
     >;
     tiktokUsers: Array<
       Pick<
@@ -533,7 +553,14 @@ export type GetTopPageQuery = {
         | "heartCount"
         | "videoCount"
         | "accountId"
-      >
+      > & {
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
     >;
   };
 };
@@ -980,6 +1007,20 @@ export const GetTopPageDocument = gql`
             title
           }
         }
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
       }
       twitterUsers {
         username
@@ -989,6 +1030,20 @@ export const GetTopPageDocument = gql`
         tweetCount
         profileImageUrl
         accountId
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
       }
       instagramUsers {
         username
@@ -997,6 +1052,20 @@ export const GetTopPageDocument = gql`
         profilePicUrl
         followedBy
         accountId
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
       }
       tiktokUsers {
         uniqueId
@@ -1007,6 +1076,20 @@ export const GetTopPageDocument = gql`
         heartCount
         videoCount
         accountId
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
       }
     }
   }

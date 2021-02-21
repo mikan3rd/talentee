@@ -3,12 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import Link from "next/link";
 
-import {
-  InstagramSocialButton,
-  TiktokSocialButton,
-  TwitterSocialButton,
-  YoutubeSocialButton,
-} from "@/components/atoms/SocialButton";
+import { SocialButtonList } from "@/components/molecules/SocialButtonList";
 import { Account, InstagramUser, TiktokUser, TwitterUser, YoutubeChannel } from "@/graphql/generated";
 
 type Props = Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
@@ -74,16 +69,15 @@ export const AccountCard = React.memo<Props>(
                 >
                   {displayName}
                 </div>
-                <div
+                <SocialButtonList
+                  hasYoutube={youtubeChannels.length > 0}
+                  hasTwitter={twitterUsers.length > 0}
+                  hasInstagram={instagramUsers.length > 0}
+                  hasTiktok={tiktokUsers.length > 0}
                   css={css`
                     margin-top: 5px;
                   `}
-                >
-                  {youtubeChannels.length > 0 && <YoutubeSocialButton />}
-                  {twitterUsers.length > 0 && <TwitterSocialButton />}
-                  {instagramUsers.length > 0 && <InstagramSocialButton />}
-                  {tiktokUsers.length > 0 && <TiktokSocialButton />}
-                </div>
+                />
               </div>
             </div>
           </a>
