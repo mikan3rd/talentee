@@ -48,7 +48,7 @@ const TwitterIndexPage = React.memo<InferGetStaticPropsType<typeof getCommonStat
   return (
     <>
       <Meta
-        title={`Twitterランキング ${page > 1 ? ` (${page}ページ目)` : ""}`}
+        title={`Twitterランキング${page > 1 ? ` (${page}ページ目)` : ""}`}
         description={`人気のTwitterランキング${page > 1 ? ` (${page}ページ目)` : ""}`}
       />
 

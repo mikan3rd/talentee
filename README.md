@@ -4,7 +4,7 @@
 
 - Backend
   - NestJS
-  - TypeORM
+  - Prisma
   - GraphQL
 - Frontend
   - Next.js / React
