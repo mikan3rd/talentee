@@ -48,7 +48,7 @@ const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((
 
   return (
     <>
-      <Meta title={displayName} description={`${displayName} のまとめページはコチラ！`} />
+      <Meta title={`${displayName}のSNSアカウントまとめ！`} description={`${displayName}のSNSアカウントをチェック！`} />
 
       <Breadcrumb size="big">
         <TopSection />
