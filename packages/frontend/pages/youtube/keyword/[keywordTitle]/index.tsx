@@ -73,7 +73,7 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
   return (
     <>
       <Meta
-        title={`${keywordTitle}で人気YouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
+        title={`${keywordTitle}で人気のYouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
         description={`キーワード「${keywordTitle}」で人気のYouTubeチャンネルをチェック！`}
       />
 
