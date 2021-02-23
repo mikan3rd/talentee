@@ -158,10 +158,10 @@ export const Account = React.memo<Props>(({ getAccountPage }) => {
             position: sticky;
             top: ${isUp ? `${headerHeight}px` : 0};
             z-index: 1;
-            margin: 10px 0 0 0;
+            margin: 1rem 0;
             background-color: #f7f7f7;
             transition: all 0.5s ease;
-            overflow-x: scroll;
+            overflow-x: auto;
             padding-bottom: 2px;
             .item {
               transition: all 0.5s ease !important;

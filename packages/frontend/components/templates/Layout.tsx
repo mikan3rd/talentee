@@ -3,7 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { SemanticToastContainer } from "react-semantic-toasts";
 import TopBarProgress from "react-topbar-progress-indicator";
-import { Container, Menu, Sidebar } from "semantic-ui-react";
+import { Container, Dimmer, Menu, Sidebar } from "semantic-ui-react";
 
 import { ScrollTopButton } from "@/components/atoms/ScrollTopButton";
 import { Header } from "@/components/molecules/Header";
@@ -42,9 +42,20 @@ export const Layout = React.memo(({ children }) => {
         >
           {children}
         </Container>
-
-        <ScrollTopButton />
       </div>
+
+      <ScrollTopButton />
+
+      <Dimmer
+        page
+        active={isOpenSidebar}
+        css={css`
+          &&& {
+            z-index: 101;
+            opacity: 0.6 !important;
+          }
+        `}
+      />
 
       <Sidebar
         vertical

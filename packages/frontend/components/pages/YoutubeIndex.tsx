@@ -115,7 +115,7 @@ export const YoutubeIndex = React.memo<Props>(
               position: sticky;
               top: ${isUp ? `60px` : 0};
               z-index: 1;
-              margin: 20px 0 0 0;
+              margin: 0;
               background-color: #f7f7f7;
               transition: all 0.5s ease;
               overflow-x: auto;
@@ -153,7 +153,7 @@ export const YoutubeIndex = React.memo<Props>(
 
         <div
           css={css`
-            margin-top: 10px;
+            margin-top: 1rem;
           `}
         >
           {youtubeChannels.map((data, index) => {
