@@ -6,7 +6,7 @@ import { Button, Container, Icon, Image } from "semantic-ui-react";
 
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 
-export const Header = React.memo(() => {
+export const Header = React.memo<{ setIsOpenSidebar: (isOpen: boolean) => void }>(({ setIsOpenSidebar }) => {
   const isUp = useScrollDirection();
   return (
     <header
@@ -50,11 +50,10 @@ export const Header = React.memo(() => {
             />
           </a>
         </Link>
-        <Link href="/search" passHref>
-          <Button icon inverted as="a">
-            <Icon name="search" size="large" />
-          </Button>
-        </Link>
+
+        <Button icon inverted onClick={() => setIsOpenSidebar(true)}>
+          <Icon name="bars" size="large" />
+        </Button>
       </Container>
     </header>
   );

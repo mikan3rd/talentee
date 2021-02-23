@@ -115,10 +115,10 @@ export const YoutubeIndex = React.memo<Props>(
               position: sticky;
               top: ${isUp ? `60px` : 0};
               z-index: 1;
-              margin-top: 20px;
+              margin: 20px 0 0 0;
               background-color: #f7f7f7;
               transition: all 0.5s ease;
-              overflow-x: scroll;
+              overflow-x: auto;
               padding: 5px 0;
               .item {
                 transition: all 0.5s ease !important;
