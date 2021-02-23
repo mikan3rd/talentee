@@ -3,17 +3,21 @@ import React from "react";
 import { css } from "@emotion/react";
 import { SemanticToastContainer } from "react-semantic-toasts";
 import TopBarProgress from "react-topbar-progress-indicator";
-import { Container, Dimmer, Menu, Sidebar } from "semantic-ui-react";
+import { Container } from "semantic-ui-react";
 
 import { ScrollTopButton } from "@/components/atoms/ScrollTopButton";
 import { Header } from "@/components/molecules/Header";
-import { SidebarContent } from "@/components/molecules/SidebarContent";
+import { PcSidebar, PhoneSidebar } from "@/components/molecules/Sidebar";
 import { useRouteChange } from "@/hooks/useRouteChange";
 import { GlobalStyle } from "@/style/GlobalStyle";
 
 export const Layout = React.memo(({ children }) => {
   const [isOpenSidebar, setIsOpenSidebar] = React.useState(false);
   const { loading } = useRouteChange();
+
+  const handleOpenSidebar = React.useCallback(() => {
+    setIsOpenSidebar(true);
+  }, []);
 
   const handleCloseSidebar = React.useCallback(() => {
     setIsOpenSidebar(false);
@@ -23,21 +27,26 @@ export const Layout = React.memo(({ children }) => {
     <>
       {GlobalStyle}
 
+      <Header handleOpenSidebar={handleOpenSidebar} />
+
       <div
         css={css`
-          display: flex;
           min-height: 100vh;
-          flex-direction: column;
           background-color: #f7f7f7;
+          margin-left: 260px;
+          @media (max-width: 600px) {
+            margin-left: 0;
+          }
         `}
       >
-        <Header setIsOpenSidebar={setIsOpenSidebar} />
-
         <Container
           text
           css={css`
-            margin-top: 60px;
+            margin-top: 0;
             padding: 10px 0 100px 0;
+            @media (max-width: 600px) {
+              margin-top: 60px;
+            }
           `}
         >
           {children}
@@ -46,36 +55,8 @@ export const Layout = React.memo(({ children }) => {
 
       <ScrollTopButton />
 
-      <Dimmer
-        page
-        active={isOpenSidebar}
-        css={css`
-          &&& {
-            z-index: 101;
-            opacity: 0.6 !important;
-          }
-        `}
-      />
-
-      <Sidebar
-        vertical
-        inverted
-        as={Menu}
-        animation="overlay"
-        visible={isOpenSidebar}
-        onHide={handleCloseSidebar}
-        onClick={handleCloseSidebar}
-        css={css`
-          &&& {
-            display: none;
-            @media (max-width: 600px) {
-              display: block;
-            }
-          }
-        `}
-      >
-        <SidebarContent />
-      </Sidebar>
+      <PcSidebar />
+      <PhoneSidebar isOpenSidebar={isOpenSidebar} handleCloseSidebar={handleCloseSidebar} />
 
       <SemanticToastContainer position="top-center" />
 

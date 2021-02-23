@@ -113,13 +113,16 @@ export const YoutubeIndex = React.memo<Props>(
           css={css`
             &&& {
               position: sticky;
-              top: ${isUp ? `60px` : 0};
+              top: 0;
               z-index: 1;
               margin: 0;
               background-color: #f7f7f7;
               transition: all 0.5s ease;
               overflow-x: auto;
               padding: 5px 0;
+              @media (max-width: 600px) {
+                top: ${isUp ? `60px` : 0};
+              }
               .item {
                 transition: all 0.5s ease !important;
               }
