@@ -156,13 +156,16 @@ export const Account = React.memo<Props>(({ getAccountPage }) => {
         css={css`
           &&& {
             position: sticky;
-            top: ${isUp ? `${headerHeight}px` : 0};
+            top: 0;
             z-index: 1;
-            margin-top: 10px;
+            margin: 1rem 0;
             background-color: #f7f7f7;
             transition: all 0.5s ease;
-            overflow-x: scroll;
+            overflow-x: auto;
             padding-bottom: 2px;
+            @media (max-width: 600px) {
+              top: ${isUp ? `${headerHeight}px` : 0};
+            }
             .item {
               transition: all 0.5s ease !important;
             }

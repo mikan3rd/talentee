@@ -2,12 +2,13 @@ import React from "react";
 
 import { css } from "@emotion/react";
 import Link from "next/link";
-import { Button, Container, Icon, Image } from "semantic-ui-react";
+import { Button, Container, Icon } from "semantic-ui-react";
 
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 
-export const Header = React.memo(() => {
+export const Header = React.memo<{ handleOpenSidebar: () => void }>(({ handleOpenSidebar }) => {
   const isUp = useScrollDirection();
+
   return (
     <header
       id="header"
@@ -20,6 +21,10 @@ export const Header = React.memo(() => {
         background-color: black;
         z-index: 1;
         transition: all 0.5s ease;
+        display: none;
+        @media (max-width: 600px) {
+          display: block;
+        }
       `}
     >
       <Container
@@ -39,22 +44,19 @@ export const Header = React.memo(() => {
               height: 80%;
             `}
           >
-            <Image
+            <img
               src="/logo_header.png"
               alt="Talentee"
               css={css`
-                &&& {
-                  height: 100%;
-                }
+                height: 100%;
               `}
             />
           </a>
         </Link>
-        <Link href="/search" passHref>
-          <Button icon inverted as="a">
-            <Icon name="search" size="large" />
-          </Button>
-        </Link>
+
+        <Button icon inverted onClick={handleOpenSidebar}>
+          <Icon name="bars" size="large" />
+        </Button>
       </Container>
     </header>
   );
