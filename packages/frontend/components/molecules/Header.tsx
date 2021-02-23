@@ -2,7 +2,7 @@ import React from "react";
 
 import { css } from "@emotion/react";
 import Link from "next/link";
-import { Button, Container, Icon, Image } from "semantic-ui-react";
+import { Button, Container, Icon } from "semantic-ui-react";
 
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 
@@ -44,13 +44,11 @@ export const Header = React.memo<{ handleOpenSidebar: () => void }>(({ handleOpe
               height: 80%;
             `}
           >
-            <Image
+            <img
               src="/logo_header.png"
               alt="Talentee"
               css={css`
-                &&& {
-                  height: 100%;
-                }
+                height: 100%;
               `}
             />
           </a>
