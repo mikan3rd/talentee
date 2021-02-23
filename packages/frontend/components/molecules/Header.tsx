@@ -8,6 +8,7 @@ import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 export const Header = React.memo<{ setIsOpenSidebar: (isOpen: boolean) => void }>(({ setIsOpenSidebar }) => {
   const isUp = useScrollDirection();
+
   return (
     <header
       id="header"
@@ -51,7 +52,19 @@ export const Header = React.memo<{ setIsOpenSidebar: (isOpen: boolean) => void }
           </a>
         </Link>
 
-        <Button icon inverted onClick={() => setIsOpenSidebar(true)}>
+        <Button
+          icon
+          inverted
+          onClick={() => setIsOpenSidebar(true)}
+          css={css`
+            &&& {
+              display: none;
+              @media (max-width: 600px) {
+                display: block;
+              }
+            }
+          `}
+        >
           <Icon name="bars" size="large" />
         </Button>
       </Container>
