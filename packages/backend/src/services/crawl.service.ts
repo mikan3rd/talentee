@@ -385,7 +385,7 @@ export class CrawlService {
   }
 
   async getTiktokTrend() {
-    const axios = this.axiosSetup();
+    const axios = this.axiosSetup("exclusive");
     const recommendResponse = await axios.get<{ itemList: TiktokItemType[] }>(
       `https://t.tiktok.com/api/recommend/item_list/`,
       {
