@@ -8,17 +8,17 @@ export class AccountController {
 
   @Post("/addServiceByYoutube")
   async addServiceByYoutube() {
-    return await this.accountService.addServiceByYoutube(30);
+    return await this.accountService.addServiceByYoutube(50);
   }
 
   @Post("/addServiceByTwitter")
   async addServiceByTwitter() {
-    return await this.accountService.addServiceByTwitter(30);
+    return await this.accountService.addServiceByTwitter(50);
   }
 
   @Post("/bulkUpdate")
   async bulkUpdate() {
-    return await this.accountService.bulkUpdate(30);
+    return await this.accountService.bulkUpdate(50);
   }
 
   @Post("/addYoutubeChannelByYoutura")
