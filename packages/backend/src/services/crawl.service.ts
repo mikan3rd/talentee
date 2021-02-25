@@ -373,8 +373,7 @@ export class CrawlService {
     const { data } = await axios.get<string>(url);
 
     const $ = cheerio.load(data);
-    const DataSelector = "script#__NEXT_DATA__";
-    const content = $(DataSelector).html();
+    const content = $("script#__NEXT_DATA__").html();
 
     if (!content) {
       return null;
@@ -383,6 +382,32 @@ export class CrawlService {
     const contentData = JSON.parse(content) as ContentDataType;
     const { userInfo, items } = contentData.props.pageProps;
     return { userInfo, items };
+  }
+
+  async getTiktokTrend() {
+    const axios = this.axiosSetup();
+    const recommendResponse = await axios.get<{ itemList: TiktokItemType[] }>(
+      `https://t.tiktok.com/api/recommend/item_list/`,
+      {
+        params: { aid: 1988, region: "JP", count: 30 },
+      },
+    );
+    const recommendUniqueIds = recommendResponse.data.itemList.map((item) => item.author.uniqueId);
+    this.logger.log(recommendUniqueIds);
+
+    const discoverResponse = await axios.get<{ body: { exploreList: { cardItem: { subTitle: string } }[] }[] }>(
+      `https://www.tiktok.com/node/share/discover`,
+      {
+        params: { region: "JP" },
+      },
+    );
+
+    const discoverUniqueIds = discoverResponse.data.body[0].exploreList.map(({ cardItem: { subTitle } }) =>
+      subTitle.replace("@", ""),
+    );
+    this.logger.log(discoverUniqueIds);
+
+    return Array.from(new Set([...recommendUniqueIds, ...discoverUniqueIds]));
   }
 
   async crawlYouturaRanking(pageNum: number) {
