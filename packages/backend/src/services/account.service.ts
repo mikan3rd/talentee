@@ -265,7 +265,7 @@ export class AccountService {
       }
       if (serviceName === "tiktok") {
         const baseData = filteredData.map(({ accountId, username }) => ({ accountId, uniqueId: username }));
-        await this.tiktokService.bulkUpdateByUniqueId(baseData);
+        await this.tiktokService.bulkUpdateByUniqueId(baseData, false);
       }
     }
   }
@@ -312,74 +312,7 @@ export class AccountService {
     await this.youtubeService.bulkUpsertChannelByChannelId(youtubeBaseDataList, false);
     await this.twitterService.upsertUsersByUsername(twitterBaseDataList);
     await this.instagramService.upsertUsers(instagramBaseDataList);
-    await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList);
-  }
-
-  async addByFirestore(
-    data: {
-      youtubeChannelId?: string;
-      twitterUsername?: string;
-      instagramUsername?: string;
-      tiktokUniqueId?: string;
-    }[],
-  ) {
-    const youtubeBaseDataList = [];
-    const twitterBaseDataList = [];
-    const instagramBaseDataList = [];
-    const tiktokBaseDataList = [];
-
-    for (const { youtubeChannelId, twitterUsername, instagramUsername, tiktokUniqueId } of data) {
-      const OR: Prisma.AccountWhereInput["OR"] = [];
-      if (youtubeChannelId) {
-        OR.push({ youtubeChannels: { some: { id: youtubeChannelId } } });
-      }
-      if (twitterUsername) {
-        OR.push({ twitterUsers: { some: { username: twitterUsername } } });
-      }
-      if (instagramUsername) {
-        OR.push({ instagramUsers: { some: { fullName: instagramUsername } } });
-      }
-      if (tiktokUniqueId) {
-        OR.push({ tiktokUsers: { some: { nickname: tiktokUniqueId } } });
-      }
-
-      const accounts = await this.prisma.account.findMany({ where: { OR } });
-
-      if (!accounts.length) {
-        if (youtubeChannelId) {
-          youtubeBaseDataList.push({ channelId: youtubeChannelId });
-        } else if (twitterUsername) {
-          twitterBaseDataList.push({ username: twitterUsername });
-        } else if (instagramUsername) {
-          instagramBaseDataList.push({ username: instagramUsername });
-        } else if (tiktokUniqueId) {
-          tiktokBaseDataList.push({ uniqueId: tiktokUniqueId });
-        }
-      } else {
-        const accountId = accounts[0].uuid;
-        if (youtubeChannelId) {
-          youtubeBaseDataList.push({ channelId: youtubeChannelId, accountId });
-        }
-        if (twitterUsername) {
-          twitterBaseDataList.push({ username: twitterUsername, accountId });
-        }
-        if (instagramUsername) {
-          instagramBaseDataList.push({ username: instagramUsername, accountId });
-        }
-        if (tiktokUniqueId) {
-          tiktokBaseDataList.push({ uniqueId: tiktokUniqueId, accountId });
-        }
-      }
-    }
-
-    this.logger.log(
-      `data: ${data.length}, youtube: ${youtubeBaseDataList.length}, twitter: ${twitterBaseDataList.length}, instagram: ${instagramBaseDataList.length}, tiktok: ${tiktokBaseDataList.length}`,
-    );
-
-    await this.youtubeService.bulkUpsertChannelByChannelId(youtubeBaseDataList, false);
-    await this.twitterService.upsertUsersByUsername(twitterBaseDataList);
-    await this.instagramService.upsertUsers(instagramBaseDataList);
-    await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList);
+    await this.tiktokService.bulkUpdateByUniqueId(tiktokBaseDataList, false);
   }
 
   async addYoutubeChannelByYoutura(pageNum: number) {

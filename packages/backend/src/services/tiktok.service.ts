@@ -41,7 +41,8 @@ export class TiktokService {
     };
   }
 
-  async upsertUser(_uniqueId: string, _accountId?: string) {
+  // TODO: acc check
+  async upsertUser(_uniqueId: string, _accountId?: string, check = true) {
     const result = await this.crawlService.getTiktokUser(_uniqueId);
 
     if (!result) {
@@ -67,6 +68,12 @@ export class TiktokService {
       },
       items,
     } = result;
+
+    if (check) {
+      if (followerCount < 10000) {
+        return;
+      }
+    }
 
     const account = await this.prisma.instagramUser.findUnique({ where: { id: userId } }).account();
     const accountId = account?.uuid ?? _accountId;
@@ -140,10 +147,10 @@ export class TiktokService {
     }
   }
 
-  async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId?: string }[]) {
+  async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId?: string }[], check = true) {
     for (const [index, { uniqueId, accountId }] of baseDataList.entries()) {
       this.logger.log(`${index} ${uniqueId}`);
-      await this.upsertUser(uniqueId, accountId);
+      await this.upsertUser(uniqueId, accountId, check);
     }
   }
 

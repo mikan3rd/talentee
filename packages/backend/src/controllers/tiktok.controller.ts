@@ -1,4 +1,4 @@
-import { Controller, Logger, Post } from "@nestjs/common";
+import { Controller, Get, Logger, Post, Query } from "@nestjs/common";
 
 import { CrawlService } from "@/services/crawl.service";
 import { TiktokService } from "@/services/tiktok.service";
@@ -15,5 +15,14 @@ export class TiktokController {
     const baseDataList = uniqueIds.map((uniqueId) => ({ uniqueId }));
     await this.tiktokService.bulkUpdateByUniqueId(baseDataList);
     return uniqueIds;
+  }
+
+  @Get("/getTiktokUser")
+  async getTiktokUser(@Query("uniqueId") uniqueId?: string) {
+    this.logger.log(uniqueId);
+    if (!uniqueId) {
+      return "FAILED!!";
+    }
+    return await this.crawlService.getTiktokUser(uniqueId);
   }
 }
