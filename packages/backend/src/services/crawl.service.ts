@@ -389,7 +389,7 @@ export class CrawlService {
       props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
 
-    const axios = this.axiosSetup();
+    const axios = this.axiosSetup("exclusive");
     const url = `https://www.tiktok.com/@${uniqueId}`;
     const { data } = await axios.get<string>(url);
 
