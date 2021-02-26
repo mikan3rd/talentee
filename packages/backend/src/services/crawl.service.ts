@@ -389,15 +389,22 @@ export class CrawlService {
       props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
 
-    const axios = this.axiosSetup("exclusive");
+    const { page, browser } = await this.puppeteerSetup();
     const url = `https://www.tiktok.com/@${uniqueId}`;
-    const { data } = await axios.get<string>(url);
+    // console.log(url);
+    await page.goto(url);
+    // const content = await page.$("script#__NEXT_DATA__");
 
-    const $ = cheerio.load(data);
-    const content = $("script#__NEXT_DATA__").html();
+    const content = await page.$eval("script#__NEXT_DATA__", (item) => item.textContent);
+    // console.log(content);
+
+    // const $ = cheerio.load(data);
+    // const content = $("script#__NEXT_DATA__").html();
+
+    await browser.close();
 
     if (!content) {
-      return data;
+      return;
     }
 
     const contentData = JSON.parse(content) as ContentDataType;
