@@ -384,6 +384,27 @@ export class CrawlService {
     return { userInfo, items };
   }
 
+  async getTestTiktokUser(uniqueId: string) {
+    type ContentDataType = {
+      props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
+    };
+
+    const axios = this.axiosSetup();
+    const url = `https://www.tiktok.com/@${uniqueId}`;
+    const { data } = await axios.get<string>(url);
+
+    const $ = cheerio.load(data);
+    const content = $("script#__NEXT_DATA__").html();
+
+    if (!content) {
+      return data;
+    }
+
+    const contentData = JSON.parse(content) as ContentDataType;
+    const { userInfo, items } = contentData.props.pageProps;
+    return { userInfo, items };
+  }
+
   async getTiktokTrend() {
     const axios = this.axiosSetup("exclusive");
     const recommendResponse = await axios.get<{ itemList: TiktokItemType[] }>(
