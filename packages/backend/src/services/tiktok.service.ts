@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 
-import { CrawlService } from "@/services/crawl.service";
+import { CrawlService, TiktokItemType, TiktokUserType } from "@/services/crawl.service";
 import { PrismaService } from "@/services/prisma.service";
 import { UtilsService } from "@/services/utils.service";
 
@@ -41,15 +41,7 @@ export class TiktokService {
     };
   }
 
-  // TODO: acc check
-  async upsertUser(_uniqueId: string, _accountId?: string, check = true) {
-    const result = await this.crawlService.getTiktokUser(_uniqueId);
-
-    if (!result) {
-      this.logger.warn("Tiktok user not found");
-      return;
-    }
-
+  async upsertUser(result: { userInfo: TiktokUserType; items: TiktokItemType[] }, _accountId?: string, check = true) {
     const {
       userInfo: {
         user: {
@@ -148,9 +140,32 @@ export class TiktokService {
   }
 
   async bulkUpdateByUniqueId(baseDataList: { uniqueId: string; accountId?: string }[], check = true) {
-    for (const [index, { uniqueId, accountId }] of baseDataList.entries()) {
+    if (!baseDataList.length) {
+      return;
+    }
+
+    const baseDataMapping = baseDataList.reduce((prev, { uniqueId, accountId }) => {
+      prev[uniqueId] = { accountId, uniqueId };
+      return prev;
+    }, {} as { [uniqueId: string]: { uniqueId: string; accountId?: string } });
+
+    const uniqueIds = Object.values(baseDataMapping).map(({ uniqueId }) => uniqueId);
+
+    const results = await this.crawlService.getTiktokUsers(uniqueIds);
+
+    for (const [index, result] of results.entries()) {
+      const {
+        userInfo: {
+          user: { uniqueId },
+        },
+      } = result;
       this.logger.log(`${index} ${uniqueId}`);
-      await this.upsertUser(uniqueId, accountId, check);
+
+      const target = baseDataMapping[uniqueId];
+      const account = await this.prisma.tiktokUser.findUnique({ where: { id: uniqueId } }).account();
+      const accountId = account?.uuid ?? target.accountId;
+
+      await this.upsertUser(result, accountId, check);
     }
   }
 

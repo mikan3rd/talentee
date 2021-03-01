@@ -23,6 +23,6 @@ export class TiktokController {
     if (!uniqueId) {
       return "FAILED!!";
     }
-    return await this.crawlService.getTestTiktokUser(uniqueId);
+    return await this.crawlService.getTiktokUsers([uniqueId]);
   }
 }
