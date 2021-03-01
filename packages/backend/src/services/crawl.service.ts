@@ -373,31 +373,37 @@ export class CrawlService {
     const userDataList: { userInfo: TiktokUserType; items: TiktokItemType[] }[] = [];
     for (const [index, uniqueId] of uniqueIds.entries()) {
       this.logger.log(`${index}  ${uniqueId}`);
-      const url = `https://www.tiktok.com/@${uniqueId}`;
-      await page.goto(url);
 
-      const hasVerify = await page.evaluate(() => {
-        const element = document.querySelector("#verifyEle");
-        return element !== null;
-      });
+      try {
+        const url = `https://www.tiktok.com/@${uniqueId}`;
+        await page.goto(url);
 
-      this.logger.log(`hasVerify: ${hasVerify}`);
-      if (hasVerify) {
-        await page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] });
+        const hasVerify = await page.evaluate(() => {
+          const element = document.querySelector("#verifyEle");
+          return element !== null;
+        });
+
+        this.logger.log(`hasVerify: ${hasVerify}`);
+        if (hasVerify) {
+          await page.reload({ waitUntil: ["load", "networkidle2"] });
+        }
+
+        const content = await page.$eval("script#__NEXT_DATA__", (item) => item.textContent);
+
+        if (!content) {
+          continue;
+        }
+
+        const contentData = JSON.parse(content) as ContentDataType;
+        const { userInfo, items } = contentData.props.pageProps;
+        userDataList.push({ userInfo, items });
+      } catch (e) {
+        this.logger.error(e);
+        Sentry.captureException(e);
       }
-
-      const content = await page.$eval("script#__NEXT_DATA__", (item) => item.textContent);
-
-      await browser.close();
-
-      if (!content) {
-        continue;
-      }
-
-      const contentData = JSON.parse(content) as ContentDataType;
-      const { userInfo, items } = contentData.props.pageProps;
-      userDataList.push({ userInfo, items });
     }
+
+    await browser.close();
 
     return userDataList;
   }
