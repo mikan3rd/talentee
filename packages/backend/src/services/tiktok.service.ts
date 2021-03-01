@@ -67,7 +67,7 @@ export class TiktokService {
       }
     }
 
-    const account = await this.prisma.instagramUser.findUnique({ where: { id: userId } }).account();
+    const account = await this.prisma.tiktokUser.findUnique({ where: { id: userId } }).account();
     const accountId = account?.uuid ?? _accountId;
 
     const thumbnailUrl = `https://p16-sg.tiktokcdn.com${new URL(avatarThumb).pathname}`;
