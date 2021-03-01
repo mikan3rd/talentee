@@ -376,7 +376,7 @@ export class CrawlService {
 
       try {
         const url = `https://www.tiktok.com/@${uniqueId}`;
-        await page.goto(url);
+        await Promise.all([page.goto(url), page.waitForNavigation()]);
 
         const hasVerify = await page.evaluate(() => {
           const element = document.querySelector("#verifyEle");
@@ -385,10 +385,12 @@ export class CrawlService {
 
         this.logger.log(`hasVerify: ${hasVerify}`);
         if (hasVerify) {
-          await page.reload({ waitUntil: ["load", "networkidle2"] });
+          await Promise.all([page.reload({ waitUntil: ["load", "networkidle2"] }), page.waitForNavigation()]);
         }
 
-        const content = await page.$eval("script#__NEXT_DATA__", (item) => item.textContent);
+        const selector = "script#__NEXT_DATA__";
+        await page.waitForSelector(selector);
+        const content = await page.$eval(selector, (item) => item.textContent);
 
         if (!content) {
           continue;
