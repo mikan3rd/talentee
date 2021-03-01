@@ -69,27 +69,6 @@ export class TaskService {
     this.logger.debug("END: bulkAddServiceByTwitter");
   }
 
-  // @Cron("0 30 2,10,18 * * *")
-  // async bulkUpsertTwitter() {
-  //   this.logger.debug("START: bulkUpsertTwitter");
-  //   await this.twitterService.bulkUpsert(100);
-  //   this.logger.debug("END: bulkUpsertTwitter");
-  // }
-
-  // @Cron("0 40 2,10,18 * * *")
-  // async bulkUpdateTiktok() {
-  //   this.logger.debug("START: bulkUpdateTiktok");
-  //   await this.tiktokService.bulkUpdate(100);
-  //   this.logger.debug("END: bulkUpdateTiktok");
-  // }
-
-  // @Cron("0 50 2,10,18 * * *")
-  // async bulkUpdateInstagram() {
-  //   this.logger.debug("START: bulkUpdateInstagram");
-  //   await this.instagramService.bulkUpdate(100);
-  //   this.logger.debug("END: bulkUpdateInstagram");
-  // }
-
   @Cron("0 30 2,10,18 * * *")
   async bulkUpdateAccount() {
     this.logger.debug("START: bulkUpdateAccount");

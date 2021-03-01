@@ -363,26 +363,77 @@ export class CrawlService {
     });
   }
 
-  async getTiktokUser(uniqueId: string) {
+  async getTiktokUsers(uniqueIds: string[]) {
     type ContentDataType = {
       props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
 
-    const axios = this.axiosSetup();
-    const url = `https://www.tiktok.com/@${uniqueId}`;
-    const { data } = await axios.get<string>(url);
+    const { page, browser } = await this.puppeteerSetup();
 
-    const $ = cheerio.load(data);
-    const DataSelector = "script#__NEXT_DATA__";
-    const content = $(DataSelector).html();
+    const userDataList: { userInfo: TiktokUserType; items: TiktokItemType[] }[] = [];
+    for (const [index, uniqueId] of uniqueIds.entries()) {
+      this.logger.log(`${index}  ${uniqueId}`);
 
-    if (!content) {
-      return null;
+      try {
+        const url = `https://www.tiktok.com/@${uniqueId}`;
+        await Promise.all([page.goto(url), page.waitForNavigation()]);
+
+        const hasVerify = await page.evaluate(() => {
+          const element = document.querySelector("#verifyEle");
+          return element !== null;
+        });
+
+        this.logger.log(`hasVerify: ${hasVerify}`);
+        if (hasVerify) {
+          await Promise.all([page.reload({ waitUntil: ["load", "networkidle2"] }), page.waitForNavigation()]);
+        }
+
+        const selector = "script#__NEXT_DATA__";
+        await page.waitForSelector(selector);
+        const content = await page.$eval(selector, (item) => item.textContent);
+
+        if (!content) {
+          continue;
+        }
+
+        const contentData = JSON.parse(content) as ContentDataType;
+        const { userInfo, items } = contentData.props.pageProps;
+        userDataList.push({ userInfo, items });
+      } catch (e) {
+        this.logger.error(e);
+        Sentry.captureException(e);
+      }
     }
 
-    const contentData = JSON.parse(content) as ContentDataType;
-    const { userInfo, items } = contentData.props.pageProps;
-    return { userInfo, items };
+    await browser.close();
+
+    return userDataList;
+  }
+
+  async getTiktokTrend() {
+    const axios = this.axiosSetup("exclusive");
+    const recommendResponse = await axios.get<{ itemList: TiktokItemType[] }>(
+      `https://t.tiktok.com/api/recommend/item_list/`,
+      {
+        params: { aid: 1988, region: "JP", count: 30 },
+      },
+    );
+    const recommendUniqueIds = recommendResponse.data.itemList.map((item) => item.author.uniqueId);
+    this.logger.log(recommendUniqueIds);
+
+    const discoverResponse = await axios.get<{ body: { exploreList: { cardItem: { subTitle: string } }[] }[] }>(
+      `https://www.tiktok.com/node/share/discover`,
+      {
+        params: { region: "JP" },
+      },
+    );
+
+    const discoverUniqueIds = discoverResponse.data.body[0].exploreList.map(({ cardItem: { subTitle } }) =>
+      subTitle.replace("@", ""),
+    );
+    this.logger.log(discoverUniqueIds);
+
+    return Array.from(new Set([...recommendUniqueIds, ...discoverUniqueIds]));
   }
 
   async crawlYouturaRanking(pageNum: number) {
@@ -563,12 +614,12 @@ type InstagramMediaType = {
   product_type?: "igtv" | "clips";
 };
 
-type TiktokUserType = {
+export type TiktokUserType = {
   user: TiktokUserInfoType;
   stats: TiktokUserStatType;
 };
 
-type TiktokItemType = {
+export type TiktokItemType = {
   id: string;
   author: TiktokUserInfoType;
   authorStats: TiktokUserStatType;
