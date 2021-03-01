@@ -71,8 +71,8 @@ export class CrawlService {
 
     const options: Puppeteer.LaunchOptions = {
       // ignoreHTTPSErrors: true,
-      headless: false,
-      devtools: true,
+      headless: true,
+      devtools: false,
       args,
     };
 
@@ -389,7 +389,7 @@ export class CrawlService {
       props: { pageProps: { userInfo: TiktokUserType; items: TiktokItemType[] } };
     };
 
-    const { page, browser } = await this.puppeteerSetup("exclusive");
+    const { page, browser } = await this.puppeteerSetup();
     const url = `https://www.tiktok.com/@${uniqueId}`;
     await page.goto(url);
 
