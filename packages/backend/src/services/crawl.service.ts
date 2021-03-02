@@ -192,6 +192,43 @@ export class CrawlService {
     return linkUrls;
   }
 
+  async loginInstagram(page: Puppeteer.Page) {
+    let currentUrl = page.url();
+    this.logger.log(`firstUrl: ${currentUrl}`);
+
+    if (currentUrl.includes("login")) {
+      const UsernameSelector = "input[name=username]";
+      const PasswordSelector = "input[name=password]";
+
+      await page.waitForSelector(UsernameSelector);
+      await page.waitForSelector(PasswordSelector);
+
+      const loginName = this.configService.get("INSTAGRAM_USERNAME");
+      const loginPass = this.configService.get("INSTAGRAM_PASSWORD");
+
+      if (!loginName || !loginPass) {
+        throw Error("env variable is required!!");
+      }
+
+      await page.type(UsernameSelector, loginName);
+      await page.type(PasswordSelector, loginPass);
+
+      await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
+
+      currentUrl = page.url();
+      this.logger.log(`secondUrl: ${currentUrl}`);
+    }
+
+    if (currentUrl.includes("onetap")) {
+      const ButtonSelector = "main section button";
+      await page.waitForSelector(ButtonSelector);
+      await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
+
+      currentUrl = page.url();
+      this.logger.log(`thirdUrl: ${currentUrl}`);
+    }
+  }
+
   async crawlInstagramProfile(usernames: string[]) {
     const { browser, page } = await this.puppeteerSetup();
 
@@ -206,42 +243,10 @@ export class CrawlService {
       try {
         const targetUrl = `https://www.instagram.com/${username}/`;
         await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+
+        await this.loginInstagram(page);
+
         currentUrl = page.url();
-
-        this.logger.log(`firstUrl: ${currentUrl}`);
-
-        if (currentUrl.includes("login")) {
-          const UsernameSelector = "input[name=username]";
-          const PasswordSelector = "input[name=password]";
-
-          await page.waitForSelector(UsernameSelector);
-          await page.waitForSelector(PasswordSelector);
-
-          const loginName = this.configService.get("INSTAGRAM_USERNAME");
-          const loginPass = this.configService.get("INSTAGRAM_PASSWORD");
-
-          if (!loginName || !loginPass) {
-            throw Error("env variable is required!!");
-          }
-
-          await page.type(UsernameSelector, loginName);
-          await page.type(PasswordSelector, loginPass);
-
-          await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
-
-          currentUrl = page.url();
-          this.logger.log(`secondUrl: ${currentUrl}`);
-        }
-
-        if (currentUrl.includes("onetap")) {
-          const ButtonSelector = "main section button";
-          await page.waitForSelector(ButtonSelector);
-          await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
-
-          currentUrl = page.url();
-          this.logger.log(`thirdUrl: ${currentUrl}`);
-        }
-
         if (!currentUrl.includes(username)) {
           await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
 
@@ -361,6 +366,30 @@ export class CrawlService {
 
       return { userData, mediaData };
     });
+  }
+
+  async getInstagramTrend() {
+    const { browser, page } = await this.puppeteerSetup();
+
+    await page.goto("https://www.google.com/", { waitUntil: ["load", "networkidle2"] });
+    let currentUrl = page.url();
+    this.logger.log(`startUrl: ${currentUrl}`);
+
+    try {
+      const targetUrl = `https://www.instagram.com/explore/`;
+      await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+
+      await this.loginInstagram(page);
+
+      currentUrl = page.url();
+      if (currentUrl !== targetUrl) {
+        await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
+        currentUrl = page.url();
+        this.logger.log(`fourthUrl: ${currentUrl}`);
+      }
+    } finally {
+      await browser.close();
+    }
   }
 
   async getTiktokUsers(uniqueIds: string[]) {
