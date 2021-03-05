@@ -16,7 +16,6 @@
     "ts-node": "ts-node -r tsconfig-paths/register",
     "migrate": "yarn prisma migrate --preview-feature",
     "migrate:dev": "yarn migrate dev --create-only",
-    "migrate:introspect": "prisma introspect",
     "migrate:deploy": "yarn migrate deploy",
     "type-check": "tsc --noEmit",
     "test": "jest",
