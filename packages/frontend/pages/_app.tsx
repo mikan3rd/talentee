@@ -12,6 +12,7 @@ import "semantic-ui-css/semantic.min.css";
 import "react-semantic-toasts/styles/react-semantic-alert.css";
 
 import { Layout } from "@/components/templates/Layout";
+import { AuthProvider } from "@/context/auth";
 import { client } from "@/graphql/client";
 
 import "@/firebase/clientApp";
@@ -32,9 +33,11 @@ Sentry.init({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <AuthProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </AuthProvider>
     </ApolloProvider>
   );
 }
