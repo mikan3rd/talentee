@@ -25,6 +25,12 @@ export class YoutubeKeywordPaginationInput extends PaginationInput {
 }
 
 @InputType()
+export class YoutubeVideoTagPaginationInput extends PaginationInput {
+  @Field()
+  tagId!: number;
+}
+
+@InputType()
 export class AccountSearchInput extends PaginationInput {
   @Field()
   word!: string;

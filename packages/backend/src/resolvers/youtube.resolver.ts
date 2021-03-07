@@ -5,6 +5,7 @@ import {
   PaginationInput,
   YoutubeCategoryPaginationInput,
   YoutubeKeywordPaginationInput,
+  YoutubeVideoTagPaginationInput,
 } from "@/dto/input/pagination.input";
 import { YoutubeKeywordSearchInput } from "@/dto/input/youtubeKeywordSearch.input";
 import { YoutubeKeywordSearchResult } from "@/dto/output/youtubeKeywordSearch.output";
@@ -29,6 +30,11 @@ export class YoutubeResolver {
   @Query((returns) => YoutubeKeywordRankingPage, { nullable: true })
   async getYoutubeKeywordRankingPage(@Args("pagination") { take, page, keywordTitle }: YoutubeKeywordPaginationInput) {
     return this.youtubeService.getKeywordRankingPage({ take, page, keywordTitle });
+  }
+
+  @Query((returns) => YoutubeKeywordRankingPage, { nullable: true })
+  async getYoutubeVideoTagRankingPage(@Args("pagination") { take, page, tagId }: YoutubeVideoTagPaginationInput) {
+    return this.youtubeService.getVideoTagRankingPage({ take, page, tagId });
   }
 
   @Query((returns) => YoutubeKeywordIndexPage)

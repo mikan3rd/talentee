@@ -119,6 +119,33 @@ export class YoutubeService {
     };
   }
 
+  async getVideoTagRankingPage({ take, page, tagId }: { take: number; page: number; tagId: number }) {
+    const where: Prisma.YoutubeChannelWhereInput = { videos: { some: { tags: { some: { tagId } } } } };
+    const totalCount = await this.prisma.youtubeChannel.count({ where });
+    const youtubeChannels = await this.prisma.youtubeChannel.findMany({
+      take: 10,
+      skip: take * (page - 1),
+      orderBy: { subscriberCount: "desc" },
+      where,
+      include: {
+        keywords: { include: { keyword: true }, orderBy: { keyword: { num: "desc" } } },
+        channelVideoCategories: { orderBy: { num: "desc" }, include: { videoCategory: true } },
+        account: {
+          include: {
+            youtubeChannels: { select: { id: true } },
+            twitterUsers: { select: { username: true } },
+            instagramUsers: { select: { username: true } },
+            tiktokUsers: { select: { uniqueId: true } },
+          },
+        },
+      },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      youtubeChannels,
+    };
+  }
+
   async getChannelList(channelIds: string[]) {
     return await this.youtubeApi.channels.list({
       part: ["id", "snippet", "contentDetails", "statistics", "topicDetails", "brandingSettings"],
