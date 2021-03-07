@@ -15,8 +15,6 @@ import { Layout } from "@/components/templates/Layout";
 import { AuthProvider } from "@/context/auth";
 import { client } from "@/graphql/client";
 
-import "@/firebase/clientApp";
-
 dayjs.locale("ja");
 
 if (typeof window !== "undefined") {
