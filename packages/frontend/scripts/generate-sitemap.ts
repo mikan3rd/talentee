@@ -32,8 +32,9 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
     "!pages/account",
     "!pages/youtube",
     "!pages/**/[page].tsx",
+    "!pages/admin/*.tsx",
   ]);
-  console.log(pages);
+
   const youtubePages = youtubeVideoCategories.map((category) => `/youtube/category/${category.id}`);
   youtubePages.unshift(`/youtube/category/all`);
   const youtubeKeywordPages = youtubeKeywords.map((keyword) => `/youtube/keyword/${encodeURIComponent(keyword.title)}`);

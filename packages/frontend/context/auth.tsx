@@ -3,24 +3,24 @@ import React from "react";
 import firebase from "@/firebase/clientApp";
 
 type State = {
-  loading: boolean;
+  authStatus: "initial" | "loading" | "completed";
   firebaseUser: firebase.User | null;
 };
 
 type Action =
   | {
-      type: "SetLoading";
-      payload: State["loading"];
+      type: "SetAuthStatus";
+      payload: State["authStatus"];
     }
   | {
       type: "SetFirebaseUser";
       payload: State["firebaseUser"];
     };
 
-const reducer: React.Reducer<State, Action> = (state, action) => {
+const reducer: React.Reducer<State, Action> = (state, action): State => {
   switch (action.type) {
-    case "SetLoading":
-      return { ...state, loading: action.payload };
+    case "SetAuthStatus":
+      return { ...state, authStatus: action.payload };
 
     case "SetFirebaseUser":
       return { ...state, firebaseUser: action.payload };
@@ -34,12 +34,12 @@ export const AuthContext = React.createContext<[State, React.Dispatch<Action>] |
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, {
-    loading: false,
+    authStatus: "initial",
     firebaseUser: null,
   });
 
   const setCurrentUser = React.useCallback(async () => {
-    dispatch({ type: "SetLoading", payload: true });
+    dispatch({ type: "SetAuthStatus", payload: "loading" });
 
     firebase.auth().onAuthStateChanged(async (currentUser) => {
       dispatch({ type: "SetFirebaseUser", payload: currentUser });
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         // TODO: backendからユーザー情報を取得
       }
 
-      dispatch({ type: "SetLoading", payload: false });
+      dispatch({ type: "SetAuthStatus", payload: "completed" });
     });
   }, []);
 
@@ -60,3 +60,12 @@ export const AuthProvider: React.FC = ({ children }) => {
 };
 
 export const useAuth = () => React.useContext(AuthContext);
+
+export const useAuthContext = () => {
+  const context = React.useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuthContext must be used within AuthProvider");
+  }
+  const [state, dispatch] = context;
+  return [state, dispatch] as const;
+};
