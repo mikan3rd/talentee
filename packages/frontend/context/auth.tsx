@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
+
+import { toast } from "react-semantic-toasts";
 
 import firebase from "@/firebase/clientApp";
 
@@ -30,7 +32,15 @@ const reducer: React.Reducer<State, Action> = (state, action): State => {
   }
 };
 
-export const AuthContext = React.createContext<[State, React.Dispatch<Action>] | undefined>(undefined);
+export const AuthContext = React.createContext<
+  | {
+      state: State;
+      dispatch: React.Dispatch<Action>;
+      login: () => void;
+      logout: () => void;
+    }
+  | undefined
+>(undefined);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, {
@@ -52,20 +62,42 @@ export const AuthProvider: React.FC = ({ children }) => {
     });
   }, []);
 
+  const login = React.useCallback(async () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    const userCredential = await firebase.auth().signInWithPopup(provider);
+    console.log(userCredential);
+
+    await setCurrentUser();
+
+    toast({
+      type: "success",
+      title: "ログインしました！",
+    });
+  }, [setCurrentUser]);
+
+  const logout = useCallback(async () => {
+    await firebase.auth().signOut();
+
+    dispatch({ type: "SetFirebaseUser", payload: null });
+
+    toast({
+      type: "success",
+      title: "ログアウトしました！",
+    });
+  }, []);
+
   React.useEffect(() => {
     setCurrentUser();
   }, [setCurrentUser]);
 
-  return <AuthContext.Provider value={[state, dispatch]}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ state, dispatch, login, logout }}>{children}</AuthContext.Provider>;
 };
-
-export const useAuth = () => React.useContext(AuthContext);
 
 export const useAuthContext = () => {
   const context = React.useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuthContext must be used within AuthProvider");
   }
-  const [state, dispatch] = context;
-  return [state, dispatch] as const;
+  return context;
 };
