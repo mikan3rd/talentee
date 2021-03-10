@@ -294,6 +294,7 @@ type Query {
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
   getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
+  getCurrentUser: Account!
 }
 
 input AccountSearchInput {

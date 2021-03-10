@@ -5,7 +5,11 @@ import { Button, Container } from "semantic-ui-react";
 import { useAuthContext } from "@/context/auth";
 
 export const AdminIndex = React.memo(() => {
-  const { logout } = useAuthContext();
+  const {
+    state: { currentUser },
+    logout,
+  } = useAuthContext();
+  console.log(currentUser);
 
   return (
     <Container>

@@ -303,6 +303,7 @@ export type Query = {
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
+  getCurrentUser: Account;
 };
 
 export type QueryGetAccountPageArgs = {
@@ -435,6 +436,12 @@ export type GetAccountPageQuery = {
       >;
     }
   >;
+};
+
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetCurrentUserQuery = {
+  getCurrentUser: Pick<Account, "uuid" | "displayName" | "thumbnailUrl" | "username">;
 };
 
 export type GetInstagramRankingPageQueryVariables = Exact<{
@@ -811,6 +818,45 @@ export function useGetAccountPageLazyQuery(
 export type GetAccountPageQueryHookResult = ReturnType<typeof useGetAccountPageQuery>;
 export type GetAccountPageLazyQueryHookResult = ReturnType<typeof useGetAccountPageLazyQuery>;
 export type GetAccountPageQueryResult = Apollo.QueryResult<GetAccountPageQuery, GetAccountPageQueryVariables>;
+export const GetCurrentUserDocument = gql`
+  query getCurrentUser {
+    getCurrentUser {
+      uuid
+      displayName
+      thumbnailUrl
+      username
+    }
+  }
+`;
+
+/**
+ * __useGetCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentUserQuery(
+  baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>,
+) {
+  return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, baseOptions);
+}
+export function useGetCurrentUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>,
+) {
+  return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, baseOptions);
+}
+export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
+export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
+export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
 export const GetInstagramRankingPageDocument = gql`
   query getInstagramRankingPage($pagination: PaginationInput!) {
     getInstagramRankingPage(pagination: $pagination) {

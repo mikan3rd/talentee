@@ -6,6 +6,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 
 import { SentryInterceptor } from "@/interceptors/sentry.interceptor";
 import { AccountModule } from "@/modules/account.module";
+import { AdminModule } from "@/modules/admin.module";
 import { InstagramModule } from "@/modules/instagram.module";
 import { TiktokModule } from "@/modules/tiktok.module";
 import { TwitterModule } from "@/modules/twitter.module";
@@ -25,6 +26,7 @@ import { AppService } from "@/services/app.service";
     TwitterModule,
     InstagramModule,
     TiktokModule,
+    AdminModule,
     // TaskModule,
   ],
   controllers: [],
