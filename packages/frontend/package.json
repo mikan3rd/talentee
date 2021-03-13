@@ -10,7 +10,7 @@
     "ts-node": "ts-node -r tsconfig-paths/register"
   },
   "resolutions": {
-    "@types/react": "17.0.2"
+    "@types/react": "17.0.3"
   },
   "dependencies": {
     "@emotion/babel-preset-css-prop": "11.2.0",
@@ -21,19 +21,19 @@
     "react-linkify": "1.0.0-alpha",
     "react-semantic-toasts": "0.6.5",
     "react-topbar-progress-indicator": "4.1.0",
-    "react-use": "17.1.1",
+    "react-use": "17.2.1",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "2.0.3",
     "smoothscroll-polyfill": "0.4.4"
   },
   "devDependencies": {
-    "@babel/core": "7.13.8",
+    "@babel/core": "7.13.10",
     "@emotion/babel-plugin": "11.2.0",
-    "@graphql-codegen/cli": "1.21.1",
+    "@graphql-codegen/cli": "1.21.2",
     "@graphql-codegen/introspection": "1.18.1",
-    "@graphql-codegen/typescript": "1.21.0",
-    "@graphql-codegen/typescript-operations": "1.17.14",
-    "@graphql-codegen/typescript-react-apollo": "2.2.1",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/typescript-operations": "1.17.15",
+    "@graphql-codegen/typescript-react-apollo": "2.2.2",
     "@types/react-linkify": "1.0.0",
     "@types/smoothscroll-polyfill": "0.3.1"
   }
