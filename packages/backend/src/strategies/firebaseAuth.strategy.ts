@@ -42,6 +42,7 @@ export class FirebaseAuthStrategy extends PassportStrategy(Strategy, "firebase")
   }
 
   private async validateDecodedIdToken(decodedIdToken: FirebaseUser) {
+    console.log(decodedIdToken);
     const result = await this.validate(decodedIdToken);
 
     if (result) {
