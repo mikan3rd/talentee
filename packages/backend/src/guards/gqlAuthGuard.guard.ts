@@ -12,11 +12,9 @@ export class GqlAuthGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
   public async canActivate(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
+    const ctx = GqlExecutionContext.create(context).getContext();
 
-    const request = ctx.getContext().req;
-
-    const idToken = this.getIdToken(request);
+    const idToken = this.getIdToken(ctx.req);
 
     const decodedIdToken = await admin
       .auth()
@@ -32,8 +30,7 @@ export class GqlAuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const user = await this.authService.upsertUser({ uid, name, email });
-    request.user = user;
+    ctx.user = await this.authService.upsertUser({ uid, name, email });
     return true;
   }
 
