@@ -286,8 +286,14 @@ type User {
   uid: ID!
   name: String!
   email: String!
+  role: UserRole!
   createdAt: Date!
   updatedAt: Date!
+}
+
+enum UserRole {
+  NONE
+  ADMIN
 }
 
 type Query {

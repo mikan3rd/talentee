@@ -3,6 +3,7 @@ query getCurrentUser {
     uid
     name
     email
+    role
     createdAt
     updatedAt
   }

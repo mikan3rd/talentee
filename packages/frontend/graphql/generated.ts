@@ -296,9 +296,15 @@ export type User = {
   uid: Scalars["ID"];
   name: Scalars["String"];
   email: Scalars["String"];
+  role: UserRole;
   createdAt: Scalars["Date"];
   updatedAt: Scalars["Date"];
 };
+
+export enum UserRole {
+  None = "NONE",
+  Admin = "ADMIN",
+}
 
 export type Query = {
   getAccountPage?: Maybe<Account>;
@@ -449,7 +455,9 @@ export type GetAccountPageQuery = {
 
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetCurrentUserQuery = { getCurrentUser: Pick<User, "uid" | "name" | "email" | "createdAt" | "updatedAt"> };
+export type GetCurrentUserQuery = {
+  getCurrentUser: Pick<User, "uid" | "name" | "email" | "role" | "createdAt" | "updatedAt">;
+};
 
 export type GetInstagramRankingPageQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -833,6 +841,7 @@ export const GetCurrentUserDocument = gql`
       uid
       name
       email
+      role
       createdAt
       updatedAt
     }

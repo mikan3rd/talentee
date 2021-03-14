@@ -9,7 +9,10 @@ export const AdminIndex = React.memo(() => {
     state: { currentUser },
     logout,
   } = useAuthContext();
-  console.log(currentUser);
+
+  if (!currentUser) {
+    return null;
+  }
 
   return (
     <Container>
