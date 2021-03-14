@@ -1,8 +1,9 @@
 query getCurrentUser {
   getCurrentUser {
-    uuid
-    displayName
-    thumbnailUrl
-    username
+    uid
+    name
+    email
+    createdAt
+    updatedAt
   }
 }

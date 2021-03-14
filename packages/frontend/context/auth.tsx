@@ -3,12 +3,12 @@ import React from "react";
 import { toast } from "react-semantic-toasts";
 
 import firebase from "@/firebase/clientApp";
-import { useGetCurrentUserLazyQuery } from "@/graphql/generated";
+import { User, useGetCurrentUserLazyQuery } from "@/graphql/generated";
 
 type State = {
   authStatus: "initial" | "loading" | "completed";
   firebaseUser: firebase.User | null;
-  currentUser: any | null;
+  currentUser: User | null;
 };
 
 type Action =

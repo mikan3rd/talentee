@@ -282,6 +282,14 @@ type TopPage {
   tiktokUsers: [TiktokUser!]!
 }
 
+type User {
+  uid: ID!
+  name: String!
+  email: String!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
 type Query {
   getAccountPage(uuid: ID!): Account
   getTopPage: TopPage!
@@ -294,7 +302,7 @@ type Query {
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
   getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
-  getCurrentUser: Account!
+  getCurrentUser: User!
 }
 
 input AccountSearchInput {

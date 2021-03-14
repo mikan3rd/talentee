@@ -4,6 +4,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -291,6 +292,14 @@ export type TopPage = {
   tiktokUsers: Array<TiktokUser>;
 };
 
+export type User = {
+  uid: Scalars["ID"];
+  name: Scalars["String"];
+  email: Scalars["String"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+};
+
 export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
@@ -303,7 +312,7 @@ export type Query = {
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
-  getCurrentUser: Account;
+  getCurrentUser: User;
 };
 
 export type QueryGetAccountPageArgs = {
@@ -440,9 +449,7 @@ export type GetAccountPageQuery = {
 
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetCurrentUserQuery = {
-  getCurrentUser: Pick<Account, "uuid" | "displayName" | "thumbnailUrl" | "username">;
-};
+export type GetCurrentUserQuery = { getCurrentUser: Pick<User, "uid" | "name" | "email" | "createdAt" | "updatedAt"> };
 
 export type GetInstagramRankingPageQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -808,12 +815,14 @@ export const GetAccountPageDocument = gql`
 export function useGetAccountPageQuery(
   baseOptions: Apollo.QueryHookOptions<GetAccountPageQuery, GetAccountPageQueryVariables>,
 ) {
-  return Apollo.useQuery<GetAccountPageQuery, GetAccountPageQueryVariables>(GetAccountPageDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAccountPageQuery, GetAccountPageQueryVariables>(GetAccountPageDocument, options);
 }
 export function useGetAccountPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetAccountPageQuery, GetAccountPageQueryVariables>,
 ) {
-  return Apollo.useLazyQuery<GetAccountPageQuery, GetAccountPageQueryVariables>(GetAccountPageDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetAccountPageQuery, GetAccountPageQueryVariables>(GetAccountPageDocument, options);
 }
 export type GetAccountPageQueryHookResult = ReturnType<typeof useGetAccountPageQuery>;
 export type GetAccountPageLazyQueryHookResult = ReturnType<typeof useGetAccountPageLazyQuery>;
@@ -821,10 +830,11 @@ export type GetAccountPageQueryResult = Apollo.QueryResult<GetAccountPageQuery, 
 export const GetCurrentUserDocument = gql`
   query getCurrentUser {
     getCurrentUser {
-      uuid
-      displayName
-      thumbnailUrl
-      username
+      uid
+      name
+      email
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -847,12 +857,14 @@ export const GetCurrentUserDocument = gql`
 export function useGetCurrentUserQuery(
   baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>,
 ) {
-  return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
 }
 export function useGetCurrentUserLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>,
 ) {
-  return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
 }
 export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
@@ -906,17 +918,19 @@ export const GetInstagramRankingPageDocument = gql`
 export function useGetInstagramRankingPageQuery(
   baseOptions: Apollo.QueryHookOptions<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>(
     GetInstagramRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export function useGetInstagramRankingPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetInstagramRankingPageQuery, GetInstagramRankingPageQueryVariables>(
     GetInstagramRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export type GetInstagramRankingPageQueryHookResult = ReturnType<typeof useGetInstagramRankingPageQuery>;
@@ -956,17 +970,19 @@ export const GetYoutubeKeywordIndexPageDocument = gql`
 export function useGetYoutubeKeywordIndexPageQuery(
   baseOptions: Apollo.QueryHookOptions<GetYoutubeKeywordIndexPageQuery, GetYoutubeKeywordIndexPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetYoutubeKeywordIndexPageQuery, GetYoutubeKeywordIndexPageQueryVariables>(
     GetYoutubeKeywordIndexPageDocument,
-    baseOptions,
+    options,
   );
 }
 export function useGetYoutubeKeywordIndexPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetYoutubeKeywordIndexPageQuery, GetYoutubeKeywordIndexPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetYoutubeKeywordIndexPageQuery, GetYoutubeKeywordIndexPageQueryVariables>(
     GetYoutubeKeywordIndexPageDocument,
-    baseOptions,
+    options,
   );
 }
 export type GetYoutubeKeywordIndexPageQueryHookResult = ReturnType<typeof useGetYoutubeKeywordIndexPageQuery>;
@@ -1009,12 +1025,14 @@ export const GetSitemapDataDocument = gql`
 export function useGetSitemapDataQuery(
   baseOptions?: Apollo.QueryHookOptions<GetSitemapDataQuery, GetSitemapDataQueryVariables>,
 ) {
-  return Apollo.useQuery<GetSitemapDataQuery, GetSitemapDataQueryVariables>(GetSitemapDataDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetSitemapDataQuery, GetSitemapDataQueryVariables>(GetSitemapDataDocument, options);
 }
 export function useGetSitemapDataLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetSitemapDataQuery, GetSitemapDataQueryVariables>,
 ) {
-  return Apollo.useLazyQuery<GetSitemapDataQuery, GetSitemapDataQueryVariables>(GetSitemapDataDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetSitemapDataQuery, GetSitemapDataQueryVariables>(GetSitemapDataDocument, options);
 }
 export type GetSitemapDataQueryHookResult = ReturnType<typeof useGetSitemapDataQuery>;
 export type GetSitemapDataLazyQueryHookResult = ReturnType<typeof useGetSitemapDataLazyQuery>;
@@ -1070,17 +1088,19 @@ export const GetTiktokRankingPageDocument = gql`
 export function useGetTiktokRankingPageQuery(
   baseOptions: Apollo.QueryHookOptions<GetTiktokRankingPageQuery, GetTiktokRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetTiktokRankingPageQuery, GetTiktokRankingPageQueryVariables>(
     GetTiktokRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export function useGetTiktokRankingPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetTiktokRankingPageQuery, GetTiktokRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetTiktokRankingPageQuery, GetTiktokRankingPageQueryVariables>(
     GetTiktokRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export type GetTiktokRankingPageQueryHookResult = ReturnType<typeof useGetTiktokRankingPageQuery>;
@@ -1218,12 +1238,14 @@ export const GetTopPageDocument = gql`
  * });
  */
 export function useGetTopPageQuery(baseOptions?: Apollo.QueryHookOptions<GetTopPageQuery, GetTopPageQueryVariables>) {
-  return Apollo.useQuery<GetTopPageQuery, GetTopPageQueryVariables>(GetTopPageDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetTopPageQuery, GetTopPageQueryVariables>(GetTopPageDocument, options);
 }
 export function useGetTopPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetTopPageQuery, GetTopPageQueryVariables>,
 ) {
-  return Apollo.useLazyQuery<GetTopPageQuery, GetTopPageQueryVariables>(GetTopPageDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetTopPageQuery, GetTopPageQueryVariables>(GetTopPageDocument, options);
 }
 export type GetTopPageQueryHookResult = ReturnType<typeof useGetTopPageQuery>;
 export type GetTopPageLazyQueryHookResult = ReturnType<typeof useGetTopPageLazyQuery>;
@@ -1278,17 +1300,19 @@ export const GetTwitterRankingPageDocument = gql`
 export function useGetTwitterRankingPageQuery(
   baseOptions: Apollo.QueryHookOptions<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>(
     GetTwitterRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export function useGetTwitterRankingPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetTwitterRankingPageQuery, GetTwitterRankingPageQueryVariables>(
     GetTwitterRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export type GetTwitterRankingPageQueryHookResult = ReturnType<typeof useGetTwitterRankingPageQuery>;
@@ -1365,9 +1389,10 @@ export const GetYoutubeCategoryRankingPageDocument = gql`
 export function useGetYoutubeCategoryRankingPageQuery(
   baseOptions: Apollo.QueryHookOptions<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>(
     GetYoutubeCategoryRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export function useGetYoutubeCategoryRankingPageLazyQuery(
@@ -1376,9 +1401,10 @@ export function useGetYoutubeCategoryRankingPageLazyQuery(
     GetYoutubeCategoryRankingPageQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetYoutubeCategoryRankingPageQuery, GetYoutubeCategoryRankingPageQueryVariables>(
     GetYoutubeCategoryRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export type GetYoutubeCategoryRankingPageQueryHookResult = ReturnType<typeof useGetYoutubeCategoryRankingPageQuery>;
@@ -1453,9 +1479,10 @@ export const GetYoutubeKeywordRankingPageDocument = gql`
 export function useGetYoutubeKeywordRankingPageQuery(
   baseOptions: Apollo.QueryHookOptions<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>(
     GetYoutubeKeywordRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export function useGetYoutubeKeywordRankingPageLazyQuery(
@@ -1464,9 +1491,10 @@ export function useGetYoutubeKeywordRankingPageLazyQuery(
     GetYoutubeKeywordRankingPageQueryVariables
   >,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>(
     GetYoutubeKeywordRankingPageDocument,
-    baseOptions,
+    options,
   );
 }
 export type GetYoutubeKeywordRankingPageQueryHookResult = ReturnType<typeof useGetYoutubeKeywordRankingPageQuery>;
@@ -1522,12 +1550,14 @@ export const SearchAccountDocument = gql`
 export function useSearchAccountQuery(
   baseOptions: Apollo.QueryHookOptions<SearchAccountQuery, SearchAccountQueryVariables>,
 ) {
-  return Apollo.useQuery<SearchAccountQuery, SearchAccountQueryVariables>(SearchAccountDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchAccountQuery, SearchAccountQueryVariables>(SearchAccountDocument, options);
 }
 export function useSearchAccountLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<SearchAccountQuery, SearchAccountQueryVariables>,
 ) {
-  return Apollo.useLazyQuery<SearchAccountQuery, SearchAccountQueryVariables>(SearchAccountDocument, baseOptions);
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchAccountQuery, SearchAccountQueryVariables>(SearchAccountDocument, options);
 }
 export type SearchAccountQueryHookResult = ReturnType<typeof useSearchAccountQuery>;
 export type SearchAccountLazyQueryHookResult = ReturnType<typeof useSearchAccountLazyQuery>;
@@ -1561,17 +1591,19 @@ export const SearchYoutubeKeywordByWordDocument = gql`
 export function useSearchYoutubeKeywordByWordQuery(
   baseOptions: Apollo.QueryHookOptions<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>(
     SearchYoutubeKeywordByWordDocument,
-    baseOptions,
+    options,
   );
 }
 export function useSearchYoutubeKeywordByWordLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>,
 ) {
+  const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<SearchYoutubeKeywordByWordQuery, SearchYoutubeKeywordByWordQueryVariables>(
     SearchYoutubeKeywordByWordDocument,
-    baseOptions,
+    options,
   );
 }
 export type SearchYoutubeKeywordByWordQueryHookResult = ReturnType<typeof useSearchYoutubeKeywordByWordQuery>;
