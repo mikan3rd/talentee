@@ -5,7 +5,7 @@ import { Button, Dimmer, Icon, Loader, Message } from "semantic-ui-react";
 import { useAuthContext } from "@/context/auth";
 import { UserRole } from "@/graphql/generated";
 
-export const AuthWrapper = React.memo<{ roles?: UserRole[] }>(({ roles = [], children }) => {
+export const AuthWrapper = React.memo<{ roles?: UserRole[]; children: React.ReactNode }>(({ roles = [], children }) => {
   const {
     state: { authStatus, firebaseUser, currentUser },
     login,
