@@ -6,7 +6,7 @@ import { useAuthContext } from "@/context/auth";
 
 export const AdminAuthWrapper = React.memo(({ children }) => {
   const {
-    state: { authStatus, firebaseUser },
+    state: { authStatus, firebaseUser, currentUser },
     login,
   } = useAuthContext();
 
@@ -18,7 +18,7 @@ export const AdminAuthWrapper = React.memo(({ children }) => {
     );
   }
 
-  if (authStatus === "completed" && !firebaseUser) {
+  if (authStatus === "completed" && (!firebaseUser || !currentUser)) {
     return (
       <Button color="blue" size="big" onClick={login}>
         <Icon name="google" />

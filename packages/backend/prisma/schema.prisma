@@ -18,6 +18,8 @@ model User {
   role    UserRole     @default(NONE)
   name    String       @db.VarChar(255)
   email   String       @db.VarChar(255)
+  createdAt       DateTime         @default(now()) @db.DateTime(6)
+  updatedAt       DateTime         @updatedAt @db.DateTime(6)
 }
 
 model Account {

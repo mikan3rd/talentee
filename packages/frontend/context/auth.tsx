@@ -70,9 +70,9 @@ export const AuthProvider: React.FC = ({ children }) => {
         const idToken = await currentUser.getIdToken();
         localStorage.setItem("token", idToken);
         fetchCurrentUser();
+      } else {
+        dispatch({ type: "SetAuthStatus", payload: "completed" });
       }
-
-      dispatch({ type: "SetAuthStatus", payload: "completed" });
     });
   }, [fetchCurrentUser]);
 
@@ -80,10 +80,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     const provider = new firebase.auth.GoogleAuthProvider();
     await firebase.auth().signInWithPopup(provider);
     await setCurrentUser();
-    toast({
-      type: "success",
-      title: "ログインしました！",
-    });
   }, [setCurrentUser]);
 
   const logout = React.useCallback(async (withToast = true) => {
@@ -105,7 +101,16 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, [setCurrentUser]);
 
   React.useEffect(() => {
-    dispatch({ type: "SetCurrentUser", payload: currentUserData?.getCurrentUser ?? null });
+    if (currentUserData) {
+      dispatch({ type: "SetCurrentUser", payload: currentUserData.getCurrentUser });
+      dispatch({ type: "SetAuthStatus", payload: "completed" });
+      toast({
+        type: "success",
+        title: "ログインしました！",
+      });
+    } else {
+      dispatch({ type: "SetCurrentUser", payload: null });
+    }
   }, [currentUserData]);
 
   React.useEffect(() => {
