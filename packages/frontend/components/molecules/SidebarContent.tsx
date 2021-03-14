@@ -4,7 +4,14 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 import { Menu } from "semantic-ui-react";
 
+import { useAuthContext } from "@/context/auth";
+
 export const SidebarContent = React.memo(() => {
+  const {
+    state: { firebaseUser },
+    logout,
+  } = useAuthContext();
+
   return (
     <>
       <Link href="/" passHref>
@@ -48,6 +55,8 @@ export const SidebarContent = React.memo(() => {
       <Link href="/search" passHref>
         <Menu.Item content="アカウント検索" />
       </Link>
+
+      {firebaseUser && <Menu.Item content="ログアウト" onClick={logout} />}
     </>
   );
 });

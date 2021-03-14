@@ -1,9 +1,10 @@
 import React from "react";
 
+import { ApolloError } from "@apollo/client";
 import { toast } from "react-semantic-toasts";
 
 import firebase from "@/firebase/clientApp";
-import { User, useGetCurrentUserLazyQuery } from "@/graphql/generated";
+import { GetCurrentUserQuery, User, useGetCurrentUserLazyQuery } from "@/graphql/generated";
 
 type State = {
   authStatus: "initial" | "loading" | "completed";
@@ -58,7 +59,47 @@ export const AuthProvider: React.FC = ({ children }) => {
     currentUser: null,
   });
 
-  const [fetchCurrentUser, { data: currentUserData, error: currentUserError }] = useGetCurrentUserLazyQuery();
+  const logout = React.useCallback(async (withToast = true) => {
+    await firebase.auth().signOut();
+    dispatch({ type: "SetFirebaseUser", payload: null });
+    dispatch({ type: "SetCurrentUser", payload: null });
+    localStorage.removeItem("token");
+
+    if (withToast) {
+      toast({
+        type: "success",
+        title: "ログアウトしました！",
+      });
+    }
+  }, []);
+
+  const handleCompleteCurrentUser = React.useCallback((data: GetCurrentUserQuery) => {
+    dispatch({ type: "SetCurrentUser", payload: data.getCurrentUser });
+    dispatch({ type: "SetAuthStatus", payload: "completed" });
+    toast({
+      type: "success",
+      title: "ログインしました！",
+    });
+  }, []);
+
+  const handleErrorCurrentUser = React.useCallback(
+    (error: ApolloError) => {
+      logout(false);
+      dispatch({ type: "SetAuthStatus", payload: "completed" });
+      toast({
+        type: "error",
+        title: error.name,
+        description: error.message,
+      });
+    },
+    [logout],
+  );
+
+  const [fetchCurrentUser] = useGetCurrentUserLazyQuery({
+    onCompleted: handleCompleteCurrentUser,
+    onError: handleErrorCurrentUser,
+    fetchPolicy: "cache-and-network",
+  });
 
   const setCurrentUser = React.useCallback(async () => {
     dispatch({ type: "SetAuthStatus", payload: "loading" });
@@ -82,47 +123,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     await setCurrentUser();
   }, [setCurrentUser]);
 
-  const logout = React.useCallback(async (withToast = true) => {
-    await firebase.auth().signOut();
-    dispatch({ type: "SetFirebaseUser", payload: null });
-    dispatch({ type: "SetCurrentUser", payload: null });
-    localStorage.removeItem("token");
-
-    if (withToast) {
-      toast({
-        type: "success",
-        title: "ログアウトしました！",
-      });
-    }
-  }, []);
-
   React.useEffect(() => {
     setCurrentUser();
   }, [setCurrentUser]);
-
-  React.useEffect(() => {
-    if (currentUserData) {
-      dispatch({ type: "SetCurrentUser", payload: currentUserData.getCurrentUser });
-      dispatch({ type: "SetAuthStatus", payload: "completed" });
-      toast({
-        type: "success",
-        title: "ログインしました！",
-      });
-    } else {
-      dispatch({ type: "SetCurrentUser", payload: null });
-    }
-  }, [currentUserData]);
-
-  React.useEffect(() => {
-    if (currentUserError) {
-      logout(false);
-      toast({
-        type: "error",
-        title: currentUserError.name,
-        description: currentUserError.message,
-      });
-    }
-  }, [currentUserError, logout]);
 
   return <AuthContext.Provider value={{ state, dispatch, login, logout }}>{children}</AuthContext.Provider>;
 };
