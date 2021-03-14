@@ -23,7 +23,7 @@ export const AuthWrapper = React.memo<{ roles?: UserRole[]; children: React.Reac
   if (authStatus === "completed" && (!firebaseUser || !currentUser)) {
     return (
       <>
-        <Message positive header="ログインが必要なページです" />;
+        <Message positive header="ログインが必要なページです" />
         <Button color="blue" size="big" onClick={login}>
           <Icon name="google" />
           Googleログイン
