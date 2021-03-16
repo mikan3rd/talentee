@@ -26,7 +26,7 @@ export class YoutubeKeywordPaginationInput extends PaginationInput {
 
 @InputType()
 export class YoutubeVideoTagPaginationInput extends PaginationInput {
-  @Field()
+  @Field((type) => Int)
   tagId!: number;
 }
 

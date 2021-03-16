@@ -57,6 +57,18 @@ export const YoutubeKeywordSection = React.memo<{ active?: boolean; keywordTitle
   },
 );
 
+export const YoutubeVideoTagSection = React.memo<{ active?: boolean; tagId: number; tagTitle: string }>(
+  ({ tagId, tagTitle, active = false }) => {
+    return (
+      <Link href={`/youtube/videoTag/${tagId}`}>
+        <Breadcrumb.Section href={`/youtube/videoTag/${tagId}`} active={active}>
+          {tagTitle}
+        </Breadcrumb.Section>
+      </Link>
+    );
+  },
+);
+
 export const TwitterSection = React.memo<{ active?: boolean }>(({ active = false }) => {
   return (
     <Link href="/twitter">

@@ -258,6 +258,12 @@ type YoutubeKeywordRankingPage {
   youtubeChannels: [YoutubeChannel!]!
 }
 
+type YoutubeVideoTagRankingPage {
+  totalPages: Int!
+  youtubeChannels: [YoutubeChannel!]!
+  youtubeTag: YoutubeTag
+}
+
 type YoutubeKeywordIndexPage {
   totalPages: Int!
   youtubeKeywords: [YoutubeKeyword!]!
@@ -302,8 +308,8 @@ type Query {
   searchAccount(pagination: AccountSearchInput!): AccountSearchResult!
   getSitemapData: Sitemap!
   getYoutubeCategoryRankingPage(pagination: YoutubeCategoryPaginationInput!): YoutubeRankingPage!
-  getYoutubeKeywordRankingPage(pagination: YoutubeKeywordPaginationInput!): YoutubeKeywordRankingPage
-  getYoutubeVideoTagRankingPage(pagination: YoutubeVideoTagPaginationInput!): YoutubeKeywordRankingPage
+  getYoutubeKeywordRankingPage(pagination: YoutubeKeywordPaginationInput!): YoutubeKeywordRankingPage!
+  getYoutubeVideoTagRankingPage(pagination: YoutubeVideoTagPaginationInput!): YoutubeVideoTagRankingPage!
   getYoutubeKeywordIndexPage(pagination: PaginationInput!): YoutubeKeywordIndexPage!
   searchYoutubeKeywordByWord(input: YoutubeKeywordSearchInput!): YoutubeKeywordSearchResult!
   getTwitterRankingPage(pagination: PaginationInput!): TwitterRankingPage!
@@ -334,7 +340,7 @@ input YoutubeKeywordPaginationInput {
 input YoutubeVideoTagPaginationInput {
   take: Int!
   page: Int!
-  tagId: Float!
+  tagId: Int!
 }
 
 input PaginationInput {

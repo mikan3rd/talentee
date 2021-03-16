@@ -120,6 +120,7 @@ export class YoutubeService {
   }
 
   async getVideoTagRankingPage({ take, page, tagId }: { take: number; page: number; tagId: number }) {
+    const youtubeTag = await this.prisma.youtubeTag.findUnique({ where: { id: tagId } });
     const where: Prisma.YoutubeChannelWhereInput = { videos: { some: { tags: { some: { tagId } } } } };
     const totalCount = await this.prisma.youtubeChannel.count({ where });
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
@@ -143,6 +144,7 @@ export class YoutubeService {
     return {
       totalPages: Math.ceil(totalCount / take),
       youtubeChannels,
+      youtubeTag,
     };
   }
 

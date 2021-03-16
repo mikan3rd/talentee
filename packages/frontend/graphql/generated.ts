@@ -268,6 +268,12 @@ export type YoutubeKeywordRankingPage = {
   youtubeChannels: Array<YoutubeChannel>;
 };
 
+export type YoutubeVideoTagRankingPage = {
+  totalPages: Scalars["Int"];
+  youtubeChannels: Array<YoutubeChannel>;
+  youtubeTag?: Maybe<YoutubeTag>;
+};
+
 export type YoutubeKeywordIndexPage = {
   totalPages: Scalars["Int"];
   youtubeKeywords: Array<YoutubeKeyword>;
@@ -312,7 +318,8 @@ export type Query = {
   searchAccount: AccountSearchResult;
   getSitemapData: Sitemap;
   getYoutubeCategoryRankingPage: YoutubeRankingPage;
-  getYoutubeKeywordRankingPage?: Maybe<YoutubeKeywordRankingPage>;
+  getYoutubeKeywordRankingPage: YoutubeKeywordRankingPage;
+  getYoutubeVideoTagRankingPage: YoutubeVideoTagRankingPage;
   getYoutubeKeywordIndexPage: YoutubeKeywordIndexPage;
   searchYoutubeKeywordByWord: YoutubeKeywordSearchResult;
   getTwitterRankingPage: TwitterRankingPage;
@@ -335,6 +342,10 @@ export type QueryGetYoutubeCategoryRankingPageArgs = {
 
 export type QueryGetYoutubeKeywordRankingPageArgs = {
   pagination: YoutubeKeywordPaginationInput;
+};
+
+export type QueryGetYoutubeVideoTagRankingPageArgs = {
+  pagination: YoutubeVideoTagPaginationInput;
 };
 
 export type QueryGetYoutubeKeywordIndexPageArgs = {
@@ -374,6 +385,12 @@ export type YoutubeKeywordPaginationInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
   keywordTitle: Scalars["String"];
+};
+
+export type YoutubeVideoTagPaginationInput = {
+  take: Scalars["Int"];
+  page: Scalars["Int"];
+  tagId: Scalars["Int"];
 };
 
 export type PaginationInput = {
@@ -662,34 +679,66 @@ export type GetYoutubeKeywordRankingPageQueryVariables = Exact<{
 }>;
 
 export type GetYoutubeKeywordRankingPageQuery = {
-  getYoutubeKeywordRankingPage?: Maybe<
-    Pick<YoutubeKeywordRankingPage, "totalPages"> & {
-      youtubeChannels: Array<
-        Pick<
-          YoutubeChannel,
-          | "id"
-          | "title"
-          | "thumbnailUrl"
-          | "description"
-          | "subscriberCount"
-          | "viewCount"
-          | "videoCount"
-          | "hiddenSubscriberCount"
-          | "accountId"
-          | "mainVideoCategoryId"
-        > & {
-          keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
-          channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
-          account: {
-            youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
-            twitterUsers: Array<Pick<TwitterUser, "username">>;
-            instagramUsers: Array<Pick<InstagramUser, "username">>;
-            tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
-          };
-        }
-      >;
-    }
-  >;
+  getYoutubeKeywordRankingPage: Pick<YoutubeKeywordRankingPage, "totalPages"> & {
+    youtubeChannels: Array<
+      Pick<
+        YoutubeChannel,
+        | "id"
+        | "title"
+        | "thumbnailUrl"
+        | "description"
+        | "subscriberCount"
+        | "viewCount"
+        | "videoCount"
+        | "hiddenSubscriberCount"
+        | "accountId"
+        | "mainVideoCategoryId"
+      > & {
+        keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+        channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
+    >;
+  };
+};
+
+export type GetYoutubeVideoTagRankingPageQueryVariables = Exact<{
+  pagination: YoutubeVideoTagPaginationInput;
+}>;
+
+export type GetYoutubeVideoTagRankingPageQuery = {
+  getYoutubeVideoTagRankingPage: Pick<YoutubeVideoTagRankingPage, "totalPages"> & {
+    youtubeTag?: Maybe<Pick<YoutubeTag, "id" | "title">>;
+    youtubeChannels: Array<
+      Pick<
+        YoutubeChannel,
+        | "id"
+        | "title"
+        | "thumbnailUrl"
+        | "description"
+        | "subscriberCount"
+        | "viewCount"
+        | "videoCount"
+        | "hiddenSubscriberCount"
+        | "accountId"
+        | "mainVideoCategoryId"
+      > & {
+        keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+        channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
+        account: {
+          youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+          twitterUsers: Array<Pick<TwitterUser, "username">>;
+          instagramUsers: Array<Pick<InstagramUser, "username">>;
+          tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+        };
+      }
+    >;
+  };
 };
 
 export type SearchAccountQueryVariables = Exact<{
@@ -1513,6 +1562,100 @@ export type GetYoutubeKeywordRankingPageLazyQueryHookResult = ReturnType<
 export type GetYoutubeKeywordRankingPageQueryResult = Apollo.QueryResult<
   GetYoutubeKeywordRankingPageQuery,
   GetYoutubeKeywordRankingPageQueryVariables
+>;
+export const GetYoutubeVideoTagRankingPageDocument = gql`
+  query getYoutubeVideoTagRankingPage($pagination: YoutubeVideoTagPaginationInput!) {
+    getYoutubeVideoTagRankingPage(pagination: $pagination) {
+      youtubeTag {
+        id
+        title
+      }
+      totalPages
+      youtubeChannels {
+        id
+        title
+        thumbnailUrl
+        description
+        subscriberCount
+        viewCount
+        videoCount
+        hiddenSubscriberCount
+        accountId
+        mainVideoCategoryId
+        keywords {
+          keyword {
+            title
+          }
+        }
+        channelVideoCategories {
+          videoCategory {
+            id
+            title
+          }
+        }
+        account {
+          youtubeChannels {
+            id
+          }
+          twitterUsers {
+            username
+          }
+          instagramUsers {
+            username
+          }
+          tiktokUsers {
+            uniqueId
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetYoutubeVideoTagRankingPageQuery__
+ *
+ * To run a query within a React component, call `useGetYoutubeVideoTagRankingPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetYoutubeVideoTagRankingPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetYoutubeVideoTagRankingPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetYoutubeVideoTagRankingPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetYoutubeVideoTagRankingPageQuery, GetYoutubeVideoTagRankingPageQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetYoutubeVideoTagRankingPageQuery, GetYoutubeVideoTagRankingPageQueryVariables>(
+    GetYoutubeVideoTagRankingPageDocument,
+    options,
+  );
+}
+export function useGetYoutubeVideoTagRankingPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetYoutubeVideoTagRankingPageQuery,
+    GetYoutubeVideoTagRankingPageQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetYoutubeVideoTagRankingPageQuery, GetYoutubeVideoTagRankingPageQueryVariables>(
+    GetYoutubeVideoTagRankingPageDocument,
+    options,
+  );
+}
+export type GetYoutubeVideoTagRankingPageQueryHookResult = ReturnType<typeof useGetYoutubeVideoTagRankingPageQuery>;
+export type GetYoutubeVideoTagRankingPageLazyQueryHookResult = ReturnType<
+  typeof useGetYoutubeVideoTagRankingPageLazyQuery
+>;
+export type GetYoutubeVideoTagRankingPageQueryResult = Apollo.QueryResult<
+  GetYoutubeVideoTagRankingPageQuery,
+  GetYoutubeVideoTagRankingPageQueryVariables
 >;
 export const SearchAccountDocument = gql`
   query searchAccount($pagination: AccountSearchInput!) {
