@@ -8,6 +8,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  NONE
+  ADMIN
+}
+
+model User {
+  uid     String       @id @db.VarChar(255)
+  role    UserRole     @default(NONE)
+  name    String       @db.VarChar(255)
+  email   String       @db.VarChar(255)
+  createdAt       DateTime         @default(now()) @db.DateTime(6)
+  updatedAt       DateTime         @updatedAt @db.DateTime(6)
+}
+
 model Account {
   uuid            String           @id @default(uuid()) @db.VarChar(36)
   displayName     String           @db.VarChar(255)
