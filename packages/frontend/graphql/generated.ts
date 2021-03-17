@@ -289,6 +289,7 @@ export type Sitemap = {
   accounts: Array<Account>;
   youtubeVideoCategories: Array<YoutubeVideoCategory>;
   youtubeKeywords: Array<YoutubeKeyword>;
+  youtubeTags: Array<YoutubeTag>;
 };
 
 export type TopPage = {
@@ -509,9 +510,10 @@ export type GetSitemapDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetSitemapDataQuery = {
   getSitemapData: {
-    accounts: Array<Pick<Account, "uuid">>;
+    accounts: Array<Pick<Account, "uuid" | "updatedAt">>;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id">>;
     youtubeKeywords: Array<Pick<YoutubeKeyword, "title">>;
+    youtubeTags: Array<Pick<YoutubeTag, "id">>;
   };
 };
 
@@ -1054,12 +1056,16 @@ export const GetSitemapDataDocument = gql`
     getSitemapData {
       accounts {
         uuid
+        updatedAt
       }
       youtubeVideoCategories {
         id
       }
       youtubeKeywords {
         title
+      }
+      youtubeTags {
+        id
       }
     }
   }

@@ -7,8 +7,8 @@ import { Breadcrumb, Divider } from "semantic-ui-react";
 import { Props, YoutubeVideoTagRankingIndex } from "@/components/pages/YoutubeVideoTagRankingIndex";
 import {
   TopSection,
-  YoutubeKeywordIndexSection,
   YoutubeSection,
+  YoutubeVideoTagIndexSection,
   YoutubeVideoTagSection,
 } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
@@ -79,8 +79,8 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
   return (
     <>
       <Meta
-        title={`${youtubeTag?.title}で人気のYouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
-        description={`キーワード「${youtubeTag?.title}」で人気のYouTubeチャンネルをチェック！`}
+        title={`${youtubeTag?.title}の動画で人気のYouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
+        description={`「${youtubeTag?.title}」の動画で人気のYouTubeチャンネルをチェック！`}
       />
 
       <Breadcrumb size="big">
@@ -88,7 +88,7 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
         <Breadcrumb.Divider />
         <YoutubeSection />
         <Breadcrumb.Divider />
-        <YoutubeKeywordIndexSection />
+        <YoutubeVideoTagIndexSection />
         <Breadcrumb.Divider />
         <YoutubeVideoTagSection tagId={youtubeTag?.id} tagTitle={youtubeTag?.title} active={true} />
       </Breadcrumb>

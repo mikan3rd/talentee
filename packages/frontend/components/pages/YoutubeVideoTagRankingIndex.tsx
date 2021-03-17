@@ -29,7 +29,7 @@ export const YoutubeVideoTagRankingIndex = React.memo<Props>(({ page, take, getY
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
       router.push({
-        pathname: "/youtube/keyword/[tagId]/page/[page]",
+        pathname: "/youtube/videoTag/[tagId]/page/[page]",
         query: { tagId: youtubeTag?.id, page: data.activePage },
       });
     },
@@ -81,7 +81,7 @@ export const YoutubeVideoTagRankingIndex = React.memo<Props>(({ page, take, getY
         </span>
       </Header>
 
-      <p>「{youtubeTag?.title}」で人気のYoutubeチャンネル一覧</p>
+      <p>「{youtubeTag?.title}」の動画で人気のYoutubeチャンネル一覧</p>
 
       <Divider />
 

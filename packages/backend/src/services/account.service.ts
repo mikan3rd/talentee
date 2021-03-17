@@ -109,7 +109,7 @@ export class AccountService {
   }
 
   async getSitemapData() {
-    const accounts = await this.prisma.account.findMany({ select: { uuid: true } });
+    const accounts = await this.prisma.account.findMany({ select: { uuid: true, updatedAt: true } });
     const youtubeVideoCategories = await this.prisma.youtubeVideoCategory.findMany({
       where: { assignable: true },
       select: { id: true },
@@ -119,7 +119,12 @@ export class AccountService {
       where: { num: { gte: 3 } },
       orderBy: { num: "desc" },
     });
-    return { accounts, youtubeVideoCategories, youtubeKeywords };
+    const youtubeTags = await this.prisma.youtubeTag.findMany({
+      select: { id: true },
+      where: { num: { gte: 100 } },
+      orderBy: { num: "desc" },
+    });
+    return { accounts, youtubeVideoCategories, youtubeKeywords, youtubeTags };
   }
 
   async addServiceByYoutube(take: number) {
