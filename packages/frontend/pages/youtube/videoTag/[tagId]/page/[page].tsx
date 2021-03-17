@@ -1,16 +1,16 @@
 import { GetStaticProps } from "next";
 
-import { Props } from "@/components/pages/YoutubeKeywordRankingIndex";
-import YoutubeKeywordPage, { getCommonStaticProps, getStaticPaths } from "@/pages/youtube/keyword/[keywordTitle]";
+import { Props } from "@/components/pages/YoutubeVideoTagRankingIndex";
+import YoutubeVideoTagPagePage, { getCommonStaticProps, getStaticPaths } from "@/pages/youtube/videoTag/[tagId]";
 
 export { getStaticPaths };
 
-export const getStaticProps: GetStaticProps<Props, { keywordTitle: string; page: string }> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Props, { tagId: string; page: string }> = async ({ params }) => {
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  return await getCommonStaticProps({ keywordTitle: params.keywordTitle, page: Number(params.page) });
+  return await getCommonStaticProps({ tagId: Number(params.tagId), page: Number(params.page) });
 };
 
-export default YoutubeKeywordPage;
+export default YoutubeVideoTagPagePage;
