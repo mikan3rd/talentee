@@ -2,12 +2,16 @@ query getSitemapData {
   getSitemapData {
     accounts {
       uuid
+      updatedAt
     }
     youtubeVideoCategories {
       id
     }
     youtubeKeywords {
       title
+    }
+    youtubeTags {
+      id
     }
   }
 }

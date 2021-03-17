@@ -12,7 +12,6 @@ import { GetSitemapDataDocument, GetSitemapDataQuery } from "@/graphql/generated
 dotenv.config({ path: ".env" });
 
 const baseUrl = "https://talentee.jp";
-const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 
 (async () => {
   const client = new ApolloClient({
@@ -22,37 +21,51 @@ const siteUpdatedAt = dayjs().format("YYYY-MM-DD");
 
   const {
     data: {
-      getSitemapData: { accounts, youtubeVideoCategories, youtubeKeywords },
+      getSitemapData: { accounts, youtubeVideoCategories, youtubeKeywords, youtubeTags },
     },
   } = await client.query<GetSitemapDataQuery>({ query: GetSitemapDataDocument });
 
-  const pages = await globby([
-    "pages/**/*.tsx",
-    "!pages/_*.tsx",
-    "!pages/account",
-    "!pages/youtube",
-    "!pages/**/[page].tsx",
-    "!pages/admin/*.tsx",
-  ]);
+  const pages = (
+    await globby([
+      "pages/**/*.tsx",
+      "!pages/_*.tsx",
+      "!pages/account",
+      "!pages/youtube",
+      "!pages/**/[page].tsx",
+      "!pages/admin/*.tsx",
+    ])
+  ).map((page) => ({ path: page }));
 
-  const youtubePages = youtubeVideoCategories.map((category) => `/youtube/category/${category.id}`);
-  youtubePages.unshift(`/youtube/category/all`);
-  const youtubeKeywordPages = youtubeKeywords.map((keyword) => `/youtube/keyword/${encodeURIComponent(keyword.title)}`);
-  const accountPages = accounts.map((accout) => `/account/${accout.uuid}`);
+  const youtubeCategoryPages = youtubeVideoCategories.map((category) => ({
+    path: `/youtube/category/${category.id}`,
+  }));
+  youtubeCategoryPages.unshift({ path: `/youtube/category/all` });
+  const youtubeKeywordPages = youtubeKeywords.map((keyword) => ({
+    path: `/youtube/keyword/${encodeURIComponent(keyword.title)}`,
+  }));
+  const youtubevideoTagPages = youtubeTags.map((tag) => ({
+    path: `/youtube/videoTag/${encodeURIComponent(tag.id)}`,
+  }));
+  const accountPages = accounts.map((account) => ({ path: `/account/${account.uuid}`, updatedAt: account.updatedAt }));
 
-  const allPages = [...pages, ...youtubePages, ...youtubeKeywordPages, ...accountPages];
+  const allPages: { path: string; updatedAt?: number }[] = [
+    ...pages,
+    ...accountPages,
+    ...youtubeCategoryPages,
+    ...youtubeKeywordPages,
+    ...youtubevideoTagPages,
+  ];
 
   const sitemap = `
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${allPages
     .map((page) => {
-      const path = page.replace("pages", "").replace("/index", "").replace(".tsx", "");
+      const path = page.path.replace("pages", "").replace("/index", "").replace(".tsx", "");
       const url = `${baseUrl}${path}`;
       return `
 <url>
-  <loc>${url}</loc>
-  <lastmod>${siteUpdatedAt}</lastmod>
+  <loc>${url}</loc>${page.updatedAt ? `\n<lastmod>${dayjs.unix(page.updatedAt).format("YYYY-MM-DD")}</lastmod>` : ""}
   <changefreq>daily</changefreq>
 </url>`;
     })

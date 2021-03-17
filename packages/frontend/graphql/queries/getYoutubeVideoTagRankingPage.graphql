@@ -1,0 +1,46 @@
+query getYoutubeVideoTagRankingPage($pagination: YoutubeVideoTagPaginationInput!) {
+  getYoutubeVideoTagRankingPage(pagination: $pagination) {
+    youtubeTag {
+      id
+      title
+    }
+    totalPages
+    youtubeChannels {
+      id
+      title
+      thumbnailUrl
+      description
+      subscriberCount
+      viewCount
+      videoCount
+      hiddenSubscriberCount
+      accountId
+      mainVideoCategoryId
+      keywords {
+        keyword {
+          title
+        }
+      }
+      channelVideoCategories {
+        videoCategory {
+          id
+          title
+        }
+      }
+      account {
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
+    }
+  }
+}

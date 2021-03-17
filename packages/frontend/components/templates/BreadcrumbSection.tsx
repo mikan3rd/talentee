@@ -45,12 +45,34 @@ export const YoutubeKeywordIndexSection = React.memo<{ active?: boolean }>(({ ac
   );
 });
 
+export const YoutubeVideoTagIndexSection = React.memo<{ active?: boolean }>(({ active = false }) => {
+  return (
+    <Link href="/youtube/videoTag">
+      <Breadcrumb.Section href="/youtube/videoTag" active={active}>
+        タグ
+      </Breadcrumb.Section>
+    </Link>
+  );
+});
+
 export const YoutubeKeywordSection = React.memo<{ active?: boolean; keywordTitle: string }>(
   ({ keywordTitle, active = false }) => {
     return (
       <Link href={`/youtube/keyword/${keywordTitle}`}>
         <Breadcrumb.Section href={`/youtube/keyword/${keywordTitle}`} active={active}>
           {keywordTitle}
+        </Breadcrumb.Section>
+      </Link>
+    );
+  },
+);
+
+export const YoutubeVideoTagSection = React.memo<{ active?: boolean; tagId: number; tagTitle: string }>(
+  ({ tagId, tagTitle, active = false }) => {
+    return (
+      <Link href={`/youtube/videoTag/${tagId}`}>
+        <Breadcrumb.Section href={`/youtube/videoTag/${tagId}`} active={active}>
+          {tagTitle}
         </Breadcrumb.Section>
       </Link>
     );
