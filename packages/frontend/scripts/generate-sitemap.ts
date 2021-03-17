@@ -65,8 +65,7 @@ const baseUrl = "https://talentee.jp";
       const url = `${baseUrl}${path}`;
       return `
 <url>
-  <loc>${url}</loc>
-  ${page.updatedAt ? `<lastmod>${dayjs.unix(page.updatedAt).format("YYYY-MM-DD")}</lastmod>` : ""}
+  <loc>${url}</loc>${page.updatedAt ? `\n<lastmod>${dayjs.unix(page.updatedAt).format("YYYY-MM-DD")}</lastmod>` : ""}
   <changefreq>daily</changefreq>
 </url>`;
     })
