@@ -279,6 +279,11 @@ export type YoutubeKeywordIndexPage = {
   youtubeKeywords: Array<YoutubeKeyword>;
 };
 
+export type YoutubeVideoTagIndexPage = {
+  totalPages: Scalars["Int"];
+  youtubeTags: Array<YoutubeTag>;
+};
+
 export type AccountSearchResult = {
   totalPages: Scalars["Int"];
   accounts: Array<Account>;
@@ -322,6 +327,7 @@ export type Query = {
   getYoutubeKeywordRankingPage: YoutubeKeywordRankingPage;
   getYoutubeVideoTagRankingPage: YoutubeVideoTagRankingPage;
   getYoutubeKeywordIndexPage: YoutubeKeywordIndexPage;
+  getYoutubeVideoTagIndexPage: YoutubeVideoTagIndexPage;
   searchYoutubeKeywordByWord: YoutubeKeywordSearchResult;
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
@@ -350,6 +356,10 @@ export type QueryGetYoutubeVideoTagRankingPageArgs = {
 };
 
 export type QueryGetYoutubeKeywordIndexPageArgs = {
+  pagination: PaginationInput;
+};
+
+export type QueryGetYoutubeVideoTagIndexPageArgs = {
   pagination: PaginationInput;
 };
 
@@ -706,6 +716,16 @@ export type GetYoutubeKeywordRankingPageQuery = {
         };
       }
     >;
+  };
+};
+
+export type GetYoutubeVideoTagIndexPageQueryVariables = Exact<{
+  pagination: PaginationInput;
+}>;
+
+export type GetYoutubeVideoTagIndexPageQuery = {
+  getYoutubeVideoTagIndexPage: Pick<YoutubeVideoTagIndexPage, "totalPages"> & {
+    youtubeTags: Array<Pick<YoutubeTag, "id" | "title" | "num">>;
   };
 };
 
@@ -1568,6 +1588,62 @@ export type GetYoutubeKeywordRankingPageLazyQueryHookResult = ReturnType<
 export type GetYoutubeKeywordRankingPageQueryResult = Apollo.QueryResult<
   GetYoutubeKeywordRankingPageQuery,
   GetYoutubeKeywordRankingPageQueryVariables
+>;
+export const GetYoutubeVideoTagIndexPageDocument = gql`
+  query getYoutubeVideoTagIndexPage($pagination: PaginationInput!) {
+    getYoutubeVideoTagIndexPage(pagination: $pagination) {
+      totalPages
+      youtubeTags {
+        id
+        title
+        num
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetYoutubeVideoTagIndexPageQuery__
+ *
+ * To run a query within a React component, call `useGetYoutubeVideoTagIndexPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetYoutubeVideoTagIndexPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetYoutubeVideoTagIndexPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetYoutubeVideoTagIndexPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetYoutubeVideoTagIndexPageQuery, GetYoutubeVideoTagIndexPageQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetYoutubeVideoTagIndexPageQuery, GetYoutubeVideoTagIndexPageQueryVariables>(
+    GetYoutubeVideoTagIndexPageDocument,
+    options,
+  );
+}
+export function useGetYoutubeVideoTagIndexPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetYoutubeVideoTagIndexPageQuery,
+    GetYoutubeVideoTagIndexPageQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetYoutubeVideoTagIndexPageQuery, GetYoutubeVideoTagIndexPageQueryVariables>(
+    GetYoutubeVideoTagIndexPageDocument,
+    options,
+  );
+}
+export type GetYoutubeVideoTagIndexPageQueryHookResult = ReturnType<typeof useGetYoutubeVideoTagIndexPageQuery>;
+export type GetYoutubeVideoTagIndexPageLazyQueryHookResult = ReturnType<typeof useGetYoutubeVideoTagIndexPageLazyQuery>;
+export type GetYoutubeVideoTagIndexPageQueryResult = Apollo.QueryResult<
+  GetYoutubeVideoTagIndexPageQuery,
+  GetYoutubeVideoTagIndexPageQueryVariables
 >;
 export const GetYoutubeVideoTagRankingPageDocument = gql`
   query getYoutubeVideoTagRankingPage($pagination: YoutubeVideoTagPaginationInput!) {

@@ -32,26 +32,47 @@ export const SidebarContent = React.memo(() => {
       </Link>
 
       <Menu.Item>
-        <Menu.Header content="ランキング" />
+        <Menu.Header content="Youtube" />
         <Menu.Menu>
           <Link href="/youtube/category/all" passHref>
             <Menu.Item content="YouTubeランキング" />
           </Link>
+          <Link href="/youtube/keyword" passHref>
+            <Menu.Item content="YouTubeキーワード一覧" />
+          </Link>
+          <Link href="/youtube/videoTag" passHref>
+            <Menu.Item content="YouTube動画タグ一覧" />
+          </Link>
+        </Menu.Menu>
+      </Menu.Item>
+
+      <Menu.Item>
+        <Menu.Header content="Twitter" />
+        <Menu.Menu>
           <Link href="/twitter" passHref>
             <Menu.Item content="Twitterランキング" />
           </Link>
+        </Menu.Menu>
+      </Menu.Item>
+
+      <Menu.Item>
+        <Menu.Header content="Instagram" />
+        <Menu.Menu>
           <Link href="/instagram" passHref>
             <Menu.Item content="Instagramランキング" />
           </Link>
+        </Menu.Menu>
+      </Menu.Item>
+
+      <Menu.Item>
+        <Menu.Header content="TikTok" />
+        <Menu.Menu>
           <Link href="/tiktok" passHref>
             <Menu.Item content="TikTokランキング" />
           </Link>
         </Menu.Menu>
       </Menu.Item>
 
-      <Link href="/youtube/keyword" passHref>
-        <Menu.Item content="YouTubeキーワード一覧" />
-      </Link>
       <Link href="/search" passHref>
         <Menu.Item content="アカウント検索" />
       </Link>

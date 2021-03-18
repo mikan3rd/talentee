@@ -1,0 +1,10 @@
+query getYoutubeVideoTagIndexPage($pagination: PaginationInput!) {
+  getYoutubeVideoTagIndexPage(pagination: $pagination) {
+    totalPages
+    youtubeTags {
+      id
+      title
+      num
+    }
+  }
+}

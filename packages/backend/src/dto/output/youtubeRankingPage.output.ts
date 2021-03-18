@@ -35,3 +35,9 @@ export class YoutubeKeywordIndexPage extends PaginationCount {
   @Field((type) => [YoutubeKeyword])
   youtubeKeywords!: YoutubeKeyword[];
 }
+
+@ObjectType()
+export class YoutubeVideoTagIndexPage extends PaginationCount {
+  @Field((type) => [YoutubeTag])
+  youtubeTags!: YoutubeTag[];
+}
