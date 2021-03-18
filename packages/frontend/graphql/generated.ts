@@ -439,10 +439,10 @@ export type GetAccountPageQuery = {
         > & {
           videos: Array<
             Pick<YoutubeVideo, "id" | "title" | "publishedAt" | "viewCount" | "likeCount" | "dislikeCount"> & {
-              tags: Array<{ tag: Pick<YoutubeTag, "title"> }>;
+              tags: Array<{ tag: Pick<YoutubeTag, "id" | "title"> }>;
             }
           >;
-          keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+          keywords: Array<{ keyword: Pick<YoutubeKeyword, "id" | "title"> }>;
           channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
         }
       >;
@@ -821,12 +821,14 @@ export const GetAccountPageDocument = gql`
           dislikeCount
           tags {
             tag {
+              id
               title
             }
           }
         }
         keywords {
           keyword {
+            id
             title
           }
         }
