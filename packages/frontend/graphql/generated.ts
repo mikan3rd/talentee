@@ -255,6 +255,7 @@ export type TwitterRankingPage = {
 
 export type YoutubeKeywordSearchResult = {
   youtubeKeywords: Array<YoutubeKeyword>;
+  youtubeTags: Array<YoutubeTag>;
 };
 
 export type YoutubeRankingPage = {
@@ -277,6 +278,11 @@ export type YoutubeVideoTagRankingPage = {
 export type YoutubeKeywordIndexPage = {
   totalPages: Scalars["Int"];
   youtubeKeywords: Array<YoutubeKeyword>;
+};
+
+export type YoutubeVideoTagIndexPage = {
+  totalPages: Scalars["Int"];
+  youtubeTags: Array<YoutubeTag>;
 };
 
 export type AccountSearchResult = {
@@ -322,6 +328,7 @@ export type Query = {
   getYoutubeKeywordRankingPage: YoutubeKeywordRankingPage;
   getYoutubeVideoTagRankingPage: YoutubeVideoTagRankingPage;
   getYoutubeKeywordIndexPage: YoutubeKeywordIndexPage;
+  getYoutubeVideoTagIndexPage: YoutubeVideoTagIndexPage;
   searchYoutubeKeywordByWord: YoutubeKeywordSearchResult;
   getTwitterRankingPage: TwitterRankingPage;
   getInstagramRankingPage: InstagramRankingPage;
@@ -350,6 +357,10 @@ export type QueryGetYoutubeVideoTagRankingPageArgs = {
 };
 
 export type QueryGetYoutubeKeywordIndexPageArgs = {
+  pagination: PaginationInput;
+};
+
+export type QueryGetYoutubeVideoTagIndexPageArgs = {
   pagination: PaginationInput;
 };
 
@@ -428,10 +439,10 @@ export type GetAccountPageQuery = {
         > & {
           videos: Array<
             Pick<YoutubeVideo, "id" | "title" | "publishedAt" | "viewCount" | "likeCount" | "dislikeCount"> & {
-              tags: Array<{ tag: Pick<YoutubeTag, "title"> }>;
+              tags: Array<{ tag: Pick<YoutubeTag, "id" | "title"> }>;
             }
           >;
-          keywords: Array<{ keyword: Pick<YoutubeKeyword, "title"> }>;
+          keywords: Array<{ keyword: Pick<YoutubeKeyword, "id" | "title"> }>;
           channelVideoCategories: Array<{ videoCategory: Pick<YoutubeVideoCategory, "id" | "title"> }>;
         }
       >;
@@ -709,6 +720,16 @@ export type GetYoutubeKeywordRankingPageQuery = {
   };
 };
 
+export type GetYoutubeVideoTagIndexPageQueryVariables = Exact<{
+  pagination: PaginationInput;
+}>;
+
+export type GetYoutubeVideoTagIndexPageQuery = {
+  getYoutubeVideoTagIndexPage: Pick<YoutubeVideoTagIndexPage, "totalPages"> & {
+    youtubeTags: Array<Pick<YoutubeTag, "id" | "title" | "num">>;
+  };
+};
+
 export type GetYoutubeVideoTagRankingPageQueryVariables = Exact<{
   pagination: YoutubeVideoTagPaginationInput;
 }>;
@@ -765,7 +786,10 @@ export type SearchYoutubeKeywordByWordQueryVariables = Exact<{
 }>;
 
 export type SearchYoutubeKeywordByWordQuery = {
-  searchYoutubeKeywordByWord: { youtubeKeywords: Array<Pick<YoutubeKeyword, "title">> };
+  searchYoutubeKeywordByWord: {
+    youtubeKeywords: Array<Pick<YoutubeKeyword, "id" | "title">>;
+    youtubeTags: Array<Pick<YoutubeTag, "id" | "title">>;
+  };
 };
 
 export const GetAccountPageDocument = gql`
@@ -797,12 +821,14 @@ export const GetAccountPageDocument = gql`
           dislikeCount
           tags {
             tag {
+              id
               title
             }
           }
         }
         keywords {
           keyword {
+            id
             title
           }
         }
@@ -1569,6 +1595,62 @@ export type GetYoutubeKeywordRankingPageQueryResult = Apollo.QueryResult<
   GetYoutubeKeywordRankingPageQuery,
   GetYoutubeKeywordRankingPageQueryVariables
 >;
+export const GetYoutubeVideoTagIndexPageDocument = gql`
+  query getYoutubeVideoTagIndexPage($pagination: PaginationInput!) {
+    getYoutubeVideoTagIndexPage(pagination: $pagination) {
+      totalPages
+      youtubeTags {
+        id
+        title
+        num
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetYoutubeVideoTagIndexPageQuery__
+ *
+ * To run a query within a React component, call `useGetYoutubeVideoTagIndexPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetYoutubeVideoTagIndexPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetYoutubeVideoTagIndexPageQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetYoutubeVideoTagIndexPageQuery(
+  baseOptions: Apollo.QueryHookOptions<GetYoutubeVideoTagIndexPageQuery, GetYoutubeVideoTagIndexPageQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetYoutubeVideoTagIndexPageQuery, GetYoutubeVideoTagIndexPageQueryVariables>(
+    GetYoutubeVideoTagIndexPageDocument,
+    options,
+  );
+}
+export function useGetYoutubeVideoTagIndexPageLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetYoutubeVideoTagIndexPageQuery,
+    GetYoutubeVideoTagIndexPageQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetYoutubeVideoTagIndexPageQuery, GetYoutubeVideoTagIndexPageQueryVariables>(
+    GetYoutubeVideoTagIndexPageDocument,
+    options,
+  );
+}
+export type GetYoutubeVideoTagIndexPageQueryHookResult = ReturnType<typeof useGetYoutubeVideoTagIndexPageQuery>;
+export type GetYoutubeVideoTagIndexPageLazyQueryHookResult = ReturnType<typeof useGetYoutubeVideoTagIndexPageLazyQuery>;
+export type GetYoutubeVideoTagIndexPageQueryResult = Apollo.QueryResult<
+  GetYoutubeVideoTagIndexPageQuery,
+  GetYoutubeVideoTagIndexPageQueryVariables
+>;
 export const GetYoutubeVideoTagRankingPageDocument = gql`
   query getYoutubeVideoTagRankingPage($pagination: YoutubeVideoTagPaginationInput!) {
     getYoutubeVideoTagRankingPage(pagination: $pagination) {
@@ -1724,6 +1806,11 @@ export const SearchYoutubeKeywordByWordDocument = gql`
   query searchYoutubeKeywordByWord($input: YoutubeKeywordSearchInput!) {
     searchYoutubeKeywordByWord(input: $input) {
       youtubeKeywords {
+        id
+        title
+      }
+      youtubeTags {
+        id
         title
       }
     }

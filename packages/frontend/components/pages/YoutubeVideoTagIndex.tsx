@@ -23,15 +23,15 @@ import {
   TwitterIndexLinkButton,
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
-import { GetYoutubeKeywordIndexPageQuery, useSearchYoutubeKeywordByWordLazyQuery } from "@/graphql/generated";
+import { GetYoutubeVideoTagIndexPageQuery, useSearchYoutubeKeywordByWordLazyQuery } from "@/graphql/generated";
 
 export type Props = {
   page: number;
   take: number;
-  getYoutubeKeywordIndexPage: GetYoutubeKeywordIndexPageQuery["getYoutubeKeywordIndexPage"];
+  getYoutubeVideoTagIndexPage: GetYoutubeVideoTagIndexPageQuery["getYoutubeVideoTagIndexPage"];
 };
 
-export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKeywordIndexPage }) => {
+export const YoutubeVideoTagIndex = React.memo<Props>(({ page, take, getYoutubeVideoTagIndexPage }) => {
   const [searchText, setSearchText] = React.useState("");
   const [debounce, setDebounce] = React.useState(false);
 
@@ -69,17 +69,18 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
     },
     [router],
   );
+
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent, data: PaginationProps) => {
       router.push({
-        pathname: "/youtube/keyword/page/[page]",
+        pathname: "/youtube/videoTag/page/[page]",
         query: { page: data.activePage },
       });
     },
     [router],
   );
 
-  const { youtubeKeywords, totalPages } = getYoutubeKeywordIndexPage;
+  const { youtubeTags, totalPages } = getYoutubeVideoTagIndexPage;
 
   const results = React.useMemo(() => {
     if (!data) {
@@ -132,7 +133,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
             }
           `}
         >
-          キーワード一覧
+          動画タグ一覧
         </span>
         <span
           css={css`
@@ -148,6 +149,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
       <Divider />
 
       <Search
+        category
         value={searchText}
         onSearchChange={handleSearchChange}
         loading={loading || debounce}
@@ -155,7 +157,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
         minCharacters={0}
         noResultsMessage="見つかりませんでした"
         onResultSelect={handleSelectResult}
-        input={{ fluid: true, placeholder: "キーワードを検索" }}
+        input={{ fluid: true, placeholder: "動画タグを検索" }}
       />
 
       <Divider />
@@ -165,9 +167,9 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
           margin-top: 10px;
         `}
       >
-        {youtubeKeywords.map((keyword, index) => {
+        {youtubeTags.map((tag, index) => {
           return (
-            <Link key={index} href={`/youtube/keyword/${keyword.title}`} passHref>
+            <Link key={index} href={`/youtube/videoTag/${tag.id}`} passHref>
               <Label
                 tag
                 size="large"
@@ -187,7 +189,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
                     }
                   `}
                 />
-                {keyword.title}
+                {tag.title}
               </Label>
             </Link>
           );

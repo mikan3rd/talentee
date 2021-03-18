@@ -26,12 +26,14 @@ query getAccountPage($uuid: ID!) {
         dislikeCount
         tags {
           tag {
+            id
             title
           }
         }
       }
       keywords {
         keyword {
+          id
           title
         }
       }

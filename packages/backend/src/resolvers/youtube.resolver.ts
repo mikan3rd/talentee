@@ -13,6 +13,7 @@ import {
   YoutubeKeywordIndexPage,
   YoutubeKeywordRankingPage,
   YoutubeRankingPage,
+  YoutubeVideoTagIndexPage,
   YoutubeVideoTagRankingPage,
 } from "@/dto/output/youtubeRankingPage.output";
 import { YoutubeService } from "@/services/youtube.service";
@@ -41,6 +42,11 @@ export class YoutubeResolver {
   @Query((returns) => YoutubeKeywordIndexPage)
   async getYoutubeKeywordIndexPage(@Args("pagination") { take, page }: PaginationInput) {
     return this.youtubeService.getKeywordIndexPage({ take, page });
+  }
+
+  @Query((returns) => YoutubeVideoTagIndexPage)
+  async getYoutubeVideoTagIndexPage(@Args("pagination") { take, page }: PaginationInput) {
+    return this.youtubeService.getVideoTagIndexPage({ take, page });
   }
 
   @Query((returns) => YoutubeKeywordSearchResult)

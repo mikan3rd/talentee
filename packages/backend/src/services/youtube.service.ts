@@ -81,14 +81,33 @@ export class YoutubeService {
     };
   }
 
+  async getVideoTagIndexPage({ take, page }: { take: number; page: number }) {
+    const totalCount = await this.prisma.youtubeTag.count();
+    const youtubeTags = await this.prisma.youtubeTag.findMany({
+      take,
+      skip: take * (page - 1),
+      orderBy: { num: "desc" },
+    });
+    return {
+      totalPages: Math.ceil(totalCount / take),
+      youtubeTags,
+    };
+  }
+
   async searchKeywordByWord({ take, word }: { take: number; word: string }) {
     const youtubeKeywords = await this.prisma.youtubeKeyword.findMany({
       take,
       orderBy: { num: "desc" },
       where: { title: { contains: word } },
     });
+    const youtubeTags = await this.prisma.youtubeTag.findMany({
+      take,
+      orderBy: { num: "desc" },
+      where: { title: { contains: word } },
+    });
     return {
       youtubeKeywords,
+      youtubeTags,
     };
   }
 

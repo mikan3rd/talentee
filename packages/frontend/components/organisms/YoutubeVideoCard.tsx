@@ -2,12 +2,13 @@ import React from "react";
 
 import { css } from "@emotion/react";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { Icon, Label } from "semantic-ui-react";
 
 import { toUnitString } from "@/common/utils";
 import { YoutubeTag, YoutubeVideo, YoutubeVideoTagRelation } from "@/graphql/generated";
 
-type CustomYoutubeVideoTagRelation = Omit<YoutubeVideoTagRelation, "tag"> & { tag: Pick<YoutubeTag, "title"> };
+type CustomYoutubeVideoTagRelation = Omit<YoutubeVideoTagRelation, "tag"> & { tag: Pick<YoutubeTag, "id" | "title"> };
 
 type Props = {
   rankNum: number;
@@ -134,10 +135,13 @@ export const YoutubeVideoCard = React.memo<Props>(
           {tags.length > 0 && (
             <div>
               {tags.map((tagRelation, index) => {
+                const { tag } = tagRelation;
                 return (
-                  <Label key={index} tag css={LabelCss}>
-                    {tagRelation.tag.title}
-                  </Label>
+                  <Link key={index} href={`/youtube/videoTag/${tag.id}`} passHref>
+                    <Label tag css={LabelCss}>
+                      {tag.title}
+                    </Label>
+                  </Link>
                 );
               })}
             </div>
