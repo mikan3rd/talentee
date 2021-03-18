@@ -35,13 +35,13 @@ export const SidebarContent = React.memo(() => {
         <Menu.Header content="Youtube" />
         <Menu.Menu>
           <Link href="/youtube/category/all" passHref>
-            <Menu.Item content="YouTubeランキング" />
+            <Menu.Item content="ランキング" />
           </Link>
           <Link href="/youtube/keyword" passHref>
-            <Menu.Item content="YouTubeキーワード一覧" />
+            <Menu.Item content="チャンネルキーワード一覧" />
           </Link>
           <Link href="/youtube/videoTag" passHref>
-            <Menu.Item content="YouTube動画タグ一覧" />
+            <Menu.Item content="動画タグ一覧" />
           </Link>
         </Menu.Menu>
       </Menu.Item>
@@ -50,7 +50,7 @@ export const SidebarContent = React.memo(() => {
         <Menu.Header content="Twitter" />
         <Menu.Menu>
           <Link href="/twitter" passHref>
-            <Menu.Item content="Twitterランキング" />
+            <Menu.Item content="ランキング" />
           </Link>
         </Menu.Menu>
       </Menu.Item>
@@ -59,7 +59,7 @@ export const SidebarContent = React.memo(() => {
         <Menu.Header content="Instagram" />
         <Menu.Menu>
           <Link href="/instagram" passHref>
-            <Menu.Item content="Instagramランキング" />
+            <Menu.Item content="ランキング" />
           </Link>
         </Menu.Menu>
       </Menu.Item>
@@ -68,7 +68,7 @@ export const SidebarContent = React.memo(() => {
         <Menu.Header content="TikTok" />
         <Menu.Menu>
           <Link href="/tiktok" passHref>
-            <Menu.Item content="TikTokランキング" />
+            <Menu.Item content="ランキング" />
           </Link>
         </Menu.Menu>
       </Menu.Item>

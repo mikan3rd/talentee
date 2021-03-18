@@ -40,7 +40,7 @@ export const YoutubeVideoTagIndex = React.memo<Props>(({ page, take, getYoutubeV
 
   useDebounce(
     () => {
-      fetch({ variables: { input: { word: searchText, take: 10 } } });
+      fetch({ variables: { input: { word: searchText, take: 5 } } });
       setDebounce(false);
     },
     1000,
@@ -53,13 +53,19 @@ export const YoutubeVideoTagIndex = React.memo<Props>(({ page, take, getYoutubeV
   }, []);
 
   const handleSelectResult = React.useCallback(
-    (event: React.MouseEvent, data: SearchResultData) => {
-      const keywordTitle = data.result.title;
-      router.push({
-        pathname: "/youtube/videoTag/[tagId]",
-        query: { tagId: keywordTitle }, // TODO
-      });
-      setSearchText(keywordTitle);
+    (event: React.MouseEvent, { result: { id, title, category } }: SearchResultData) => {
+      if (category === "keyword") {
+        router.push({
+          pathname: "/youtube/keyword/[keywordTitle]",
+          query: { keywordTitle: title },
+        });
+      } else if (category === "tag") {
+        router.push({
+          pathname: "/youtube/videoTag/[tagId]",
+          query: { tagId: id },
+        });
+      }
+      setSearchText(title);
     },
     [router],
   );
@@ -75,6 +81,25 @@ export const YoutubeVideoTagIndex = React.memo<Props>(({ page, take, getYoutubeV
   );
 
   const { youtubeTags, totalPages } = getYoutubeVideoTagIndexPage;
+
+  const results = React.useMemo(() => {
+    if (!data) {
+      return {};
+    }
+    return {
+      keyword: {
+        name: "キーワード",
+        results: data.searchYoutubeKeywordByWord.youtubeKeywords.map((keyword) => ({
+          ...keyword,
+          category: "keyword",
+        })),
+      },
+      tag: {
+        name: "動画タグ",
+        results: data.searchYoutubeKeywordByWord.youtubeTags.map((tag) => ({ ...tag, category: "tag" })),
+      },
+    };
+  }, [data]);
 
   return (
     <>
@@ -124,10 +149,11 @@ export const YoutubeVideoTagIndex = React.memo<Props>(({ page, take, getYoutubeV
       <Divider />
 
       <Search
+        category
         value={searchText}
         onSearchChange={handleSearchChange}
         loading={loading || debounce}
-        results={data?.searchYoutubeKeywordByWord.youtubeKeywords ?? []}
+        results={results}
         minCharacters={0}
         noResultsMessage="見つかりませんでした"
         onResultSelect={handleSelectResult}

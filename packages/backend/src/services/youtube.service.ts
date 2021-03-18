@@ -100,8 +100,14 @@ export class YoutubeService {
       orderBy: { num: "desc" },
       where: { title: { contains: word } },
     });
+    const youtubeTags = await this.prisma.youtubeTag.findMany({
+      take,
+      orderBy: { num: "desc" },
+      where: { title: { contains: word } },
+    });
     return {
       youtubeKeywords,
+      youtubeTags,
     };
   }
 

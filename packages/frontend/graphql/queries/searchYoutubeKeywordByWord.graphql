@@ -1,6 +1,11 @@
 query searchYoutubeKeywordByWord($input: YoutubeKeywordSearchInput!) {
   searchYoutubeKeywordByWord(input: $input) {
     youtubeKeywords {
+      id
+      title
+    }
+    youtubeTags {
+      id
       title
     }
   }

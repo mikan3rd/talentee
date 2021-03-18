@@ -255,6 +255,7 @@ export type TwitterRankingPage = {
 
 export type YoutubeKeywordSearchResult = {
   youtubeKeywords: Array<YoutubeKeyword>;
+  youtubeTags: Array<YoutubeTag>;
 };
 
 export type YoutubeRankingPage = {
@@ -785,7 +786,10 @@ export type SearchYoutubeKeywordByWordQueryVariables = Exact<{
 }>;
 
 export type SearchYoutubeKeywordByWordQuery = {
-  searchYoutubeKeywordByWord: { youtubeKeywords: Array<Pick<YoutubeKeyword, "title">> };
+  searchYoutubeKeywordByWord: {
+    youtubeKeywords: Array<Pick<YoutubeKeyword, "id" | "title">>;
+    youtubeTags: Array<Pick<YoutubeTag, "id" | "title">>;
+  };
 };
 
 export const GetAccountPageDocument = gql`
@@ -1800,6 +1804,11 @@ export const SearchYoutubeKeywordByWordDocument = gql`
   query searchYoutubeKeywordByWord($input: YoutubeKeywordSearchInput!) {
     searchYoutubeKeywordByWord(input: $input) {
       youtubeKeywords {
+        id
+        title
+      }
+      youtubeTags {
+        id
         title
       }
     }

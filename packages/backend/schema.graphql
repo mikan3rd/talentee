@@ -245,6 +245,7 @@ type TwitterRankingPage {
 
 type YoutubeKeywordSearchResult {
   youtubeKeywords: [YoutubeKeyword!]!
+  youtubeTags: [YoutubeTag!]!
 }
 
 type YoutubeRankingPage {
