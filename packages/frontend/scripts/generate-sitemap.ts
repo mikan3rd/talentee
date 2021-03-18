@@ -24,6 +24,10 @@ const baseUrl = "https://talentee.jp";
       getSitemapData: { accounts, youtubeVideoCategories, youtubeKeywords, youtubeTags },
     },
   } = await client.query<GetSitemapDataQuery>({ query: GetSitemapDataDocument });
+  console.log(`accounts: ${accounts.length}`);
+  console.log(`youtubeVideoCategories: ${youtubeVideoCategories.length}`);
+  console.log(`youtubeKeywords: ${youtubeKeywords.length}`);
+  console.log(`youtubeTags: ${youtubeTags.length}`);
 
   const pages = (
     await globby([
@@ -55,6 +59,7 @@ const baseUrl = "https://talentee.jp";
     ...youtubeKeywordPages,
     ...youtubevideoTagPages,
   ];
+  console.log(`total: ${allPages.length}`);
 
   const sitemap = `
 <?xml version="1.0" encoding="UTF-8"?>
