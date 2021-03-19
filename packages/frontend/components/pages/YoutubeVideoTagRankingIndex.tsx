@@ -11,6 +11,7 @@ import {
   TiktokIndexLinkButton,
   TwitterIndexLinkButton,
   YoutubeKeywordLinkButton,
+  YoutubeVideoTagLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { YoutubeCard } from "@/components/organisms/YoutubeCard";
 import { GetYoutubeVideoTagRankingPageQuery } from "@/graphql/generated";
@@ -119,6 +120,7 @@ export const YoutubeVideoTagRankingIndex = React.memo<Props>(({ page, take, getY
         `}
       >
         <YoutubeKeywordLinkButton />
+        <YoutubeVideoTagLinkButton />
       </div>
 
       <Divider />

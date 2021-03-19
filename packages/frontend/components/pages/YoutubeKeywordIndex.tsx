@@ -167,7 +167,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
       >
         {youtubeKeywords.map((keyword, index) => {
           return (
-            <Link key={index} href={`/youtube/keyword/${keyword.title}`} passHref>
+            <Link key={index} href={`/youtube/keyword/${keyword.title}`} passHref prefetch={false}>
               <Label
                 tag
                 size="large"

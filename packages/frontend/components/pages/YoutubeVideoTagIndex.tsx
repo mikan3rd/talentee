@@ -169,7 +169,7 @@ export const YoutubeVideoTagIndex = React.memo<Props>(({ page, take, getYoutubeV
       >
         {youtubeTags.map((tag, index) => {
           return (
-            <Link key={index} href={`/youtube/videoTag/${tag.id}`} passHref>
+            <Link key={index} href={`/youtube/videoTag/${tag.id}`} passHref prefetch={false}>
               <Label
                 tag
                 size="large"

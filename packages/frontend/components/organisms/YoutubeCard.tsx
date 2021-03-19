@@ -207,7 +207,7 @@ export const YoutubeCard = React.memo<Props>(
                       tag
                       css={css`
                         &&& {
-                          margin: 5px 10px 0 12px;
+                          margin: 10px 10px 0 12px;
                           padding-left: 1em;
                           padding-right: 0.5em;
                         }

@@ -137,8 +137,16 @@ export const YoutubeVideoCard = React.memo<Props>(
               {tags.map((tagRelation, index) => {
                 const { tag } = tagRelation;
                 return (
-                  <Link key={index} href={`/youtube/videoTag/${tag.id}`} passHref>
+                  <Link key={index} href={`/youtube/videoTag/${tag.id}`} passHref prefetch={false}>
                     <Label tag css={LabelCss}>
+                      <Icon
+                        name="linkify"
+                        css={css`
+                          &&& {
+                            margin: 0 5px 0 0;
+                          }
+                        `}
+                      />
                       {tag.title}
                     </Label>
                   </Link>
