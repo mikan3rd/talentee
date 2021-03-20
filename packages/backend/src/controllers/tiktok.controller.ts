@@ -19,7 +19,7 @@ export class TiktokController {
 
   @Get("/getTiktokUser")
   async getTiktokUser(@Query("uniqueId") uniqueId?: string) {
-    this.logger.log(uniqueId);
+    this.logger.debug(uniqueId);
     if (!uniqueId) {
       return "FAILED!!";
     }

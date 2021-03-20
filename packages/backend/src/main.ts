@@ -20,7 +20,9 @@ admin.initializeApp({
 });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ["debug", "warn", "error"],
+  });
 
   Sentry.init({
     dsn: process.env.SENTRY_DSN,

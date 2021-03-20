@@ -58,7 +58,7 @@ export class InstagramService {
       return results;
     }
 
-    this.logger.log(`results: ${results.length}`);
+    this.logger.debug(`results: ${results.length}`);
 
     if (!results.length) {
       return;
@@ -81,7 +81,7 @@ export class InstagramService {
         mediaCount,
       } = userData;
 
-      this.logger.log(`${index} ${username}`);
+      this.logger.debug(`${index} ${username}`);
 
       const target = baseDataMapping[username];
       const account = await this.prisma.instagramUser.findUnique({ where: { id: ownerId } }).account();
@@ -188,7 +188,7 @@ export class InstagramService {
       where: { updatedAt: { lte: beforeDate.toDate() } },
     });
 
-    this.logger.log(`users: ${users.length}`);
+    this.logger.debug(`users: ${users.length}`);
     if (!users.length) {
       return;
     }

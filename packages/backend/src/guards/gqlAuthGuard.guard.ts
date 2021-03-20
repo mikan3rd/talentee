@@ -20,7 +20,7 @@ export class GqlAuthGuard implements CanActivate {
       .auth()
       .verifyIdToken(idToken)
       .catch((e) => {
-        this.logger.log(e);
+        this.logger.debug(e);
         throw new UnauthorizedException();
       });
 
