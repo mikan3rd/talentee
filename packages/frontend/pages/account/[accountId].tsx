@@ -35,10 +35,6 @@ export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>
 };
 
 const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  if (isFallback) {
-    return null;
-  }
-
   const {
     getAccountPage: { uuid, displayName },
   } = props;
