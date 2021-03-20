@@ -345,7 +345,7 @@ export class AccountService {
     const accountUrl = `https://talentee.jp/account/${account.uuid}`;
 
     // OGPを表示させるためにTwitterのcacheを更新
-    await this.crawlService.updateTwitterCardCache([accountUrl]);
+    // await this.crawlService.updateTwitterCardCache([accountUrl]);
 
     let statuses = [`【人気YouTuberまとめ】`, ``, youtubeChannel.title, ``];
 
