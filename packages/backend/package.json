@@ -14,7 +14,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "ts-node": "ts-node -r tsconfig-paths/register",
-    "migrate": "yarn prisma migrate --preview-feature",
+    "migrate": "yarn prisma migrate",
     "migrate:dev": "yarn migrate dev --create-only",
     "migrate:deploy": "yarn migrate deploy",
     "type-check": "tsc --noEmit",
