@@ -1,7 +1,6 @@
 import React from "react";
 
 import { GetStaticPaths, GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
-import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, YoutubeIndex } from "@/components/pages/YoutubeIndex";
@@ -19,7 +18,7 @@ const AllCategory = "all" as const;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],
-  fallback: true,
+  fallback: "blocking",
 });
 
 export const getStaticProps: GetStaticProps<Props, { categoryId: string }> = async ({ params }) => {
@@ -72,12 +71,6 @@ export const getCommonStaticProps = async ({
 };
 
 export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  const { isFallback } = useRouter();
-
-  if (isFallback) {
-    return null;
-  }
-
   const { selectedVideoCategory, page } = props;
   return (
     <>

@@ -147,7 +147,7 @@ export class AccountService {
 
     let serviceUsernames: ServiceNameDataList = [];
     for (const [index, channel] of youtubeChannels.entries()) {
-      this.logger.log(`${index} ${channel.id}`);
+      this.logger.debug(`${index} ${channel.id}`);
       const linkUrls = await this.crawlService.getServiceLinkByYoutube(channel.id);
 
       if (!linkUrls) {
@@ -254,7 +254,7 @@ export class AccountService {
         return true;
       });
 
-      this.logger.log(`serviceName: ${serviceName}, data: ${data.length}, filteredData: ${filteredData.length}`);
+      this.logger.debug(`serviceName: ${serviceName}, data: ${data.length}, filteredData: ${filteredData.length}`);
 
       if (serviceName === "youtube") {
         const baseData = filteredData.map(({ accountId, username }) => ({ accountId, channelId: username }));
@@ -310,7 +310,7 @@ export class AccountService {
       }
     }
 
-    this.logger.log(
+    this.logger.debug(
       `account: ${accounts.length}, youtube: ${youtubeBaseDataList.length}, twitter: ${twitterBaseDataList.length}, instagram: ${instagramBaseDataList.length}, tiktok: ${tiktokBaseDataList.length}`,
     );
 
@@ -322,7 +322,7 @@ export class AccountService {
 
   async addYoutubeChannelByYoutura(pageNum: number) {
     const channeUrls = await this.crawlService.crawlYouturaRanking(pageNum);
-    this.logger.log(`channeUrls: ${channeUrls.length}`);
+    this.logger.debug(`channeUrls: ${channeUrls.length}`);
     const channelIds = channeUrls.map((url) => this.judgeServiceAccount(url)).map((service) => service.username);
     const baseDataList = channelIds.map((channelId) => ({ channelId }));
     await this.youtubeService.bulkUpsertChannelByChannelId(baseDataList, false);
@@ -345,7 +345,7 @@ export class AccountService {
     const accountUrl = `https://talentee.jp/account/${account.uuid}`;
 
     // OGPを表示させるためにTwitterのcacheを更新
-    await this.crawlService.updateTwitterCardCache([accountUrl]);
+    // await this.crawlService.updateTwitterCardCache([accountUrl]);
 
     let statuses = [`【人気YouTuberまとめ】`, ``, youtubeChannel.title, ``];
 

@@ -12,7 +12,7 @@ export class InstagramController {
 
   @Get("/crawlInstagramProfile")
   async crawlInstagramProfile(@Res() res: Response, @Query("username") username?: string) {
-    this.logger.log(username);
+    this.logger.debug(username);
     if (!username) {
       return res.send("FAILED!!");
     }
@@ -26,7 +26,7 @@ export class InstagramController {
 
   @Post("/addAccount")
   async addAccount(@Res() res: Response, @Body("username") username?: string) {
-    this.logger.log(`username: ${username}`);
+    this.logger.debug(`username: ${username}`);
     if (!username) {
       return res.send("FAILED!!");
     }

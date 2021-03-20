@@ -124,7 +124,7 @@ export class CrawlService {
     }
 
     const uniqueVideoIds = Array.from(new Set(videoIds));
-    this.logger.log(`uniqueVideoIds: ${uniqueVideoIds}`);
+    this.logger.debug(`uniqueVideoIds: ${uniqueVideoIds}`);
     return uniqueVideoIds;
   }
 
@@ -188,13 +188,13 @@ export class CrawlService {
         return `${UrlObj.origin}${UrlObj.pathname}`;
       }) ?? [];
 
-    this.logger.log(`linkUrls: ${linkUrls}`);
+    this.logger.debug(`linkUrls: ${linkUrls}`);
     return linkUrls;
   }
 
   async loginInstagram(page: Puppeteer.Page) {
     let currentUrl = page.url();
-    this.logger.log(`firstUrl: ${currentUrl}`);
+    this.logger.debug(`firstUrl: ${currentUrl}`);
 
     if (currentUrl.includes("login")) {
       const UsernameSelector = "input[name=username]";
@@ -216,7 +216,7 @@ export class CrawlService {
       await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
 
       currentUrl = page.url();
-      this.logger.log(`secondUrl: ${currentUrl}`);
+      this.logger.debug(`secondUrl: ${currentUrl}`);
     }
 
     if (currentUrl.includes("onetap")) {
@@ -225,7 +225,7 @@ export class CrawlService {
       await Promise.all([page.click(ButtonSelector), page.waitForNavigation()]);
 
       currentUrl = page.url();
-      this.logger.log(`thirdUrl: ${currentUrl}`);
+      this.logger.debug(`thirdUrl: ${currentUrl}`);
     }
   }
 
@@ -234,12 +234,12 @@ export class CrawlService {
 
     await page.goto("https://www.google.com/", { waitUntil: ["load", "networkidle2"] });
     let currentUrl = page.url();
-    this.logger.log(`startUrl: ${currentUrl}`);
+    this.logger.debug(`startUrl: ${currentUrl}`);
 
     const profileDataList: InstagramUserBaseType[] = [];
 
     for (const [index, username] of usernames.entries()) {
-      this.logger.log(`${index}  ${username}`);
+      this.logger.debug(`${index}  ${username}`);
       try {
         const targetUrl = `https://www.instagram.com/${username}/`;
         await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
@@ -251,7 +251,7 @@ export class CrawlService {
           await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
 
           currentUrl = page.url();
-          this.logger.log(`fourthUrl: ${currentUrl}`);
+          this.logger.debug(`fourthUrl: ${currentUrl}`);
         }
 
         const sharedData: shareDataType = JSON.parse(await page.evaluate(() => JSON.stringify(window._sharedData)));
@@ -259,7 +259,7 @@ export class CrawlService {
         const { ProfilePage } = sharedData.entry_data;
 
         if (!ProfilePage) {
-          this.logger.log(`Failed: crawlInstagramProfile ${username}`);
+          this.logger.debug(`Failed: crawlInstagramProfile ${username}`);
           continue;
         }
 
@@ -373,7 +373,7 @@ export class CrawlService {
 
     await page.goto("https://www.google.com/", { waitUntil: ["load", "networkidle2"] });
     let currentUrl = page.url();
-    this.logger.log(`startUrl: ${currentUrl}`);
+    this.logger.debug(`startUrl: ${currentUrl}`);
 
     try {
       const targetUrl = `https://www.instagram.com/explore/`;
@@ -385,7 +385,7 @@ export class CrawlService {
       if (currentUrl !== targetUrl) {
         await page.goto(targetUrl, { waitUntil: ["load", "networkidle2"] });
         currentUrl = page.url();
-        this.logger.log(`fourthUrl: ${currentUrl}`);
+        this.logger.debug(`fourthUrl: ${currentUrl}`);
       }
     } finally {
       await browser.close();
@@ -401,7 +401,7 @@ export class CrawlService {
 
     const userDataList: { userInfo: TiktokUserType; items: TiktokItemType[] }[] = [];
     for (const [index, uniqueId] of uniqueIds.entries()) {
-      this.logger.log(`${index}  ${uniqueId}`);
+      this.logger.debug(`${index}  ${uniqueId}`);
 
       try {
         const url = `https://www.tiktok.com/@${uniqueId}`;
@@ -412,7 +412,7 @@ export class CrawlService {
           return element !== null;
         });
 
-        this.logger.log(`hasVerify: ${hasVerify}`);
+        this.logger.debug(`hasVerify: ${hasVerify}`);
         if (hasVerify) {
           await Promise.all([page.reload({ waitUntil: ["load", "networkidle2"] }), page.waitForNavigation()]);
         }
@@ -448,7 +448,7 @@ export class CrawlService {
       },
     );
     const recommendUniqueIds = recommendResponse.data.itemList.map((item) => item.author.uniqueId);
-    this.logger.log(recommendUniqueIds);
+    this.logger.debug(recommendUniqueIds);
 
     const discoverResponse = await axios.get<{ body: { exploreList: { cardItem: { subTitle: string } }[] }[] }>(
       `https://www.tiktok.com/node/share/discover`,
@@ -460,7 +460,7 @@ export class CrawlService {
     const discoverUniqueIds = discoverResponse.data.body[0].exploreList.map(({ cardItem: { subTitle } }) =>
       subTitle.replace("@", ""),
     );
-    this.logger.log(discoverUniqueIds);
+    this.logger.debug(discoverUniqueIds);
 
     return Array.from(new Set([...recommendUniqueIds, ...discoverUniqueIds]));
   }
@@ -543,7 +543,7 @@ export class CrawlService {
         await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
 
         currentUrl = page.url();
-        this.logger.log(`secondUrl: ${currentUrl}`);
+        this.logger.debug(`secondUrl: ${currentUrl}`);
       }
 
       if (currentUrl.includes("login_challenge")) {
@@ -554,14 +554,14 @@ export class CrawlService {
         await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation({ waitUntil: "networkidle2" })]);
 
         currentUrl = page.url();
-        this.logger.log(`thirdUrl: ${currentUrl}`);
+        this.logger.debug(`thirdUrl: ${currentUrl}`);
       }
 
       const urlSelector = `input[name="url"]`;
       const iframeSelector = `iframe`;
       const buttonSelector = `input[type="submit"]`;
       for (const [index, url] of urls.entries()) {
-        this.logger.log(`${index}: ${url}`);
+        this.logger.debug(`${index}: ${url}`);
         await page.$eval(urlSelector, (element) => ((element as HTMLInputElement).value = ""));
         await page.type(urlSelector, url);
         await page.click(buttonSelector);

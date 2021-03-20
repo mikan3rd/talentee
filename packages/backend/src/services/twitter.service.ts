@@ -88,7 +88,7 @@ export class TwitterService {
         public_metrics: { followers_count, following_count, listed_count, tweet_count },
       } = userData;
 
-      this.logger.log(`${index} ${username}`);
+      this.logger.debug(`${index} ${username}`);
 
       const tweetResponse = await this.searchRecentTweets(`from:${username} -is:retweet -is:reply -is:quote`);
 
@@ -253,7 +253,7 @@ export class TwitterService {
       where: { updatedAt: { lte: beforeDate.toDate() } },
     });
 
-    this.logger.log(`users: ${users.length}`);
+    this.logger.debug(`users: ${users.length}`);
     if (!users.length) {
       return;
     }

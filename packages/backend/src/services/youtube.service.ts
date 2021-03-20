@@ -223,7 +223,7 @@ export class YoutubeService {
   async saveTrendChannel() {
     const videoIds = (await this.crawlService.getTrendVideoIds()) ?? [];
 
-    this.logger.log(`videoIds.length: ${videoIds.length}`);
+    this.logger.debug(`videoIds.length: ${videoIds.length}`);
 
     let channelIds: string[] = [];
     for (const chunkVideoIds of this.utilsService.chunk(videoIds, 50)) {
@@ -251,7 +251,7 @@ export class YoutubeService {
       })
     ).map(({ id }) => id);
     const filteredChannelIds = uniqueChannelIds.filter((channelId) => !existChannelIds.includes(channelId));
-    this.logger.log(
+    this.logger.debug(
       `uniqueChannelIds: ${uniqueChannelIds.length}, existChannelIds: ${existChannelIds.length}, filteredChannelIds: ${filteredChannelIds.length}`,
     );
 
@@ -283,11 +283,11 @@ export class YoutubeService {
       );
     }
 
-    this.logger.log(`channelDataList: ${channelDataList.length}`);
+    this.logger.debug(`channelDataList: ${channelDataList.length}`);
 
     for (const [index, { youtubeChannel, youtubeKeywords }] of channelDataList.entries()) {
       const target = baseDataMapping[youtubeChannel.id];
-      this.logger.log(`${index} ${youtubeChannel.id} ${target.accountId}`);
+      this.logger.debug(`${index} ${youtubeChannel.id} ${target.accountId}`);
       await this.upsertChannel(youtubeChannel, youtubeKeywords, target.accountId);
       await this.saveChannelPopularVideo(youtubeChannel.id);
     }

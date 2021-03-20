@@ -159,7 +159,7 @@ export class TiktokService {
           user: { uniqueId },
         },
       } = result;
-      this.logger.log(`${index} ${uniqueId}`);
+      this.logger.debug(`${index} ${uniqueId}`);
 
       const target = baseDataMapping[uniqueId];
       const account = await this.prisma.tiktokUser.findUnique({ where: { id: uniqueId } }).account();
