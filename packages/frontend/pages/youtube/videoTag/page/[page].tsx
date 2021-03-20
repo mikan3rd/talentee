@@ -5,7 +5,7 @@ import YoutubeKeywordIndexPage, { getCommonStaticProps } from "@/pages/youtube/v
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],
-  fallback: true,
+  fallback: "blocking",
 });
 
 export const getStaticProps: GetStaticProps<Props, { page: string }> = async ({ params }) => {

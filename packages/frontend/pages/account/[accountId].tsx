@@ -2,7 +2,6 @@ import React from "react";
 
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Account } from "@/components/pages/Account";
@@ -13,7 +12,7 @@ import { GetAccountPageDocument, GetAccountPageQuery, GetAccountPageQueryVariabl
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],
-  fallback: true,
+  fallback: "blocking",
 });
 
 export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>, { accountId: string }> = async ({
@@ -36,8 +35,6 @@ export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>
 };
 
 const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  const { isFallback } = useRouter();
-
   if (isFallback) {
     return null;
   }

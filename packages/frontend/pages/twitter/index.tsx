@@ -1,7 +1,6 @@
 import React from "react";
 
 import { GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
-import { useRouter } from "next/router";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
 import { Props, TwitterIndex } from "@/components/pages/TwitterIndex";
@@ -37,12 +36,6 @@ export const getCommonStaticProps = async ({ page }: { page: number }): Promise<
 };
 
 const TwitterIndexPage = React.memo<InferGetStaticPropsType<typeof getCommonStaticProps>>((props) => {
-  const { isFallback } = useRouter();
-
-  if (isFallback) {
-    return null;
-  }
-
   const { page } = props;
 
   return (
