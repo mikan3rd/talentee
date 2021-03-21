@@ -19,6 +19,9 @@ export class YoutubeRankingPage extends PaginationCount {
 export class YoutubeKeywordRankingPage extends PaginationCount {
   @Field((type) => [YoutubeChannel])
   youtubeChannels!: YoutubeChannel[];
+
+  @Field((type) => YoutubeKeyword, { nullable: true })
+  youtubeKeyword!: YoutubeKeyword;
 }
 
 @ObjectType()

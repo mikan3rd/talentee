@@ -56,8 +56,8 @@ export const YoutubeVideoTagIndex = React.memo<Props>(({ page, take, getYoutubeV
     (event: React.MouseEvent, { result: { id, title, category } }: SearchResultData) => {
       if (category === "keyword") {
         router.push({
-          pathname: "/youtube/keyword/[keywordTitle]",
-          query: { keywordTitle: title },
+          pathname: "/youtube/keyword/[keywordParams]",
+          query: { keywordParams: id },
         });
       } else if (category === "tag") {
         router.push({

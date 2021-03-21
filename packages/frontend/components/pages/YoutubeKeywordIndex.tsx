@@ -56,8 +56,8 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
     (event: React.MouseEvent, { result: { id, title, category } }: SearchResultData) => {
       if (category === "keyword") {
         router.push({
-          pathname: "/youtube/keyword/[keywordTitle]",
-          query: { keywordTitle: title },
+          pathname: "/youtube/keyword/[keywordParams]",
+          query: { keywordParams: id },
         });
       } else if (category === "tag") {
         router.push({
@@ -148,6 +148,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
       <Divider />
 
       <Search
+        category
         value={searchText}
         onSearchChange={handleSearchChange}
         loading={loading || debounce}
@@ -167,7 +168,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
       >
         {youtubeKeywords.map((keyword, index) => {
           return (
-            <Link key={index} href={`/youtube/keyword/${keyword.title}`} passHref prefetch={false}>
+            <Link key={index} href={`/youtube/keyword/${keyword.id}`} passHref prefetch={false}>
               <Label
                 tag
                 size="large"

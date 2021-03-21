@@ -30,8 +30,10 @@ export class YoutubeResolver {
   }
 
   @Query((returns) => YoutubeKeywordRankingPage)
-  async getYoutubeKeywordRankingPage(@Args("pagination") { take, page, keywordTitle }: YoutubeKeywordPaginationInput) {
-    return this.youtubeService.getKeywordRankingPage({ take, page, keywordTitle });
+  async getYoutubeKeywordRankingPage(
+    @Args("pagination") { take, page, keywordTitle, keywordId }: YoutubeKeywordPaginationInput,
+  ) {
+    return this.youtubeService.getKeywordRankingPage({ take, page, keywordTitle, keywordId });
   }
 
   @Query((returns) => YoutubeVideoTagRankingPage)

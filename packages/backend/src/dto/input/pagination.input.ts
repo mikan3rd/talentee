@@ -20,8 +20,11 @@ export class YoutubeCategoryPaginationInput extends PaginationInput {
 
 @InputType()
 export class YoutubeKeywordPaginationInput extends PaginationInput {
-  @Field()
-  keywordTitle!: string;
+  @Field({ nullable: true })
+  keywordTitle?: string;
+
+  @Field((type) => Int, { nullable: true })
+  keywordId?: number;
 }
 
 @InputType()

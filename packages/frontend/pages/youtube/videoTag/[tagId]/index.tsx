@@ -72,8 +72,8 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
   return (
     <>
       <Meta
-        title={`${youtubeTag?.title}の動画で人気のYouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
-        description={`「${youtubeTag?.title}」の動画で人気のYouTubeチャンネルをチェック！`}
+        title={`${youtubeTag.title}の動画で人気のYouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
+        description={`「${youtubeTag.title}」の動画で人気のYouTubeチャンネルをチェック！`}
       />
 
       <Breadcrumb size="big">
@@ -83,7 +83,7 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
         <Breadcrumb.Divider />
         <YoutubeVideoTagIndexSection />
         <Breadcrumb.Divider />
-        <YoutubeVideoTagSection tagId={youtubeTag?.id} tagTitle={youtubeTag?.title} active={true} />
+        <YoutubeVideoTagSection tagId={youtubeTag.id} tagTitle={youtubeTag.title} active={true} />
       </Breadcrumb>
 
       <Divider />

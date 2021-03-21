@@ -25,27 +25,36 @@ export const getStaticPaths: GetStaticPaths = async () => ({
   fallback: "blocking",
 });
 
-export const getStaticProps: GetStaticProps<Props, { keywordTitle: string }> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Props, { keywordParams: string }> = async ({ params }) => {
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  return await getCommonStaticProps({ keywordTitle: params.keywordTitle, page: 1 });
+  return await getCommonStaticProps({ keywordParams: params.keywordParams, page: 1 });
 };
 
 export const getCommonStaticProps = async ({
-  keywordTitle,
+  keywordParams,
   page,
 }: {
-  keywordTitle: string;
+  keywordParams: string;
   page: number;
 }): Promise<GetStaticPropsResult<Props>> => {
+  let keywordTitle: GetYoutubeKeywordRankingPageQueryVariables["pagination"]["keywordTitle"] = undefined;
+  let keywordId: GetYoutubeKeywordRankingPageQueryVariables["pagination"]["keywordId"] = undefined;
+
+  if (Number.isNaN(Number(keywordParams))) {
+    keywordTitle = keywordParams;
+  } else {
+    keywordId = Number(keywordParams);
+  }
+
   const { data } = await client.query<GetYoutubeKeywordRankingPageQuery, GetYoutubeKeywordRankingPageQueryVariables>({
     query: GetYoutubeKeywordRankingPageDocument,
-    variables: { pagination: { take, page, keywordTitle } },
+    variables: { pagination: { take, page, keywordTitle, keywordId } },
   });
 
-  if (!data.getYoutubeKeywordRankingPage) {
+  if (!data.getYoutubeKeywordRankingPage.youtubeKeyword) {
     return { redirect: { statusCode: 302, destination: "/youtube/keyword" } };
   }
 
@@ -53,7 +62,6 @@ export const getCommonStaticProps = async ({
     props: {
       take,
       page,
-      keywordTitle,
       getYoutubeKeywordRankingPage: data.getYoutubeKeywordRankingPage,
     },
     revalidate: 60 * 10,
@@ -61,13 +69,20 @@ export const getCommonStaticProps = async ({
 };
 
 export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {
-  const { keywordTitle, page } = props;
+  const {
+    getYoutubeKeywordRankingPage: { youtubeKeyword },
+    page,
+  } = props;
+
+  if (!youtubeKeyword) {
+    return null;
+  }
 
   return (
     <>
       <Meta
-        title={`${keywordTitle}で人気のYouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
-        description={`キーワード「${keywordTitle}」で人気のYouTubeチャンネルをチェック！`}
+        title={`${youtubeKeyword.title}で人気のYouTuberランキング！${page > 1 ? ` (${page}ページ目)` : ""}`}
+        description={`キーワード「${youtubeKeyword.title}」で人気のYouTubeチャンネルをチェック！`}
       />
 
       <Breadcrumb size="big">
@@ -77,7 +92,7 @@ export default React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props
         <Breadcrumb.Divider />
         <YoutubeKeywordIndexSection />
         <Breadcrumb.Divider />
-        <YoutubeKeywordSection keywordTitle={keywordTitle} active={true} />
+        <YoutubeKeywordSection keywordId={youtubeKeyword.id} keywordTitle={youtubeKeyword.title} active={true} />
       </Breadcrumb>
 
       <Divider />

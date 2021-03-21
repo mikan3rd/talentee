@@ -111,8 +111,23 @@ export class YoutubeService {
     };
   }
 
-  async getKeywordRankingPage({ take, page, keywordTitle }: { take: number; page: number; keywordTitle: string }) {
-    const where: Prisma.YoutubeChannelWhereInput = { keywords: { some: { keyword: { title: keywordTitle } } } };
+  async getKeywordRankingPage({
+    take,
+    page,
+    keywordTitle,
+    keywordId,
+  }: {
+    take: number;
+    page: number;
+    keywordTitle?: string;
+    keywordId?: number;
+  }) {
+    const youtubeKeyword = await this.prisma.youtubeKeyword.findUnique({
+      where: { id: keywordId, title: keywordTitle },
+    });
+    const where: Prisma.YoutubeChannelWhereInput = {
+      keywords: { some: { keyword: { id: keywordId, title: keywordTitle } } },
+    };
     const totalCount = await this.prisma.youtubeChannel.count({ where });
     const youtubeChannels = await this.prisma.youtubeChannel.findMany({
       take,
@@ -135,6 +150,7 @@ export class YoutubeService {
     return {
       totalPages: Math.ceil(totalCount / take),
       youtubeChannels,
+      youtubeKeyword,
     };
   }
 
