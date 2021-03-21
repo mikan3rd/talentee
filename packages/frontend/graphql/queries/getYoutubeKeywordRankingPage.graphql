@@ -1,5 +1,9 @@
 query getYoutubeKeywordRankingPage($pagination: YoutubeKeywordPaginationInput!) {
   getYoutubeKeywordRankingPage(pagination: $pagination) {
+    youtubeKeyword {
+      id
+      title
+    }
     totalPages
     youtubeChannels {
       id

@@ -19,131 +19,128 @@ import { GetYoutubeKeywordRankingPageQuery } from "@/graphql/generated";
 export type Props = {
   page: number;
   take: number;
-  keywordTitle: string;
   getYoutubeKeywordRankingPage: NonNullable<GetYoutubeKeywordRankingPageQuery["getYoutubeKeywordRankingPage"]>;
 };
 
-export const YoutubeKeywordRankingIndex = React.memo<Props>(
-  ({ page, take, keywordTitle, getYoutubeKeywordRankingPage }) => {
-    const router = useRouter();
+export const YoutubeKeywordRankingIndex = React.memo<Props>(({ page, take, getYoutubeKeywordRankingPage }) => {
+  const router = useRouter();
 
-    const handlePageChange = React.useCallback(
-      async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
-        router.push({
-          pathname: "/youtube/keyword/[keywordTitle]/page/[page]",
-          query: { keywordTitle, page: data.activePage },
-        });
-      },
-      [keywordTitle, router],
-    );
+  const { youtubeChannels, totalPages, youtubeKeyword } = getYoutubeKeywordRankingPage;
 
-    const { youtubeChannels, totalPages } = getYoutubeKeywordRankingPage;
+  const handlePageChange = React.useCallback(
+    async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
+      router.push({
+        pathname: "/youtube/keyword/[keywordTitle]/page/[page]",
+        query: { keywordTitle: youtubeKeyword?.id, page: data.activePage },
+      });
+    },
+    [router, youtubeKeyword?.id],
+  );
 
-    return (
-      <>
-        <Header
-          as="h1"
-          color="red"
+  return (
+    <>
+      <Header
+        as="h1"
+        color="red"
+        css={css`
+          display: flex;
+          align-items: center;
+          @media (max-width: 600px) {
+            display: block;
+          }
+        `}
+      >
+        <div
           css={css`
             display: flex;
             align-items: center;
+          `}
+        >
+          <Icon name="youtube" color="red" size="big" />
+          YouTubeランキング
+        </div>
+        <span
+          css={css`
+            color: black;
+            font-size: 18px;
+            margin-left: 10px;
             @media (max-width: 600px) {
-              display: block;
+              margin-left: 0;
             }
           `}
         >
-          <div
-            css={css`
-              display: flex;
-              align-items: center;
-            `}
-          >
-            <Icon name="youtube" color="red" size="big" />
-            YouTubeランキング
-          </div>
-          <span
-            css={css`
-              color: black;
-              font-size: 18px;
-              margin-left: 10px;
-              @media (max-width: 600px) {
-                margin-left: 0;
-              }
-            `}
-          >
-            {keywordTitle}
-          </span>
-          <span
-            css={css`
-              color: black;
-              margin-left: 10px;
-              font-size: 14px;
-            `}
-          >
-            {page}ページ目
-          </span>
-        </Header>
-
-        <p>「{keywordTitle}」で人気のYoutubeチャンネル一覧</p>
-
-        <Divider />
-
-        <div
+          {youtubeKeyword?.title}
+        </span>
+        <span
           css={css`
+            color: black;
+            margin-left: 10px;
+            font-size: 14px;
+          `}
+        >
+          {page}ページ目
+        </span>
+      </Header>
+
+      <p>「{youtubeKeyword?.title}」で人気のYoutubeチャンネル一覧</p>
+
+      <Divider />
+
+      <div
+        css={css`
+          margin-top: 10px;
+        `}
+      >
+        {youtubeChannels.map((data, index) => {
+          return (
+            <YoutubeCard
+              key={data.id}
+              {...data}
+              rankNum={toRankingNumByPagination({ page, take, index })}
+              activeKeywordTitle={youtubeKeyword?.title}
+            />
+          );
+        })}
+      </div>
+
+      <Pagination
+        css={css`
+          &&& {
+            width: 100%;
             margin-top: 10px;
-          `}
-        >
-          {youtubeChannels.map((data, index) => {
-            return (
-              <YoutubeCard
-                key={data.id}
-                {...data}
-                rankNum={toRankingNumByPagination({ page, take, index })}
-                activeKeywordTitle={keywordTitle}
-              />
-            );
-          })}
-        </div>
-
-        <Pagination
-          css={css`
-            &&& {
-              width: 100%;
-              margin-top: 10px;
-              overflow-x: auto;
-              > a {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-              }
+            overflow-x: auto;
+            > a {
+              flex-grow: 1;
+              display: flex;
+              justify-content: center;
             }
-          `}
-          activePage={page}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+          }
+        `}
+        activePage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
-        <div
-          css={css`
-            margin-top: 15px;
-          `}
-        >
-          <YoutubeKeywordLinkButton />
-          <YoutubeVideoTagLinkButton />
-        </div>
+      <div
+        css={css`
+          margin-top: 15px;
+        `}
+      >
+        <YoutubeKeywordLinkButton />
+        <YoutubeVideoTagLinkButton />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <div>
-          <TwitterIndexLinkButton />
-          <InstagramIndexLinkButton />
-          <TiktokIndexLinkButton />
-        </div>
+      <div>
+        <TwitterIndexLinkButton />
+        <InstagramIndexLinkButton />
+        <TiktokIndexLinkButton />
+      </div>
 
-        <Divider />
+      <Divider />
 
-        <IndexLinkButton />
-      </>
-    );
-  },
-);
+      <IndexLinkButton />
+    </>
+  );
+});

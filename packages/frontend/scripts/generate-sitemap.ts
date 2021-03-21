@@ -45,10 +45,10 @@ const baseUrl = "https://talentee.jp";
   }));
   youtubeCategoryPages.unshift({ path: `/youtube/category/all` });
   const youtubeKeywordPages = youtubeKeywords.map((keyword) => ({
-    path: `/youtube/keyword/${encodeURIComponent(keyword.title)}`,
+    path: `/youtube/keyword/${keyword.id}`,
   }));
   const youtubevideoTagPages = youtubeTags.map((tag) => ({
-    path: `/youtube/videoTag/${encodeURIComponent(tag.id)}`,
+    path: `/youtube/videoTag/${tag.id}`,
   }));
   const accountPages = accounts.map((account) => ({ path: `/account/${account.uuid}`, updatedAt: account.updatedAt }));
 

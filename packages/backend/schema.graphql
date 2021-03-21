@@ -257,6 +257,7 @@ type YoutubeRankingPage {
 type YoutubeKeywordRankingPage {
   totalPages: Int!
   youtubeChannels: [YoutubeChannel!]!
+  youtubeKeyword: YoutubeKeyword
 }
 
 type YoutubeVideoTagRankingPage {
@@ -342,7 +343,8 @@ input YoutubeCategoryPaginationInput {
 input YoutubeKeywordPaginationInput {
   take: Int!
   page: Int!
-  keywordTitle: String!
+  keywordTitle: String
+  keywordId: Int
 }
 
 input YoutubeVideoTagPaginationInput {

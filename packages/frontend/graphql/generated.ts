@@ -267,6 +267,7 @@ export type YoutubeRankingPage = {
 export type YoutubeKeywordRankingPage = {
   totalPages: Scalars["Int"];
   youtubeChannels: Array<YoutubeChannel>;
+  youtubeKeyword?: Maybe<YoutubeKeyword>;
 };
 
 export type YoutubeVideoTagRankingPage = {
@@ -396,7 +397,8 @@ export type YoutubeCategoryPaginationInput = {
 export type YoutubeKeywordPaginationInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
-  keywordTitle: Scalars["String"];
+  keywordTitle?: Maybe<Scalars["String"]>;
+  keywordId?: Maybe<Scalars["Int"]>;
 };
 
 export type YoutubeVideoTagPaginationInput = {
@@ -523,7 +525,7 @@ export type GetSitemapDataQuery = {
   getSitemapData: {
     accounts: Array<Pick<Account, "uuid" | "updatedAt">>;
     youtubeVideoCategories: Array<Pick<YoutubeVideoCategory, "id">>;
-    youtubeKeywords: Array<Pick<YoutubeKeyword, "title">>;
+    youtubeKeywords: Array<Pick<YoutubeKeyword, "id">>;
     youtubeTags: Array<Pick<YoutubeTag, "id">>;
   };
 };
@@ -693,6 +695,7 @@ export type GetYoutubeKeywordRankingPageQueryVariables = Exact<{
 
 export type GetYoutubeKeywordRankingPageQuery = {
   getYoutubeKeywordRankingPage: Pick<YoutubeKeywordRankingPage, "totalPages"> & {
+    youtubeKeyword?: Maybe<Pick<YoutubeKeyword, "id" | "title">>;
     youtubeChannels: Array<
       Pick<
         YoutubeChannel,
@@ -1088,7 +1091,7 @@ export const GetSitemapDataDocument = gql`
         id
       }
       youtubeKeywords {
-        title
+        id
       }
       youtubeTags {
         id
@@ -1508,6 +1511,10 @@ export type GetYoutubeCategoryRankingPageQueryResult = Apollo.QueryResult<
 export const GetYoutubeKeywordRankingPageDocument = gql`
   query getYoutubeKeywordRankingPage($pagination: YoutubeKeywordPaginationInput!) {
     getYoutubeKeywordRankingPage(pagination: $pagination) {
+      youtubeKeyword {
+        id
+        title
+      }
       totalPages
       youtubeChannels {
         id
