@@ -115,7 +115,7 @@ export class AccountService {
       select: { id: true },
     });
     const youtubeKeywords = await this.prisma.youtubeKeyword.findMany({
-      select: { title: true },
+      select: { id: true },
       where: { num: { gte: 3 } },
       orderBy: { num: "desc" },
     });
