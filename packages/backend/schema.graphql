@@ -325,6 +325,7 @@ type Query {
   getInstagramRankingPage(pagination: PaginationInput!): InstagramRankingPage!
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
   getCurrentUser: User!
+  findAccountByUsername(username: AccountSearchByUsernameInput!): Account
 }
 
 input AccountSearchInput {
@@ -361,4 +362,15 @@ input PaginationInput {
 input YoutubeKeywordSearchInput {
   take: Int!
   word: String!
+}
+
+input AccountSearchByUsernameInput {
+  youtubeChannelId: String
+  twitterUsername: String
+  instagramUsername: String
+  tiktokUniqueId: String
+}
+
+type Mutation {
+  addAccountByUsername(username: AccountSearchByUsernameInput!): Account!
 }

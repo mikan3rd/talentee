@@ -35,11 +35,17 @@ async function bootstrap() {
   morgan.token("graphql-query", (req) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const { operationName, variables } = req.body;
+    const { body } = req;
+
+    if (!body) {
+      return;
+    }
+
+    const { operationName, variables } = body;
     if (operationName) {
       return `\nOperation Name: ${operationName}\nVariables: ${JSON.stringify(variables)}`;
     }
-    return "";
+    return;
   });
   app.use(morgan(":method :url :status :response-time ms :graphql-query"));
 

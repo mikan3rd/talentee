@@ -2,6 +2,7 @@ import React from "react";
 
 import { Container } from "semantic-ui-react";
 
+import { AddAccountForm } from "@/components/organisms/AddAccountForm";
 import { useAuthContext } from "@/context/auth";
 
 export const AdminIndex = React.memo(() => {
@@ -15,7 +16,7 @@ export const AdminIndex = React.memo(() => {
 
   return (
     <Container>
-      <div>TEST</div>
+      <AddAccountForm />
     </Container>
   );
 });

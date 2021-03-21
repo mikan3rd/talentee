@@ -335,6 +335,7 @@ export type Query = {
   getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
   getCurrentUser: User;
+  findAccountByUsername?: Maybe<Account>;
 };
 
 export type QueryGetAccountPageArgs = {
@@ -381,6 +382,10 @@ export type QueryGetTiktokRankingPageArgs = {
   pagination: PaginationInput;
 };
 
+export type QueryFindAccountByUsernameArgs = {
+  username: AccountSearchByUsernameInput;
+};
+
 export type AccountSearchInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
@@ -415,6 +420,49 @@ export type PaginationInput = {
 export type YoutubeKeywordSearchInput = {
   take: Scalars["Int"];
   word: Scalars["String"];
+};
+
+export type AccountSearchByUsernameInput = {
+  youtubeChannelId?: Maybe<Scalars["String"]>;
+  twitterUsername?: Maybe<Scalars["String"]>;
+  instagramUsername?: Maybe<Scalars["String"]>;
+  tiktokUniqueId?: Maybe<Scalars["String"]>;
+};
+
+export type Mutation = {
+  addAccountByUsername: Account;
+};
+
+export type MutationAddAccountByUsernameArgs = {
+  username: AccountSearchByUsernameInput;
+};
+
+export type AddAccountByUsernameMutationVariables = Exact<{
+  username: AccountSearchByUsernameInput;
+}>;
+
+export type AddAccountByUsernameMutation = {
+  addAccountByUsername: Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
+    youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+    twitterUsers: Array<Pick<TwitterUser, "username">>;
+    instagramUsers: Array<Pick<InstagramUser, "username">>;
+    tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+  };
+};
+
+export type FindAccountByUsernameQueryVariables = Exact<{
+  username: AccountSearchByUsernameInput;
+}>;
+
+export type FindAccountByUsernameQuery = {
+  findAccountByUsername?: Maybe<
+    Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
+      youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+      twitterUsers: Array<Pick<TwitterUser, "username">>;
+      instagramUsers: Array<Pick<InstagramUser, "username">>;
+      tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+    }
+  >;
 };
 
 export type GetAccountPageQueryVariables = Exact<{
@@ -795,6 +843,126 @@ export type SearchYoutubeKeywordByWordQuery = {
   };
 };
 
+export const AddAccountByUsernameDocument = gql`
+  mutation addAccountByUsername($username: AccountSearchByUsernameInput!) {
+    addAccountByUsername(username: $username) {
+      uuid
+      displayName
+      thumbnailUrl
+      youtubeChannels {
+        id
+      }
+      twitterUsers {
+        username
+      }
+      instagramUsers {
+        username
+      }
+      tiktokUsers {
+        uniqueId
+      }
+    }
+  }
+`;
+export type AddAccountByUsernameMutationFn = Apollo.MutationFunction<
+  AddAccountByUsernameMutation,
+  AddAccountByUsernameMutationVariables
+>;
+
+/**
+ * __useAddAccountByUsernameMutation__
+ *
+ * To run a mutation, you first call `useAddAccountByUsernameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAccountByUsernameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAccountByUsernameMutation, { data, loading, error }] = useAddAccountByUsernameMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useAddAccountByUsernameMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddAccountByUsernameMutation, AddAccountByUsernameMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddAccountByUsernameMutation, AddAccountByUsernameMutationVariables>(
+    AddAccountByUsernameDocument,
+    options,
+  );
+}
+export type AddAccountByUsernameMutationHookResult = ReturnType<typeof useAddAccountByUsernameMutation>;
+export type AddAccountByUsernameMutationResult = Apollo.MutationResult<AddAccountByUsernameMutation>;
+export type AddAccountByUsernameMutationOptions = Apollo.BaseMutationOptions<
+  AddAccountByUsernameMutation,
+  AddAccountByUsernameMutationVariables
+>;
+export const FindAccountByUsernameDocument = gql`
+  query findAccountByUsername($username: AccountSearchByUsernameInput!) {
+    findAccountByUsername(username: $username) {
+      uuid
+      displayName
+      thumbnailUrl
+      youtubeChannels {
+        id
+      }
+      twitterUsers {
+        username
+      }
+      instagramUsers {
+        username
+      }
+      tiktokUsers {
+        uniqueId
+      }
+    }
+  }
+`;
+
+/**
+ * __useFindAccountByUsernameQuery__
+ *
+ * To run a query within a React component, call `useFindAccountByUsernameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAccountByUsernameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAccountByUsernameQuery({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useFindAccountByUsernameQuery(
+  baseOptions: Apollo.QueryHookOptions<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>(
+    FindAccountByUsernameDocument,
+    options,
+  );
+}
+export function useFindAccountByUsernameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>(
+    FindAccountByUsernameDocument,
+    options,
+  );
+}
+export type FindAccountByUsernameQueryHookResult = ReturnType<typeof useFindAccountByUsernameQuery>;
+export type FindAccountByUsernameLazyQueryHookResult = ReturnType<typeof useFindAccountByUsernameLazyQuery>;
+export type FindAccountByUsernameQueryResult = Apollo.QueryResult<
+  FindAccountByUsernameQuery,
+  FindAccountByUsernameQueryVariables
+>;
 export const GetAccountPageDocument = gql`
   query getAccountPage($uuid: ID!) {
     getAccountPage(uuid: $uuid) {
