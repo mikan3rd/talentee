@@ -31,7 +31,18 @@ async function bootstrap() {
   });
   app.useGlobalInterceptors(new SentryInterceptor());
 
-  app.use(morgan(process.env.MORGAN_FORMAT ?? "tiny"));
+  // https://github.com/expressjs/morgan/issues/116#issuecomment-240242129
+  morgan.token("graphql-query", (req) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { operationName, variables } = req.body;
+    if (operationName) {
+      return `\nOperation Name: ${operationName}\nVariables: ${JSON.stringify(variables)}`;
+    }
+    return "";
+  });
+  app.use(morgan(":method :url :status :response-time ms :graphql-query"));
+
   app.enableCors();
   const server = await app.listen(process.env.PORT || 3300);
   if (process.env.HTTPS_TIMEOUT) {
