@@ -82,7 +82,7 @@ export const YoutubeVideoTagRankingIndex = React.memo<Props>(({ page, take, getY
         </span>
       </Header>
 
-      <p>「{youtubeTag?.title}」の動画で人気のYoutubeチャンネル一覧</p>
+      <p>「{youtubeTag?.title}」の動画で人気のおすすめYoutubeチャンネル一覧</p>
 
       <Divider />
 

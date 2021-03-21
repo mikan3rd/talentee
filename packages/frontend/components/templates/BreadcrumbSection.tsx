@@ -27,7 +27,7 @@ export const YoutubeCategorySection = React.memo<{ active?: boolean; categoryNam
   ({ categoryName, categoryId, active = false }) => {
     return (
       <Link href={`/youtube/category/${categoryId}`}>
-        <Breadcrumb.Section href={`/youtube/keyword/${categoryId}`} active={active}>
+        <Breadcrumb.Section href={`/youtube/category/${categoryId}`} active={active}>
           {categoryName}
         </Breadcrumb.Section>
       </Link>

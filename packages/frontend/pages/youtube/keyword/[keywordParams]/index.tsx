@@ -25,12 +25,12 @@ export const getStaticPaths: GetStaticPaths = async () => ({
   fallback: "blocking",
 });
 
-export const getStaticProps: GetStaticProps<Props, { keywordTitle: string }> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Props, { keywordParams: string }> = async ({ params }) => {
   if (!params) {
     return { redirect: { statusCode: 302, destination: "/" } };
   }
 
-  return await getCommonStaticProps({ keywordParams: params.keywordTitle, page: 1 });
+  return await getCommonStaticProps({ keywordParams: params.keywordParams, page: 1 });
 };
 
 export const getCommonStaticProps = async ({

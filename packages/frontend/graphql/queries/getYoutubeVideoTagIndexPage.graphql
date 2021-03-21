@@ -4,7 +4,6 @@ query getYoutubeVideoTagIndexPage($pagination: PaginationInput!) {
     youtubeTags {
       id
       title
-      num
     }
   }
 }

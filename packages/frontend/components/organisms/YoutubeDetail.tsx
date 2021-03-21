@@ -142,7 +142,7 @@ export const YoutubeDetail = React.memo<Props>(
           {keywords.map((keywordRelation, index) => {
             const { keyword } = keywordRelation;
             return (
-              <Link key={index} href={`/youtube/keyword/${keyword.title}`} passHref prefetch={false}>
+              <Link key={index} href={`/youtube/keyword/${keyword.id}`} passHref prefetch={false}>
                 <Label
                   tag
                   css={css`

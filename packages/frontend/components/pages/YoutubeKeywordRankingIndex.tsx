@@ -30,8 +30,8 @@ export const YoutubeKeywordRankingIndex = React.memo<Props>(({ page, take, getYo
   const handlePageChange = React.useCallback(
     async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: PaginationProps) => {
       router.push({
-        pathname: "/youtube/keyword/[keywordTitle]/page/[page]",
-        query: { keywordTitle: youtubeKeyword?.id, page: data.activePage },
+        pathname: "/youtube/keyword/[keywordParams]/page/[page]",
+        query: { keywordParams: youtubeKeyword?.id, page: data.activePage },
       });
     },
     [router, youtubeKeyword?.id],
@@ -82,7 +82,7 @@ export const YoutubeKeywordRankingIndex = React.memo<Props>(({ page, take, getYo
         </span>
       </Header>
 
-      <p>「{youtubeKeyword?.title}」で人気のYoutubeチャンネル一覧</p>
+      <p>「{youtubeKeyword?.title}」で人気のおすすめYoutubeチャンネル一覧</p>
 
       <Divider />
 
