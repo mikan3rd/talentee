@@ -2,7 +2,7 @@ import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { User } from "@prisma/client";
 
-import { CurrentUser } from "@/decorators/auth.decorator";
+import { CurrentUser, Roles } from "@/decorators/auth.decorator";
 import { AccountSearchByUsernameInput } from "@/dto/input/account.input";
 import { GqlAuthGuard } from "@/guards/gqlAuthGuard.guard";
 import { Account } from "@/models/account.model";
@@ -21,6 +21,7 @@ export class AdminResolver {
 
   @Query((returns) => Account, { nullable: true })
   @UseGuards(GqlAuthGuard)
+  @Roles("ADMIN")
   async findAccountByUsername(
     @Args("username")
     { youtubeChannelId, twitterUsername, instagramUsername, tiktokUniqueId }: AccountSearchByUsernameInput,
@@ -35,6 +36,7 @@ export class AdminResolver {
 
   @Mutation((returns) => Account)
   @UseGuards(GqlAuthGuard)
+  @Roles("ADMIN")
   async addAccountByUsername(
     @Args("username")
     { youtubeChannelId, twitterUsername, instagramUsername, tiktokUniqueId }: AccountSearchByUsernameInput,

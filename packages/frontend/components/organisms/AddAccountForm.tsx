@@ -45,7 +45,10 @@ export const AddAccountForm = React.memo(() => {
     [selectedService, username],
   );
 
-  const [fetch] = useFindAccountByUsernameLazyQuery({ onCompleted: handleFindAccountCompleted });
+  const [fetch] = useFindAccountByUsernameLazyQuery({
+    onCompleted: handleFindAccountCompleted,
+    fetchPolicy: "cache-and-network",
+  });
   const [addAccount, { loading }] = useAddAccountByUsernameMutation();
 
   const handleConfirm = React.useCallback(() => {
