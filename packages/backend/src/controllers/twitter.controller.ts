@@ -1,5 +1,4 @@
-import { Body, Controller, Logger, Post, Res } from "@nestjs/common";
-import { Response } from "express";
+import { Controller, Logger } from "@nestjs/common";
 
 import { CrawlService } from "@/services/crawl.service";
 import { TwitterService } from "@/services/twitter.service";
@@ -8,16 +7,5 @@ import { TwitterService } from "@/services/twitter.service";
 export class TwitterController {
   private readonly logger = new Logger(TwitterController.name);
 
-  constructor(private readonly twitterServoce: TwitterService, private crawlService: CrawlService) {}
-
-  @Post("/addAccount")
-  async addAccount(@Res() res: Response, @Body("username") username?: string) {
-    this.logger.debug(`username: ${username}`);
-    if (!username) {
-      return res.send("FAILED!!");
-    }
-    await this.twitterServoce.upsertUsersByUsername([{ username }]);
-
-    return res.send("SUCCESS!!");
-  }
+  constructor(private readonly twitterService: TwitterService, private crawlService: CrawlService) {}
 }

@@ -2,7 +2,7 @@ overwrite: true
 schema: "../backend/schema.graphql"
 documents:
   - ./graphql/queries/*.graphql
-  # - ./graphql/mutations/*.graphql
+  - ./graphql/mutations/*.graphql
 generates:
   graphql/generated.ts:
     plugins:

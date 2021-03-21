@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post, Query, Res } from "@nestjs/common";
+import { Controller, Get, Logger, Query, Res } from "@nestjs/common";
 import { Response } from "express";
 
 import { CrawlService } from "@/services/crawl.service";
@@ -21,17 +21,6 @@ export class InstagramController {
       res.contentType("image/jpeg");
       return res.send(results);
     }
-    return res.send("SUCCESS!!");
-  }
-
-  @Post("/addAccount")
-  async addAccount(@Res() res: Response, @Body("username") username?: string) {
-    this.logger.debug(`username: ${username}`);
-    if (!username) {
-      return res.send("FAILED!!");
-    }
-    await this.instagramService.upsertUsers([{ username }]);
-
     return res.send("SUCCESS!!");
   }
 }

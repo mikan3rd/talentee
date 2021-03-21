@@ -1,5 +1,5 @@
 import { Inject, UseGuards } from "@nestjs/common";
-import { Args, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { User } from "@prisma/client";
 
 import { CurrentUser } from "@/decorators/auth.decorator";
@@ -25,7 +25,32 @@ export class AdminResolver {
     @Args("username")
     { youtubeChannelId, twitterUsername, instagramUsername, tiktokUniqueId }: AccountSearchByUsernameInput,
   ) {
-    return this.adminService.findAccountByUsername({
+    return await this.adminService.findAccountByUsername({
+      youtubeChannelId,
+      twitterUsername,
+      instagramUsername,
+      tiktokUniqueId,
+    });
+  }
+
+  @Mutation((returns) => Account)
+  @UseGuards(GqlAuthGuard)
+  async addAccountByUsername(
+    @Args("username")
+    { youtubeChannelId, twitterUsername, instagramUsername, tiktokUniqueId }: AccountSearchByUsernameInput,
+  ) {
+    const result = await this.adminService.findAccountByUsername({
+      youtubeChannelId,
+      twitterUsername,
+      instagramUsername,
+      tiktokUniqueId,
+    });
+
+    if (result) {
+      throw Error("the username is exist");
+    }
+
+    return await this.adminService.addAccountByUsername({
       youtubeChannelId,
       twitterUsername,
       instagramUsername,

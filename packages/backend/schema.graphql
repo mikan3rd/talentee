@@ -370,3 +370,7 @@ input AccountSearchByUsernameInput {
   instagramUsername: String
   tiktokUniqueId: String
 }
+
+type Mutation {
+  addAccountByUsername(username: AccountSearchByUsernameInput!): Account!
+}

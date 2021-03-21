@@ -2,8 +2,12 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 
+import { InstagramService } from "@/services/instagram.service";
 import { PrismaService } from "@/services/prisma.service";
+import { TiktokService } from "@/services/tiktok.service";
+import { TwitterService } from "@/services/twitter.service";
 import { UtilsService } from "@/services/utils.service";
+import { YoutubeService } from "@/services/youtube.service";
 
 @Injectable()
 export class AdminService {
@@ -13,6 +17,10 @@ export class AdminService {
     private utilsService: UtilsService,
     private prisma: PrismaService,
     private configService: ConfigService<EnvironmentVariables>,
+    private youtubeService: YoutubeService,
+    private twitterService: TwitterService,
+    private instagramService: InstagramService,
+    private tiktokService: TiktokService,
   ) {}
 
   async findAccountByUsername({
@@ -51,5 +59,56 @@ export class AdminService {
         tiktokUsers: { select: { uniqueId: true } },
       },
     });
+  }
+
+  async addAccountByUsername({
+    youtubeChannelId,
+    twitterUsername,
+    instagramUsername,
+    tiktokUniqueId,
+  }: {
+    youtubeChannelId?: string;
+    twitterUsername?: string;
+    instagramUsername?: string;
+    tiktokUniqueId?: string;
+  }) {
+    if (!youtubeChannelId && !twitterUsername && !instagramUsername && !tiktokUniqueId) {
+      throw Error("At least one username is required");
+    }
+
+    const include: Prisma.AccountInclude = {
+      youtubeChannels: { select: { id: true } },
+      twitterUsers: { select: { username: true } },
+      instagramUsers: { select: { username: true } },
+      tiktokUsers: { select: { uniqueId: true } },
+    };
+
+    if (youtubeChannelId) {
+      await this.youtubeService.bulkUpsertChannelByChannelId([{ channelId: youtubeChannelId }]);
+      return this.prisma.account.findFirst({
+        where: { youtubeChannels: { some: { id: youtubeChannelId } } },
+        include,
+      });
+    } else if (twitterUsername) {
+      await this.twitterService.upsertUsersByUsername([{ username: twitterUsername }]);
+      return this.prisma.account.findFirst({
+        where: { twitterUsers: { some: { username: twitterUsername } } },
+        include,
+      });
+    } else if (instagramUsername) {
+      await this.instagramService.upsertUsers([{ username: instagramUsername }]);
+      return this.prisma.account.findFirst({
+        where: { instagramUsers: { some: { username: instagramUsername } } },
+        include,
+      });
+    } else if (tiktokUniqueId) {
+      await this.tiktokService.bulkUpdateByUniqueId([{ uniqueId: tiktokUniqueId }]);
+      return this.prisma.account.findFirst({
+        where: { tiktokUsers: { some: { uniqueId: tiktokUniqueId } } },
+        include,
+      });
+    }
+
+    throw Error("Unhandled condition");
   }
 }

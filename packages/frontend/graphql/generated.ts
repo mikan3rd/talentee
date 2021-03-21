@@ -429,6 +429,27 @@ export type AccountSearchByUsernameInput = {
   tiktokUniqueId?: Maybe<Scalars["String"]>;
 };
 
+export type Mutation = {
+  addAccountByUsername: Account;
+};
+
+export type MutationAddAccountByUsernameArgs = {
+  username: AccountSearchByUsernameInput;
+};
+
+export type AddAccountByUsernameMutationVariables = Exact<{
+  username: AccountSearchByUsernameInput;
+}>;
+
+export type AddAccountByUsernameMutation = {
+  addAccountByUsername: Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
+    youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+    twitterUsers: Array<Pick<TwitterUser, "username">>;
+    instagramUsers: Array<Pick<InstagramUser, "username">>;
+    tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+  };
+};
+
 export type FindAccountByUsernameQueryVariables = Exact<{
   username: AccountSearchByUsernameInput;
 }>;
@@ -822,6 +843,64 @@ export type SearchYoutubeKeywordByWordQuery = {
   };
 };
 
+export const AddAccountByUsernameDocument = gql`
+  mutation addAccountByUsername($username: AccountSearchByUsernameInput!) {
+    addAccountByUsername(username: $username) {
+      uuid
+      displayName
+      thumbnailUrl
+      youtubeChannels {
+        id
+      }
+      twitterUsers {
+        username
+      }
+      instagramUsers {
+        username
+      }
+      tiktokUsers {
+        uniqueId
+      }
+    }
+  }
+`;
+export type AddAccountByUsernameMutationFn = Apollo.MutationFunction<
+  AddAccountByUsernameMutation,
+  AddAccountByUsernameMutationVariables
+>;
+
+/**
+ * __useAddAccountByUsernameMutation__
+ *
+ * To run a mutation, you first call `useAddAccountByUsernameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAccountByUsernameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAccountByUsernameMutation, { data, loading, error }] = useAddAccountByUsernameMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useAddAccountByUsernameMutation(
+  baseOptions?: Apollo.MutationHookOptions<AddAccountByUsernameMutation, AddAccountByUsernameMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddAccountByUsernameMutation, AddAccountByUsernameMutationVariables>(
+    AddAccountByUsernameDocument,
+    options,
+  );
+}
+export type AddAccountByUsernameMutationHookResult = ReturnType<typeof useAddAccountByUsernameMutation>;
+export type AddAccountByUsernameMutationResult = Apollo.MutationResult<AddAccountByUsernameMutation>;
+export type AddAccountByUsernameMutationOptions = Apollo.BaseMutationOptions<
+  AddAccountByUsernameMutation,
+  AddAccountByUsernameMutationVariables
+>;
 export const FindAccountByUsernameDocument = gql`
   query findAccountByUsername($username: AccountSearchByUsernameInput!) {
     findAccountByUsername(username: $username) {
