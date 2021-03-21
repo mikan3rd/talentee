@@ -148,6 +148,7 @@ export const YoutubeKeywordIndex = React.memo<Props>(({ page, take, getYoutubeKe
       <Divider />
 
       <Search
+        category
         value={searchText}
         onSearchChange={handleSearchChange}
         loading={loading || debounce}
