@@ -335,6 +335,7 @@ export type Query = {
   getInstagramRankingPage: InstagramRankingPage;
   getTiktokRankingPage: TiktokRankingPage;
   getCurrentUser: User;
+  findAccountByUsername?: Maybe<Account>;
 };
 
 export type QueryGetAccountPageArgs = {
@@ -381,6 +382,10 @@ export type QueryGetTiktokRankingPageArgs = {
   pagination: PaginationInput;
 };
 
+export type QueryFindAccountByUsernameArgs = {
+  username: AccountSearchByUsernameInput;
+};
+
 export type AccountSearchInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
@@ -415,6 +420,28 @@ export type PaginationInput = {
 export type YoutubeKeywordSearchInput = {
   take: Scalars["Int"];
   word: Scalars["String"];
+};
+
+export type AccountSearchByUsernameInput = {
+  youtubeChannelId?: Maybe<Scalars["String"]>;
+  twitterUsername?: Maybe<Scalars["String"]>;
+  instagramUsername?: Maybe<Scalars["String"]>;
+  tiktokUniqueId?: Maybe<Scalars["String"]>;
+};
+
+export type FindAccountByUsernameQueryVariables = Exact<{
+  username: AccountSearchByUsernameInput;
+}>;
+
+export type FindAccountByUsernameQuery = {
+  findAccountByUsername?: Maybe<
+    Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
+      youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+      twitterUsers: Array<Pick<TwitterUser, "username">>;
+      instagramUsers: Array<Pick<InstagramUser, "username">>;
+      tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+    }
+  >;
 };
 
 export type GetAccountPageQueryVariables = Exact<{
@@ -795,6 +822,68 @@ export type SearchYoutubeKeywordByWordQuery = {
   };
 };
 
+export const FindAccountByUsernameDocument = gql`
+  query findAccountByUsername($username: AccountSearchByUsernameInput!) {
+    findAccountByUsername(username: $username) {
+      uuid
+      displayName
+      thumbnailUrl
+      youtubeChannels {
+        id
+      }
+      twitterUsers {
+        username
+      }
+      instagramUsers {
+        username
+      }
+      tiktokUsers {
+        uniqueId
+      }
+    }
+  }
+`;
+
+/**
+ * __useFindAccountByUsernameQuery__
+ *
+ * To run a query within a React component, call `useFindAccountByUsernameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAccountByUsernameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAccountByUsernameQuery({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useFindAccountByUsernameQuery(
+  baseOptions: Apollo.QueryHookOptions<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>(
+    FindAccountByUsernameDocument,
+    options,
+  );
+}
+export function useFindAccountByUsernameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FindAccountByUsernameQuery, FindAccountByUsernameQueryVariables>(
+    FindAccountByUsernameDocument,
+    options,
+  );
+}
+export type FindAccountByUsernameQueryHookResult = ReturnType<typeof useFindAccountByUsernameQuery>;
+export type FindAccountByUsernameLazyQueryHookResult = ReturnType<typeof useFindAccountByUsernameLazyQuery>;
+export type FindAccountByUsernameQueryResult = Apollo.QueryResult<
+  FindAccountByUsernameQuery,
+  FindAccountByUsernameQueryVariables
+>;
 export const GetAccountPageDocument = gql`
   query getAccountPage($uuid: ID!) {
     getAccountPage(uuid: $uuid) {

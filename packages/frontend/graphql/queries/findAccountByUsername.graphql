@@ -1,0 +1,19 @@
+query findAccountByUsername($username: AccountSearchByUsernameInput!) {
+  findAccountByUsername(username: $username) {
+    uuid
+    displayName
+    thumbnailUrl
+    youtubeChannels {
+      id
+    }
+    twitterUsers {
+      username
+    }
+    instagramUsers {
+      username
+    }
+    tiktokUsers {
+      uniqueId
+    }
+  }
+}
