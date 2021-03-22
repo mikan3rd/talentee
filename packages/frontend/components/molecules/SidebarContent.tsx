@@ -8,7 +8,7 @@ import { useAuthContext } from "@/context/auth";
 
 export const SidebarContent = React.memo(() => {
   const {
-    state: { firebaseUser },
+    state: { firebaseUser, currentUser },
     logout,
   } = useAuthContext();
 
@@ -76,6 +76,12 @@ export const SidebarContent = React.memo(() => {
       <Link href="/search" passHref>
         <Menu.Item content="アカウント検索" />
       </Link>
+
+      {currentUser && (
+        <Link href="/admin" passHref>
+          <Menu.Item content="管理用" />
+        </Link>
+      )}
 
       {firebaseUser && <Menu.Item content="ログアウト" onClick={logout} />}
     </>
