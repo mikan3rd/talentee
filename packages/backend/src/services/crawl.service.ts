@@ -55,7 +55,7 @@ export class CrawlService {
       "--no-first-run",
       "--no-zygote",
       "--single-process",
-      "–disable-extensions",
+      "–-disable-extensions",
       "--lang=ja",
     ];
 
@@ -72,7 +72,7 @@ export class CrawlService {
     const options: Puppeteer.LaunchOptions = {
       // ignoreHTTPSErrors: true,
       headless: true,
-      devtools: false,
+      devtools: true,
       args,
     };
 
@@ -450,19 +450,7 @@ export class CrawlService {
     const recommendUniqueIds = recommendResponse.data.itemList.map((item) => item.author.uniqueId);
     this.logger.debug(recommendUniqueIds);
 
-    const discoverResponse = await axios.get<{ body: { exploreList: { cardItem: { subTitle: string } }[] }[] }>(
-      `https://www.tiktok.com/node/share/discover`,
-      {
-        params: { region: "JP" },
-      },
-    );
-
-    const discoverUniqueIds = discoverResponse.data.body[0].exploreList.map(({ cardItem: { subTitle } }) =>
-      subTitle.replace("@", ""),
-    );
-    this.logger.debug(discoverUniqueIds);
-
-    return Array.from(new Set([...recommendUniqueIds, ...discoverUniqueIds]));
+    return Array.from(new Set([...recommendUniqueIds]));
   }
 
   async crawlYouturaRanking(pageNum: number) {
