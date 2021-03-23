@@ -19,7 +19,7 @@ export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>
   params,
 }) => {
   if (!params) {
-    return { redirect: { statusCode: 302, destination: "/" } };
+    return { redirect: { permanent: false, destination: "/" } };
   }
 
   const { data } = await client.query<GetAccountPageQuery, GetAccountPageQueryVariables>({
@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>
   });
 
   if (!data.getAccountPage) {
-    return { redirect: { statusCode: 302, destination: "/" } };
+    return { redirect: { permanent: false, destination: "/" } };
   }
 
   return { props: { getAccountPage: data.getAccountPage }, revalidate: 60 * 10 };

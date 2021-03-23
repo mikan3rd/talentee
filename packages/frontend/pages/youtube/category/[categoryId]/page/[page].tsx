@@ -7,7 +7,7 @@ export { getStaticPaths };
 
 export const getStaticProps: GetStaticProps<Props, { categoryId: string; page: string }> = async ({ params }) => {
   if (!params) {
-    return { redirect: { statusCode: 302, destination: "/" } };
+    return { redirect: { permanent: false, destination: "/" } };
   }
 
   return await getCommonStaticProps({ categoryId: params.categoryId, page: Number(params.page) });

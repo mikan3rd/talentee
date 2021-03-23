@@ -27,7 +27,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps<Props, { keywordParams: string }> = async ({ params }) => {
   if (!params) {
-    return { redirect: { statusCode: 302, destination: "/" } };
+    return { redirect: { permanent: false, destination: "/" } };
   }
 
   return await getCommonStaticProps({ keywordParams: params.keywordParams, page: 1 });
@@ -55,7 +55,16 @@ export const getCommonStaticProps = async ({
   });
 
   if (!data.getYoutubeKeywordRankingPage.youtubeKeyword) {
-    return { redirect: { statusCode: 302, destination: "/youtube/keyword" } };
+    return { redirect: { permanent: false, destination: "/youtube/keyword" } };
+  }
+
+  if (keywordTitle) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/youtube/keyword/${data.getYoutubeKeywordRankingPage.youtubeKeyword.id}`,
+      },
+    };
   }
 
   return {
