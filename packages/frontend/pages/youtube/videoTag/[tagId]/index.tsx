@@ -27,7 +27,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps<Props, { tagId: string }> = async ({ params }) => {
   if (!params) {
-    return { redirect: { statusCode: 302, destination: "/" } };
+    return { redirect: { permanent: false, destination: "/" } };
   }
 
   return await getCommonStaticProps({ tagId: Number(params.tagId), page: 1 });
@@ -46,7 +46,7 @@ export const getCommonStaticProps = async ({
   });
 
   if (!data.getYoutubeVideoTagRankingPage.youtubeTag) {
-    return { redirect: { statusCode: 302, destination: "/youtube/videoTag" } };
+    return { redirect: { permanent: false, destination: "/youtube/videoTag" } };
   }
 
   return {

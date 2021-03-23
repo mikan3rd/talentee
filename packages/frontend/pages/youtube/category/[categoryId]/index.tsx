@@ -23,7 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps<Props, { categoryId: string }> = async ({ params }) => {
   if (!params) {
-    return { redirect: { statusCode: 302, destination: "/" } };
+    return { redirect: { permanent: false, destination: "/" } };
   }
 
   return await getCommonStaticProps({ categoryId: params.categoryId, page: 1 });
@@ -56,7 +56,7 @@ export const getCommonStaticProps = async ({
     : videoCategoryOptions.find((category) => category.value === String(videoCategoryId));
 
   if (!selectedVideoCategory) {
-    return { redirect: { statusCode: 302, destination: "/youtube/category/all" } };
+    return { redirect: { permanent: false, destination: "/youtube/category/all" } };
   }
 
   return {
