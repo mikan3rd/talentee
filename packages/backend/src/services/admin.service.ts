@@ -111,4 +111,26 @@ export class AdminService {
 
     throw Error("Unhandled condition");
   }
+
+  async searchAccount({ word, take }: { word: string; take: number }) {
+    const where: Prisma.AccountWhereInput = {
+      OR: [
+        { youtubeChannels: { some: { title: { contains: word } } } },
+        { twitterUsers: { some: { name: { contains: word } } } },
+        { instagramUsers: { some: { fullName: { contains: word } } } },
+        { tiktokUsers: { some: { nickname: { contains: word } } } },
+      ],
+    };
+    const accounts = this.prisma.account.findMany({
+      take,
+      where,
+      include: {
+        youtubeChannels: { select: { id: true } },
+        twitterUsers: { select: { username: true } },
+        instagramUsers: { select: { username: true } },
+        tiktokUsers: { select: { uniqueId: true } },
+      },
+    });
+    return accounts;
+  }
 }

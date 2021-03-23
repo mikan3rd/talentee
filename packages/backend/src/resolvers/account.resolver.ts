@@ -1,7 +1,7 @@
 import { Inject } from "@nestjs/common";
 import { Args, ID, Query, Resolver } from "@nestjs/graphql";
 
-import { AccountSearchInput } from "@/dto/input/pagination.input";
+import { AccountSearchPaginationInput } from "@/dto/input/pagination.input";
 import { AccountSearchResult } from "@/dto/output/accountSearchResult.output";
 import { Sitemap } from "@/dto/output/sitemap.output";
 import { TopPage } from "@/dto/output/topPage.output";
@@ -23,7 +23,7 @@ export class AccountResolver {
   }
 
   @Query((returns) => AccountSearchResult)
-  async searchAccount(@Args("pagination") { take, word, page }: AccountSearchInput) {
+  async searchAccountByName(@Args("pagination") { take, word, page }: AccountSearchPaginationInput) {
     return await this.accountService.searchByName({ word, take, page });
   }
 

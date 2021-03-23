@@ -1,4 +1,4 @@
-import { Field, InputType } from "@nestjs/graphql";
+import { Field, InputType, Int } from "@nestjs/graphql";
 
 @InputType()
 export class AccountSearchByUsernameInput {
@@ -13,4 +13,13 @@ export class AccountSearchByUsernameInput {
 
   @Field({ nullable: true })
   tiktokUniqueId?: string;
+}
+
+@InputType()
+export class AccountSearchInput {
+  @Field((type) => Int)
+  take!: number;
+
+  @Field()
+  word!: string;
 }

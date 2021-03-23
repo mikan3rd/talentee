@@ -10,14 +10,14 @@ import {
   YoutubeIndexLinkButton,
 } from "@/components/atoms/IndexLinkButton";
 import { AccountCard } from "@/components/organisms/AccountCard";
-import { useSearchAccountLazyQuery } from "@/graphql/generated";
+import { useSearchAccountByNameLazyQuery } from "@/graphql/generated";
 
 const take = 10;
 
 export const SearchIndex = React.memo(() => {
   const [text, setText] = React.useState("");
   const [page, setPage] = React.useState(1);
-  const [fetch, { data, loading }] = useSearchAccountLazyQuery();
+  const [fetch, { data, loading }] = useSearchAccountByNameLazyQuery();
 
   const handleSearch = React.useCallback(
     (e: React.MouseEvent) => {
@@ -72,7 +72,7 @@ export const SearchIndex = React.memo(() => {
             margin-top: 20px;
           `}
         >
-          検索結果 {data.searchAccount.totalCount}件
+          検索結果 {data.searchAccountByName.totalCount}件
         </div>
       )}
 
@@ -81,12 +81,12 @@ export const SearchIndex = React.memo(() => {
           margin-top: 20px;
         `}
       >
-        {data?.searchAccount.accounts.map((data) => (
+        {data?.searchAccountByName.accounts.map((data) => (
           <AccountCard key={data.uuid} {...data} />
         ))}
       </div>
 
-      {data?.searchAccount?.totalCount !== undefined && data.searchAccount.totalCount > 0 && (
+      {data?.searchAccountByName?.totalCount !== undefined && data.searchAccountByName.totalCount > 0 && (
         <Pagination
           css={css`
             &&& {
@@ -101,7 +101,7 @@ export const SearchIndex = React.memo(() => {
             }
           `}
           activePage={page}
-          totalPages={data?.searchAccount.totalPages}
+          totalPages={data?.searchAccountByName.totalPages}
           onPageChange={handlePageChange}
         />
       )}

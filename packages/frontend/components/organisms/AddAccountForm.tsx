@@ -128,7 +128,7 @@ export const AddAccountForm = React.memo(() => {
 
   return (
     <Segment>
-      <Header content="新規登録" />
+      <Header content="アカウント新規登録" />
       <div>
         <Dropdown
           selection

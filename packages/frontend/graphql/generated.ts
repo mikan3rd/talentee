@@ -323,7 +323,7 @@ export enum UserRole {
 export type Query = {
   getAccountPage?: Maybe<Account>;
   getTopPage: TopPage;
-  searchAccount: AccountSearchResult;
+  searchAccountByName: AccountSearchResult;
   getSitemapData: Sitemap;
   getYoutubeCategoryRankingPage: YoutubeRankingPage;
   getYoutubeKeywordRankingPage: YoutubeKeywordRankingPage;
@@ -336,14 +336,15 @@ export type Query = {
   getTiktokRankingPage: TiktokRankingPage;
   getCurrentUser: User;
   findAccountByUsername?: Maybe<Account>;
+  searchAccount: Array<Account>;
 };
 
 export type QueryGetAccountPageArgs = {
   uuid: Scalars["ID"];
 };
 
-export type QuerySearchAccountArgs = {
-  pagination: AccountSearchInput;
+export type QuerySearchAccountByNameArgs = {
+  pagination: AccountSearchPaginationInput;
 };
 
 export type QueryGetYoutubeCategoryRankingPageArgs = {
@@ -386,7 +387,11 @@ export type QueryFindAccountByUsernameArgs = {
   username: AccountSearchByUsernameInput;
 };
 
-export type AccountSearchInput = {
+export type QuerySearchAccountArgs = {
+  pagination: AccountSearchInput;
+};
+
+export type AccountSearchPaginationInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
   word: Scalars["String"];
@@ -427,6 +432,11 @@ export type AccountSearchByUsernameInput = {
   twitterUsername?: Maybe<Scalars["String"]>;
   instagramUsername?: Maybe<Scalars["String"]>;
   tiktokUniqueId?: Maybe<Scalars["String"]>;
+};
+
+export type AccountSearchInput = {
+  take: Scalars["Int"];
+  word: Scalars["String"];
 };
 
 export type Mutation = {
@@ -820,7 +830,22 @@ export type SearchAccountQueryVariables = Exact<{
 }>;
 
 export type SearchAccountQuery = {
-  searchAccount: Pick<AccountSearchResult, "totalCount" | "totalPages"> & {
+  searchAccount: Array<
+    Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
+      youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
+      twitterUsers: Array<Pick<TwitterUser, "username">>;
+      instagramUsers: Array<Pick<InstagramUser, "username">>;
+      tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+    }
+  >;
+};
+
+export type SearchAccountByNameQueryVariables = Exact<{
+  pagination: AccountSearchPaginationInput;
+}>;
+
+export type SearchAccountByNameQuery = {
+  searchAccountByName: Pick<AccountSearchResult, "totalCount" | "totalPages"> & {
     accounts: Array<
       Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
         youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
@@ -1922,24 +1947,20 @@ export type GetYoutubeVideoTagRankingPageQueryResult = Apollo.QueryResult<
 export const SearchAccountDocument = gql`
   query searchAccount($pagination: AccountSearchInput!) {
     searchAccount(pagination: $pagination) {
-      totalCount
-      totalPages
-      accounts {
-        uuid
-        displayName
-        thumbnailUrl
-        youtubeChannels {
-          id
-        }
-        twitterUsers {
-          username
-        }
-        instagramUsers {
-          username
-        }
-        tiktokUsers {
-          uniqueId
-        }
+      uuid
+      displayName
+      thumbnailUrl
+      youtubeChannels {
+        id
+      }
+      twitterUsers {
+        username
+      }
+      instagramUsers {
+        username
+      }
+      tiktokUsers {
+        uniqueId
       }
     }
   }
@@ -1976,6 +1997,72 @@ export function useSearchAccountLazyQuery(
 export type SearchAccountQueryHookResult = ReturnType<typeof useSearchAccountQuery>;
 export type SearchAccountLazyQueryHookResult = ReturnType<typeof useSearchAccountLazyQuery>;
 export type SearchAccountQueryResult = Apollo.QueryResult<SearchAccountQuery, SearchAccountQueryVariables>;
+export const SearchAccountByNameDocument = gql`
+  query searchAccountByName($pagination: AccountSearchPaginationInput!) {
+    searchAccountByName(pagination: $pagination) {
+      totalCount
+      totalPages
+      accounts {
+        uuid
+        displayName
+        thumbnailUrl
+        youtubeChannels {
+          id
+        }
+        twitterUsers {
+          username
+        }
+        instagramUsers {
+          username
+        }
+        tiktokUsers {
+          uniqueId
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useSearchAccountByNameQuery__
+ *
+ * To run a query within a React component, call `useSearchAccountByNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchAccountByNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchAccountByNameQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useSearchAccountByNameQuery(
+  baseOptions: Apollo.QueryHookOptions<SearchAccountByNameQuery, SearchAccountByNameQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<SearchAccountByNameQuery, SearchAccountByNameQueryVariables>(
+    SearchAccountByNameDocument,
+    options,
+  );
+}
+export function useSearchAccountByNameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SearchAccountByNameQuery, SearchAccountByNameQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<SearchAccountByNameQuery, SearchAccountByNameQueryVariables>(
+    SearchAccountByNameDocument,
+    options,
+  );
+}
+export type SearchAccountByNameQueryHookResult = ReturnType<typeof useSearchAccountByNameQuery>;
+export type SearchAccountByNameLazyQueryHookResult = ReturnType<typeof useSearchAccountByNameLazyQuery>;
+export type SearchAccountByNameQueryResult = Apollo.QueryResult<
+  SearchAccountByNameQuery,
+  SearchAccountByNameQueryVariables
+>;
 export const SearchYoutubeKeywordByWordDocument = gql`
   query searchYoutubeKeywordByWord($input: YoutubeKeywordSearchInput!) {
     searchYoutubeKeywordByWord(input: $input) {
