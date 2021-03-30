@@ -16,8 +16,8 @@
     "@emotion/babel-preset-css-prop": "11.2.0",
     "@emotion/react": "11.1.5",
     "next": "10.0.9",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-linkify": "1.0.0-alpha",
     "react-semantic-toasts": "0.6.5",
     "react-topbar-progress-indicator": "4.1.0",
@@ -27,7 +27,7 @@
     "smoothscroll-polyfill": "0.4.4"
   },
   "devDependencies": {
-    "@babel/core": "7.13.10",
+    "@babel/core": "7.13.13",
     "@emotion/babel-plugin": "11.2.0",
     "@graphql-codegen/cli": "1.21.3",
     "@graphql-codegen/introspection": "1.18.1",
