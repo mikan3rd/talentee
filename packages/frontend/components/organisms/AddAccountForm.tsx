@@ -161,7 +161,7 @@ export const AddAccountForm = React.memo(() => {
       {account && (
         <>
           <Message warning header="既にユーザーが存在します" />
-          <AccountCard {...account} />
+          <AccountCard {...account} linkTarget="_blank" />
         </>
       )}
 

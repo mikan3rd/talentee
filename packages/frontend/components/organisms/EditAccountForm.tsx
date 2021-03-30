@@ -8,7 +8,7 @@ import { AccountCard } from "@/components/organisms/AccountCard";
 import { useSearchAccountLazyQuery } from "@/graphql/generated";
 
 export const EditAccountForm = React.memo(() => {
-  const [fetch, { data, loading }] = useSearchAccountLazyQuery();
+  const [fetch, { data: searchResult, loading }] = useSearchAccountLazyQuery();
 
   const [searchText, setSearchText] = React.useState("");
   const [debounce, setDebounce] = React.useState(false);
@@ -30,12 +30,10 @@ export const EditAccountForm = React.memo(() => {
     [],
   );
 
-  console.log(data);
-
   return (
     <Segment>
       <Header content="アカウント編集" />
-      <form>
+      <div>
         <Input
           fluid
           placeholder="検索ワードを入力"
@@ -43,7 +41,41 @@ export const EditAccountForm = React.memo(() => {
           onChange={handleSearchChange}
           loading={loading || debounce}
         />
-      </form>
+
+        {searchResult && (
+          <div
+            css={css`
+              margin-top: 10px;
+            `}
+          >
+            {searchResult.searchAccount.map((account) => (
+              <div
+                key={account.uuid}
+                css={css`
+                  display: flex;
+                  margin-top: 10px;
+                `}
+              >
+                <AccountCard
+                  {...account}
+                  linkTarget="_blank"
+                  css={css`
+                    flex-grow: 1;
+                  `}
+                />
+                <Button
+                  content="編集"
+                  css={css`
+                    &&& {
+                      margin-left: 10px;
+                    }
+                  `}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </Segment>
   );
 });
