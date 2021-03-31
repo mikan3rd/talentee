@@ -18,166 +18,6 @@ export type Scalars = {
   Date: number;
 };
 
-export type TiktokItem = {
-  id: Scalars["ID"];
-  desc: Scalars["String"];
-  commentCount: Scalars["BigInt"];
-  diggCount: Scalars["BigInt"];
-  playCount: Scalars["BigInt"];
-  shareCount: Scalars["BigInt"];
-  createdTimestamp: Scalars["Date"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  user: TiktokUser;
-};
-
-export type TiktokUser = {
-  id: Scalars["ID"];
-  nickname: Scalars["String"];
-  uniqueId: Scalars["String"];
-  signature: Scalars["String"];
-  bioLink?: Maybe<Scalars["String"]>;
-  avatarThumb: Scalars["String"];
-  followerCount: Scalars["BigInt"];
-  followingCount: Scalars["BigInt"];
-  heartCount: Scalars["BigInt"];
-  videoCount: Scalars["BigInt"];
-  verified: Scalars["Boolean"];
-  privateAccount: Scalars["Boolean"];
-  secret: Scalars["Boolean"];
-  createdTimestamp: Scalars["Date"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  accountId: Scalars["String"];
-  account: Account;
-  items: Array<TiktokItem>;
-};
-
-export type TwitterTweet = {
-  id: Scalars["ID"];
-  text: Scalars["String"];
-  retweetCount: Scalars["BigInt"];
-  replyCount: Scalars["BigInt"];
-  likeCount: Scalars["BigInt"];
-  quoteCount: Scalars["BigInt"];
-  possiblySensitive: Scalars["Boolean"];
-  tweetType?: Maybe<Scalars["String"]>;
-  createdTimestamp: Scalars["Date"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  user: TwitterUser;
-};
-
-export type TwitterUser = {
-  id: Scalars["ID"];
-  name: Scalars["String"];
-  username: Scalars["String"];
-  description: Scalars["String"];
-  profileImageUrl: Scalars["String"];
-  followersCount: Scalars["BigInt"];
-  followingCount: Scalars["BigInt"];
-  listedCount: Scalars["BigInt"];
-  tweetCount: Scalars["BigInt"];
-  verified: Scalars["Boolean"];
-  protected: Scalars["Boolean"];
-  createdTimestamp: Scalars["Date"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  accountId: Scalars["String"];
-  account: Account;
-  tweets: Array<TwitterTweet>;
-};
-
-export type YoutubeKeyword = {
-  id: Scalars["Float"];
-  title: Scalars["String"];
-  num: Scalars["Float"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  channels: Array<YoutubeChannel>;
-};
-
-export type YoutubeChannelKeywordRelation = {
-  channelId: Scalars["ID"];
-  keywordId: Scalars["ID"];
-  channel: YoutubeChannel;
-  keyword: YoutubeKeyword;
-};
-
-export type YoutubeTag = {
-  id: Scalars["Float"];
-  title: Scalars["String"];
-  num: Scalars["Float"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  videos: Array<YoutubeVideo>;
-};
-
-export type YoutubeVideoTagRelation = {
-  videoId: Scalars["ID"];
-  tagOd: Scalars["ID"];
-  video: YoutubeVideo;
-  tag: YoutubeTag;
-};
-
-export type YoutubeVideo = {
-  id: Scalars["String"];
-  title: Scalars["String"];
-  description: Scalars["String"];
-  thumbnailUrl: Scalars["String"];
-  publishedAt: Scalars["Date"];
-  viewCount?: Maybe<Scalars["BigInt"]>;
-  likeCount?: Maybe<Scalars["BigInt"]>;
-  dislikeCount?: Maybe<Scalars["BigInt"]>;
-  commentCount?: Maybe<Scalars["BigInt"]>;
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  tags: Array<YoutubeVideoTagRelation>;
-  videoCategory: YoutubeVideoCategory;
-  channel: YoutubeChannel;
-};
-
-export type YoutubeVideoCategory = {
-  id: Scalars["Float"];
-  title: Scalars["String"];
-  assignable: Scalars["Boolean"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  videos: Array<YoutubeVideo>;
-  channelVideoCategories: Array<YoutubeChannelVideoCategory>;
-};
-
-export type YoutubeChannelVideoCategory = {
-  channelId: Scalars["ID"];
-  videoCategoryId: Scalars["Float"];
-  num: Scalars["Float"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  channel: YoutubeChannel;
-  videoCategory: YoutubeVideoCategory;
-};
-
-export type YoutubeChannel = {
-  id: Scalars["ID"];
-  title: Scalars["String"];
-  description: Scalars["String"];
-  thumbnailUrl: Scalars["String"];
-  country?: Maybe<Scalars["String"]>;
-  publishedAt: Scalars["Date"];
-  subscriberCount?: Maybe<Scalars["BigInt"]>;
-  viewCount: Scalars["BigInt"];
-  videoCount: Scalars["BigInt"];
-  hiddenSubscriberCount: Scalars["Boolean"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  accountId: Scalars["String"];
-  mainVideoCategoryId?: Maybe<Scalars["Int"]>;
-  keywords: Array<YoutubeChannelKeywordRelation>;
-  videos: Array<YoutubeVideo>;
-  account: Account;
-  channelVideoCategories: Array<YoutubeChannelVideoCategory>;
-};
-
 export type Account = {
   uuid: Scalars["ID"];
   displayName: Scalars["String"];
@@ -189,6 +29,30 @@ export type Account = {
   twitterUsers: Array<TwitterUser>;
   instagramUsers: Array<InstagramUser>;
   tiktokUsers: Array<TiktokUser>;
+};
+
+export type AccountSearchByUsernameInput = {
+  youtubeChannelId?: Maybe<Scalars["String"]>;
+  twitterUsername?: Maybe<Scalars["String"]>;
+  instagramUsername?: Maybe<Scalars["String"]>;
+  tiktokUniqueId?: Maybe<Scalars["String"]>;
+};
+
+export type AccountSearchInput = {
+  take: Scalars["Int"];
+  word: Scalars["String"];
+};
+
+export type AccountSearchPaginationInput = {
+  take: Scalars["Int"];
+  page: Scalars["Int"];
+  word: Scalars["String"];
+};
+
+export type AccountSearchResult = {
+  totalPages: Scalars["Int"];
+  accounts: Array<Account>;
+  totalCount: Scalars["Int"];
 };
 
 export type InstagramLocation = {
@@ -220,6 +84,11 @@ export type InstagramMedia = {
   location?: Maybe<InstagramLocation>;
 };
 
+export type InstagramRankingPage = {
+  totalPages: Scalars["Int"];
+  instagramUsers: Array<InstagramUser>;
+};
+
 export type InstagramUser = {
   id: Scalars["ID"];
   fullName: Scalars["String"];
@@ -238,87 +107,18 @@ export type InstagramUser = {
   mediaList: Array<InstagramMedia>;
 };
 
-export type InstagramRankingPage = {
-  totalPages: Scalars["Int"];
-  instagramUsers: Array<InstagramUser>;
+export type Mutation = {
+  addAccountByUsername: Account;
 };
 
-export type TiktokRankingPage = {
-  totalPages: Scalars["Int"];
-  tiktokUsers: Array<TiktokUser>;
+export type MutationAddAccountByUsernameArgs = {
+  username: AccountSearchByUsernameInput;
 };
 
-export type TwitterRankingPage = {
-  totalPages: Scalars["Int"];
-  twitterUsers: Array<TwitterUser>;
+export type PaginationInput = {
+  take: Scalars["Int"];
+  page: Scalars["Int"];
 };
-
-export type YoutubeKeywordSearchResult = {
-  youtubeKeywords: Array<YoutubeKeyword>;
-  youtubeTags: Array<YoutubeTag>;
-};
-
-export type YoutubeRankingPage = {
-  totalPages: Scalars["Int"];
-  youtubeChannels: Array<YoutubeChannel>;
-  youtubeVideoCategories: Array<YoutubeVideoCategory>;
-};
-
-export type YoutubeKeywordRankingPage = {
-  totalPages: Scalars["Int"];
-  youtubeChannels: Array<YoutubeChannel>;
-  youtubeKeyword?: Maybe<YoutubeKeyword>;
-};
-
-export type YoutubeVideoTagRankingPage = {
-  totalPages: Scalars["Int"];
-  youtubeChannels: Array<YoutubeChannel>;
-  youtubeTag?: Maybe<YoutubeTag>;
-};
-
-export type YoutubeKeywordIndexPage = {
-  totalPages: Scalars["Int"];
-  youtubeKeywords: Array<YoutubeKeyword>;
-};
-
-export type YoutubeVideoTagIndexPage = {
-  totalPages: Scalars["Int"];
-  youtubeTags: Array<YoutubeTag>;
-};
-
-export type AccountSearchResult = {
-  totalPages: Scalars["Int"];
-  accounts: Array<Account>;
-  totalCount: Scalars["Int"];
-};
-
-export type Sitemap = {
-  accounts: Array<Account>;
-  youtubeVideoCategories: Array<YoutubeVideoCategory>;
-  youtubeKeywords: Array<YoutubeKeyword>;
-  youtubeTags: Array<YoutubeTag>;
-};
-
-export type TopPage = {
-  youtubeChannels: Array<YoutubeChannel>;
-  twitterUsers: Array<TwitterUser>;
-  instagramUsers: Array<InstagramUser>;
-  tiktokUsers: Array<TiktokUser>;
-};
-
-export type User = {
-  uid: Scalars["ID"];
-  name: Scalars["String"];
-  email: Scalars["String"];
-  role: UserRole;
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-};
-
-export enum UserRole {
-  None = "NONE",
-  Admin = "ADMIN",
-}
 
 export type Query = {
   getAccountPage?: Maybe<Account>;
@@ -391,17 +191,171 @@ export type QuerySearchAccountArgs = {
   pagination: AccountSearchInput;
 };
 
-export type AccountSearchPaginationInput = {
-  take: Scalars["Int"];
-  page: Scalars["Int"];
-  word: Scalars["String"];
+export type Sitemap = {
+  accounts: Array<Account>;
+  youtubeVideoCategories: Array<YoutubeVideoCategory>;
+  youtubeKeywords: Array<YoutubeKeyword>;
+  youtubeTags: Array<YoutubeTag>;
 };
+
+export type TiktokItem = {
+  id: Scalars["ID"];
+  desc: Scalars["String"];
+  commentCount: Scalars["BigInt"];
+  diggCount: Scalars["BigInt"];
+  playCount: Scalars["BigInt"];
+  shareCount: Scalars["BigInt"];
+  createdTimestamp: Scalars["Date"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  user: TiktokUser;
+};
+
+export type TiktokRankingPage = {
+  totalPages: Scalars["Int"];
+  tiktokUsers: Array<TiktokUser>;
+};
+
+export type TiktokUser = {
+  id: Scalars["ID"];
+  nickname: Scalars["String"];
+  uniqueId: Scalars["String"];
+  signature: Scalars["String"];
+  bioLink?: Maybe<Scalars["String"]>;
+  avatarThumb: Scalars["String"];
+  followerCount: Scalars["BigInt"];
+  followingCount: Scalars["BigInt"];
+  heartCount: Scalars["BigInt"];
+  videoCount: Scalars["BigInt"];
+  verified: Scalars["Boolean"];
+  privateAccount: Scalars["Boolean"];
+  secret: Scalars["Boolean"];
+  createdTimestamp: Scalars["Date"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
+  account: Account;
+  items: Array<TiktokItem>;
+};
+
+export type TopPage = {
+  youtubeChannels: Array<YoutubeChannel>;
+  twitterUsers: Array<TwitterUser>;
+  instagramUsers: Array<InstagramUser>;
+  tiktokUsers: Array<TiktokUser>;
+};
+
+export type TwitterRankingPage = {
+  totalPages: Scalars["Int"];
+  twitterUsers: Array<TwitterUser>;
+};
+
+export type TwitterTweet = {
+  id: Scalars["ID"];
+  text: Scalars["String"];
+  retweetCount: Scalars["BigInt"];
+  replyCount: Scalars["BigInt"];
+  likeCount: Scalars["BigInt"];
+  quoteCount: Scalars["BigInt"];
+  possiblySensitive: Scalars["Boolean"];
+  tweetType?: Maybe<Scalars["String"]>;
+  createdTimestamp: Scalars["Date"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  user: TwitterUser;
+};
+
+export type TwitterUser = {
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  username: Scalars["String"];
+  description: Scalars["String"];
+  profileImageUrl: Scalars["String"];
+  followersCount: Scalars["BigInt"];
+  followingCount: Scalars["BigInt"];
+  listedCount: Scalars["BigInt"];
+  tweetCount: Scalars["BigInt"];
+  verified: Scalars["Boolean"];
+  protected: Scalars["Boolean"];
+  createdTimestamp: Scalars["Date"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
+  account: Account;
+  tweets: Array<TwitterTweet>;
+};
+
+export type User = {
+  uid: Scalars["ID"];
+  name: Scalars["String"];
+  email: Scalars["String"];
+  role: UserRole;
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+};
+
+export enum UserRole {
+  None = "NONE",
+  Admin = "ADMIN",
+}
 
 export type YoutubeCategoryPaginationInput = {
   take: Scalars["Int"];
   page: Scalars["Int"];
   videoCategoryId?: Maybe<Scalars["Int"]>;
   isAll: Scalars["Boolean"];
+};
+
+export type YoutubeChannel = {
+  id: Scalars["ID"];
+  title: Scalars["String"];
+  description: Scalars["String"];
+  thumbnailUrl: Scalars["String"];
+  country?: Maybe<Scalars["String"]>;
+  publishedAt: Scalars["Date"];
+  subscriberCount?: Maybe<Scalars["BigInt"]>;
+  viewCount: Scalars["BigInt"];
+  videoCount: Scalars["BigInt"];
+  hiddenSubscriberCount: Scalars["Boolean"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  accountId: Scalars["String"];
+  mainVideoCategoryId?: Maybe<Scalars["Int"]>;
+  keywords: Array<YoutubeChannelKeywordRelation>;
+  videos: Array<YoutubeVideo>;
+  account: Account;
+  channelVideoCategories: Array<YoutubeChannelVideoCategory>;
+};
+
+export type YoutubeChannelKeywordRelation = {
+  channelId: Scalars["ID"];
+  keywordId: Scalars["ID"];
+  channel: YoutubeChannel;
+  keyword: YoutubeKeyword;
+};
+
+export type YoutubeChannelVideoCategory = {
+  channelId: Scalars["ID"];
+  videoCategoryId: Scalars["Float"];
+  num: Scalars["Float"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  channel: YoutubeChannel;
+  videoCategory: YoutubeVideoCategory;
+};
+
+export type YoutubeKeyword = {
+  id: Scalars["Float"];
+  title: Scalars["String"];
+  num: Scalars["Float"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  channels: Array<YoutubeChannel>;
+};
+
+export type YoutubeKeywordIndexPage = {
+  totalPages: Scalars["Int"];
+  youtubeKeywords: Array<YoutubeKeyword>;
 };
 
 export type YoutubeKeywordPaginationInput = {
@@ -411,15 +365,10 @@ export type YoutubeKeywordPaginationInput = {
   keywordId?: Maybe<Scalars["Int"]>;
 };
 
-export type YoutubeVideoTagPaginationInput = {
-  take: Scalars["Int"];
-  page: Scalars["Int"];
-  tagId: Scalars["Int"];
-};
-
-export type PaginationInput = {
-  take: Scalars["Int"];
-  page: Scalars["Int"];
+export type YoutubeKeywordRankingPage = {
+  totalPages: Scalars["Int"];
+  youtubeChannels: Array<YoutubeChannel>;
+  youtubeKeyword?: Maybe<YoutubeKeyword>;
 };
 
 export type YoutubeKeywordSearchInput = {
@@ -427,24 +376,75 @@ export type YoutubeKeywordSearchInput = {
   word: Scalars["String"];
 };
 
-export type AccountSearchByUsernameInput = {
-  youtubeChannelId?: Maybe<Scalars["String"]>;
-  twitterUsername?: Maybe<Scalars["String"]>;
-  instagramUsername?: Maybe<Scalars["String"]>;
-  tiktokUniqueId?: Maybe<Scalars["String"]>;
+export type YoutubeKeywordSearchResult = {
+  youtubeKeywords: Array<YoutubeKeyword>;
+  youtubeTags: Array<YoutubeTag>;
 };
 
-export type AccountSearchInput = {
+export type YoutubeRankingPage = {
+  totalPages: Scalars["Int"];
+  youtubeChannels: Array<YoutubeChannel>;
+  youtubeVideoCategories: Array<YoutubeVideoCategory>;
+};
+
+export type YoutubeTag = {
+  id: Scalars["Float"];
+  title: Scalars["String"];
+  num: Scalars["Float"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  videos: Array<YoutubeVideo>;
+};
+
+export type YoutubeVideo = {
+  id: Scalars["String"];
+  title: Scalars["String"];
+  description: Scalars["String"];
+  thumbnailUrl: Scalars["String"];
+  publishedAt: Scalars["Date"];
+  viewCount?: Maybe<Scalars["BigInt"]>;
+  likeCount?: Maybe<Scalars["BigInt"]>;
+  dislikeCount?: Maybe<Scalars["BigInt"]>;
+  commentCount?: Maybe<Scalars["BigInt"]>;
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  tags: Array<YoutubeVideoTagRelation>;
+  videoCategory: YoutubeVideoCategory;
+  channel: YoutubeChannel;
+};
+
+export type YoutubeVideoCategory = {
+  id: Scalars["Float"];
+  title: Scalars["String"];
+  assignable: Scalars["Boolean"];
+  createdAt: Scalars["Date"];
+  updatedAt: Scalars["Date"];
+  videos: Array<YoutubeVideo>;
+  channelVideoCategories: Array<YoutubeChannelVideoCategory>;
+};
+
+export type YoutubeVideoTagIndexPage = {
+  totalPages: Scalars["Int"];
+  youtubeTags: Array<YoutubeTag>;
+};
+
+export type YoutubeVideoTagPaginationInput = {
   take: Scalars["Int"];
-  word: Scalars["String"];
+  page: Scalars["Int"];
+  tagId: Scalars["Int"];
 };
 
-export type Mutation = {
-  addAccountByUsername: Account;
+export type YoutubeVideoTagRankingPage = {
+  totalPages: Scalars["Int"];
+  youtubeChannels: Array<YoutubeChannel>;
+  youtubeTag?: Maybe<YoutubeTag>;
 };
 
-export type MutationAddAccountByUsernameArgs = {
-  username: AccountSearchByUsernameInput;
+export type YoutubeVideoTagRelation = {
+  videoId: Scalars["ID"];
+  tagOd: Scalars["ID"];
+  video: YoutubeVideo;
+  tag: YoutubeTag;
 };
 
 export type AddAccountByUsernameMutationVariables = Exact<{
@@ -832,10 +832,10 @@ export type SearchAccountQueryVariables = Exact<{
 export type SearchAccountQuery = {
   searchAccount: Array<
     Pick<Account, "uuid" | "displayName" | "thumbnailUrl"> & {
-      youtubeChannels: Array<Pick<YoutubeChannel, "id">>;
-      twitterUsers: Array<Pick<TwitterUser, "username">>;
-      instagramUsers: Array<Pick<InstagramUser, "username">>;
-      tiktokUsers: Array<Pick<TiktokUser, "uniqueId">>;
+      youtubeChannels: Array<Pick<YoutubeChannel, "id" | "title">>;
+      twitterUsers: Array<Pick<TwitterUser, "username" | "name">>;
+      instagramUsers: Array<Pick<InstagramUser, "username" | "fullName">>;
+      tiktokUsers: Array<Pick<TiktokUser, "uniqueId" | "nickname">>;
     }
   >;
 };
@@ -1952,15 +1952,19 @@ export const SearchAccountDocument = gql`
       thumbnailUrl
       youtubeChannels {
         id
+        title
       }
       twitterUsers {
         username
+        name
       }
       instagramUsers {
         username
+        fullName
       }
       tiktokUsers {
         uniqueId
+        nickname
       }
     }
   }

@@ -5,15 +5,19 @@ query searchAccount($pagination: AccountSearchInput!) {
     thumbnailUrl
     youtubeChannels {
       id
+      title
     }
     twitterUsers {
       username
+      name
     }
     instagramUsers {
       username
+      fullName
     }
     tiktokUsers {
       uniqueId
+      nickname
     }
   }
 }

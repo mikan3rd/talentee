@@ -125,10 +125,10 @@ export class AdminService {
       take,
       where,
       include: {
-        youtubeChannels: { select: { id: true } },
-        twitterUsers: { select: { username: true } },
-        instagramUsers: { select: { username: true } },
-        tiktokUsers: { select: { uniqueId: true } },
+        youtubeChannels: { select: { id: true, title: true } },
+        twitterUsers: { select: { username: true, name: true } },
+        instagramUsers: { select: { username: true, fullName: true } },
+        tiktokUsers: { select: { uniqueId: true, nickname: true } },
       },
     });
     return accounts;

@@ -12,7 +12,7 @@ export const YoutubeSocialButton = React.memo<{ className?: string; channelId?: 
       linkProps = {
         as: "a",
         href: `https://www.youtube.com/channel/${channelId}`,
-        target: "_black",
+        target: "_blank",
         circular: false,
       };
     }
@@ -29,7 +29,7 @@ export const TwitterSocialButton = React.memo<{ className?: string; username?: s
     linkProps = {
       as: "a",
       href: `https://twitter.com/${username}`,
-      target: "_black",
+      target: "_blank",
       circular: false,
     };
   }
@@ -46,7 +46,7 @@ export const InstagramSocialButton = React.memo<{ className?: string; username?:
       linkProps = {
         as: "a",
         href: `https://instagram.com/${username}/`,
-        target: "_black",
+        target: "_blank",
         circular: false,
       };
     }
@@ -83,7 +83,7 @@ export const TiktokSocialButton = React.memo<{ className?: string; uniqueId?: st
     linkProps = {
       as: "a",
       href: `https://www.tiktok.com/@${uniqueId}`,
-      target: "_black",
+      target: "_blank",
       circular: false,
     };
   }
