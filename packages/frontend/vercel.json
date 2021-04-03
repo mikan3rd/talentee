@@ -2,7 +2,7 @@
   "functions":{
     "*":{
       "memory": 128,
-      "maxDuration": 200
+      "maxDuration": 2
     }
   }
 }
