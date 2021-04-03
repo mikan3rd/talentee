@@ -1,6 +1,6 @@
 {
-  "functions":{
-    "pages/**/*.js":{
+  "functions": {
+    "pages/**/*.js": {
       "memory": 128,
       "maxDuration": 2
     }
