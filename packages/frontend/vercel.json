@@ -1,0 +1,8 @@
+{
+  "functions":{
+    "*":{
+      "memory": 128,
+      "maxDuration": 200
+    }
+  }
+}
