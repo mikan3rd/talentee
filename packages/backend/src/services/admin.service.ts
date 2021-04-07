@@ -133,4 +133,8 @@ export class AdminService {
     });
     return accounts;
   }
+
+  async updateAccount({ uuid, displayName }: { uuid: string; displayName: string }) {
+    return await this.prisma.account.update({ where: { uuid }, data: { displayName } });
+  }
 }

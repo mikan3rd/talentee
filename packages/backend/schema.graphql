@@ -379,4 +379,10 @@ input AccountSearchInput {
 
 type Mutation {
   addAccountByUsername(username: AccountSearchByUsernameInput!): Account!
+  updateAccount(account: AccountEditInput!): Account!
+}
+
+input AccountEditInput {
+  uuid: ID!
+  displayName: String!
 }

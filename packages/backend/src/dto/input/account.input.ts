@@ -1,4 +1,4 @@
-import { Field, InputType, Int } from "@nestjs/graphql";
+import { Field, ID, InputType, Int } from "@nestjs/graphql";
 
 @InputType()
 export class AccountSearchByUsernameInput {
@@ -22,4 +22,13 @@ export class AccountSearchInput {
 
   @Field()
   word!: string;
+}
+
+@InputType()
+export class AccountEditInput {
+  @Field((type) => ID)
+  uuid!: string;
+
+  @Field()
+  displayName!: string;
 }
