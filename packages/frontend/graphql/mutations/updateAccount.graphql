@@ -1,0 +1,6 @@
+mutation updateAccount($account: AccountEditInput!) {
+  updateAccount(account: $account) {
+    uuid
+    displayName
+  }
+}

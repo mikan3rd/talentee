@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { User } from "@prisma/client";
 
 import { CurrentUser, Roles } from "@/decorators/auth.decorator";
-import { AccountSearchByUsernameInput } from "@/dto/input/account.input";
+import { AccountEditInput, AccountSearchByUsernameInput, AccountSearchInput } from "@/dto/input/account.input";
 import { GqlAuthGuard } from "@/guards/gqlAuthGuard.guard";
 import { Account } from "@/models/account.model";
 import { User as UserModel } from "@/models/user.model";
@@ -58,5 +58,19 @@ export class AdminResolver {
       instagramUsername,
       tiktokUniqueId,
     });
+  }
+
+  @Query((returns) => [Account])
+  @UseGuards(GqlAuthGuard)
+  @Roles("ADMIN")
+  async searchAccount(@Args("pagination") { take, word }: AccountSearchInput) {
+    return await this.adminService.searchAccount({ word, take });
+  }
+
+  @Mutation((returns) => Account)
+  @UseGuards(GqlAuthGuard)
+  @Roles("ADMIN")
+  async updateAccount(@Args("account") { uuid, displayName }: AccountEditInput) {
+    return await this.adminService.updateAccount({ uuid, displayName });
   }
 }

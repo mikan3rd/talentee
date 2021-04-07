@@ -313,7 +313,7 @@ enum UserRole {
 type Query {
   getAccountPage(uuid: ID!): Account
   getTopPage: TopPage!
-  searchAccount(pagination: AccountSearchInput!): AccountSearchResult!
+  searchAccountByName(pagination: AccountSearchPaginationInput!): AccountSearchResult!
   getSitemapData: Sitemap!
   getYoutubeCategoryRankingPage(pagination: YoutubeCategoryPaginationInput!): YoutubeRankingPage!
   getYoutubeKeywordRankingPage(pagination: YoutubeKeywordPaginationInput!): YoutubeKeywordRankingPage!
@@ -326,9 +326,10 @@ type Query {
   getTiktokRankingPage(pagination: PaginationInput!): TiktokRankingPage!
   getCurrentUser: User!
   findAccountByUsername(username: AccountSearchByUsernameInput!): Account
+  searchAccount(pagination: AccountSearchInput!): [Account!]!
 }
 
-input AccountSearchInput {
+input AccountSearchPaginationInput {
   take: Int!
   page: Int!
   word: String!
@@ -371,6 +372,17 @@ input AccountSearchByUsernameInput {
   tiktokUniqueId: String
 }
 
+input AccountSearchInput {
+  take: Int!
+  word: String!
+}
+
 type Mutation {
   addAccountByUsername(username: AccountSearchByUsernameInput!): Account!
+  updateAccount(account: AccountEditInput!): Account!
+}
+
+input AccountEditInput {
+  uuid: ID!
+  displayName: String!
 }

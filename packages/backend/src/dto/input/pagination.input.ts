@@ -34,7 +34,7 @@ export class YoutubeVideoTagPaginationInput extends PaginationInput {
 }
 
 @InputType()
-export class AccountSearchInput extends PaginationInput {
+export class AccountSearchPaginationInput extends PaginationInput {
   @Field()
   word!: string;
 }

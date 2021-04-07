@@ -1,23 +1,23 @@
 query searchAccount($pagination: AccountSearchInput!) {
   searchAccount(pagination: $pagination) {
-    totalCount
-    totalPages
-    accounts {
-      uuid
-      displayName
-      thumbnailUrl
-      youtubeChannels {
-        id
-      }
-      twitterUsers {
-        username
-      }
-      instagramUsers {
-        username
-      }
-      tiktokUsers {
-        uniqueId
-      }
+    uuid
+    displayName
+    thumbnailUrl
+    youtubeChannels {
+      id
+      title
+    }
+    twitterUsers {
+      username
+      name
+    }
+    instagramUsers {
+      username
+      fullName
+    }
+    tiktokUsers {
+      uniqueId
+      nickname
     }
   }
 }
