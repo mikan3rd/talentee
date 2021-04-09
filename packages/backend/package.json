@@ -38,7 +38,7 @@
     "@types/twitter": "1.7.0",
     "apollo-server-express": "2.22.2",
     "axios": "0.21.1",
-    "cheerio": "1.0.0-rc.5",
+    "cheerio": "1.0.0-rc.6",
     "googleapis": "70.0.0",
     "graphql": "15.5.0",
     "graphql-tools": "7.0.4",
