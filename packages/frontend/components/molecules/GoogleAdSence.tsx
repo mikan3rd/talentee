@@ -1,26 +1,24 @@
 import React from "react";
 
-let window: customWindow;
-interface customWindow extends Window {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  adsbygoogle: any;
-}
+import { useRouter } from "next/router";
 
-export const GoogleAdSense = React.memo(() => {
+export const GoogleAdSense = React.memo<{ className?: string }>(({ className = "" }) => {
+  const { asPath } = useRouter();
+
   React.useEffect(() => {
-    if (window) {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    }
-  }, []);
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+  }, [asPath]);
 
   return (
-    <ins
-      className="adsbygoogle"
-      style={{ display: "block" }}
-      data-ad-client="ca-pub-2915249860974702"
-      data-ad-slot="5934873216"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    />
+    <div key={asPath}>
+      <ins
+        className={`${className} adsbygoogle`}
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-2915249860974702"
+        data-ad-slot="5934873216"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    </div>
   );
 });

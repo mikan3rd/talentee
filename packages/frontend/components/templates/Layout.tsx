@@ -3,7 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import { SemanticToastContainer } from "react-semantic-toasts";
 import TopBarProgress from "react-topbar-progress-indicator";
-import { Container } from "semantic-ui-react";
+import { Container, Divider } from "semantic-ui-react";
 
 import { ScrollTopButton } from "@/components/atoms/ScrollTopButton";
 import { GoogleAdSense } from "@/components/molecules/GoogleAdSence";
@@ -52,14 +52,8 @@ export const Layout = React.memo(({ children }) => {
         >
           {children}
 
-          {/* Google AdSense */}
-          <div
-            css={css`
-              margin-top: 10px;
-            `}
-          >
-            <GoogleAdSense />
-          </div>
+          <Divider />
+          <GoogleAdSense />
         </Container>
       </div>
 
