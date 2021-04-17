@@ -50,6 +50,18 @@ export const Layout = React.memo(({ children }) => {
           `}
         >
           {children}
+
+          {/* Google AdSense */}
+          <div>
+            <ins
+              className="adsbygoogle"
+              style={{ display: "block" }}
+              data-ad-client="ca-pub-2915249860974702"
+              data-ad-slot="5934873216"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+          </div>
         </Container>
       </div>
 

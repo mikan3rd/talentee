@@ -38,6 +38,13 @@ class MyDocument extends Document {
           {/* End Google Tag Manager (noscript) */}
           <Main />
           <NextScript />
+
+          {/* Google AdSense */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(adsbygoogle = window.adsbygoogle || []).push({});`,
+            }}
+          />
         </body>
       </Html>
     );
