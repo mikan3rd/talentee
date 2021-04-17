@@ -6,6 +6,7 @@ import TopBarProgress from "react-topbar-progress-indicator";
 import { Container } from "semantic-ui-react";
 
 import { ScrollTopButton } from "@/components/atoms/ScrollTopButton";
+import { GoogleAdSense } from "@/components/molecules/GoogleAdSence";
 import { Header } from "@/components/molecules/Header";
 import { PcSidebar, PhoneSidebar } from "@/components/molecules/Sidebar";
 import { useRouteChange } from "@/hooks/useRouteChange";
@@ -52,15 +53,12 @@ export const Layout = React.memo(({ children }) => {
           {children}
 
           {/* Google AdSense */}
-          <div>
-            <ins
-              className="adsbygoogle"
-              style={{ display: "block" }}
-              data-ad-client="ca-pub-2915249860974702"
-              data-ad-slot="5934873216"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
+          <div
+            css={css`
+              margin-top: 10px;
+            `}
+          >
+            <GoogleAdSense />
           </div>
         </Container>
       </div>
