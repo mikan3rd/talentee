@@ -21,19 +21,19 @@
     "react-linkify": "1.0.0-alpha",
     "react-semantic-toasts": "0.6.5",
     "react-topbar-progress-indicator": "4.1.0",
-    "react-use": "17.2.3",
+    "react-use": "17.2.4",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "2.0.3",
     "smoothscroll-polyfill": "0.4.4"
   },
   "devDependencies": {
-    "@babel/core": "7.13.15",
+    "@babel/core": "7.13.16",
     "@emotion/babel-plugin": "11.3.0",
-    "@graphql-codegen/cli": "1.21.3",
-    "@graphql-codegen/introspection": "1.18.1",
-    "@graphql-codegen/typescript": "1.21.1",
-    "@graphql-codegen/typescript-operations": "1.17.15",
-    "@graphql-codegen/typescript-react-apollo": "2.2.3",
+    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/introspection": "1.18.2",
+    "@graphql-codegen/typescript": "1.22.0",
+    "@graphql-codegen/typescript-operations": "1.17.16",
+    "@graphql-codegen/typescript-react-apollo": "2.2.4",
     "@types/react-linkify": "1.0.0",
     "@types/smoothscroll-polyfill": "0.3.1"
   }
