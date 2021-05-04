@@ -4,6 +4,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
+import { Constants } from "@/common/constants";
 import { Account } from "@/components/pages/Account";
 import { TopSection } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
@@ -31,7 +32,7 @@ export const getStaticProps: GetStaticProps<React.ComponentProps<typeof Account>
     return { redirect: { permanent: false, destination: "/" } };
   }
 
-  return { props: { getAccountPage: data.getAccountPage }, revalidate: 60 * 10 };
+  return { props: { getAccountPage: data.getAccountPage }, revalidate: Constants.revalidateTime };
 };
 
 const ProfilePage = React.memo<InferGetStaticPropsType<typeof getStaticProps>>((props) => {

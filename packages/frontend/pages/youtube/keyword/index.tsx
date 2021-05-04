@@ -3,6 +3,7 @@ import React from "react";
 import { GetStaticProps, GetStaticPropsResult, InferGetStaticPropsType } from "next";
 import { Breadcrumb, Divider } from "semantic-ui-react";
 
+import { Constants } from "@/common/constants";
 import { Props, YoutubeKeywordIndex } from "@/components/pages/YoutubeKeywordIndex";
 import { TopSection, YoutubeKeywordIndexSection, YoutubeSection } from "@/components/templates/BreadcrumbSection";
 import { Meta } from "@/components/templates/Meta";
@@ -31,7 +32,7 @@ export const getCommonStaticProps = async ({ page }: { page: number }): Promise<
       page,
       getYoutubeKeywordIndexPage: data.getYoutubeKeywordIndexPage,
     },
-    revalidate: 60 * 10,
+    revalidate: Constants.revalidateTime,
   };
 };
 
