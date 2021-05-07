@@ -38,7 +38,7 @@
     "@types/twitter": "1.7.0",
     "apollo-server-express": "2.24.0",
     "axios": "0.21.1",
-    "cheerio": "1.0.0-rc.6",
+    "cheerio": "1.0.0-rc.9",
     "googleapis": "71.0.0",
     "graphql": "15.5.0",
     "graphql-tools": "7.0.4",
@@ -60,8 +60,8 @@
     "@types/supertest": "2.0.11",
     "jest": "26.6.3",
     "supertest": "6.1.3",
-    "ts-jest": "26.5.5",
-    "ts-loader": "9.1.1"
+    "ts-jest": "26.5.6",
+    "ts-loader": "9.1.2"
   },
   "jest": {
     "moduleFileExtensions": [
