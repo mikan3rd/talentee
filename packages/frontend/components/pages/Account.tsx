@@ -38,15 +38,8 @@ const scrollToElement = (elementId: ServiceType) => {
 export type Props = { getAccountPage: NonNullable<GetAccountPageQuery["getAccountPage"]> };
 
 export const Account = React.memo<Props>(({ getAccountPage }) => {
-  const {
-    displayName,
-    thumbnailUrl,
-    updatedAt,
-    youtubeChannels,
-    twitterUsers,
-    instagramUsers,
-    tiktokUsers,
-  } = getAccountPage;
+  const { displayName, thumbnailUrl, updatedAt, youtubeChannels, twitterUsers, instagramUsers, tiktokUsers } =
+    getAccountPage;
 
   const [headerHeight, setHeaderHeight] = React.useState(0);
   const [selectedTab, setSelectedTab] = React.useState<ServiceType | null>(null);
