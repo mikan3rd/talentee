@@ -23,7 +23,17 @@ class MyDocument extends Document {
               })(window,document,'script','dataLayer','GTM-54DGPF3');`,
             }}
           />
-          {/* End Google Tag Manager */}
+          {/* Clarity */}
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `(function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "866ma84dxy");`,
+            }}
+          />
         </Head>
         <body>
           {/* Google Tag Manager (noscript) */}
@@ -35,7 +45,6 @@ class MyDocument extends Document {
               style={{ display: "none", visibility: "hidden" }}
             />
           </noscript>
-          {/* End Google Tag Manager (noscript) */}
           <Main />
           <NextScript />
         </body>
