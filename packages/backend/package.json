@@ -29,7 +29,7 @@
     "@nestjs/common": "7.6.17",
     "@nestjs/config": "0.6.3",
     "@nestjs/core": "7.6.17",
-    "@nestjs/graphql": "7.10.6",
+    "@nestjs/graphql": "9.0.4",
     "@nestjs/platform-express": "7.6.17",
     "@nestjs/schedule": "0.4.3",
     "@nestjs/schematics": "7.3.1",
