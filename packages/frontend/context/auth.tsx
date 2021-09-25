@@ -42,16 +42,15 @@ const reducer: React.Reducer<State, Action> = (state, action): State => {
   }
 };
 
-export const AuthContext =
-  React.createContext<
-    | {
-        state: State;
-        dispatch: React.Dispatch<Action>;
-        login: () => void;
-        logout: () => void;
-      }
-    | undefined
-  >(undefined);
+export const AuthContext = React.createContext<
+  | {
+      state: State;
+      dispatch: React.Dispatch<Action>;
+      login: () => void;
+      logout: () => void;
+    }
+  | undefined
+>(undefined);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, {
