@@ -43,7 +43,7 @@
     "graphql-tools": "8.2.0",
     "https-proxy-agent": "5.0.0",
     "morgan": "1.10.0",
-    "puppeteer": "6.0.0",
+    "puppeteer": "10.4.0",
     "puppeteer-extra": "3.2.3",
     "puppeteer-extra-plugin-stealth": "2.9.0",
     "reflect-metadata": "0.1.13",
