@@ -27,7 +27,7 @@
   "dependencies": {
     "@nestjs/cli": "8.1.4",
     "@nestjs/common": "8.1.2",
-    "@nestjs/config": "1.0.3",
+    "@nestjs/config": "1.1.0",
     "@nestjs/core": "8.1.2",
     "@nestjs/graphql": "9.1.1",
     "@nestjs/platform-express": "8.1.2",
@@ -36,7 +36,7 @@
     "@types/cron": "1.7.3",
     "@types/morgan": "1.9.3",
     "@types/twitter": "1.7.1",
-    "apollo-server-express": "3.4.0",
+    "apollo-server-express": "3.5.0",
     "axios": "0.24.0",
     "cheerio": "1.0.0-rc.10",
     "googleapis": "73.0.0",
