@@ -10,11 +10,11 @@
     "ts-node": "ts-node -r tsconfig-paths/register"
   },
   "resolutions": {
-    "@types/react": "17.0.35"
+    "@types/react": "17.0.37"
   },
   "dependencies": {
     "@emotion/babel-preset-css-prop": "11.2.0",
-    "@emotion/react": "11.6.0",
+    "@emotion/react": "11.7.0",
     "next": "10.2.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
