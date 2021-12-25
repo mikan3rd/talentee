@@ -1,15 +1,15 @@
-name: deploy website
-on:
-  schedule:
-    - cron:  '0 18 * * *'
-jobs:
-  frontend-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+# name: deploy website
+# on:
+#   schedule:
+#     - cron:  '0 18 * * *'
+# jobs:
+#   frontend-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}  #Required
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
+#       - uses: amondnet/vercel-action@v20
+#         with:
+#           vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
+#           vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}  #Required
+#           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}} #Required
